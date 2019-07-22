@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"mongoBack1.strapi_administrator"},{"v":2,"unique":true,"key":{"username":1},"name":"username_1","ns":"mongoBack1.strapi_administrator","background":true}],"uuid":"ff91c8e0c84147ec8070b34e5faee98b"}
