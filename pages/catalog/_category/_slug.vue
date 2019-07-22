@@ -102,7 +102,7 @@ export default {
   components: { ContactForm },
   async asyncData(ctx) {
     if (ctx.params && ctx.params.slug) {
-      console.log("TCL: Data -> CHILD COMPONENT RENDERER1");
+      // console.log("TCL: Data -> CHILD COMPONENT RENDERER1");
       await ctx.store.dispatch("fetchGeneralInfo");
       const category = await ctx.store.dispatch("fetchCategory", {
         slug: ctx.route.params.category
