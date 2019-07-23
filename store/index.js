@@ -115,10 +115,10 @@ export const actions = {
 
     const {
       data: productsData
-    } = await this.$axios.get(`http://localhost:1337/products?` + query)
+    } = await this.$axios.get(`/products?` + query)
     const {
       data: productsCount
-    } = await this.$axios.get(`http://localhost:1337/products/count?` + query)
+    } = await this.$axios.get(`/products/count?` + query)
 
     count = productsCount
     products = productsData
@@ -162,10 +162,10 @@ export const actions = {
 
     const {
       data: productsData
-    } = await this.$axios.get(`http://localhost:1337/products?` + query)
+    } = await this.$axios.get(`/products?` + query)
     const {
       data: productsCount
-    } = await this.$axios.get(`http://localhost:1337/products/count?` + query)
+    } = await this.$axios.get(`/products/count?` + query)
 
     count = productsCount
     products = productsData
