@@ -55,10 +55,10 @@
         >{{item.name}}</v-btn>
       </template>
     </div>
-    <v-btn icon class="ml-1 mr-3" to="/basket" large>
+    <v-btn icon class="ml-1" to="/basket" large>
       <v-icon medium>shopping_basket</v-icon>
     </v-btn>
-    <v-btn icon class="ml-1 hidden-md-and-up mr-3" @click="$emit('showDrawer')" large>
+    <v-btn icon class="ml-1 hidden-md-and-up" @click="$emit('showDrawer')" large>
       <v-icon medium>menu</v-icon>
     </v-btn>
   </v-toolbar>
