@@ -66,7 +66,7 @@
                 large
                 @click="handleOneClickBuy"
               >КУпить в один клик</v-btn>
-              <v-btn dark color="#d50000" class="ml-0 mont" large>Добавить в корзину</v-btn>
+              <v-btn dark color="#d50000" class="ml-0 mont" $large>Добавить в корзину</v-btn>
             </div>
           </v-flex>
           <v-flex xs12 md5 lg4 order-xs1 order-md2 class="display-flex image-wrapper">
@@ -108,7 +108,7 @@ export default {
         slug: ctx.route.params.category
       });
       const { data: product } = await ctx.$axios.get(
-        `http://localhost:1337/products?slug=` + ctx.params.slug
+        `/products?slug=` + ctx.params.slug
       );
       const productItem = product[0];
       return {

@@ -86,7 +86,10 @@ module.exports = {
       breaks: true,
       injected: true
     }],
-    '@nuxtjs/axios', ['@nuxtjs/apollo', {
+    ['@nuxtjs/axios', {
+      baseURL: backendUrl
+    }],
+    ['@nuxtjs/apollo', {
       clientConfigs: {
         default: {
           httpEndpoint: backendUrl + '/graphql',
@@ -188,6 +191,7 @@ module.exports = {
    ** Build configuration
    */
   build: {
+    publicPath: '/js/',
     /*
      ** You can extend webpack config here
      */

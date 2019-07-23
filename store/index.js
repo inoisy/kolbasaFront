@@ -7,9 +7,15 @@ export const mutations = {
   category(state, item) {
     state.sessionStorage.category = item
   },
+  product(state, item) {
+    state.sessionStorage.product = item
+  },
   products(state, item) {
     state.sessionStorage.products = item
-  }
+  },
+  basket(state, item) {
+    state.localStorage.basket.push(item)
+  },
 }
 export const strict = false
 export const actions = {
@@ -56,8 +62,8 @@ export const actions = {
     return result
   },
   async fetchCategory(ctx, params) {
-    console.log("TCL: fetchCategory -> manufacturer", params.manufacturer)
-    console.log("TCL: fetchCategory -> slug", params.slug)
+    // console.log("TCL: fetchCategory -> manufacturer", params.manufacturer)
+    // console.log("TCL: fetchCategory -> slug", params.slug)
     const categoryFind = ctx.state.sessionStorage.generalInfo.categories.find(item => item.slug === params.slug)
     let client = this.app.apolloProvider.defaultClient;
 
@@ -123,6 +129,18 @@ export const actions = {
       count: count
     });
     return categoryData.category
+  },
+  async fetchProduct(ctx, params) {
+
+    const {
+      data: product
+    } = await ctx.$axios.get(
+      `/products?slug=` + params.slug
+    );
+    const productItem = product[0];
+    await ctx.commit("product", productItem);
+
+    return productItem
   },
   async fetchProducts(ctx, params) {
     const categoryFind = ctx.state.sessionStorage.generalInfo.categories.find(item => item.slug === params.slug)
