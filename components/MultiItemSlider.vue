@@ -68,12 +68,25 @@ export default {
 .manuf-img {
   transition: all 0.2s;
   filter: saturate(0.5);
-  min-height: 100px;
+  height: 80px;
+  object-fit: contain;
 
   &:hover {
     transform: scale(1.1);
     transition: all 0.3s ease-in-out;
     filter: none;
+  }
+}
+
+@media (min-width: 600px) {
+  .manuf-img {
+    height: 120px;
+  }
+}
+
+@media (min-width: 960px) {
+  .manuf-img {
+    height: 140px;
   }
 }
 </style>

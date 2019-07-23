@@ -11,10 +11,11 @@
               <div
                 class="flex xs12 sm6 md4 lg3 xl2"
                 data-aos="fade-up"
-                v-for="(item,index) in products.items"
+                v-for="(product,index) in products.items"
                 :key="index"
               >
-                <v-card
+                <product-card :product="product" :category="category.slug"></product-card>
+                <!-- <v-card
                   :to="`/catalog/${category.slug}/${item.slug}`"
                   hover
                   ripple
@@ -33,7 +34,7 @@
                   <v-card-text class="pt-1" style="flex-grow: 0 !important;">
                     <h3 class="display-1 mb-0" style="line-height: normal !important;">{{item.name}}</h3>
                   </v-card-text>
-                </v-card>
+                </v-card>-->
               </div>
             </v-layout>
           </v-flex>
@@ -113,9 +114,11 @@ import gql from "graphql-tag";
 // import _ from "lodash";
 import PageHeader from "~/components/PageHeader";
 import StickyMenu from "~/components/StickyMenu";
+import ProductCard from "~/components/ProductCard";
+
 import { isArray } from "util";
 export default {
-  components: { PageHeader, StickyMenu },
+  components: { PageHeader, StickyMenu, ProductCard },
   computed: {
     products() {
       return this.$store.state.sessionStorage.products;

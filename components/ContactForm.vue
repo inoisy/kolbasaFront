@@ -24,7 +24,7 @@
 
     <v-flex xs12 class="mt-4">
       <v-btn class="ml-0" color="#d50000" @click="submit" dark large>Отправить</v-btn>
-      <v-btn flat color="#d50000" @click="clear" outline large>Очистить</v-btn>
+      <!-- <v-btn flat color="#d50000" @click="clear" outline large>Очистить</v-btn> -->
     </v-flex>
 
     <v-slide-y-transition>
@@ -37,7 +37,6 @@
         <v-alert :value="this.formError" class="flex xs12 mt-3" type="error">Ошибка при отправке</v-alert>
       </v-flex>
     </v-slide-y-transition>
-    <!-- {{formMessage}} -->
   </v-form>
 </template>
 

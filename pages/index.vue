@@ -56,7 +56,7 @@
         <v-layout class="mb-5 pb-4" row wrap align-center justify-center>
           <div
             data-aos="zoom-in"
-            class="flex xs12 sm6 md4 lg3"
+            class="flex xs6 sm6 md4 lg3"
             v-for="(item,i) in categories"
             :key="i"
           >
@@ -90,7 +90,7 @@
         </div>
 
         <section class="py-5">
-          <h2 data-aos="zoom-in" class="text-xs-center mb-4 primary--text d-block">Производители</h2>
+          <h2 data-aos="zoom-in" class="text-xs-center mb-5 primary--text d-block">Производители</h2>
           <div class="d-flex justify-center layout">
             <multi-item-slider :items="manufacturers" />
           </div>
@@ -182,10 +182,12 @@
     .category-img {
       filter: grayscale(50%);
       display: block;
-      min-height: 100px;
+      // min-height: 70px;
+      height: 75px;
       margin: auto;
       max-width: 100%;
       transition: all 0.2s;
+      object-fit: contain;
     }
   }
 
@@ -224,7 +226,24 @@
   color: #4A1F00;
 }
 
-@media (max-width: 960px) {
+@media (min-width: 600px) {
+  .category-wrapper {
+    .category-img-wrapper {
+      .category-img {
+        height: 100px;
+      }
+    }
+  }
+}
+
+@media (min-width: 960px) {
+  .category-wrapper {
+    .category-img-wrapper {
+      .category-img {
+        height: 150px;
+      }
+    }
+  }
 }
 </style>
 

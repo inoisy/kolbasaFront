@@ -4,15 +4,20 @@
     v-model="dialog"
     scrollable
     :width="showCard ? 'auto' : '500px'"
+    style="margin-top: 120px;"
+    attach=".v-content__wrap"
+    content-class="dialog-content-wrapper"
   >
+    <portal-target name="toolbar"></portal-target>
+
     <v-card class="position-relative px-3 pb-4 pt-2 fill-height" style="min-height:45vh">
-      <div class="close-btn-wrap">
+      <div class="close-btn-wrap mt-2">
         <v-btn class="close-btn" outline icon large @click="dialog=false">
           <v-icon>close</v-icon>
         </v-btn>
       </div>
       <div v-show="showCard">
-        <v-breadcrumbs :items="breadcrumbs" class="pl-1">
+        <v-breadcrumbs :items="breadcrumbs" class="pl-1 pr-5">
           <template slot="item" slot-scope="props">
             <nuxt-link class="text-decoration-none" :to="props.item.to" exact>{{ props.item.text }}</nuxt-link>
           </template>
@@ -85,7 +90,7 @@
         </v-layout>
       </div>
       <div v-show="!showCard">
-        <v-btn outline @click="showCard=true" icon large class="ml-0 mb-5">
+        <v-btn outline @click="showCard=true" icon large class="ml-0 mb-5 mt-2">
           <v-icon>arrow_back</v-icon>
         </v-btn>
         <h2 class="mb-5">Купить в один клик</h2>
@@ -167,6 +172,14 @@ export default {
 </script>
 
 <style lang="stylus" >
+.v-dialog:not(.v-dialog--fullscreen) {
+  max-height: calc(90% - 100px) !important;
+}
+
+.dialog-content-wrapper {
+  margin-top: 100px;
+}
+
 .mw500 {
   max-width: 500px;
 }

@@ -33,6 +33,7 @@
   .img-wrapper {
     img {
       padding: 0 20px;
+      object-fit: contain;
       // max-width: 90%;
     }
   }

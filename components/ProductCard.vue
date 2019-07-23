@@ -7,7 +7,7 @@
   >
     <div class="display-flex justify-center align-center px-2" style="min-height:150px">
       <img
-        class="d-block ma-auto"
+        class="d-block ma-auto product-img"
         v-lazy="product.img ? imageBaseUrl + product.img.url : require('~/assets/no-image.png')"
       />
     </div>
@@ -16,6 +16,24 @@
     </v-card-text>
   </v-card>
 </template>
+<style lang="stylus" scoped>
+.product-img {
+  height: 150px;
+  object-fit: contain;
+}
+
+@media (min-width: 600px) {
+  .product-img {
+    height: 180px;
+  }
+}
+
+@media (min-width: 960px) {
+  .product-img {
+    height: 200px;
+  }
+}
+</style>
 
 <script>
 export default {
@@ -26,5 +44,3 @@ export default {
 };
 </script>
 
-<style>
-</style>
