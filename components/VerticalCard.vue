@@ -6,16 +6,16 @@
     class="card-wrapper flex xs12 text-xs-left mont font-weight-medium pa-3"
     style="text-decoration: none; border-radius: 10px"
   >
-    <v-layout row wrap>
-      <v-flex xs12 md4 class="img-wrapper display-flex gray px-5 py-4">
+    <v-layout class="card-inner">
+      <div class="img-wrapper display-flex gray" style=" min-height:13rem; min-width:300px">
         <img
           class="d-block ma-auto"
-          style="max-height:13rem"
+          style="max-height:13rem; min-height:150px"
           v-lazy="item.img ? imageBaseUrl+item.img.url : require('~/assets/no-image.png')"
           :alt="item.name"
         />
-      </v-flex>
-      <v-flex xs12 md8 class="card-text-wrapper display-flex">
+      </div>
+      <v-flex class="card-text-wrapper display-flex">
         <div class="card-text-inner my-auto">
           <h2 class="card-header display-2 mont mb-3">{{item.name}}</h2>
           <div class="card-text mb-0 mont" v-text="item.description"></div>
@@ -26,10 +26,14 @@
 </template>
 <style lang="stylus">
 .card-wrapper {
+  .card-inner {
+    flex-direction: column;
+  }
+
   .img-wrapper {
     img {
       padding: 0 20px;
-      max-width: 90%;
+      // max-width: 90%;
     }
   }
 
@@ -45,6 +49,10 @@
 
 @media (min-width: 960px) {
   .card-wrapper {
+    .card-inner {
+      flex-direction: row;
+    }
+
     .img-wrapper {
       // padding-right: 20px !important;
       img {

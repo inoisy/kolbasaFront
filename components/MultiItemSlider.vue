@@ -9,10 +9,11 @@
       >
         <nuxt-link :to="`/manufacturers/${item.slug}`" class="align-center justify-center px-3">
           <img
-            :src="item.img ? imageBaseUrl+ item.img.url  : require('~/assets/no-image.png')"
-            class="ma-auto d-block manuf-img"
+            :data-src="item.img ? imageBaseUrl+ item.img.url  : require('~/assets/no-image.png')"
+            class="swiper-lazy ma-auto d-block manuf-img"
             style="max-width: 90%"
           />
+          <div class="swiper-lazy-preloader"></div>
         </nuxt-link>
       </div>
     </div>
@@ -67,6 +68,7 @@ export default {
 .manuf-img {
   transition: all 0.2s;
   filter: saturate(0.5);
+  min-height: 100px;
 
   &:hover {
     transform: scale(1.1);

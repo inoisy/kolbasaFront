@@ -7,6 +7,6 @@ Vue.use(VueLazyload)
 Vue.use(VueLazyload, {
   preLoad: 1.3,
   // error: 'dist/error.png',
-  // loading: 'http://localhost:1337/uploads/78345b5372924b35a7c0588742b490b0.gif',
+  // loading: 'https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif',
   attempt: 1
 })

@@ -56,7 +56,7 @@
         <v-layout class="mb-5 pb-4" row wrap align-center justify-center>
           <div
             data-aos="zoom-in"
-            class="flex xs6 sm6 md4 lg3"
+            class="flex xs12 sm6 md4 lg3"
             v-for="(item,i) in categories"
             :key="i"
           >
@@ -104,7 +104,7 @@
         </div>
         <div class="layout row wrap align-center justify-center pt-5">
           <div class="flex hidden-sm-and-down md4 offset-lg1 lg3 mb-5" data-aos="fade-up">
-            <img class="bottom-img pr-4" :src="require('~/assets/img/bottomImage1.png')" />
+            <img class="bottom-img pr-4" v-lazy="require('~/assets/img/bottomImage1.png')" />
           </div>
           <v-flex xs10 md8 offset-lg1 lg7 xl6 class="d-flex mb-5">
             <div class="my-auto">
@@ -182,7 +182,7 @@
     .category-img {
       filter: grayscale(50%);
       display: block;
-      width: 200px;
+      min-height: 100px;
       margin: auto;
       max-width: 100%;
       transition: all 0.2s;

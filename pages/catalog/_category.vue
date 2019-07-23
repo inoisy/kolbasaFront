@@ -26,6 +26,7 @@
                   >
                     <img
                       class="d-block ma-auto"
+                      style="min-height:100px"
                       v-lazy="item.img ? imageBaseUrl + item.img.url : require('~/assets/no-image.png')"
                     />
                   </div>
@@ -60,20 +61,6 @@
                   :key="checkbox.id"
                   :value="checkbox.id"
                 ></v-checkbox>
-                <!-- <v-btn-toggle
-                  v-show="manufacturers.length>1"
-                  v-model="manufacturersModel"
-                  @change="manufacturerChange"
-                  multiple
-                  style="width: 100%; flex-direction: column"
-                >
-                  <v-btn
-                    flat
-                    v-for="(item,index) in manufacturers"
-                    :key="index"
-                    style="width: 100%"
-                  >{{item.name}}</v-btn>
-                </v-btn-toggle>-->
                 <v-subheader class="pl-0">КАТЕГОРИИ</v-subheader>
                 <v-list
                   class="navigation pa-0"
