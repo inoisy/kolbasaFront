@@ -15,32 +15,12 @@
                 :key="index"
               >
                 <product-card :product="product" :category="category.slug"></product-card>
-                <!-- <v-card
-                  :to="`/catalog/${category.slug}/${item.slug}`"
-                  hover
-                  ripple
-                  class="fill-height d-flex column"
-                >
-                  <div
-                    class="display-flex justify-center align-center px-2"
-                    style="min-height:150px"
-                  >
-                    <img
-                      class="d-block ma-auto"
-                      style="min-height:100px"
-                      v-lazy="item.img ? imageBaseUrl + item.img.url : require('~/assets/no-image.png')"
-                    />
-                  </div>
-                  <v-card-text class="pt-1" style="flex-grow: 0 !important;">
-                    <h3 class="display-1 mb-0" style="line-height: normal !important;">{{item.name}}</h3>
-                  </v-card-text>
-                </v-card>-->
               </div>
             </v-layout>
           </v-flex>
           <v-flex hidden-sm-and-down md4 lg3 xl2>
             <sticky-menu>
-              <portal to="destination">
+              <portal to="filters">
                 <v-subheader class="pl-0">СОРТИРОВАТЬ ПО</v-subheader>
                 <v-btn-toggle
                   class="mb-3"
@@ -62,9 +42,9 @@
                   :key="checkbox.id"
                   :value="checkbox.id"
                 ></v-checkbox>
-                <v-subheader class="pl-0">КАТЕГОРИИ</v-subheader>
+                <v-subheader class="pl-0 hidden-sm-and-down">КАТЕГОРИИ</v-subheader>
                 <v-list
-                  class="navigation pa-0"
+                  class="navigation pa-0 hidden-sm-and-down"
                   style="background-color:transparent !important"
                   color="transparent"
                 >
@@ -75,7 +55,7 @@
                   >{{item.name}}</v-list-tile>
                 </v-list>
               </portal>
-              <portal-target name="destination" v-if="$vuetify.breakpoint.mdAndUp"></portal-target>
+              <portal-target name="filters" v-show="$vuetify.breakpoint.mdAndUp"></portal-target>
             </sticky-menu>
           </v-flex>
         </v-layout>

@@ -66,10 +66,13 @@
         <v-btn icon class="ml-1" :href="'tel:'+phone" large>
           <v-icon medium color="#95282a">phone</v-icon>
         </v-btn>
-        <!-- <v-btn flat class="headline text-no-wrap fill-height" :href="'tel:'"></v-btn> -->
-        <v-btn icon class="ml-1" to="/basket" large>
-          <v-icon medium color="#95282a">shopping_basket</v-icon>
-        </v-btn>
+        <v-badge color="#95282a" overlap :value="basketActive">
+          <template v-slot:badge>{{basketLength}}</template>
+          <v-btn icon class="ml-1" to="/basket" large :disabled="!basketActive">
+            <v-icon medium color="#95282a">shopping_basket</v-icon>
+          </v-btn>
+        </v-badge>
+
         <v-btn icon class="ml-1 hidden-md-and-up" @click="$emit('showDrawer')" large>
           <v-icon medium color="#95282a">menu</v-icon>
         </v-btn>
@@ -90,6 +93,12 @@
 export default {
   props: ["menuItems"],
   computed: {
+    basketActive() {
+      return this.$store.state.localStorage.basket.length > 0;
+    },
+    basketLength() {
+      return this.$store.state.localStorage.basket.length;
+    },
     phone() {
       return this.$store.state.sessionStorage.generalInfo.contacts.phone;
     },

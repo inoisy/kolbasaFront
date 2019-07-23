@@ -116,6 +116,7 @@ export default {
     };
   },
   components: { PageHeader, ProductCard },
+
   computed: {
     // manufacturer() {
     //   return this.$store.state.manufacturer;

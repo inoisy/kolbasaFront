@@ -71,7 +71,15 @@
                 large
                 @click="handleOneClickBuy"
               >КУпить в один клик</v-btn>
-              <v-btn dark color="#d50000" class="ml-0 mont" large>Добавить в корзину</v-btn>
+              <v-btn
+                color="#d50000"
+                class="ml-0 mont"
+                large
+                @click="addToBasket"
+                :disabled="isInBasket"
+                style="color:white"
+              >Добавить в корзину</v-btn>
+              <!-- {{isInBasket}} -->
             </div>
           </v-flex>
           <v-flex xs12 md5 lg4 order-xs1 order-md2 class="display-flex image-wrapper">
@@ -110,15 +118,18 @@ export default {
       // console.log("TCL: Data -> CHILD COMPONENT RENDERER1");
       await ctx.store.dispatch("fetchGeneralInfo");
       const category = await ctx.store.dispatch("fetchCategory", {
-        slug: ctx.route.params.category
+        slug: ctx.params.category
       });
-      const { data: product } = await ctx.$axios.get(
-        `/products?slug=` + ctx.params.slug
-      );
-      const productItem = product[0];
+      const product = await ctx.store.dispatch("fetchProduct", {
+        slug: ctx.params.slug
+      });
+      // const { data: product } = await ctx.$axios.get(
+      //   `/products?slug=` + ctx.params.slug
+      // );
+      // const productItem = product[0];
       return {
-        product: productItem,
-        multiple: productItem.productmodifications.length > 1
+        product: product,
+        multiple: product.productmodifications.length > 1
       };
     }
   },
@@ -138,6 +149,11 @@ export default {
           text: this.$store.state.sessionStorage.category.name
         }
       ];
+    },
+    isInBasket() {
+      return this.$store.state.localStorage.basket.some(
+        item => item.id === this.product.id
+      );
     }
   },
   watch: {
@@ -155,6 +171,12 @@ export default {
   methods: {
     handleOneClickBuy() {
       this.showCard = false;
+    },
+    async addToBasket() {
+      await this.$store.commit(
+        "basket",
+        this.$store.state.sessionStorage.product
+      );
     }
   },
   props: ["products"],

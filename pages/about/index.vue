@@ -40,6 +40,9 @@ export default {
         }
       ]
     };
+  },
+  async asyncData(ctx) {
+    await ctx.store.dispatch("fetchGeneralInfo");
   }
 };
 </script>

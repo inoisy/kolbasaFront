@@ -15,6 +15,7 @@
 <style lang="stylus" scoped>
 .dash {
   position: relative;
+  min-height: 80vh;
 
   &:after {
     content: '';

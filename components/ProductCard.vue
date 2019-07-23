@@ -5,7 +5,7 @@
     ripple
     class="fill-height d-flex column"
   >
-    <div class="display-flex justify-center align-center px-2" style="min-height:150px">
+    <div class="display-flex justify-center align-center pt-2 pb-3" style="min-height:150px">
       <img
         class="d-block ma-auto product-img"
         v-lazy="product.img ? imageBaseUrl + product.img.url : require('~/assets/no-image.png')"
