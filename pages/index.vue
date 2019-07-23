@@ -26,6 +26,9 @@
               </v-flex>
             </v-layout>
           </v-container>
+          <v-btn class="btn-scroll" @click="$vuetify.goTo('#content-wrapper')" icon flat large dark>
+            <v-icon large>keyboard_arrow_down</v-icon>
+          </v-btn>
           <!-- <nuxt-link :to="`/manufacturers/${item.slug}`" class="align-center justify-center">
           <img
             v-if="item.img"
@@ -49,7 +52,7 @@
     </div>
 
     <div class="background" v-lazy:background-image="require('~/assets/img/bg.jpg')">
-      <v-container class="py-5" style="min-height: 100vh">
+      <v-container class="py-5" style="min-height: 100vh" id="content-wrapper">
         <div data-aos="zoom-in">
           <h2 class="text-xs-center primary--text mt-4">Каталог</h2>
         </div>
@@ -138,6 +141,12 @@
 </template>
 <style lang="stylus" scoped>
 @import 'swiper/dist/css/swiper.css';
+
+.btn-scroll {
+  position: absolute;
+  bottom: 5px;
+  left: calc(50% - 17px);
+}
 
 .swiper-button-next, .swiper-button-prev {
   background-image: none !important;
