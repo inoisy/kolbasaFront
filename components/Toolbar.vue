@@ -78,9 +78,9 @@
         </v-btn>
       </v-toolbar>
     </portal>
-    <v-slide-y-transition>
-      <portal-target name="toolbar" v-if="isModal"></portal-target>
-    </v-slide-y-transition>
+    <!-- <v-slide-y-transition> -->
+    <portal-target name="toolbar" v-if="isModal"></portal-target>
+    <!-- </v-slide-y-transition> -->
 
     <!-- {{$vuetify.breakpoint.mbAndUp}} -->
     <v-navigation-drawer
@@ -122,7 +122,11 @@ export default {
   props: ["menuItems"],
   data() {
     return {
-      basketDrawer: false
+      basketDrawer: false,
+      isModal:
+        this.$route.name === "catalog-category-slug" && this.$route.params.slug
+          ? false
+          : true
     };
   },
   components: { Busket },
@@ -135,13 +139,10 @@ export default {
     },
     phone() {
       return this.$store.state.sessionStorage.generalInfo.contacts.phone;
-    },
-    isModal() {
-      return this.$route.name === "catalog-category-slug" &&
-        this.$route.params.slug
-        ? false
-        : true;
     }
+    // isModal() {
+    //   return
+    // }
   }
 };
 </script>
