@@ -7,15 +7,20 @@
     style="margin-top: 120px;"
     attach=".v-content__wrap"
     content-class="dialog-content-wrapper"
+    persistent
+    no-click-animation
   >
     <portal-target name="toolbar"></portal-target>
 
     <v-card class="position-relative px-3 pb-4 pt-2 fill-height" style="min-height:45vh">
-      <div class="close-btn-wrap mt-2">
-        <v-btn class="close-btn" outline icon large @click="dialog=false">
+      <!-- <div class="close-btn-wrapper"> -->
+      <div class="close-btn-wrap mt-2 mr-3">
+        <v-btn class="close-btn ma-0" color="gray" fab @click="dialog=false">
           <v-icon>close</v-icon>
         </v-btn>
       </div>
+      <!-- </div> -->
+
       <div v-show="showCard">
         <v-breadcrumbs :items="breadcrumbs" class="pl-1 pr-5">
           <template slot="item" slot-scope="props">
@@ -97,10 +102,10 @@
         </v-layout>
       </div>
       <div v-show="!showCard">
-        <v-btn outline @click="showCard=true" icon large class="ml-0 mb-5 mt-2">
+        <v-btn color="gray" fab @click="showCard=true" class="ml-0 mb-4">
           <v-icon>arrow_back</v-icon>
         </v-btn>
-        <h2 class="mb-5">Купить в один клик</h2>
+        <h2 class="mb-5 mont display-3 font-weight-bold">Купить в один клик</h2>
         <contact-form></contact-form>
       </div>
     </v-card>
@@ -119,9 +124,14 @@
 }
 
 .close-btn-wrap {
-  position: absolute;
-  right: 5px;
-  top: 5px;
+  position: sticky;
+  right: 0px;
+  top: 20px;
+  display: flex;
+  z-index: 9999;
+  margin-bottom: -56px;
+  width: 44px;
+  margin-left: auto;
 }
 
 .table-wrapper table {
