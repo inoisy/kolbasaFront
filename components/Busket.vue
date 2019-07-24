@@ -2,11 +2,11 @@
   <div>
     <div v-show="offer">
       <v-toolbar class="grey lighten-2 px-2" height="100px">
-        <div class="toolbar-inner">
+        <div class="toolbar-inner pr-5">
           <v-btn outline @click="offer=false" icon large class="ma-0">
             <v-icon>arrow_back</v-icon>
           </v-btn>
-          <h2 class="mb-0 ml-5">Оформление заказа</h2>
+          <h2 class="mb-0 ml-3 display-3 mont font-weight-bold">Оформление заказа</h2>
         </div>
       </v-toolbar>
       <div class="px-4 py-5">
@@ -29,7 +29,7 @@
     <div v-show="!offer" class="mb-4">
       <v-toolbar class="grey lighten-2 px-2" height="100px">
         <div class="toolbar-inner">
-          <h2 class="mb-0">Корзина</h2>
+          <h2 class="mb-0 display-3 mont font-weight-bold">Корзина</h2>
           <!-- <v-btn
             class="close-btn ma-0 ml-auto display-flex"
             outline
@@ -44,8 +44,11 @@
       <div class="pa-4">
         <v-flex xs12 v-for="(item,index) in basket" :key="item.id" class="mb-1">
           <!---->
-          <v-layout row wrap>
-            <div class="img-wrapper display-flex gray xs2 flex pr-3" style="min-width:100px">
+          <v-layout row>
+            <div
+              class="img-wrapper display-flex gray xs2 flex pr-3 hidden-xs-only"
+              style="min-width:100px"
+            >
               <img
                 class="d-block ma-auto"
                 style="height:80px; object-fit: contain;"
@@ -53,13 +56,13 @@
                 :alt="item.name"
               />
             </div>
-            <v-flex xs6 class="d-flex">
+            <v-flex class="d-flex">
               <nuxt-link
                 :to="`/catalog/${item.category.slug}/${item.slug}`"
                 class="display-1 mont d-block my-auto"
               >{{item.name}}</nuxt-link>
             </v-flex>
-            <v-flex xs4 style="display:flex; flex-direction:row;">
+            <v-flex style="display:flex; flex-direction:row;">
               <v-text-field
                 class="ma-auto mr-4"
                 style="width:150px"
