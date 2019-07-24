@@ -79,7 +79,6 @@
                 :disabled="isInBasket"
                 style="color:white"
               >Добавить в корзину</v-btn>
-              <!-- {{isInBasket}} -->
             </div>
           </v-flex>
           <v-flex xs12 md5 lg4 order-xs1 order-md2 class="display-flex image-wrapper">
@@ -107,6 +106,73 @@
     </v-card>
   </v-dialog>
 </template>
+<style lang="stylus" scoped>
+// .v-dialog:not(.v-dialog--fullscreen) {
+
+// }
+// .dialog-content-wrapper {
+// margin-top: 100px;
+// max-height: calc(90% - 100px) !important;
+// }
+.mw500 {
+  max-width: 500px;
+}
+
+.close-btn-wrap {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+
+.table-wrapper table {
+  border-radius: 2px;
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  max-width: 100%;
+
+  tr:not(:last-child) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  // th:first-child {
+  // padding: 0 24px;
+  // }
+  td, th {
+    height: 36px;
+  }
+}
+
+.image-wrapper {
+  margin-bottom: 30px;
+  position: relative;
+
+  .manufacturer-img {
+    position: absolute;
+    width: 8rem;
+    right: 0;
+    // bottom: 0;
+  }
+
+  .item-img {
+    max-height: 300px;
+  }
+}
+
+@media (min-width: 960px) {
+  .image-wrapper {
+    padding-left: 30px;
+    margin-bottom: 0;
+  }
+}
+
+.swiper-button-next, .swiper-button-prev {
+  background-image: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
 
 <script>
 import gql from "graphql-tag";
@@ -193,71 +259,3 @@ export default {
 };
 </script>
 
-<style lang="stylus" >
-.v-dialog:not(.v-dialog--fullscreen) {
-  max-height: calc(90% - 100px) !important;
-}
-
-.dialog-content-wrapper {
-  margin-top: 100px;
-}
-
-.mw500 {
-  max-width: 500px;
-}
-
-.close-btn-wrap {
-  position: absolute;
-  right: 5px;
-  top: 5px;
-}
-
-.table-wrapper table {
-  border-radius: 2px;
-  border-collapse: collapse;
-  border-spacing: 0;
-  width: 100%;
-  max-width: 100%;
-
-  tr:not(:last-child) {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-  }
-
-  // th:first-child {
-  // padding: 0 24px;
-  // }
-  td, th {
-    height: 36px;
-  }
-}
-
-.image-wrapper {
-  margin-bottom: 30px;
-  position: relative;
-
-  .manufacturer-img {
-    position: absolute;
-    width: 8rem;
-    right: 0;
-    // bottom: 0;
-  }
-
-  .item-img {
-    max-height: 300px;
-  }
-}
-
-@media (min-width: 960px) {
-  .image-wrapper {
-    padding-left: 30px;
-    margin-bottom: 0;
-  }
-}
-
-.swiper-button-next, .swiper-button-prev {
-  background-image: none !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-</style>

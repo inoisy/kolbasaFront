@@ -68,7 +68,7 @@
         </v-btn>
         <v-badge color="#95282a" overlap :value="basketActive">
           <template v-slot:badge>{{basketLength}}</template>
-          <v-btn icon class="ml-1" to="/basket" large :disabled="!basketActive">
+          <v-btn icon class="ml-1" @click="basketDrawer=true" large :disabled="!basketActive">
             <v-icon medium color="#95282a">shopping_basket</v-icon>
           </v-btn>
         </v-badge>
@@ -78,10 +78,37 @@
         </v-btn>
       </v-toolbar>
     </portal>
-    <portal-target name="toolbar" v-if="isModal"></portal-target>
+    <v-slide-y-transition>
+      <portal-target name="toolbar" v-if="isModal"></portal-target>
+    </v-slide-y-transition>
+
+    <!-- {{$vuetify.breakpoint.mbAndUp}} -->
+    <v-navigation-drawer
+      v-model="basketDrawer"
+      absolute
+      temporary
+      :width="$vuetify.breakpoint.mdAndUp ? '700px' : '500px'"
+    >
+      <div class="position-relative" style="width:100%; height: 100vh">
+        <div class="close-btn-wrap ma-4 d-flex" style>
+          <v-btn class="close-btn mx-0 my-auto" outline icon large @click="basketDrawer=false">
+            <v-icon>close</v-icon>
+          </v-btn>
+        </div>
+        <busket />
+      </div>
+    </v-navigation-drawer>
   </div>
 </template>
 <style lang="stylus" scoped>
+.close-btn-wrap {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  height: 64px;
+}
+
 @media (min-width: 1264px) {
   .toolbar-inner, .toolbar-inner>*, .toolbar-inner>*>*, .toolbar-inner>*>*>* {
     font-size: 1.3rem !important;
@@ -90,8 +117,15 @@
 </style>
 
 <script>
+import Busket from "~/components/Busket";
 export default {
   props: ["menuItems"],
+  data() {
+    return {
+      basketDrawer: false
+    };
+  },
+  components: { Busket },
   computed: {
     basketActive() {
       return this.$store.state.localStorage.basket.length > 0;

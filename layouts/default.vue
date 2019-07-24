@@ -6,6 +6,7 @@
       :drawer="drawer"
       @changeDrawer="(val) => drawer = val"
     />
+
     <v-content class="dash">
       <nuxt />
     </v-content>

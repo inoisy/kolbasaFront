@@ -19,18 +19,41 @@ export const mutations = {
     console.log("TCL: basket -> state.localStorage.basket", state.localStorage.basket)
     const find = state.localStorage.basket.some(product => product.id === item.id)
     if (!find) {
+      item.count = 1
       state.localStorage.basket.push(item)
     }
   },
   removeFromBasket(state, productId) {
     state.localStorage.basket = state.localStorage.basket.filter(item => {
-      // console.log("TCL: removeFromBasket -> item.id", item.id)
-      // console.log("TCL: removeFromBasket -> productId", productId)
-      // console.log("TCL: removeFromBasket -> String(item.id) === String(productId)", String(item.id) === String(productId))
-
       return String(item.id) !== String(productId)
     })
-    console.log("TCL: removeFromBasket -> state.localStorage.basket.filter(item => item._id == productId)", state.localStorage.basket.filter(item => item._id == productId))
+    // console.log("TCL: removeFromBasket -> state.localStorage.basket.filter(item => item._id == productId)", state.localStorage.basket.filter(item => item._id == productId))
+  },
+  incrementBasket(state, productId) {
+    const findBasket = state.localStorage.basket.findIndex(item => item.id === productId)
+    const count = state.localStorage.basket[findBasket].count + 1
+    console.log("TCL: incrementBasket -> count", count)
+    state.localStorage.basket[findBasket].count = count
+    console.log("TCL: incrementBasket -> findBasket", findBasket)
+    //  = state.localStorage.basket.filter(item => {
+    //   return String(item.id) !== String(productId)
+    // })
+    // console.log("TCL: removeFromBasket -> state.localStorage.basket.filter(item => item._id == productId)", state.localStorage.basket.filter(item => item._id == productId))
+  },
+  decrementBasket(state, productId) {
+    const findBasket = state.localStorage.basket.findIndex(item => item.id === productId)
+    const count = state.localStorage.basket[findBasket].count - 1
+    if (count < 1) {
+      state.localStorage.basket = state.localStorage.basket.filter(item => {
+        return String(item.id) !== String(productId)
+      })
+
+    } else {
+      state.localStorage.basket[findBasket].count = count
+      console.log("TCL: decrementBasket -> findBasket", findBasket)
+    }
+
+    // console.log("TCL: removeFromBasket -> state.localStorage.basket.filter(item => item._id == productId)", state.localStorage.basket.filter(item => item._id == productId))
   }
 }
 export const strict = false

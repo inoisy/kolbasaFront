@@ -65,7 +65,6 @@ export default {
 
     return {
       categories: categoriesData.categories
-      // manufacturers: manufacturerData.manufacturers
     };
   },
   computed: {
