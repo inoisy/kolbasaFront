@@ -8,7 +8,7 @@
     attach=".v-content__wrap"
     content-class="dialog-content-wrapper"
   >
-    <portal-target name="toolbar"></portal-target>
+    <!-- <portal-target name="toolbar"></portal-target> -->
 
     <v-card class="position-relative px-3 pb-4 pt-2 fill-height" style="min-height:45vh">
       <div class="close-btn-wrap mt-2">
