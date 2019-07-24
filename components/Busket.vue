@@ -33,51 +33,52 @@
         </div>
       </v-toolbar>
       <div class="pa-4">
-        <!-- <div v-for="(item,index) in basket" :key="index" class="mb-1 layout row">
-          <div
-            class="img-wrapper display-flex gray xs2 flex pr-3 hidden-xs-only"
-            style="min-width:100px"
-          >
-            <img
-              class="d-block ma-auto"
-              style="height:80px; object-fit: contain;"
-              v-lazy="item.img ? imageBaseUrl+item.img.url : require('~/assets/no-image.png')"
-              :alt="item.name"
-            />
-          </div>
-          <v-flex class="d-flex">
-            <nuxt-link
-              :to="`/catalog/${item.category.slug}/${item.slug}`"
-              class="display-1 mont d-block my-auto"
-            >{{item.name}}</nuxt-link>
-          </v-flex>
-          <v-flex style="display:flex; flex-direction:row;">
-            <v-text-field
-              class="ma-auto mr-4"
-              style="width:150px"
-              type="number"
-              label="Количество"
-              append-outer-icon="add"
-              @click:append-outer="increment($event,item.id)"
-              prepend-icon="remove"
-              @click:prepend="decrement($event,item.id)"
-              @change="handleQuantityChange($event,item.id)"
-              :value="item.count"
-              hide-details
-            ></v-text-field>
-
-            <v-btn
-              class="ma-auto"
-              color="error"
-              icon
-              outline
-              @click="$store.commit('removeFromBasket',item.id)"
+        <template v-for="(item,index) in basket" class>
+          <div class="mb-1 layout row item-wrapper" :key="index">
+            <div
+              class="img-wrapper display-flex gray xs2 flex pr-3 hidden-xs-only"
+              style="min-width:100px"
             >
-              <v-icon>delete_outline</v-icon>
-            </v-btn>
-            <v-divider class="my-4"></v-divider>
-          </v-flex>
-        </div>-->
+              <img
+                class="d-block ma-auto"
+                style="height:80px; object-fit: contain;"
+                v-lazy="item.img ? imageBaseUrl+item.img.url : require('~/assets/no-image.png')"
+                :alt="item.name"
+              />
+            </div>
+            <v-flex class="d-flex">
+              <nuxt-link
+                :to="`/catalog/${item.category.slug}/${item.slug}`"
+                class="display-1 mont d-block my-auto"
+              >{{item.name}}</nuxt-link>
+            </v-flex>
+            <v-flex style="display:flex; flex-direction:row;">
+              <v-text-field
+                class="ma-auto mr-3 quantity"
+                type="number"
+                :label="!isMobile ? 'Количество' : ''"
+                append-outer-icon="add"
+                @click:append-outer="increment($event,item.id)"
+                prepend-icon="remove"
+                @click:prepend="decrement($event,item.id)"
+                @change="handleQuantityChange($event,item.id)"
+                :value="item.count"
+                hide-details
+              ></v-text-field>
+
+              <v-btn
+                class="ma-auto"
+                color="error"
+                icon
+                outline
+                @click="$store.commit('removeFromBasket',item.id)"
+              >
+                <v-icon>delete_outline</v-icon>
+              </v-btn>
+            </v-flex>
+          </div>
+          <v-divider :key="index"></v-divider>
+        </template>
         <v-flex xs12 class="mt-4">
           <v-btn color="accent" class="ml-0" large @click="handleOfferClick">Оформить заказ</v-btn>
         </v-flex>
@@ -91,6 +92,23 @@
   align-items: center;
   width: 100%;
 }
+
+.item-wrapper {
+  min-height: 80px;
+}
+
+.quantity {
+  width: 100px;
+}
+
+@media (max-width: 600px) {
+}
+
+@media (min-width: 960px) {
+  .quantity {
+    width: 150px;
+  }
+}
 </style>
 
 <script>
@@ -100,8 +118,8 @@ export default {
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl,
-      offer: false,
-      basket: this.$store.state.localStorage.basket
+      offer: false
+      //   basket: this.$store.state.localStorage.basket
     };
   },
   methods: {
@@ -129,9 +147,18 @@ export default {
     // contacts() {
     //   return this.$store.state.generalInfo.contacts;
     // }
-    // basket() {
-    //   return this.$store.state.localStorage.basket;
-    // }
+    isMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
+    },
+    basket() {
+      return this.$store.state.localStorage.basket;
+    },
+    isBasket() {
+      return (
+        this.$store.state.localStorage.basket &&
+        this.$store.state.localStorage.basket.length > 0
+      );
+    }
   }
 };
 </script>
