@@ -1,20 +1,12 @@
 <template>
   <div>
-    <!-- <div class="close-btn-wrap ma-4">
-      <v-btn class="close-btn ma-0" outline icon large @click="$parent.basketDrawer=false">
-        <v-icon>close</v-icon>
-      </v-btn>
-    </div>-->
     <div v-show="offer">
-      <v-toolbar class="grey lighten-2 py-4 px-2">
+      <v-toolbar class="grey lighten-2 px-2" height="100px">
         <div class="toolbar-inner">
           <v-btn outline @click="offer=false" icon large class="ma-0">
             <v-icon>arrow_back</v-icon>
           </v-btn>
           <h2 class="mb-0 ml-5">Оформление заказа</h2>
-          <!-- <v-btn class="close-btn ma-0" outline icon large @click="$parent.basketDrawer=false">
-            <v-icon>close</v-icon>
-          </v-btn>-->
         </div>
       </v-toolbar>
       <div class="px-4 py-5">
@@ -35,7 +27,7 @@
     </div>
 
     <div v-show="!offer" class="mb-4">
-      <v-toolbar class="grey lighten-2 py-4 px-2">
+      <v-toolbar class="grey lighten-2 px-2" height="100px">
         <div class="toolbar-inner">
           <h2 class="mb-0">Корзина</h2>
           <!-- <v-btn

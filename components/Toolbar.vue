@@ -90,7 +90,7 @@
       :width="$vuetify.breakpoint.mdAndUp ? '700px' : '500px'"
     >
       <div class="position-relative" style="width:100%; height: 100vh">
-        <div class="close-btn-wrap ma-4 d-flex" style>
+        <div class="close-btn-wrap mr-4 d-flex" style="height:100px">
           <v-btn class="close-btn mx-0 my-auto" outline icon large @click="basketDrawer=false">
             <v-icon>close</v-icon>
           </v-btn>

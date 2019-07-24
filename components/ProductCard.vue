@@ -24,7 +24,10 @@
       </v-btn>
     </div>
     <v-card-text class="pt-1" style="flex-grow: 0 !important;">
-      <h3 class="display-1 mb-0" style="line-height: normal !important;">{{product.name}}</h3>
+      <h3
+        class="display-1 mb-0 text-xs-center text-sm-left"
+        style="line-height: normal !important;"
+      >{{product.name}}</h3>
     </v-card-text>
   </v-card>
 </template>
