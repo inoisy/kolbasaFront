@@ -32,7 +32,7 @@
           <h2 class="mb-0 display-3 mont font-weight-bold">Корзина</h2>
         </div>
       </v-toolbar>
-      <div class="pa-4">
+      <div class="px-4 py-5">
         <template v-for="(item,index) in basket" class>
           <div class="mb-1 layout row item-wrapper" :key="index">
             <div
@@ -52,9 +52,9 @@
                 class="display-1 mont d-block my-auto"
               >{{item.name}}</nuxt-link>
             </v-flex>
-            <v-flex style="display:flex; flex-direction:row;">
+            <div class="quantity">
               <v-text-field
-                class="ma-auto mr-3 quantity"
+                class="ma-auto mr-3 pt-0 text-xs-center"
                 type="number"
                 :label="!isMobile ? 'Количество' : ''"
                 append-outer-icon="add"
@@ -65,19 +65,19 @@
                 :value="item.count"
                 hide-details
               ></v-text-field>
+            </div>
 
-              <v-btn
-                class="ma-auto"
-                color="error"
-                icon
-                outline
-                @click="$store.commit('removeFromBasket',item.id)"
-              >
-                <v-icon>delete_outline</v-icon>
-              </v-btn>
-            </v-flex>
+            <v-btn
+              class="ma-auto"
+              color="error"
+              icon
+              outline
+              @click="$store.commit('removeFromBasket',item.id)"
+            >
+              <v-icon>delete_outline</v-icon>
+            </v-btn>
           </div>
-          <v-divider :key="index"></v-divider>
+          <v-divider :key="index" class="my-3"></v-divider>
         </template>
         <v-flex xs12 class="mt-4">
           <v-btn color="accent" class="ml-0" large @click="handleOfferClick">Оформить заказ</v-btn>
@@ -98,7 +98,14 @@
 }
 
 .quantity {
-  width: 100px;
+  width: 120px;
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+
+  input {
+    text-align: center !important;
+  }
 }
 
 @media (max-width: 600px) {
@@ -106,7 +113,8 @@
 
 @media (min-width: 960px) {
   .quantity {
-    width: 150px;
+    width: 155px;
+    min-width: 155px;
   }
 }
 </style>

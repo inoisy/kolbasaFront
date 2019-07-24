@@ -133,7 +133,11 @@ export default {
   components: { Busket },
   computed: {
     basketActive() {
-      return this.$store.state.localStorage.basket.length > 0;
+      const isActive = this.$store.state.localStorage.basket.length > 0;
+      if (!isActive) {
+        this.basketDrawer = false;
+      }
+      return isActive;
     },
     basketLength() {
       return this.$store.state.localStorage.basket.length;
