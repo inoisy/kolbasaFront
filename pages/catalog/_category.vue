@@ -172,14 +172,20 @@ export default {
     let manufacturersSelectedIds = [];
     if (isArray(queryManufacturers)) {
       for (let queryManufacurer of queryManufacturers) {
-        manufacturersSelectedIds.push(
-          manufacturers.find(item => item.slug == queryManufacurer).id
+        const finded = manufacturers.find(
+          item => item.slug == queryManufacurer
         );
+        if (finded) {
+          manufacturersSelectedIds.push(finded.id);
+        }
       }
     } else if (queryManufacturers) {
-      manufacturersSelectedIds.push(
-        manufacturers.find(item => item.slug == queryManufacturers).id
+      const finded = manufacturers.find(
+        item => item.slug == queryManufacturers
       );
+      if (finded) {
+        manufacturersSelectedIds.push(finded.id);
+      }
     }
     const category = await ctx.store.dispatch("fetchCategory", {
       slug: ctx.route.params.category,

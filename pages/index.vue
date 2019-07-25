@@ -315,15 +315,15 @@ export default {
           content: `  Capi ta lise on low hanging fruit to identify a ballpark value added activity to beta test.
             <br>Override the digital divide with.`,
           buttontext: "Хочу колбаску!",
-          href: "/catalog/kolbasa",
+          href: "/catalog/varenaya",
           image: require("@/assets/img/promo.jpg")
         },
         {
-          header: "Скидка на ветчину 20%!",
-          content: `  Capi ta lise on low hanging fruit to identify a ballpark value added activity to beta test.
+          header: "Скидка деликатесы и копчености 10%!",
+          content: `Capitalise on low hanging fruit to identify a ballpark value added activity to beta test.
             <br>Override the digital divide with.`,
-          buttontext: "Хочу ветчину!",
-          href: "/catalog/vetchina",
+          buttontext: "Хочу вкусняшек!",
+          href: "/catalog/delikatesy-i-kopchenosti",
           image: require("@/assets/img/promo1.jpg")
         }
       ],

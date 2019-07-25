@@ -50,7 +50,7 @@
     </div>
 
     <!-- <h2>Заполните данные</h2> -->
-    <div v-if="!offer || !isSummValid" class="mb-4 po">
+    <div v-if="!offer || !isSummValid" class="mb-4">
       <v-toolbar class="grey lighten-2 px-2" height="100px">
         <div class="toolbar-inner">
           <h2 class="mb-0 display-3 mont font-weight-bold">Корзина</h2>
@@ -78,7 +78,7 @@
             </v-flex>
             <div class="quantity">
               <v-text-field
-                class="ma-auto mr-3 pt-0 text-xs-center"
+                class="ma-auto pt-0 text-xs-center"
                 type="numeric"
                 :label="!isMobile ? 'Количество' : ''"
                 append-outer-icon="add"
@@ -92,18 +92,21 @@
             </div>
 
             <div
-              class="display-flex display-1 align-center justify-center"
-              style="min-width:60px; width:60px"
+              class="price display-flex display-1 align-center justify-center mx-2 font-weight-medium mont"
             >{{item.price ? item.price*item.count : ''}}</div>
+            <v-btn class="ma-auto" icon @click="$store.commit('removeFromBasket',item.id)">
+              <v-icon>delete_outline</v-icon>
+            </v-btn>
           </div>
           <v-divider :key="'item-divider'+index" class="my-1"></v-divider>
         </template>
         <v-flex xs12 class="mt-4">
+          <!-- {{basketCounts}} -->
           <div class="mb-3 display-1 mont text-xs-right pr-3">
             Итого:
             <span class="font-weight-bold">{{summa}}</span>
           </div>
-          <v-alert type="error" :value="!isSummValid">
+          <v-alert type="error" :value="!isSummValid" class="mt-4">
             Сумма заказа ниже 3000.
             Наберите товаров еще на {{3000-summa}} рублей.
           </v-alert>
@@ -131,14 +134,19 @@
 }
 
 .quantity {
-  width: 120px;
-  min-width: 120px;
+  width: 100px;
+  min-width: 100px;
   display: flex;
   align-items: center;
 
   input {
     text-align: center !important;
   }
+}
+
+.price {
+  width: 60px;
+  max-width: 60px;
 }
 
 @media (max-width: 600px) {
@@ -149,6 +157,11 @@
     width: 155px;
     min-width: 155px;
   }
+
+  .price {
+    width: 80px;
+    max-width: 80px;
+  }
 }
 </style>
 
@@ -157,15 +170,11 @@ import ContactForm from "~/components/ContactForm";
 export default {
   components: { ContactForm },
   data() {
-    const newObj = {};
-    for (let item of this.$store.state.localStorage.basket) {
-      newObj[item.id] = item.count;
-    }
     //   return newObj;
     return {
       imageBaseUrl: process.env.imageBaseUrl,
-      offer: false,
-      basketCounts: newObj
+      offer: false
+      //   basketCounts: newObj
       //   quantity: {}
       //   basket: this.$store.state.localStorage.basket
     };
@@ -185,8 +194,8 @@ export default {
       // console.log("TCL: handleQuantityChange -> value", val, val1);
     },
     async increment(event, id) {
-      //   console.log("TCL: increment -> id", id);
-      const val = Number(this.basketCounts[id]) + 1;
+      console.log("TCL: increment -> id", this.basketCounts[id]);
+      const val = Number(+this.basketCounts[id] + 1);
       this.basketCounts[id] = val;
       await this.$store.commit("changeBasket", { id, val });
       //   await this.$store.commit("incrementBasket", id);
@@ -225,15 +234,23 @@ export default {
     basket() {
       return this.$store.state.localStorage.basket;
     },
-    // basketCounts() {
-
-    //   return this.$store.state.localStorage.basket.map(item => {
-    //     return {
-    //       item: item.id,
-    //       count: item.count
-    //     };
-    //   });
-    // },
+    basketCounts() {
+      const newObj = {};
+      const basketItems = this.$store.state.localStorage.basket;
+      //   console.log("TCL: data -> basketItems", basketItems);
+      for (let item of basketItems) {
+        const count = Number(item.count);
+        // console.log("TCL: data -> count", count);
+        newObj[item.id] = count;
+      }
+      return newObj;
+      //   return this.$store.state.localStorage.basket.map(item => {
+      //     return {
+      //       item: item.id,
+      //       count: item.count
+      //     };
+      //   });
+    },
     isBasket() {
       return (
         this.$store.state.localStorage.basket &&

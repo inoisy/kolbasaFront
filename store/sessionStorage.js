@@ -52,10 +52,10 @@ export const state = () => ({
   category: {},
   promo: [{
       header: "Пс, у нас тут новая колбаска, бесплатные пробники до конца лета!",
-      content: `  Capi ta lise on low hanging fruit to identify a ballpark value added activity to beta test.
+      content: `Capitalise on low hanging fruit to identify a ballpark value added activity to beta test.
             <br>Override the digital divide with.`,
       buttontext: "Хочу колбаску!",
-      href: "/catalog/kolbasa",
+      href: "/catalog/varenaya",
       image: require("@/assets/img/promo.jpg")
     },
     {
