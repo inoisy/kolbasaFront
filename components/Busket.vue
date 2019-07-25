@@ -183,28 +183,30 @@ export default {
     handleOfferClick() {
       this.offer = true;
     },
-    async handleQuantityChange(event, id, val) {
-      console.log("TCL: handleQuantityChange -> val", val);
-      console.log("TCL: handleQuantityChange -> id", id);
-      console.log("TCL: handleQuantityChange -> event", event);
+    async handleQuantityChange(val, id, event) {
+      //   console.log("TCL: handleQuantityChange -> val", val);
+      //   console.log("TCL: handleQuantityChange -> id", id);
+      //   console.log("TCL: handleQuantityChange -> event", event);
       //   console.log("TCL: handleQuantityChange -> id", id, val);
-      this.basketCounts[id] = val;
+      //   this.basketCounts[id] = val;
       await this.$store.commit("changeBasket", { id, val });
       // console.log("TCL: handleQuantityChange -> val1", val1);
       // console.log("TCL: handleQuantityChange -> value", val, val1);
     },
     async increment(event, id) {
-      console.log("TCL: increment -> id", this.basketCounts[id]);
+      //   console.log("TCL: increment -> id", id);
+      //   console.log("TCL: increment -> event", event);
+      //   console.log("TCL: increment -> id", this.basketCounts[id]);
       const val = Number(+this.basketCounts[id] + 1);
-      this.basketCounts[id] = val;
+      //   this.basketCounts[id] = val;
       await this.$store.commit("changeBasket", { id, val });
       //   await this.$store.commit("incrementBasket", id);
       // console.log("TCL: ,increment -> val", val);
     },
     async decrement(event, id) {
       //   console.log("TCL: decrement -> id", id);
-      const val = Number(this.basketCounts[id]) - 1;
-      this.basketCounts[id] = val;
+      const val = Number(+this.basketCounts[id] - 1);
+      //   this.basketCounts[id] = val;
       await this.$store.commit("changeBasket", { id, val });
       //   await this.$store.commit("decrementBasket", id);
       // console.log("TCL: ,decrement -> val", val);
@@ -234,22 +236,23 @@ export default {
     basket() {
       return this.$store.state.localStorage.basket;
     },
-    basketCounts() {
-      const newObj = {};
-      const basketItems = this.$store.state.localStorage.basket;
-      //   console.log("TCL: data -> basketItems", basketItems);
-      for (let item of basketItems) {
-        const count = Number(item.count);
-        // console.log("TCL: data -> count", count);
-        newObj[item.id] = count;
+    basketCounts: {
+      get() {
+        const newObj = {};
+        const basketItems = this.$store.state.localStorage.basket;
+        console.log("TCL: get -> basketItems", basketItems);
+        //   console.log("TCL: data -> basketItems", basketItems);
+        for (let item of basketItems) {
+          const count = Number(item.count);
+          // console.log("TCL: data -> count", count);
+          newObj[item.id] = count;
+        }
+        return newObj;
+      },
+      set(newValue) {
+        console.log("TCL: set -> newValue", newValue);
+        this.basketCounts = newValue;
       }
-      return newObj;
-      //   return this.$store.state.localStorage.basket.map(item => {
-      //     return {
-      //       item: item.id,
-      //       count: item.count
-      //     };
-      //   });
     },
     isBasket() {
       return (
