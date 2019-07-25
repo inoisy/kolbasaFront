@@ -173,7 +173,8 @@ export default {
     //   return newObj;
     return {
       imageBaseUrl: process.env.imageBaseUrl,
-      offer: false
+      offer: false,
+      cart: {}
       //   basketCounts: newObj
       //   quantity: {}
       //   basket: this.$store.state.localStorage.basket
@@ -198,7 +199,12 @@ export default {
       this.$forceUpdate();
     }
   },
-
+  // watch: {
+  //   basket() {
+  //     this.$set(this.cart, this.$store.state.localStorage.basket);
+  //     console.log("watch basket");
+  //   }
+  // },
   computed: {
     summa() {
       const summ = this.$store.state.localStorage.basket.reduce((acc, val) => {
@@ -221,6 +227,7 @@ export default {
     },
     basket() {
       //   this.$forceUpdate();
+      this.$forceUpdate();
       return this.$store.state.localStorage.basket;
     },
     basketCounts: {
@@ -228,6 +235,7 @@ export default {
         const newObj = {};
         const basketItems = this.$store.state.localStorage.basket;
         console.log("TCL: get -> basketItems", basketItems);
+        this.$forceUpdate();
         //   console.log("TCL: data -> basketItems", basketItems);
         for (let item of basketItems) {
           const count = Number(item.count);

@@ -30,7 +30,7 @@
         <v-layout row wrap>
           <v-flex
             xs12
-            md7
+            md8
             lg8
             order-xs2
             order-md1
@@ -92,7 +92,7 @@
               >Добавить в корзину</v-btn>
             </div>
           </v-flex>
-          <v-flex xs12 md5 lg4 order-xs1 order-md2 class="display-flex image-wrapper">
+          <v-flex xs12 md4 lg4 order-xs1 order-md2 class="display-flex image-wrapper">
             <img
               class="manufacturer-img"
               v-if="product.manufacturer.img"
@@ -184,7 +184,7 @@
 
 @media (min-width: 960px) {
   .image-wrapper {
-    padding-left: 30px;
+    padding-left: 1rem;
     margin-bottom: 0;
   }
 
