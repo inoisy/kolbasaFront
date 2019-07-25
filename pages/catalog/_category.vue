@@ -34,6 +34,7 @@
                 </v-btn-toggle>
                 <v-subheader class="pl-0" v-show="manufacturers.length>1">БРЕНД</v-subheader>
                 <v-checkbox
+                  v-show="manufacturers.length>1"
                   v-model="manufacturersSelected"
                   multiple
                   @change="manufacturerChange"
@@ -77,7 +78,7 @@
     </section>
     <!-- {{category}} -->
     <!-- <div> -->
-    <nuxt-child :key="$route.params.slug" />
+    <nuxt-child :key="$route.params && $route.params.slug ? $route.params.slug : ''" />
     <!-- </div> -->
   </div>
 </template>
@@ -140,6 +141,31 @@ export default {
 
     const manufacturers =
       ctx.store.state.sessionStorage.generalInfo.manufacturers;
+    // console.log(
+    //   "manufacturerFilter",
+    //   ctx.store.state.sessionStorage.manufacturerFilter
+    // );
+    // const storeManufacturers =
+    //   ctx.store.state.sessionStorage.manufacturerFilter;
+    // if (isArray(storeManufacturers)) {
+    //   console.log("TCL: Data -> storeManufacturers", storeManufacturers);
+    //   let manufacturersSelectedIds = [];
+
+    //   for (let queryManufacurer of storeManufacturers) {
+    //     manufacturersSelectedIds.push(
+    //       manufacturers.find(item => item.id == queryManufacurer).slug
+    //     );
+    //   }
+    //   const addObj = {
+    //     manufacturer: manufacturersSelectedIds
+    //   };
+    //   ctx.router.push({
+    //     path: ctx.route.path,
+    //     query: { ...ctx.route.query, ...addObj }
+    //   });
+    // }
+    // const manufacturers = ctx.store.state.sessionStorage.generalInfo.manufacturers;
+
     const queryManufacturers = ctx.route.query.manufacturer;
     // console.log("TCL: Data -> queryManufacturers", isArray(queryManufacturers));
     // const manufacturersSelected = queryManufacturer;
@@ -190,11 +216,16 @@ export default {
           const addObj = {
             sort: "price"
           };
-
+          this.$store.commit("sortFilter", addObj);
           this.$router.push({
             path: this.$route.path,
             query: { ...this.$route.query, ...addObj }
           });
+        } else if (val === 0) {
+          const addObj = {
+            sort: "name"
+          };
+          this.$store.commit("sortFilter", addObj);
         }
       }
       let { sort, ...query } = this.$route.query;
@@ -209,6 +240,7 @@ export default {
         await this.$store.dispatch("fetchProducts", {
           slug: this.$route.params.category
         });
+        this.$store.commit("manufacturerFilter", {});
         let { manufacturer, ...query } = this.$route.query;
         this.$router.push({
           path: this.$route.path,
@@ -224,13 +256,17 @@ export default {
         let manufacturersSelectedIds = [];
 
         for (let queryManufacurer of val) {
-          manufacturersSelectedIds.push(
-            manufacturers.find(item => item.id == queryManufacurer).slug
+          const finded = manufacturers.find(
+            item => item.id == queryManufacurer
           );
+          if (finded && finded.slug) {
+            manufacturersSelectedIds.push(finded.slug);
+          }
         }
         const addObj = {
           manufacturer: manufacturersSelectedIds
         };
+        this.$store.commit("manufacturerFilter", manufacturersSelectedIds);
         this.$router.push({
           path: this.$route.path,
           query: { ...this.$route.query, ...addObj }

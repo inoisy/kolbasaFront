@@ -5,10 +5,7 @@
     ripple
     class="fill-height d-flex column"
   >
-    <div
-      class="display-flex justify-center align-center pt-2 position-relative"
-      style="min-height:150px"
-    >
+    <div class="position-relative product-card-img-wrap">
       <img
         class="d-block ma-auto product-img"
         v-lazy="product.img ? imageBaseUrl + product.img.url : require('~/assets/no-image.png')"
@@ -23,29 +20,48 @@
         <v-icon>add_shopping_cart</v-icon>
       </v-btn>
     </div>
-    <v-card-text class="pt-1" style="flex-grow: 0 !important;">
+    <v-card-text class="pt-0">
+      <div class="display-flex justify-space-between">
+        <v-subheader
+          class="pl-0 display-flex align-center"
+          :class="product.price ? 'display-2 font-weight-medium black--text' : ''"
+        >{{product.price ? product.price +'₽' : 'Цена по запросу'}}</v-subheader>
+        <v-subheader
+          class="align-center display-flex pa-0"
+        >{{product.weight ? product.weight + 'кг' : ''}}</v-subheader>
+      </div>
+
       <h3
-        class="display-1 mb-0 text-xs-center text-sm-left"
-        style="line-height: normal !important;"
+        class="mb-0"
+        style="line-height: normal !important; font-size:1rem;font-weight: 600;"
       >{{product.name}}</h3>
     </v-card-text>
   </v-card>
 </template>
 <style lang="stylus" scoped>
+.product-card-img-wrap {
+}
+
+.product-img, .product-card-img-wrap {
+  height: 120px;
+  max-height: 120px;
+}
+
 .product-img {
-  height: 150px;
   object-fit: contain;
 }
 
 @media (min-width: 600px) {
-  .product-img {
-    height: 180px;
+  .product-img, .product-card-img-wrap {
+    height: 140px;
+    max-height: 140px;
   }
 }
 
 @media (min-width: 960px) {
-  .product-img {
-    height: 200px;
+  .product-img, .product-card-img-wrap {
+    height: 160px;
+    max-height: 160px;
   }
 }
 </style>

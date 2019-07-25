@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-    v-if="$route.params.slug && product && Object.keys(product).length >0 "
+    v-if="$route.params && $route.params.slug && product && Object.keys(product).length >0 "
     v-model="dialog"
     scrollable
     :width="showCard ? 'auto' : '500px'"

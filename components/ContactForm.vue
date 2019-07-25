@@ -22,7 +22,7 @@
       @blur="$v.phone.$touch()"
     ></v-text-field>
 
-    <v-flex xs12 class="mt-4">
+    <v-flex xs12 class>
       <v-btn class="ml-0" color="#d50000" @click="submit" dark large>Отправить</v-btn>
       <!-- <v-btn flat color="#d50000" @click="clear" outline large>Очистить</v-btn> -->
     </v-flex>

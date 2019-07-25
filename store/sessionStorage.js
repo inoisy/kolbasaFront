@@ -10,6 +10,8 @@ export const state = () => ({
   //   },
   //   slug: "dmitrovskii"
   // },
+  sortFilter: {},
+  manufacturerFilter: {},
   benefits: [{
     title: "Опыт",
     text: "Работаем с 1996 года - гарантия надежности",

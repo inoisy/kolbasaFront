@@ -1,6 +1,12 @@
 import gql from "graphql-tag";
 const baseUrl = process.env.baseUrl
 export const mutations = {
+  manufacturerFilter(state, item) {
+    state.sessionStorage.manufacturerFilter = item
+  },
+  sortFilter(state, item) {
+    state.sessionStorage.sortFilter = item
+  },
   generalInfo(state, item) {
     state.sessionStorage.generalInfo = item
   },

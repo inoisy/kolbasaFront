@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-show="offer">
+    <div v-if="offer && isSummValid">
       <v-toolbar class="grey lighten-2 px-2" height="100px">
         <div class="toolbar-inner pr-5">
           <v-btn outline @click="offer=false" icon large class="ma-0">
@@ -10,34 +10,58 @@
         </div>
       </v-toolbar>
       <div class="px-4 py-5">
-        <contact-form />
-        <!-- <v-btn color="accent">Оформить</v-btn> -->
+        <!-- <v-simple-table>
+          <thead>
+            <tr>
+              <th class="text-left">Name</th>
+              <th class="text-left">Calories</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in basket" :key="item.name">
+              <td>{{ item.name }}</td>
+              <td>{{ item.id }}</td>
+            </tr>
+          </tbody>
+        </v-simple-table>-->
+        <v-subheader class="mb-3 pl-0">ВВЕДИТЕ ВАШИ ДАННЫЕ</v-subheader>
+        <!-- <div class="display-1 mb-4 mt-4">Введите ваши данные и наши менеджеры свяжутся с вами.</div> -->
+
+        <contact-form class />
+        <v-divider class="my-4"></v-divider>
+        <v-subheader class="pl-0">ВАШ ЗАКАЗ</v-subheader>
+        <v-data-table
+          :items="basket"
+          :hide-actions="true"
+          :headers="[{ text: 'Наименование', sortable: true, value: 'name' },{ text: 'Цена', sortable: true, value: 'price' },{ text: 'Количество', sortable: true, value: 'Quan' }]"
+        >
+          <template slot="items" slot-scope="props">
+            <td class>{{ props.item.name}}</td>
+            <td class>{{ props.item.price}}</td>
+            <td class>{{ props.item.count}}</td>
+          </template>
+          <template slot="footer">
+            <td class></td>
+            <td class>Итого</td>
+            <td class>{{summa}}</td>
+          </template>
+        </v-data-table>
       </div>
     </div>
 
-    <!-- <v-data-table
-          :items="basket"
-          :disable-pagination="true"
-          :headers="[{ text: 'id', sortable: false, value: 'id' },{ text: 'name', sortable: true, value: 'name' }]"
-        >
-          <template slot="items" slot-scope="props">
-            <td class>{{ props.item.id}}</td>
-            <td class>{{ props.item.name}}</td>
-          </template>
-    </v-data-table>-->
     <!-- <h2>Заполните данные</h2> -->
-    <div v-show="!offer" class="mb-4">
-      <v-toolbar class="grey lighten-2 px-2" height="100px">
+    <div v-if="!offer || !isSummValid" class="mb-4 po">
+      <v-toolbar class="grey lighten-2 px-2" height="100px" fixed>
         <div class="toolbar-inner">
           <h2 class="mb-0 display-3 mont font-weight-bold">Корзина</h2>
         </div>
       </v-toolbar>
       <div class="px-4 py-5">
         <template v-for="(item,index) in basket" class>
-          <div class="mb-1 layout row item-wrapper" :key="index">
+          <div class="mb-1 layout row item-wrapper" :key="'item-wrapper'+index">
             <div
               class="img-wrapper display-flex gray xs2 flex pr-3 hidden-xs-only"
-              style="min-width:100px"
+              style="max-width:80px; width:80px"
             >
               <img
                 class="d-block ma-auto"
@@ -67,7 +91,7 @@
               ></v-text-field>
             </div>
 
-            <v-btn
+            <!-- <v-btn
               class="ma-auto"
               color="error"
               icon
@@ -75,12 +99,31 @@
               @click="$store.commit('removeFromBasket',item.id)"
             >
               <v-icon>delete_outline</v-icon>
-            </v-btn>
+            </v-btn>-->
+            <!-- {{item.price}} -->
+            <div
+              class="display-flex display-1 align-center justify-center"
+              style="min-width:60px; width:60px"
+            >{{item.price ? item.price*item.count : ''}}</div>
           </div>
-          <v-divider :key="index" class="my-3"></v-divider>
+          <v-divider :key="'item-divider'+index" class="my-3"></v-divider>
         </template>
         <v-flex xs12 class="mt-4">
-          <v-btn color="accent" class="ml-0" large @click="handleOfferClick">Оформить заказ</v-btn>
+          <div class="mb-3">
+            Итого:
+            <span class="font-weight-bold">{{summa}}</span>
+          </div>
+          <v-alert type="primary" :value="!isSummValid">
+            Сумма заказа ниже 3000.
+            Наберите товаров еще на {{3000-summa}} рублей.
+          </v-alert>
+          <v-btn
+            color="accent"
+            class="ml-0"
+            large
+            @click="handleOfferClick"
+            v-show="isSummValid"
+          >Оформить заказ</v-btn>
         </v-flex>
       </div>
     </div>
@@ -152,9 +195,22 @@ export default {
   },
 
   computed: {
-    // contacts() {
-    //   return this.$store.state.generalInfo.contacts;
-    // }
+    summa() {
+      const summ = this.$store.state.localStorage.basket.reduce((acc, val) => {
+        console.log("TCL: summa -> val", val);
+        if (val.price && val.count) {
+          acc = acc + val.count * val.price;
+        }
+        return acc;
+      }, 0);
+      console.log("TCL: summa -> summ", summ);
+
+      return summ;
+    },
+    isSummValid() {
+      return this.summa > 3000;
+    },
+
     isMobile() {
       return this.$vuetify.breakpoint.smAndDown;
     },
