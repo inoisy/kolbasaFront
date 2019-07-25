@@ -36,7 +36,7 @@ export const mutations = {
     // console.log("TCL: removeFromBasket -> state.localStorage.basket.filter(item => item._id == productId)", state.localStorage.basket.filter(item => item._id == productId))
   },
   changeBasket(state, object) {
-    // console.log("TCL: changeBasket -> object", object)
+    console.log("TCL: changeBasket -> object", object)
 
     if (object.val < 1) {
       state.localStorage.basket = state.localStorage.basket.filter(item => {
@@ -44,14 +44,8 @@ export const mutations = {
       })
     } else {
       const findIndex = state.localStorage.basket.findIndex(item => item.id === object.id)
-      const findItem = state.localStorage.basket[findIndex]
-      // console.log("TCL: changeBasket -> findItem", findItem)
-      const count = object.val
-      const newObj = {
-        ...findItem,
-        count
-      }
-      state.localStorage.basket[findIndex] = newObj
+
+      state.localStorage.basket[findIndex].count = object.val
     }
 
 

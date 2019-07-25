@@ -184,32 +184,18 @@ export default {
       this.offer = true;
     },
     async handleQuantityChange(val, id, event) {
-      //   console.log("TCL: handleQuantityChange -> val", val);
-      //   console.log("TCL: handleQuantityChange -> id", id);
-      //   console.log("TCL: handleQuantityChange -> event", event);
-      //   console.log("TCL: handleQuantityChange -> id", id, val);
-      //   this.basketCounts[id] = val;
       await this.$store.commit("changeBasket", { id, val });
-      // console.log("TCL: handleQuantityChange -> val1", val1);
-      // console.log("TCL: handleQuantityChange -> value", val, val1);
+      this.$forceUpdate();
     },
     async increment(event, id) {
-      //   console.log("TCL: increment -> id", id);
-      //   console.log("TCL: increment -> event", event);
-      //   console.log("TCL: increment -> id", this.basketCounts[id]);
       const val = Number(+this.basketCounts[id] + 1);
-      //   this.basketCounts[id] = val;
       await this.$store.commit("changeBasket", { id, val });
-      //   await this.$store.commit("incrementBasket", id);
-      // console.log("TCL: ,increment -> val", val);
+      this.$forceUpdate();
     },
     async decrement(event, id) {
-      //   console.log("TCL: decrement -> id", id);
       const val = Number(+this.basketCounts[id] - 1);
-      //   this.basketCounts[id] = val;
       await this.$store.commit("changeBasket", { id, val });
-      //   await this.$store.commit("decrementBasket", id);
-      // console.log("TCL: ,decrement -> val", val);
+      this.$forceUpdate();
     }
   },
 
