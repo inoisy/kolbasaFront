@@ -13,7 +13,7 @@
               id="products"
               ref="product"
               v-scroll="handleScroll"
-              v-if="products.items.length>0"
+              v-show="products.items.length>0"
             >
               <!-- <div > -->
               <div
@@ -26,7 +26,7 @@
               </div>
               <!-- </div> -->
             </v-layout>
-            <div v-else-if="$store.state.loading">
+            <div v-show="$store.state.loading">
               <v-progress-circular
                 v-if="$store.state.loading"
                 :size="150"

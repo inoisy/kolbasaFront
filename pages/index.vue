@@ -124,8 +124,10 @@
             <div class="my-auto">
               <h2 class="bottom-header d-block" data-aos="fade-up">Lorem ipsum sit dolor amet</h2>
               <div class="bottom-text" data-aos="fade-up">
-                Capitalise on low hanging fruit to identify a ballpark value added activity to beta test. Override the.
-                Capitalise on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with.
+                Доставка по России и странам ЕАЭС
+                <!-- Бесплатная доставка от 3000р -->
+                Скидки постоянным партнерам
+                лучшие цены от производителя
               </div>
             </div>
           </div>
@@ -311,7 +313,7 @@ export default {
       },
       sliders: [
         {
-          header: "Пс, у нас тут новая колбаска!",
+          header: "Скидка деликатесы и копчености 10%!",
           content: `  Capi ta lise on low hanging fruit to identify a ballpark value added activity to beta test.
             <br>Override the digital divide with.`,
           buttontext: "Хочу колбаску!",

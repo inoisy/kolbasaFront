@@ -12,7 +12,7 @@
   >
     <portal-target name="toolbar"></portal-target>
 
-    <v-card class="position-relative px-3 pb-4 pt-2 fill-height" style="min-height:45vh">
+    <v-card class="position-relative px-4 pb-4 pt-2 fill-height" style="min-height:45vh">
       <!-- <div class="close-btn-wrapper"> -->
       <div class="close-btn-wrap mt-2 mr-3">
         <v-btn class="close-btn ma-0" color="gray" fab @click="dialog=false">
@@ -52,22 +52,28 @@
               class="mb-4"
               style="line-height: 1,5"
             ></div>
-            <v-tabs v-model="activeTab" centered grow>
-              <template v-for="(item) in product.productmodifications">
-                <v-tab :key="item.id" ripple>{{item.weight}} кг.</v-tab>
-                <v-tab-item :key="item.id">
-                  <v-card flat>
-                    <v-card-text>
-                      <div class="mb-2 table-wrapper" v-html="item.description"></div>
-                      <div class="fs-2 mont font-weight-medium mb-3" v-show="item.price">
-                        <span>от {{item.price}} &#8381;</span>
-                        <span class="display-1 mb-3" v-show="item.weight">/ {{item.weight}} кг.</span>
-                      </div>
-                    </v-card-text>
-                  </v-card>
-                </v-tab-item>
-              </template>
-            </v-tabs>
+            <!-- <v-tabs v-model="activeTab" centered grow> -->
+            <!-- <template v-for="(item) in product.productmodifications"> -->
+            <!-- <v-tab :key="item.id" ripple>{{item.weight}} кг.</v-tab>
+            <v-tab-item :key="item.id">-->
+            <!-- <v-card flat> -->
+            <!-- <v-card-text> -->
+            <div class="mb-3 table-wrapper" v-html="product.productmodifications[0].description"></div>
+            <div
+              class="fs-2 mont font-weight-medium mb-3"
+              v-show="product.productmodifications[0].price"
+            >
+              <span>{{product.productmodifications[0].price}} &#8381;</span>
+              <span
+                class="display-1 mb-3"
+                v-show="product.productmodifications[0].weight"
+              >/ {{product.productmodifications[0].weight}} кг.</span>
+            </div>
+            <!-- </v-card-text> -->
+            <!-- </v-card> -->
+            <!-- </v-tab-item>
+            </template>-->
+            <!-- </v-tabs> -->
             <div>
               <v-btn
                 dark
@@ -111,7 +117,7 @@
     </v-card>
   </v-dialog>
 </template>
-<style lang="stylus" scoped>
+<style lang="stylus" >
 // .v-dialog:not(.v-dialog--fullscreen) {
 
 // }
@@ -169,18 +175,28 @@
   }
 }
 
-@media (min-width: 960px) {
-  .image-wrapper {
-    padding-left: 30px;
-    margin-bottom: 0;
-  }
-}
-
 .swiper-button-next, .swiper-button-prev {
   background-image: none !important;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+@media (min-width: 960px) {
+  .image-wrapper {
+    padding-left: 30px;
+    margin-bottom: 0;
+  }
+
+  .dialog-content-wrapper {
+    max-width: 900px !important;
+  }
+}
+
+@media (min-width: 1264px) {
+  .dialog-content-wrapper {
+    max-width: 1185px !important;
+  }
 }
 </style>
 

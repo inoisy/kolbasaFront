@@ -1,7 +1,8 @@
 <template>
   <div>
     <page-header :title="manufacturer.name" :breadrumbs="breadrumbs" />
-    <div class="background" v-lazy:background-image="require('~/assets/img/bg.jpg')">
+    <div>
+      <!-- class="background" v-lazy:background-image="require('~/assets/img/bg.jpg')" -->
       <v-container grid-list-lg class="py-5">
         <div class="display-1 mb-4">
           <div
@@ -51,7 +52,13 @@
     </div>
   </div>
 </template>
-
+<style>
+.background {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+</style>
 <script>
 import gql from "graphql-tag";
 
@@ -96,6 +103,8 @@ export default {
               id
               name
               slug
+              price
+              weight
               img {
                 url
               }
@@ -145,5 +154,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+

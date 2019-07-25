@@ -86,8 +86,8 @@
                 prepend-icon="remove"
                 @click:prepend="(e)=>decrement(e,item.id)"
                 @input="(e,val)=>handleQuantityChange(e,item.id,val)"
-                :value="basketCounts[item.id]"
                 hide-details
+                v-model="basketCounts[item.id]"
               ></v-text-field>
             </div>
 
@@ -146,7 +146,7 @@
 
 .price {
   width: 60px;
-  max-width: 60px;
+  min-width: 60px;
 }
 
 @media (max-width: 600px) {
@@ -160,7 +160,7 @@
 
   .price {
     width: 80px;
-    max-width: 80px;
+    min-width: 80px;
   }
 }
 </style>
