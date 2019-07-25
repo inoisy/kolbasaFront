@@ -56,7 +56,7 @@
           <h2 class="mb-0 display-3 mont font-weight-bold">Корзина</h2>
         </div>
       </v-toolbar>
-      <div class="px-4 py-5">
+      <div class="px-4 py-5" v-if="basket.length>0">
         <template v-for="(item,index) in basket" class>
           <div class="mb-1 layout row item-wrapper" :key="'item-wrapper'+index">
             <div
