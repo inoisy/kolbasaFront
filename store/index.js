@@ -35,6 +35,12 @@ export const mutations = {
     })
     // console.log("TCL: removeFromBasket -> state.localStorage.basket.filter(item => item._id == productId)", state.localStorage.basket.filter(item => item._id == productId))
   },
+  changeBasket(state, object) {
+    console.log("TCL: changeBasket -> object", object)
+    const findBasket = state.localStorage.basket.findIndex(item => item.id === object.id)
+
+    state.localStorage.basket[findBasket].count = object.val
+  },
   incrementBasket(state, productId) {
     const findBasket = state.localStorage.basket.findIndex(item => item.id === productId)
     const count = state.localStorage.basket[findBasket].count + 1
