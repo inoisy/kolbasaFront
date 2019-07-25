@@ -99,7 +99,7 @@
           <v-divider :key="'item-divider'+index" class="my-1"></v-divider>
         </template>
         <v-flex xs12 class="mt-4">
-          <div class="mb-3">
+          <div class="mb-3 display-1 mont text-xs-right pr-3">
             Итого:
             <span class="font-weight-bold">{{summa}}</span>
           </div>
