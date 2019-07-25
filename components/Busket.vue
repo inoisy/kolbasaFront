@@ -220,6 +220,7 @@ export default {
       return this.$vuetify.breakpoint.smAndDown;
     },
     basket() {
+      //   this.$forceUpdate();
       return this.$store.state.localStorage.basket;
     },
     basketCounts: {

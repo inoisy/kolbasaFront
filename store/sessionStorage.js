@@ -10,6 +10,7 @@ export const state = () => ({
   //   },
   //   slug: "dmitrovskii"
   // },
+  loading: false,
   sortFilter: {},
   manufacturerFilter: {},
   benefits: [{

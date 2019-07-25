@@ -7,7 +7,15 @@
       <v-container grid-list-lg class="py-5" fluid>
         <v-layout row wrap id="contentWrapper">
           <v-flex xs12 md8 lg9 xl10 style="min-height: 80vh">
-            <v-layout row wrap id="products" ref="product" v-scroll="handleScroll">
+            <v-layout
+              row
+              wrap
+              id="products"
+              ref="product"
+              v-scroll="handleScroll"
+              v-if="products.items.length>0"
+            >
+              <!-- <div > -->
               <div
                 class="flex xs12 sm6 md4 lg3 xl2"
                 data-aos="fade-up"
@@ -16,10 +24,20 @@
               >
                 <product-card :product="product" :category="category.slug"></product-card>
               </div>
+              <!-- </div> -->
             </v-layout>
+            <div v-else-if="$store.state.loading">
+              <v-progress-circular
+                v-if="$store.state.loading"
+                :size="150"
+                color="#95282a"
+                indeterminate
+                class="mx-auto my-5 d-flex"
+              ></v-progress-circular>
+            </div>
           </v-flex>
           <v-flex hidden-sm-and-down md4 lg3 xl2>
-            <sticky-menu>
+            <sticky-menu class="px-3">
               <portal to="filters">
                 <v-subheader class="pl-0">СОРТИРОВАТЬ ПО</v-subheader>
                 <v-btn-toggle
@@ -216,12 +234,17 @@ export default {
     },
 
     async paginationInput(val) {},
-    sortChange(val) {
+    async sortChange(val) {
       if (Number.isInteger(val)) {
         if (val === 1) {
           const addObj = {
             sort: "price"
           };
+          await this.$store.dispatch("fetchProducts", {
+            slug: this.$route.params.category,
+            manufacturer: this.$store.state.manufacturerFilter,
+            sort: "price"
+          });
           this.$store.commit("sortFilter", addObj);
           this.$router.push({
             path: this.$route.path,
@@ -231,6 +254,11 @@ export default {
           const addObj = {
             sort: "name"
           };
+          await this.$store.dispatch("fetchProducts", {
+            slug: this.$route.params.category,
+            manufacturer: this.$store.state.manufacturerFilter,
+            sort: "name"
+          });
           this.$store.commit("sortFilter", addObj);
         }
       }

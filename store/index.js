@@ -1,6 +1,9 @@
 import gql from "graphql-tag";
 const baseUrl = process.env.baseUrl
 export const mutations = {
+  loading(state, item) {
+    state.loading = item
+  },
   manufacturerFilter(state, item) {
     state.sessionStorage.manufacturerFilter = item
   },
@@ -208,6 +211,11 @@ export const actions = {
     return productItem
   },
   async fetchProducts(ctx, params) {
+    await ctx.commit('loading', true)
+    await ctx.commit("products", {
+      items: [],
+      count: 0
+    });
     const categoryFind = ctx.state.sessionStorage.generalInfo.categories.find(item => item.slug === params.slug)
     let products = []
     let count
@@ -239,6 +247,6 @@ export const actions = {
       items: products,
       count: count
     });
-
+    await ctx.commit('loading', false)
   }
 }
