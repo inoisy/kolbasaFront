@@ -68,7 +68,7 @@
             <!-- </v-tab-item>
             </template>-->
             <!-- </v-tabs> -->
-            <div class="display-flex align-center">
+            <div class="display-flex align-center wrap">
               <v-btn
                 dark
                 color="#d50000"

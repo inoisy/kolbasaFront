@@ -91,7 +91,7 @@ export default {
   methods: {
     cardClick(event) {
       const capture = this.$refs.productCardActions.contains(event.target);
-      console.log("TCL: cardClick -> event", capture);
+      // console.log("TCL: cardClick -> event", capture);
       if (capture) {
         event.preventDefault();
         // event.stopPropagation();
