@@ -72,19 +72,22 @@
               <v-btn
                 dark
                 color="#d50000"
-                class="ml-0 mont"
+                class="product-button ml-0 mont"
                 large
                 @click="handleOneClickBuy"
               >КУпить в один клик</v-btn>
               <v-btn
                 color="#d50000"
-                class="ml-0 mont"
+                class="ml-0 mont product-button"
                 large
                 @click="addToBasket"
                 v-show="!busket"
                 style="color:white"
               >Добавить в корзину</v-btn>
-              <v-sheet class="d-flex align-center display-flex" color="grey lighten-3">
+              <v-sheet
+                class="product-button align-center display-flex justify-center"
+                color="grey lighten-3"
+              >
                 <v-btn flat icon color="primary" @click="removeFromBasket" v-show="busket">
                   <v-icon>remove</v-icon>
                 </v-btn>
@@ -184,6 +187,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.product-button {
+  min-width: 200px;
+}
+
+@media (max-width: 600px) {
+  .product-button {
+    width: 100%;
+  }
 }
 
 @media (min-width: 960px) {
