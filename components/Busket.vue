@@ -6,7 +6,7 @@
           <h2 class="mb-0 display-3 mont font-weight-bold">Корзина</h2>
         </div>
       </v-toolbar>
-      <div class="px-4 py-5">
+      <div class="px-4 py-5" v-if="basket && basket.length > 0">
         <template v-for="(product,index) in basket" class>
           <div class="mb-1 layout row item-wrapper" :key="'item-wrapper'+index">
             <div
@@ -79,7 +79,7 @@
         <v-divider class="my-4"></v-divider>
         <v-subheader class="pl-0">ВАШ ЗАКАЗ</v-subheader>
         <v-data-table
-          :items="Object.values(basket)"
+          :items="basket"
           :hide-actions="true"
           :headers="[{ text: 'Наименование', sortable: true, value: 'name' },{ text: 'Цена', sortable: true, value: 'price' },{ text: 'Количество', sortable: true, value: 'Quan' }]"
         >
@@ -245,7 +245,7 @@ export default {
     basket() {
       //   this.$forceUpdate();
       // this.$forceUpdate();
-      return this.$store.state.localStorage.basket;
+      return Object.values(this.$store.state.localStorage.basket);
     },
     basketCounts: {
       get() {
