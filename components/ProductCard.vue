@@ -12,21 +12,23 @@
         class="d-block ma-auto product-img"
         v-lazy="product.img ? imageBaseUrl + product.img.url : require('~/assets/no-image.png')"
       />
-      <v-card-actions
-        class="product-card-actions"
+      <!-- <v-sheet class="d-flex align-center display-flex" color="grey lighten-3"> -->
+
+      <div
+        class="product-card-actions grey lighten-3"
         ref="productCardActions"
         style="position:absolute; right: 0;top: 0;"
       >
         <v-btn flat icon color="primary" @click="removeFromBasket" v-show="busket">
           <v-icon>remove</v-icon>
         </v-btn>
-        <span class="font-weight-bold display-1 mont mx-2">{{busket}}</span>
+        <span v-show="busket" class="font-weight-bold display-1 mont mx-1">{{busket}}</span>
 
         <v-btn flat icon color="primary" @click="addToBasket">
           <v-icon v-show="!busket">add_shopping_cart</v-icon>
           <v-icon v-show="busket">add</v-icon>
         </v-btn>
-      </v-card-actions>
+      </div>
     </div>
     <v-card-text class="pt-2">
       <div class="display-flex justify-space-between">
@@ -51,8 +53,8 @@
 }
 
 .product-img, .product-card-img-wrap {
-  height: 120px;
-  max-height: 120px;
+  height: 140px;
+  max-height: 140px;
 }
 
 .product-img {
@@ -92,6 +94,7 @@ export default {
       console.log("TCL: cardClick -> event", capture);
       if (capture) {
         event.preventDefault();
+        // event.stopPropagation();
       }
     },
     async addToBasket(event) {

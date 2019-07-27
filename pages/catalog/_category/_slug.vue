@@ -84,7 +84,7 @@
                 v-show="!busket"
                 style="color:white"
               >Добавить в корзину</v-btn>
-              <v-sheet class="d-flex" color="grey lighten-3 align-center display-flex">
+              <v-sheet class="d-flex align-center display-flex" color="grey lighten-3">
                 <v-btn flat icon color="primary" @click="removeFromBasket" v-show="busket">
                   <v-icon>remove</v-icon>
                 </v-btn>
