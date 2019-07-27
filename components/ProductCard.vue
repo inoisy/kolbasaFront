@@ -12,11 +12,15 @@
         class="d-block ma-auto product-img"
         v-lazy="product.img ? imageBaseUrl + product.img.url : require('~/assets/no-image.png')"
       />
-      <v-card-actions style="position:absolute; right: 0;top: 0;">
+      <v-card-actions
+        class="product-card-actions"
+        ref="productCardActions"
+        style="position:absolute; right: 0;top: 0;"
+      >
         <v-btn flat icon color="primary" @click="removeFromBasket" v-show="busket">
           <v-icon>remove</v-icon>
         </v-btn>
-        <span class="font-weight-bold display-1 mont">{{busket}}</span>
+        <span class="font-weight-bold display-1 mont mx-2">{{busket}}</span>
 
         <v-btn flat icon color="primary" @click="addToBasket">
           <v-icon v-show="!busket">add_shopping_cart</v-icon>
@@ -83,9 +87,12 @@ export default {
     }
   },
   methods: {
-    cardClick(event, as) {
-      console.log("TCL: cardClick -> event", event, as);
-      event.preventDefault();
+    cardClick(event) {
+      const capture = this.$refs.productCardActions.contains(event.target);
+      console.log("TCL: cardClick -> event", capture);
+      if (capture) {
+        event.preventDefault();
+      }
     },
     async addToBasket(event) {
       await this.$store.commit("addToBasket", this.product);
