@@ -119,6 +119,9 @@ import { isArray } from "util";
 export default {
   components: { PageHeader, StickyMenu, ProductCard },
   computed: {
+    // busket() {
+    //   return this.$store.state.localStorage.basket;
+    // },
     products() {
       return this.$store.state.sessionStorage.products;
     },
@@ -222,13 +225,6 @@ export default {
     };
   },
   methods: {
-    throttledMethod(val) {
-      console.log("TCL: val", val);
-      // const that = this;
-      // return _.throttle(() => {
-      //   console.log("I get fired every two seconds!", that.$refs.products);
-      // }, 300);
-    },
     handleScroll() {
       return _.throttle(this.throttledMethod, 300);
     },

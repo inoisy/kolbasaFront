@@ -1,15 +1,7 @@
 import gql from "graphql-tag";
 const baseUrl = process.env.baseUrl
 export const state = () => ({
-  // manufacturer: {
-  //   name: "Богатырь",
-  //   description: "Ut adipisicing sint sunt ea in aute consequat deserunt. Mollit laboris sit occaecat ea occaecat anim ea eu ipsum pariatur. Nulla officia id pariatur quis in laborum dolore consectetur eiusmod minim. Aliqua duis laboris esse excepteur esse nostrud sunt anim deserunt adipisicing et ipsum incididunt eu. Consequat consequat voluptate do in exercitation quis proident cupidatat laboris ad dolor.",
-  //   content: "Proident Lorem qui do cupidatat in eu reprehenderit anim deserunt occaecat. Ullamco in quis nulla deserunt. Sint labore dolor laboris aliquip duis enim non sint occaecat aliquip cupidatat incididunt. Ut proident exercitation magna veniam tempor mollit consequat. Eiusmod aliquip magna minim in velit.",
-  //   img: {
-  //     url: require("~/assets/manufacturers/bogatyr.png")
-  //   },
-  //   slug: "dmitrovskii"
-  // },
+  // basket: new Map(),
   loading: false,
   sortFilter: {},
   manufacturerFilter: {},

@@ -133,14 +133,15 @@ export default {
   components: { Busket },
   computed: {
     basketActive() {
-      const isActive = this.$store.state.localStorage.basket.length > 0;
+      const isActive =
+        Object.keys(this.$store.state.localStorage.basket).length > 0;
       if (!isActive) {
         this.basketDrawer = false;
       }
       return isActive;
     },
     basketLength() {
-      return this.$store.state.localStorage.basket.length;
+      return Object.keys(this.$store.state.localStorage.basket).length;
     },
     phone() {
       return this.$store.state.sessionStorage.generalInfo.contacts.phone;

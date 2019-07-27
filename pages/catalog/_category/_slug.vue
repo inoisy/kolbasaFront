@@ -58,23 +58,17 @@
             <v-tab-item :key="item.id">-->
             <!-- <v-card flat> -->
             <!-- <v-card-text> -->
-            <div class="mb-3 table-wrapper" v-html="product.productmodifications[0].description"></div>
-            <div
-              class="fs-2 mont font-weight-medium mb-3"
-              v-show="product.productmodifications[0].price"
-            >
-              <span>{{product.productmodifications[0].price}} &#8381;</span>
-              <span
-                class="display-1 mb-3"
-                v-show="product.productmodifications[0].weight"
-              >/ {{product.productmodifications[0].weight}} кг.</span>
+            <div class="mb-3 table-wrapper" v-html="product.content"></div>
+            <div class="fs-2 mont font-weight-medium mb-3" v-show="product.price">
+              <span>{{product.price}} &#8381;</span>
+              <span class="display-1 mb-3" v-show="product.weight">/ {{product.weight}} кг.</span>
             </div>
             <!-- </v-card-text> -->
             <!-- </v-card> -->
             <!-- </v-tab-item>
             </template>-->
             <!-- </v-tabs> -->
-            <div>
+            <div class="display-flex align-center">
               <v-btn
                 dark
                 color="#d50000"
@@ -87,9 +81,19 @@
                 class="ml-0 mont"
                 large
                 @click="addToBasket"
-                :disabled="isInBasket"
+                v-show="!busket"
                 style="color:white"
               >Добавить в корзину</v-btn>
+              <v-sheet class="d-flex" color="grey lighten-3 align-center display-flex">
+                <v-btn flat icon color="primary" @click="removeFromBasket" v-show="busket">
+                  <v-icon>remove</v-icon>
+                </v-btn>
+                {{busket}}
+                <v-btn flat icon color="primary" @click="addToBasket" v-show="busket">
+                  <!-- <v-icon >add_shopping_cart</v-icon> -->
+                  <v-icon v-show="busket">add</v-icon>
+                </v-btn>
+              </v-sheet>
             </div>
           </v-flex>
           <v-flex xs12 md4 lg4 order-xs1 order-md2 class="display-flex image-wrapper">
@@ -215,13 +219,15 @@ export default {
       const product = await ctx.store.dispatch("fetchProduct", {
         slug: ctx.params.slug
       });
+      console.log("TCL: Data -> product", product);
+
       // const { data: product } = await ctx.$axios.get(
       //   `/products?slug=` + ctx.params.slug
       // );
       // const productItem = product[0];
       return {
-        product: product,
-        multiple: product.productmodifications.length > 1
+        product: product
+        // multiple: product.productmodifications.length > 1
       };
     }
   },
@@ -242,10 +248,10 @@ export default {
         }
       ];
     },
-    isInBasket() {
-      return this.$store.state.localStorage.basket.some(
-        item => item.id === this.product.id
-      );
+    busket() {
+      return this.$store.state.localStorage.basket[this.product.id]
+        ? this.$store.state.localStorage.basket[this.product.id].count
+        : null;
     }
   },
   watch: {
@@ -264,11 +270,11 @@ export default {
     handleOneClickBuy() {
       this.showCard = false;
     },
-    async addToBasket() {
-      await this.$store.commit(
-        "basket",
-        this.$store.state.sessionStorage.product
-      );
+    async addToBasket(event) {
+      await this.$store.commit("addToBasket", this.product);
+    },
+    async removeFromBasket(event) {
+      await this.$store.commit("removeFromBasket", this.product);
     }
   },
   props: ["products"],

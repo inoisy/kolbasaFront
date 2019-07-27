@@ -1,63 +1,13 @@
 <template>
   <div>
-    <div v-if="offer && isSummValid">
-      <v-toolbar class="grey lighten-2 px-2" height="100px">
-        <div class="toolbar-inner pr-5">
-          <v-btn outline @click="offer=false" icon large class="ma-0">
-            <v-icon>arrow_back</v-icon>
-          </v-btn>
-          <h2 class="mb-0 ml-3 display-3 mont font-weight-bold">Оформление заказа</h2>
-        </div>
-      </v-toolbar>
-      <div class="px-4 py-5">
-        <!-- <v-simple-table>
-          <thead>
-            <tr>
-              <th class="text-left">Name</th>
-              <th class="text-left">Calories</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="item in basket" :key="item.name">
-              <td>{{ item.name }}</td>
-              <td>{{ item.id }}</td>
-            </tr>
-          </tbody>
-        </v-simple-table>-->
-        <v-subheader class="mb-3 pl-0">ВВЕДИТЕ ВАШИ ДАННЫЕ</v-subheader>
-        <!-- <div class="display-1 mb-4 mt-4">Введите ваши данные и наши менеджеры свяжутся с вами.</div> -->
-
-        <contact-form class />
-        <v-divider class="my-4"></v-divider>
-        <v-subheader class="pl-0">ВАШ ЗАКАЗ</v-subheader>
-        <v-data-table
-          :items="basket"
-          :hide-actions="true"
-          :headers="[{ text: 'Наименование', sortable: true, value: 'name' },{ text: 'Цена', sortable: true, value: 'price' },{ text: 'Количество', sortable: true, value: 'Quan' }]"
-        >
-          <template slot="items" slot-scope="props">
-            <td class>{{ props.item.name}}</td>
-            <td class>{{ props.item.price}}</td>
-            <td class>{{ props.item.count}}</td>
-          </template>
-          <template slot="footer">
-            <td class></td>
-            <td class>Итого</td>
-            <td class>{{summa}}</td>
-          </template>
-        </v-data-table>
-      </div>
-    </div>
-
-    <!-- <h2>Заполните данные</h2> -->
     <div v-if="!offer || !isSummValid" class="mb-4">
       <v-toolbar class="grey lighten-2 px-2" height="100px">
         <div class="toolbar-inner">
           <h2 class="mb-0 display-3 mont font-weight-bold">Корзина</h2>
         </div>
       </v-toolbar>
-      <div class="px-4 py-5" v-if="basket.length>0">
-        <template v-for="(item,index) in basket" class>
+      <div class="px-4 py-5">
+        <template v-for="(product,index) in basket" class>
           <div class="mb-1 layout row item-wrapper" :key="'item-wrapper'+index">
             <div
               class="img-wrapper display-flex gray xs2 flex pr-3 hidden-xs-only"
@@ -66,42 +16,36 @@
               <img
                 class="d-block ma-auto"
                 style="height:80px; max-width:80px; width:80px; object-fit: contain;"
-                v-lazy="item.img ? imageBaseUrl+item.img.url : require('~/assets/no-image.png')"
-                :alt="item.name"
+                v-lazy="product.item.img ? imageBaseUrl+product.item.img.url : require('~/assets/no-image.png')"
+                :alt="product.item.name"
               />
             </div>
             <v-flex class="d-flex">
               <nuxt-link
-                :to="`/catalog/${item.category.slug}/${item.slug}`"
+                :to="`/catalog/${product.item.category.slug}/${product.item.slug}`"
                 class="mont d-block my-auto text-decoration-none"
-              >{{item.name}}</nuxt-link>
+              >{{product.item.name}}</nuxt-link>
             </v-flex>
             <div class="quantity">
-              <v-text-field
-                class="ma-auto pt-0 text-xs-center"
-                type="numeric"
-                :label="!isMobile ? 'Количество' : ''"
-                append-outer-icon="add"
-                @click:append-outer="(e)=>increment(e,item.id)"
-                prepend-icon="remove"
-                @click:prepend="(e)=>decrement(e,item.id)"
-                @input="(e,val)=>handleQuantityChange(e,item.id,val)"
-                hide-details
-                v-model="basketCounts[item.id]"
-              ></v-text-field>
+              <v-btn icon @click="(e)=>removeFromBasket(e,product.item)">
+                <v-icon>remove</v-icon>
+              </v-btn>
+              {{product.count}}
+              <v-btn icon @click="(e)=>addToBasket(e,product.item)">
+                <v-icon>add</v-icon>
+              </v-btn>
             </div>
 
             <div
               class="price display-flex display-1 align-center justify-center mx-2 font-weight-medium mont"
-            >{{item.price ? item.price*item.count : ''}}</div>
-            <v-btn class="ma-auto" icon @click="$store.commit('removeFromBasket',item.id)">
+            >{{product.item.price ? product.item.price*product.count : ''}}</div>
+            <!-- <v-btn class="ma-auto" icon @click="$store.commit('removeFromBasket',item.id)">
               <v-icon>delete_outline</v-icon>
-            </v-btn>
+            </v-btn>-->
           </div>
           <v-divider :key="'item-divider'+index" class="my-1"></v-divider>
         </template>
         <v-flex xs12 class="mt-4">
-          <!-- {{basketCounts}} -->
           <div class="mb-3 display-1 mont text-xs-right pr-3">
             Итого:
             <span class="font-weight-bold">{{summa}}</span>
@@ -120,6 +64,50 @@
         </v-flex>
       </div>
     </div>
+    <div v-if="offer && isSummValid">
+      <v-toolbar class="grey lighten-2 px-2" height="100px">
+        <div class="toolbar-inner pr-5">
+          <v-btn outline @click="offer=false" icon large class="ma-0">
+            <v-icon>arrow_back</v-icon>
+          </v-btn>
+          <h2 class="mb-0 ml-3 display-3 mont font-weight-bold">Оформление заказа</h2>
+        </div>
+      </v-toolbar>
+      <div class="px-4 py-5">
+        <v-subheader class="mb-3 pl-0">ВВЕДИТЕ ВАШИ ДАННЫЕ</v-subheader>
+        <contact-form class />
+        <v-divider class="my-4"></v-divider>
+        <v-subheader class="pl-0">ВАШ ЗАКАЗ</v-subheader>
+        <v-data-table
+          :items="Object.values(basket)"
+          :hide-actions="true"
+          :headers="[{ text: 'Наименование', sortable: true, value: 'name' },{ text: 'Цена', sortable: true, value: 'price' },{ text: 'Количество', sortable: true, value: 'Quan' }]"
+        >
+          <template slot="items" slot-scope="props">
+            <td class>{{ props.item.item.name}}</td>
+            <td class>{{ props.item.item.price}}</td>
+            <td class>{{ props.item.count}}</td>
+          </template>
+          <template slot="footer">
+            <td class></td>
+            <td class>Итого</td>
+            <td class>{{summa}}</td>
+          </template>
+        </v-data-table>
+      </div>
+    </div>
+    <!-- <v-text-field
+                class="ma-auto pt-0 text-xs-center"
+                type="numeric"
+                :label="!isMobile ? 'Количество' : ''"
+                append-outer-icon="add"
+                @click:append-outer="(e)=>increment(e,item.item.id)"
+                prepend-icon="remove"
+                @click:prepend="(e)=>decrement(e,item.item.id)"
+                @input="(e,val)=>handleQuantityChange(e,item.item.id,val)"
+                hide-details
+                v-model="$store.state.localStorage[item.item.id]"
+    ></v-text-field>-->
   </div>
 </template>
 <style lang="stylus" scoped>
@@ -185,19 +173,36 @@ export default {
       this.offer = true;
     },
     async handleQuantityChange(val, id, event) {
-      await this.$store.commit("changeBasket", { id, val });
-      this.$forceUpdate();
+      // await this.$store.commit("changeBasket", { id, val });
+      // // this.$set(this.cart, id, val);
+      // await this.$nextTick();
     },
-    async increment(event, id) {
-      const val = Number(+this.basketCounts[id] + 1);
-      await this.$store.commit("changeBasket", { id, val });
-      this.$forceUpdate();
+    async addToBasket(event, item) {
+      await this.$store.commit("addToBasket", item);
     },
-    async decrement(event, id) {
-      const val = Number(+this.basketCounts[id] - 1);
-      await this.$store.commit("changeBasket", { id, val });
-      this.$forceUpdate();
+    async removeFromBasket(event, item) {
+      await this.$store.commit("removeFromBasket", item);
     }
+    // async increment(event, id) {
+
+    // const item = this.$store.state.localStorage.basket.find(
+    //   item => item.item.id === id
+    // );
+    // console.log(
+    //   "TCL: increment -> item",
+    //   this.$store.state.localStorage.basket
+    // );
+    // const val = Number(+item.count + 1);
+    // await this.$store.commit("changeBasket", { id, val });
+    // // this.$set(this.cart, id, val);
+    // await this.$nextTick();
+    // },
+    // async decrement(event, id) {
+    // const val = Number(+this.basketCounts[id] - 1);
+    // await this.$store.commit("changeBasket", { id, val });
+    // // this.$set(this.cart, id, val);
+    // await this.$nextTick();
+    // }
   },
   // watch: {
   //   basket() {
@@ -207,16 +212,28 @@ export default {
   // },
   computed: {
     summa() {
-      const summ = this.$store.state.localStorage.basket.reduce((acc, val) => {
-        // console.log("TCL: summa -> val", val);
-        if (val.price && val.count) {
-          acc = acc + val.count * val.price;
+      let summ = 0;
+      for (let id of Object.keys(this.$store.state.localStorage.basket)) {
+        const product = this.$store.state.localStorage.basket[id];
+        console.log("TCL: summa -> product", product);
+        if (product.item.price && product.count) {
+          summ = summ + product.count * product.item.price;
         }
-        return acc;
-      }, 0);
-      //   console.log("TCL: summa -> summ", summ);
-
+      }
+      console.log("TCL: summa -> acc", summ);
       return summ;
+      // const summ = this.$store.state.localStorage.basket.reduce(
+      //   (acc, product) => {
+      //     // console.log("TCL: summa -> val", val);
+      //     if (product.item.price && product.count) {
+      //       acc = acc + product.count * product.item.price;
+      //     }
+      //     return acc;
+      //   },
+      //   0
+      // );
+      // console.log("TCL: summa -> summ", summ);
+      // return summ;
     },
     isSummValid() {
       return this.summa > 3000;
@@ -227,7 +244,7 @@ export default {
     },
     basket() {
       //   this.$forceUpdate();
-      this.$forceUpdate();
+      // this.$forceUpdate();
       return this.$store.state.localStorage.basket;
     },
     basketCounts: {
@@ -235,12 +252,14 @@ export default {
         const newObj = {};
         const basketItems = this.$store.state.localStorage.basket;
         console.log("TCL: get -> basketItems", basketItems);
-        this.$forceUpdate();
+        // this.$forceUpdate();
         //   console.log("TCL: data -> basketItems", basketItems);
         for (let item of basketItems) {
-          const count = Number(item.count);
+          // const count = ;
+          // this.$set(this.cart, item.id, count);
+
           // console.log("TCL: data -> count", count);
-          newObj[item.id] = count;
+          newObj[item.id] = Number(item.count);
         }
         return newObj;
       },

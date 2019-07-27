@@ -1,4 +1,5 @@
 import gql from "graphql-tag";
+const omit = require('object.omit');
 const baseUrl = process.env.baseUrl
 export const mutations = {
   loading(state, item) {
@@ -22,63 +23,127 @@ export const mutations = {
   products(state, item) {
     state.sessionStorage.products = item
   },
-  basket(state, item) {
-    console.log("TCL: basket -> item", item)
-    // state.localStorage.basket.add(item)
-    console.log("TCL: basket -> state.localStorage.basket", state.localStorage.basket)
-    const find = state.localStorage.basket.some(product => product.id === item.id)
-    if (!find) {
-      item.count = 1
-      state.localStorage.basket.push(item)
-    }
-  },
-  removeFromBasket(state, productId) {
-    state.localStorage.basket = state.localStorage.basket.filter(item => {
-      return String(item.id) !== String(productId)
-    })
-    // console.log("TCL: removeFromBasket -> state.localStorage.basket.filter(item => item._id == productId)", state.localStorage.basket.filter(item => item._id == productId))
-  },
-  changeBasket(state, object) {
-    console.log("TCL: changeBasket -> object", object)
-
-    if (object.val < 1) {
-      state.localStorage.basket = state.localStorage.basket.filter(item => {
-        return String(item.id) !== String(object.id)
-      })
+  addToBasket(state, product) {
+    console.log("TCL: addToBasket -> id", product.id)
+    // console.log("TCL: addToBasket -> get", state.localStorage.basket[id])
+    if (state.localStorage.basket[product.id]) {
+      const newItem = {
+        [product.id]: {
+          count: state.localStorage.basket[product.id].count + 1,
+          item: product
+        }
+      }
+      const newBusket = {
+        ...state.localStorage.basket,
+        ...newItem
+      }
+      state.localStorage.basket = newBusket
     } else {
-      const findIndex = state.localStorage.basket.findIndex(item => item.id === object.id)
-
-      state.localStorage.basket[findIndex].count = object.val
+      const newItem = {
+        [product.id]: {
+          count: 1,
+          item: product
+        }
+      }
+      const newBusket = {
+        ...state.localStorage.basket,
+        ...newItem
+      }
+      state.localStorage.basket = newBusket
     }
 
 
+
   },
-  incrementBasket(state, productId) {
-    const findBasket = state.localStorage.basket.findIndex(item => item.id === productId)
-    const count = state.localStorage.basket[findBasket].count + 1
-    console.log("TCL: incrementBasket -> count", count)
-    state.localStorage.basket[findBasket].count = count
-    console.log("TCL: incrementBasket -> findBasket", findBasket)
-    //  = state.localStorage.basket.filter(item => {
-    //   return String(item.id) !== String(productId)
-    // })
-    // console.log("TCL: removeFromBasket -> state.localStorage.basket.filter(item => item._id == productId)", state.localStorage.basket.filter(item => item._id == productId))
-  },
-  decrementBasket(state, productId) {
-    const findBasket = state.localStorage.basket.findIndex(item => item.id === productId)
-    const count = state.localStorage.basket[findBasket].count - 1
+
+  removeFromBasket(state, product) {
+    const count = state.localStorage.basket[product.id].count - 1
+    console.log("TCL: removeFromBasket -> count", count)
     if (count < 1) {
-      state.localStorage.basket = state.localStorage.basket.filter(item => {
-        return String(item.id) !== String(productId)
-      })
-
+      // const basket = state.localStorage.basket
+      // let {
+      //   id,
+      //   ...basket
+      // } = state.localStorage.basket
+      // console.log("TCL: removeFromBasket -> basket", basket)
+      state.localStorage.basket = omit(state.localStorage.basket, product.id)
     } else {
-      state.localStorage.basket[findBasket].count = count
-      console.log("TCL: decrementBasket -> findBasket", findBasket)
+      const newItem = {
+        [product.id]: {
+          count: count,
+          item: product
+        }
+      }
+      const newBusket = {
+        ...state.localStorage.basket,
+        ...newItem
+      }
+      state.localStorage.basket = newBusket
     }
+    //  let { page, ...query } = this.$route.query;
+    // const newItem = {
+    //   [id]: state.localStorage.basket[id] ? state.localStorage.basket[id] - 1 : 1
+    // }
+    // const newBusket = {
+    //   ...state.localStorage.basket,
+    //   ...newItem
+    // }
+    // state.localStorage.basket = newBusket
+    //   state.localStorage.basket = state.localStorage.basket.filter(item => {
+    //     return String(item.id) !== String(productId)
+    //   })
+    //   // console.log("TCL: removeFromBasket -> state.localStorage.basket.filter(item => item._id == productId)", state.localStorage.basket.filter(item => item._id == productId))
+  },
+  // changeBasket(state, object) {
+  //   console.log("TCL: changeBasket -> object", object)
 
-    // console.log("TCL: removeFromBasket -> state.localStorage.basket.filter(item => item._id == productId)", state.localStorage.basket.filter(item => item._id == productId))
-  }
+  //   if (object.val < 1) {
+  //     state.localStorage.basket = state.localStorage.basket.filter(item => {
+  //       return String(item.id) !== String(object.id)
+  //     })
+  //   } else {
+  //     const findIndex = state.localStorage.basket.findIndex(item => item.item.id === object.id)
+  //     console.log("TCL: changeBasket -> findIndex", findIndex)
+  //     const count = object.val
+  //     const newItem = {
+  //       ...state.localStorage.basket[findIndex].item,
+  //       count
+  //     }
+  //     console.log("TCL: changeBasket -> newItem", newItem)
+  //     // state.localStorage.basket.splice(findIndex, 1, newItem)
+  //     // const newArray = state.localStorage.basket.splice(findIndex, 1)
+  //     // console.log("TCL: changeBasket -> newArray", )
+  //     state.localStorage.basket[findIndex] = newItem
+  //   }
+
+
+  // },
+  // incrementBasket(state, productId) {
+  //   const findBasket = state.localStorage.basket.findIndex(item => item.id === productId)
+  //   const count = state.localStorage.basket[findBasket].count + 1
+  //   console.log("TCL: incrementBasket -> count", count)
+  //   state.localStorage.basket[findBasket].count = count
+  //   console.log("TCL: incrementBasket -> findBasket", findBasket)
+  //   //  = state.localStorage.basket.filter(item => {
+  //   //   return String(item.id) !== String(productId)
+  //   // })
+  //   // console.log("TCL: removeFromBasket -> state.localStorage.basket.filter(item => item._id == productId)", state.localStorage.basket.filter(item => item._id == productId))
+  // },
+  // decrementBasket(state, productId) {
+  //   const findBasket = state.localStorage.basket.findIndex(item => item.id === productId)
+  //   const count = state.localStorage.basket[findBasket].count - 1
+  //   if (count < 1) {
+  //     state.localStorage.basket = state.localStorage.basket.filter(item => {
+  //       return String(item.id) !== String(productId)
+  //     })
+
+  //   } else {
+  //     state.localStorage.basket[findBasket].count = count
+  //     console.log("TCL: decrementBasket -> findBasket", findBasket)
+  //   }
+
+  //   // console.log("TCL: removeFromBasket -> state.localStorage.basket.filter(item => item._id == productId)", state.localStorage.basket.filter(item => item._id == productId))
+  // }
 }
 export const strict = false
 export const actions = {

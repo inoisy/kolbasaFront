@@ -1,26 +1,23 @@
 <template>
-  <v-card
-    :to="`/catalog/${category}/${product.slug}`"
-    hover
-    ripple
-    class="fill-height d-flex column"
-  >
+  <v-card hover class="fill-height d-flex column pt-2">
+    <!--  -->
     <div class="position-relative product-card-img-wrap">
       <img
         class="d-block ma-auto product-img"
         v-lazy="product.img ? imageBaseUrl + product.img.url : require('~/assets/no-image.png')"
       />
-      <v-btn
-        flat
-        icon
-        color="primary"
-        style="position:absolute; right: 0;top: 0;"
-        @click="addToBasket"
-      >
-        <v-icon>add_shopping_cart</v-icon>
-      </v-btn>
+      <div style="position:absolute; right: 0;top: 0;">
+        <v-btn flat icon color="primary" @click="removeFromBasket" v-show="busket">
+          <v-icon>remove</v-icon>
+        </v-btn>
+        {{busket}}
+        <v-btn flat icon color="primary" @click="addToBasket">
+          <v-icon v-show="!busket">add_shopping_cart</v-icon>
+          <v-icon v-show="busket">add</v-icon>
+        </v-btn>
+      </div>
     </div>
-    <v-card-text class="pt-0">
+    <v-card-text class="pt-2">
       <div class="display-flex justify-space-between">
         <v-subheader
           class="pl-0 display-flex align-center"
@@ -31,10 +28,11 @@
         >{{product.weight ? product.weight + 'кг' : ''}}</v-subheader>
       </div>
 
-      <h3
+      <nuxt-link
+        :to="`/catalog/${category}/${product.slug}`"
         class="mb-0"
         style="line-height: normal !important; font-size:1rem;font-weight: 600;"
-      >{{product.name}}</h3>
+      >{{product.name}}</nuxt-link>
     </v-card-text>
   </v-card>
 </template>
@@ -71,10 +69,19 @@ export default {
   data() {
     return { imageBaseUrl: process.env.imageBaseUrl };
   },
+  computed: {
+    busket() {
+      return this.$store.state.localStorage.basket[this.product.id]
+        ? this.$store.state.localStorage.basket[this.product.id].count
+        : null;
+    }
+  },
   methods: {
     async addToBasket(event) {
-      event.stopPropagation();
-      await this.$store.commit("basket", this.product);
+      await this.$store.commit("addToBasket", this.product);
+    },
+    async removeFromBasket(event) {
+      await this.$store.commit("removeFromBasket", this.product);
     }
   },
   props: ["category", "product"]
