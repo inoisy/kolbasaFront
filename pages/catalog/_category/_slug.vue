@@ -88,7 +88,7 @@
                 <v-btn flat icon color="primary" @click="removeFromBasket" v-show="busket">
                   <v-icon>remove</v-icon>
                 </v-btn>
-                {{busket}}
+                <span class="font-weight-bold">{{busket}}</span>
                 <v-btn flat icon color="primary" @click="addToBasket" v-show="busket">
                   <!-- <v-icon >add_shopping_cart</v-icon> -->
                   <v-icon v-show="busket">add</v-icon>

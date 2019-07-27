@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!offer || !isSummValid" class="mb-4">
+    <div v-show="!offer" class="mb-4">
       <v-toolbar class="grey lighten-2 px-2" height="100px">
         <div class="toolbar-inner">
           <h2 class="mb-0 display-3 mont font-weight-bold">Корзина</h2>

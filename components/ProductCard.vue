@@ -1,21 +1,28 @@
 <template>
-  <v-card hover class="fill-height d-flex column pt-2">
+  <v-card
+    hover
+    ripple
+    class="fill-height d-flex column pt-2"
+    :to="`/catalog/${category}/${product.slug}`"
+    @click.capture="cardClick"
+  >
     <!--  -->
     <div class="position-relative product-card-img-wrap">
       <img
         class="d-block ma-auto product-img"
         v-lazy="product.img ? imageBaseUrl + product.img.url : require('~/assets/no-image.png')"
       />
-      <div style="position:absolute; right: 0;top: 0;">
+      <v-card-actions style="position:absolute; right: 0;top: 0;">
         <v-btn flat icon color="primary" @click="removeFromBasket" v-show="busket">
           <v-icon>remove</v-icon>
         </v-btn>
-        {{busket}}
+        <span class="font-weight-bold display-1 mont">{{busket}}</span>
+
         <v-btn flat icon color="primary" @click="addToBasket">
           <v-icon v-show="!busket">add_shopping_cart</v-icon>
           <v-icon v-show="busket">add</v-icon>
         </v-btn>
-      </div>
+      </v-card-actions>
     </div>
     <v-card-text class="pt-2">
       <div class="display-flex justify-space-between">
@@ -28,11 +35,10 @@
         >{{product.weight ? product.weight + 'кг' : ''}}</v-subheader>
       </div>
 
-      <nuxt-link
-        :to="`/catalog/${category}/${product.slug}`"
+      <h3
         class="mb-0"
         style="line-height: normal !important; font-size:1rem;font-weight: 600;"
-      >{{product.name}}</nuxt-link>
+      >{{product.name}}</h3>
     </v-card-text>
   </v-card>
 </template>
@@ -77,6 +83,10 @@ export default {
     }
   },
   methods: {
+    cardClick(event, as) {
+      console.log("TCL: cardClick -> event", event, as);
+      event.preventDefault();
+    },
     async addToBasket(event) {
       await this.$store.commit("addToBasket", this.product);
     },

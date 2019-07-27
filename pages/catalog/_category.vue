@@ -7,15 +7,9 @@
       <v-container grid-list-lg class="py-5" fluid>
         <v-layout row wrap id="contentWrapper">
           <v-flex xs12 md8 lg9 xl10 style="min-height: 80vh">
-            <v-layout
-              row
-              wrap
-              id="products"
-              ref="product"
-              v-scroll="handleScroll"
-              v-show="products.items.length>0"
-            >
-              <!-- <div > -->
+            <v-layout row wrap id="products" ref="product" v-show="products.items.length>0">
+              <!-- <div >
+              v-scroll="handleScroll"-->
               <div
                 class="flex xs12 sm6 md4 lg3 xl2"
                 data-aos="fade-up"
@@ -225,9 +219,9 @@ export default {
     };
   },
   methods: {
-    handleScroll() {
-      return _.throttle(this.throttledMethod, 300);
-    },
+    // handleScroll() {
+    //   return _.throttle(this.throttledMethod, 300);
+    // },
 
     async paginationInput(val) {},
     async sortChange(val) {
