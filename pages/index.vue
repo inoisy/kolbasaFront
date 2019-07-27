@@ -313,7 +313,7 @@ export default {
       },
       sliders: [
         {
-          header: "Скидка деликатесы и копчености 10%!",
+          header: "Пс, у нас тут новая вареная колбаска!",
           content: `  Capi ta lise on low hanging fruit to identify a ballpark value added activity to beta test.
             <br>Override the digital divide with.`,
           buttontext: "Хочу колбаску!",
