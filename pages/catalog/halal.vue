@@ -1,8 +1,12 @@
 <template>
   <div>
-    <page-header title="Халяльная продукция" :breadrumbs="breadcrumbs" :fluid="true" />
+    <page-header title="Халяльная продукция" :breadrumbs="breadcrumbs" />
     <section class="background" v-lazy:background-image="require('~/assets/img/bg.jpg')">
       <v-container class="py-5">
+        <v-layout row wrap v-if="page.content">
+          <div v-html="page.content"></div>
+          <v-divider class="mb-4"></v-divider>
+        </v-layout>
         <v-layout row wrap v-for="category of categories" :key="category.id" class="mb-4">
           <h2 class="mb-4 flex xs12 d-block" data-aos="fade-up">{{category.name}}</h2>
           <div
@@ -33,6 +37,11 @@ import PageHeader from "~/components/PageHeader";
 import ProductCard from "~/components/ProductCard";
 
 export default {
+  head() {
+    return {
+      title: "Халяльная продукция"
+    };
+  },
   components: { ProductCard, PageHeader },
   async asyncData(ctx) {
     await ctx.store.dispatch("fetchGeneralInfo");
@@ -40,6 +49,10 @@ export default {
     const { data: categoryData } = await client.query({
       query: gql`
         query HalalQuery {
+          pages(where: { name: "halal" }) {
+            name
+            content
+          }
           categories {
             id
             name
@@ -74,7 +87,8 @@ export default {
     return {
       categories: categoryData.categories.filter(
         item => item.products && item.products.length > 0
-      )
+      ),
+      page: categoryData.pages[0]
     };
   },
   data() {

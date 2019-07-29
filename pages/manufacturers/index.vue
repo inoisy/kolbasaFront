@@ -34,6 +34,11 @@ import PageHeader from "~/components/PageHeader";
 import VerticalCard from "~/components/VerticalCard";
 
 export default {
+  head() {
+    return {
+      title: "Производители"
+    };
+  },
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl

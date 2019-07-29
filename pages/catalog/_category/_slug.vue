@@ -186,6 +186,7 @@
   .halal-img {
     height: 3.5rem;
     width: 3.5rem;
+    padding: 7px;
     object-fit: contain;
   }
 }
@@ -281,6 +282,33 @@ import gql from "graphql-tag";
 // import ProductZoomer from "vue-product-zoomer";
 import ContactForm from "~/components/ContactForm";
 export default {
+  head() {
+    return {
+      title:
+        this.$route.params && this.$route.params.slug
+          ? this.product && this.product.name
+            ? this.product.name
+            : ""
+          : this.$parent.category && this.$parent.category.name
+          ? this.$parent.category.name
+          : "",
+      meta: [
+        // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+        {
+          hid: "description",
+          name: "description",
+          content:
+            this.$route.params && this.$route.params.slug
+              ? this.product && this.product.description
+                ? this.product.description
+                : ""
+              : this.$parent.category && this.$parent.category.description
+              ? this.$parent.category.description
+              : ""
+        }
+      ]
+    };
+  },
   components: { ContactForm },
   async asyncData(ctx) {
     if (ctx.params && ctx.params.slug) {

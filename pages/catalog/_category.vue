@@ -81,7 +81,6 @@
       <v-card class="pb-4">
         <v-card-text>
           <v-pagination
-            @input="paginationInput"
             v-model="pageCurr"
             :length="pagesTotal"
             light
@@ -91,10 +90,9 @@
         </v-card-text>
       </v-card>
     </section>
-    <!-- {{category}} -->
-    <!-- <div> -->
-    <nuxt-child :key="$route.params && $route.params.slug ? $route.params.slug : ''" />
-    <!-- </div> -->
+    <keep-alive>
+      <nuxt-child :key="$route.params && $route.params.slug ? $route.params.slug : ''" />
+    </keep-alive>
   </div>
 </template>
 <style lang="stylus">
@@ -114,6 +112,19 @@ import ProductCard from "~/components/ProductCard";
 
 import { isArray } from "util";
 export default {
+  head() {
+    return {
+      title: "sdas",
+      meta: [
+        // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+        {
+          hid: "description",
+          name: "description",
+          content: this.category.description ? this.category.description : ""
+        }
+      ]
+    };
+  },
   components: { PageHeader, StickyMenu, ProductCard },
   computed: {
     // busket() {
@@ -201,9 +212,9 @@ export default {
     //   return _.throttle(this.throttledMethod, 300);
     // },
 
-    // async paginationInput(val) {},
     async sortChange(val) {
       if (Number.isInteger(val)) {
+        this.$vuetify.goTo("#contentWrapper");
         if (val === 1) {
           const addObj = {
             sort: "price"
@@ -238,6 +249,7 @@ export default {
     },
     async manufacturerChange(val) {
       this.pageCurr = 1;
+      this.$vuetify.goTo("#contentWrapper");
       if (val.length === 0) {
         await this.$store.dispatch("fetchProducts", {
           slug: this.$route.params.category
@@ -290,9 +302,7 @@ export default {
   },
   watch: {
     async pageCurr(val) {
-      await this.$vuetify.goTo("#contentWrapper", {
-        // offset: 100
-      });
+      await this.$vuetify.goTo("#contentWrapper");
 
       await this.$store.dispatch("fetchProducts", {
         slug: this.$route.params.category,
@@ -308,7 +318,6 @@ export default {
         });
       } else {
         let { page, ...query } = this.$route.query;
-        // console.log("TCL: paginationInput -> query", query);
         this.$router.push({
           path: this.$route.path,
           query: query

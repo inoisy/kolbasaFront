@@ -15,7 +15,8 @@ module.exports = {
    ** Headers of the page
    */
   head: {
-    title: pkg.name,
+    title: 'Альянс Фуд',
+    titleTemplate: '%s - Альянс Фуд',
     meta: [{
         charset: 'utf-8'
       },

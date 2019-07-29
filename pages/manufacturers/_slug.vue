@@ -66,6 +66,19 @@ import PageHeader from "~/components/PageHeader";
 import ProductCard from "~/components/ProductCard";
 
 export default {
+  head() {
+    return {
+      title: this.manufacturer.name,
+      meta: [
+        // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+        {
+          hid: "description",
+          name: "description",
+          content: this.manufacturer.description
+        }
+      ]
+    };
+  },
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl

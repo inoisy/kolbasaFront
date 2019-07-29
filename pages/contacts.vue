@@ -53,6 +53,11 @@
 import PageHeader from "~/components/PageHeader";
 
 export default {
+  head() {
+    return {
+      title: "Контакты"
+    };
+  },
   data() {
     return {
       title: "Контакты",

@@ -27,6 +27,11 @@ import VerticalCard from "~/components/VerticalCard";
 import gql from "graphql-tag";
 
 export default {
+  head() {
+    return {
+      title: "Каталог"
+    };
+  },
   components: { PageHeader, VerticalCard },
   data() {
     return {
