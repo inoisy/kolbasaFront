@@ -9,18 +9,16 @@
     content-class="dialog-content-wrapper"
     persistent
     no-click-animation
+    @click:outside="handleClickOutside"
   >
-    <portal-target name="toolbar"></portal-target>
+    <portal-target name="toolbar" ref="portalTarget"></portal-target>
 
-    <v-card class="position-relative px-4 pb-4 pt-2 fill-height" style="min-height:45vh">
-      <!-- <div class="close-btn-wrapper"> -->
+    <v-card class="position-relative px-4 pb-4 pt-0 fill-height" style="min-height:45vh">
       <div class="close-btn-wrap mt-2 mr-3">
         <v-btn class="close-btn ma-0" color="gray" fab @click="dialog=false">
           <v-icon>close</v-icon>
         </v-btn>
       </div>
-      <!-- </div> -->
-
       <div v-show="showCard">
         <v-breadcrumbs :items="breadcrumbs" class="pl-1 pr-5">
           <template slot="item" slot-scope="props">
@@ -52,22 +50,29 @@
               class="mb-4"
               style="line-height: 1,5"
             ></div>
-            <!-- <v-tabs v-model="activeTab" centered grow> -->
-            <!-- <template v-for="(item) in product.productmodifications"> -->
-            <!-- <v-tab :key="item.id" ripple>{{item.weight}} кг.</v-tab>
-            <v-tab-item :key="item.id">-->
-            <!-- <v-card flat> -->
-            <!-- <v-card-text> -->
             <div class="mb-3 table-wrapper" v-html="product.content"></div>
             <div class="fs-2 mont font-weight-medium mb-3" v-show="product.price">
-              <span>{{product.price}} &#8381;</span>
+              <!-- <span>{{product.price}} &#8381;</span> -->
+              <span
+                v-show="product.price"
+                :class="'display-3 font-weight-bold black--text'"
+              >{{product.isDiscount ? product.discountPrice : product.price}}&#8381;</span>
+              <span v-show="!product.price">Цена по запросу</span>
+              <!-- {{product.price ? product.price +'₽' : ''}}</v-subheader> -->
+              <span
+                class="pl-2"
+                v-if="product.isDiscount"
+                style="text-decoration: line-through; font-size:1rem"
+              >{{product.price+'₽'}}</span>
+              <v-chip
+                v-if="product.isDiscount"
+                color="accent"
+                dark
+                class="mont ml-2"
+                style="font-size: 1.1rem"
+              >-{{Math.ceil(100*(product.price-product.discountPrice)/product.price) }}%</v-chip>
               <span class="display-1 mb-3" v-show="product.weight">/ {{product.weight}} кг.</span>
             </div>
-            <!-- </v-card-text> -->
-            <!-- </v-card> -->
-            <!-- </v-tab-item>
-            </template>-->
-            <!-- </v-tabs> -->
             <div class="display-flex align-center wrap">
               <v-btn
                 dark
@@ -86,7 +91,7 @@
               >Добавить в корзину</v-btn>
               <v-sheet
                 class="product-button align-center display-flex justify-center"
-                color="grey lighten-3"
+                color="grey lighten-2"
               >
                 <v-btn flat icon color="primary" @click="removeFromBasket" v-show="busket">
                   <v-icon>remove</v-icon>
@@ -100,12 +105,44 @@
             </div>
           </v-flex>
           <v-flex xs12 md4 lg4 order-xs1 order-md2 class="display-flex image-wrapper">
-            <img
-              class="manufacturer-img"
-              v-if="product.manufacturer.img"
-              :src="imageBaseUrl+product.manufacturer.img.url"
-              :alt="product.manufacturer.name"
-            />
+            <div class="mini-imgs-wrapper">
+              <v-tooltip left max-width="300px" v-if="product.manufacturer">
+                <template v-slot:activator="{ on }">
+                  <img
+                    class="manufacturer-img"
+                    v-if="product.manufacturer.img"
+                    :src="imageBaseUrl+product.manufacturer.img.url"
+                    :alt="product.manufacturer.name"
+                    v-on="on"
+                  />
+                </template>
+                <div
+                  style="font-size:1rem;"
+                  class="font-weight-medium mb-2"
+                >{{product.manufacturer.name}}</div>
+                <div
+                  style="font-size:0.8rem;"
+                  class="font-weight-thin"
+                >{{product.manufacturer.description}}</div>
+              </v-tooltip>
+
+              <v-tooltip left max-width="300px">
+                <template v-slot:activator="{ on }">
+                  <img
+                    class="halal-img"
+                    v-if="product.isHalal"
+                    :src="require('~/assets/halal1.png')"
+                    v-on="on"
+                  />
+                </template>
+                <div style="font-size:1rem;" class="font-weight-medium mb-2">Халяльная продукция</div>
+                <div
+                  style="font-size:0.8rem;"
+                  class="font-weight-thin"
+                >Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet perferendis expedita, minima harum impedit tempore beatae velit error. Nesciunt omnis porro minima earum at inventore dolore esse ipsum doloremque voluptate!</div>
+              </v-tooltip>
+            </div>
+
             <img
               class="item-img d-block mx-auto mb-auto"
               :src="product.img ? imageBaseUrl+product.img.url : require('~/assets/no-image.png')"
@@ -132,6 +169,35 @@
 // margin-top: 100px;
 // max-height: calc(90% - 100px) !important;
 // }
+.mini-imgs-wrapper {
+  position: absolute;
+  right: 0;
+  top: 20px;
+
+  .manufacturer-img {
+    // position: absolute;
+    height: 3.5rem;
+    width: 3.5rem;
+    object-fit: contain;
+    // right: 0;
+    // bottom: 0;
+  }
+
+  .halal-img {
+    height: 3.5rem;
+    width: 3.5rem;
+    object-fit: contain;
+  }
+}
+
+.halal-img {
+  display: block;
+  // position: absolute;
+  // width: 6rem;
+  // right: 0;
+  // top: 4rem;
+}
+
 .mw500 {
   max-width: 500px;
 }
@@ -169,13 +235,6 @@
 .image-wrapper {
   margin-bottom: 30px;
   position: relative;
-
-  .manufacturer-img {
-    position: absolute;
-    width: 8rem;
-    right: 0;
-    // bottom: 0;
-  }
 
   .item-img {
     max-height: 300px;
@@ -219,6 +278,7 @@
 
 <script>
 import gql from "graphql-tag";
+// import ProductZoomer from "vue-product-zoomer";
 import ContactForm from "~/components/ContactForm";
 export default {
   components: { ContactForm },
@@ -280,6 +340,14 @@ export default {
     // }
   },
   methods: {
+    handleClickOutside() {
+      console.log(
+        "TCL: handleClickOutside -> handleClickOutside",
+        this.$refs.portalTarget
+      );
+
+      // const capture = this.$refs.productCardActions.contains(event.target);
+    },
     handleOneClickBuy() {
       this.showCard = false;
     },

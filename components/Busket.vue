@@ -22,11 +22,12 @@
             </div>
             <v-flex class="d-flex">
               <nuxt-link
+                v-if="product.item.category && product.item.category.slug"
                 :to="`/catalog/${product.item.category.slug}/${product.item.slug}`"
                 class="mont d-block my-auto text-decoration-none"
               >{{product.item.name}}</nuxt-link>
             </v-flex>
-            <div class="quantity">
+            <div class="quantity align-center display-flex justify-center">
               <v-btn icon @click="(e)=>removeFromBasket(e,product.item)">
                 <v-icon>remove</v-icon>
               </v-btn>
@@ -39,9 +40,6 @@
             <div
               class="price display-flex display-1 align-center justify-center mx-2 font-weight-medium mont"
             >{{product.item.price ? product.item.price*product.count : ''}}</div>
-            <!-- <v-btn class="ma-auto" icon @click="$store.commit('removeFromBasket',item.id)">
-              <v-icon>delete_outline</v-icon>
-            </v-btn>-->
           </div>
           <v-divider :key="'item-divider'+index" class="my-1"></v-divider>
         </template>
@@ -81,7 +79,7 @@
         <v-data-table
           :items="basket"
           :hide-actions="true"
-          :headers="[{ text: 'Наименование', sortable: true, value: 'name' },{ text: 'Цена', sortable: true, value: 'price' },{ text: 'Количество', sortable: true, value: 'Quan' }]"
+          :headers="[{ text: 'Наименование', sortable: false, value: 'name' },{ text: 'Цена', sortable: false, value: 'price' },{ text: 'Количество', sortable: false, value: 'Quan' }]"
         >
           <template slot="items" slot-scope="props">
             <td class>{{ props.item.item.name}}</td>

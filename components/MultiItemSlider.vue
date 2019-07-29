@@ -3,11 +3,11 @@
     <div class="swiper-wrapper layout">
       <div
         data-aos="zoom-in"
-        class="swiper-slide flex xs6 md4 lg3 xl2 d-flex align-center justify-center"
+        class="swiper-slide flex xs6 sm4 md3 lg2 xl2 d-flex align-center justify-center"
         v-for="(item,index) in items"
         :key="index"
       >
-        <nuxt-link :to="`/manufacturers/${item.slug}`" class="align-center justify-center px-3">
+        <nuxt-link :to="`/manufacturers/${item.slug}`" class="align-center justify-center pa-3">
           <img
             :data-src="item.img ? imageBaseUrl+ item.img.url  : require('~/assets/no-image.png')"
             class="swiper-lazy ma-auto d-block manuf-img"

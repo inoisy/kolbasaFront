@@ -22,14 +22,14 @@
               <v-icon left dark>save_alt</v-icon>Загрузить каталог
             </v-btn>
           </div>
-          <v-divider class="mt-3"></v-divider>
+          <v-divider class="mt-3" v-show="categories.length>0"></v-divider>
         </div>
 
         <v-layout row wrap v-for="category of categories" :key="category.id" class="mb-4">
           <h2 class="mb-4 flex xs12 d-block" data-aos="fade-up">
             <nuxt-link
-              :to="`/catalog/${category.slug}?manufacturer=${manufacturer.slug}`"
-            >{{category.name}}</nuxt-link>
+              :to="`/catalog/${category.item.slug}?manufacturer=${manufacturer.slug}`"
+            >{{category.item.name}}</nuxt-link>
           </h2>
           <div
             class="flex xs12 sm6 md4 lg3 xl2"
@@ -37,11 +37,11 @@
             v-for="product of category.products"
             :key="product.id"
           >
-            <product-card :product="product" :category="category.slug"></product-card>
+            <product-card :product="product" :category="category.item.slug"></product-card>
           </div>
           <div class="flex xs12" data-aos="fade-up">
             <v-btn
-              :to="`/catalog/${category.slug}?manufacturer=${manufacturer.slug}`"
+              :to="`/catalog/${category.item.slug}?manufacturer=${manufacturer.slug}`"
               class="mt-4 ml-0"
               color="accent"
               large
@@ -95,33 +95,37 @@ export default {
               url
             }
           }
-          categories {
-            id
-            slug
-            name
-            products(where: { manufacturer: { id: $id } }, limit: 12) {
-              id
-              name
-              slug
-              price
-              weight
-              img {
-                url
-              }
-              manufacturer {
-                id
-                name
-              }
-            }
-          }
+          # categories {
+          #   id
+          #   slug
+          #   name
+          #   products(where: { manufacturer: { id: $id } }, limit: 12) {
+          #     id
+          #     name
+          #     slug
+          #     price
+          #     weight
+          #     img {
+          #       url
+          #     }
+          #     manufacturer {
+          #       id
+          #       name
+          #     }
+          #   }
+          # }
         }
       `
     });
+    const { data: categories } = await ctx.$axios.get(
+      `/categories/categoriesByManufacturer/` + id
+    );
     return {
       manufacturer: manufacturerData.manufacturer,
-      categories: manufacturerData.categories.filter(
-        item => item.products.length > 0
-      )
+      categories: categories
+      // manufacturerData.categories.filter(
+      //   item => item.products.length > 0
+      // )
     };
   },
   components: { PageHeader, ProductCard },

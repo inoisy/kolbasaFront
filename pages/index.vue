@@ -119,15 +119,21 @@
             </div>
           </v-flex>
         </div>
-        <div class="layout row wrap align-center justify-center mb-5">
+        <div class="layout row wrap align-center justify-center">
           <div class="xs10 md8 offset-lg1 lg7 xl6 flex d-flex">
             <div class="my-auto">
-              <h2 class="bottom-header d-block" data-aos="fade-up">Lorem ipsum sit dolor amet</h2>
-              <div class="bottom-text" data-aos="fade-up">
-                Доставка по России и странам ЕАЭС
-                <!-- Бесплатная доставка от 3000р -->
-                Скидки постоянным партнерам
-                лучшие цены от производителя
+              <h2 class="bottom-header d-block mb-4" data-aos="fade-up">Lorem ipsum sit dolor amet</h2>
+              <div class="bottom-text layout row wrap" data-aos="fade-up">
+                <div
+                  class="flex xs12 sm4 px-3 mb-4"
+                  v-for="(item,index) in benefits"
+                  :key="'benefit'+index"
+                >
+                  <div class="img-wrapper display-flex mb-3 pt-3">
+                    <img :src="item.img" class="mx-auto d-block" alt style="width: 3.5rem" />
+                  </div>
+                  <div class="display-1 lumber text-xs-center">{{item.text}}</div>
+                </div>
               </div>
             </div>
           </div>
@@ -311,6 +317,20 @@ export default {
         description: `Capi ta lise on low hanging fruit to identify a ballpark value added activity to beta test.
             <br>Override the digital divide with.`
       },
+      benefits: [
+        {
+          text: "Доставка по России и странам ЕАЭС",
+          img: require("@/assets/benefits/shipped.svg")
+        },
+        {
+          text: "Лучшие цены от производителей",
+          img: require("@/assets/benefits/currency.svg")
+        },
+        {
+          text: "Скидки постоянным партнерам",
+          img: require("@/assets/benefits/1179545.svg")
+        }
+      ],
       sliders: [
         {
           header: "Пс, у нас тут новая вареная колбаска!",

@@ -1,21 +1,21 @@
 <template>
   <div class="header d-flex" v-lazy:background-image="require('~/assets/img/promo.jpg')">
-    <v-container fill-height :fluid="fluid">
+    <v-container fill-height :fluid="fluid" class="py-5">
       <v-layout column>
-        <v-flex class>
-          <v-breadcrumbs :items="breadrumbs" class="pl-1" dark>
-            <template slot="item" slot-scope="props">
-              <nuxt-link
-                class="text-decoration-none white--text"
-                :to="props.item.to"
-                exact
-              >{{ props.item.text }}</nuxt-link>
-            </template>
-          </v-breadcrumbs>
-        </v-flex>
-        <v-flex>
-          <h1 class="white--text mb-5">{{title}}</h1>
-        </v-flex>
+        <!-- <v-flex class> -->
+        <v-breadcrumbs :items="breadrumbs" class="pl-1 pb-4" dark>
+          <template slot="item" slot-scope="props">
+            <nuxt-link
+              class="text-decoration-none white--text"
+              :to="props.item.to"
+              exact
+            >{{ props.item.text }}</nuxt-link>
+          </template>
+        </v-breadcrumbs>
+        <!-- </v-flex>
+        <v-flex>-->
+        <h1 class="white--text mb-5">{{title}}</h1>
+        <!-- </v-flex> -->
       </v-layout>
     </v-container>
   </div>

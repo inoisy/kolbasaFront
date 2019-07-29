@@ -6,8 +6,9 @@
     v-resize="onResize"
     :class="fixedTop ? 'fixed-top':''"
     ref="sidebarContent"
-    :style="`width: ${this.parentWidth}px; max-height: ${sidebar.maxHeight}px;`"
+    :style="`max-height: ${sidebar.maxHeight}px;`"
   >
+    <!-- width: ${this.parentWidth}px;  -->
     <slot></slot>
   </div>
 </template>
@@ -48,7 +49,7 @@ export default {
       const elem = this.$refs.sidebarContent
         ? this.$refs.sidebarContent.parentElement
         : null;
-      this.parentWidth = elem.clientWidth - 20;
+      // this.parentWidth = elem.clientWidth - 20;
       //   console.log(elem.clientWidth);
       // this.windowSize = { x: window.innerWidth, y: window.innerHeight };
       this.sidebar.offsetHeight = elem.offsetTop;
@@ -83,7 +84,7 @@ export default {
     const elem = this.$refs.sidebarContent
       ? this.$refs.sidebarContent.parentElement
       : null;
-    this.parentWidth = elem.clientWidth - 20;
+    // this.parentWidth = elem.clientWidth - 20;
     this.sidebar.windowScrollTop =
       window.pageYOffset || document.documentElement.scrollTop;
 
@@ -92,7 +93,7 @@ export default {
   },
   data() {
     return {
-      parentWidth: 300,
+      // parentWidth: 300,
       offsetTop: 0,
       // windowSize: {
       //   x: 0,

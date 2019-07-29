@@ -5,8 +5,8 @@
     <section class="background">
       <!-- v-lazy:background-image="require('~/assets/img/bg.jpg')" -->
       <v-container grid-list-lg class="py-5" fluid>
-        <v-layout row wrap id="contentWrapper">
-          <v-flex xs12 md8 lg9 xl10 style="min-height: 80vh">
+        <div id="contentWrapper" class="display-flex">
+          <v-flex style="min-height: 80vh">
             <v-layout row wrap id="products" ref="product" v-show="products.items.length>0">
               <!-- <div >
               v-scroll="handleScroll"-->
@@ -30,7 +30,10 @@
               ></v-progress-circular>
             </div>
           </v-flex>
-          <v-flex hidden-sm-and-down md4 lg3 xl2>
+          <v-flex
+            hidden-sm-and-down
+            style="width: 300px; min-width: 300px; max-width: 300px; margin-left: auto;"
+          >
             <sticky-menu class="px-3">
               <portal to="filters">
                 <v-subheader class="pl-0">СОРТИРОВАТЬ ПО</v-subheader>
@@ -71,7 +74,7 @@
               <portal-target name="filters" v-show="$vuetify.breakpoint.mdAndUp"></portal-target>
             </sticky-menu>
           </v-flex>
-        </v-layout>
+        </div>
       </v-container>
     </section>
     <section v-if="pagesTotal>1">
@@ -103,7 +106,7 @@
 </style>
 
 <script>
-import gql from "graphql-tag";
+// import gql from "graphql-tag";
 // import _ from "lodash";
 import PageHeader from "~/components/PageHeader";
 import StickyMenu from "~/components/StickyMenu";
@@ -147,44 +150,12 @@ export default {
     }
   },
   async asyncData(ctx) {
-    // console.log(ctx.route.params);
-
-    // console.log("TCL: Data -> queryManufacturers", queryManufacturers);
     await ctx.store.dispatch("fetchGeneralInfo");
-
-    // let client = ctx.app.apolloProvider.defaultClient;
-
     const manufacturers =
       ctx.store.state.sessionStorage.generalInfo.manufacturers;
-    // console.log(
-    //   "manufacturerFilter",
-    //   ctx.store.state.sessionStorage.manufacturerFilter
-    // );
-    // const storeManufacturers =
-    //   ctx.store.state.sessionStorage.manufacturerFilter;
-    // if (isArray(storeManufacturers)) {
-    //   console.log("TCL: Data -> storeManufacturers", storeManufacturers);
-    //   let manufacturersSelectedIds = [];
-
-    //   for (let queryManufacurer of storeManufacturers) {
-    //     manufacturersSelectedIds.push(
-    //       manufacturers.find(item => item.id == queryManufacurer).slug
-    //     );
-    //   }
-    //   const addObj = {
-    //     manufacturer: manufacturersSelectedIds
-    //   };
-    //   ctx.router.push({
-    //     path: ctx.route.path,
-    //     query: { ...ctx.route.query, ...addObj }
-    //   });
-    // }
-    // const manufacturers = ctx.store.state.sessionStorage.generalInfo.manufacturers;
-
     const queryManufacturers = ctx.route.query.manufacturer;
-    // console.log("TCL: Data -> queryManufacturers", isArray(queryManufacturers));
-    // const manufacturersSelected = queryManufacturer;
     let manufacturersSelectedIds = [];
+
     if (isArray(queryManufacturers)) {
       for (let queryManufacurer of queryManufacturers) {
         const finded = manufacturers.find(
@@ -211,6 +182,13 @@ export default {
       category.manufacturers && category.manufacturers.length > 0
         ? manufacturers.filter(item => category.manufacturers.includes(item.id))
         : [];
+
+    await ctx.store.dispatch("fetchProducts", {
+      slug: ctx.route.params.category,
+      manufacturer: manufacturersSelectedIds,
+      sort: "name"
+    });
+
     return {
       category: category,
       manufacturers: manufacturersExist,
@@ -223,7 +201,7 @@ export default {
     //   return _.throttle(this.throttledMethod, 300);
     // },
 
-    async paginationInput(val) {},
+    // async paginationInput(val) {},
     async sortChange(val) {
       if (Number.isInteger(val)) {
         if (val === 1) {

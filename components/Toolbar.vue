@@ -4,7 +4,7 @@
       <v-toolbar height="100px" fixed app>
         <div class="flex">
           <nuxt-link to="/" class="py-1 fill-height ml-auto d-inline-flex">
-            <img :src="require('~/assets/img/logo.png')" alt="logo" />
+            <img :src="require('~/assets/img/logo1.png')" alt="logo" />
           </nuxt-link>
         </div>
 
@@ -44,9 +44,18 @@
                   :key="index"
                   nuxt
                   :to="`${item.to}/${child.slug}`"
+                >{{ child.name }}</v-list-tile>
+                <v-list-tile
+                  v-if="item.to==='/catalog'"
+                  class="list-item"
+                  active-class="text--accent"
+                  nuxt
+                  :to="`${item.to}/halal`"
                 >
-                  <!-- :to="item.forms && item.forms.length > 0 ? localePath({ name: 'catalog-slug', params: { slug: item.forms[0].slug } }) :  localePath({ name: 'about-slug', params: { slug: item.slug } })" -->
-                  {{ child.name }}
+                  Халяльная продукция
+                  <v-list-tile-avatar class="ml-auto">
+                    <img style="width:45px" :src="require('~/assets/halal1.png')" />
+                  </v-list-tile-avatar>
                 </v-list-tile>
               </v-list>
             </v-menu>
@@ -141,13 +150,17 @@ export default {
       return isActive;
     },
     basketLength() {
-      return Object.keys(this.$store.state.localStorage.basket).length;
+      return Object.values(this.$store.state.localStorage.basket).reduce(
+        (acc, val) => acc + val.count,
+        0
+      );
     },
     phone() {
       return this.$store.state.sessionStorage.generalInfo.contacts.phone;
     },
     isModal() {
       return this.$route.name === "catalog-category-slug" &&
+        this.$route.params &&
         this.$route.params.slug
         ? false
         : true;

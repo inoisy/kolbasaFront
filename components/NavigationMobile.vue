@@ -18,6 +18,15 @@
           >
             <v-list-tile-content class="ml-4">{{ product.name}}</v-list-tile-content>
           </v-list-tile>
+          <v-list-tile
+            v-if="item.to==='/catalog'"
+            class="list-item"
+            active-class="text--accent"
+            nuxt
+            :to="`${item.to}/halal`"
+          >
+            <v-list-tile-content class="ml-4">Халяльная продукция</v-list-tile-content>
+          </v-list-tile>
         </v-list-group>
         <v-list-tile
           v-else

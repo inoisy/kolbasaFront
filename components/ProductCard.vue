@@ -2,17 +2,29 @@
   <v-card
     hover
     ripple
-    class="fill-height d-flex column pt-2"
+    class="fill-height d-flex column"
     :to="`/catalog/${category}/${product.slug}`"
     @click.capture="cardClick"
   >
-    <!--  -->
-    <div class="position-relative product-card-img-wrap">
+    <div class="product-card-img-wrap py-3" style="position: relative;">
+      <!-- <div class="img-wrapper position-relative"> -->
+
       <img
         class="d-block ma-auto product-img"
         v-lazy="product.img ? imageBaseUrl + product.img.url : require('~/assets/no-image.png')"
       />
-      <!-- <v-sheet class="d-flex align-center display-flex" color="grey lighten-3"> -->
+      <div class="product-card-mini-imgs">
+        <img
+          class="product-card-halal-img"
+          v-if="product.isHalal"
+          :src="require('~/assets/halal1.png')"
+        />
+        <img
+          class="product-card-manufacturer-img d-block"
+          v-show="product.manufacturer && product.manufacturer.img"
+          v-lazy="product.manufacturer && product.manufacturer.img ? imageBaseUrl + product.manufacturer.img.url : require('~/assets/no-image.png')"
+        />
+      </div>
 
       <div
         class="product-card-actions grey lighten-3"
@@ -29,13 +41,33 @@
           <v-icon v-show="busket">add</v-icon>
         </v-btn>
       </div>
+      <!-- </div> -->
     </div>
-    <v-card-text class="pt-2">
+    <v-card-text class="pt-0">
       <div class="display-flex justify-space-between">
-        <v-subheader
-          class="pl-0 display-flex align-center"
-          :class="product.price ? 'display-2 font-weight-medium black--text' : ''"
-        >{{product.price ? product.price +'₽' : 'Цена по запросу'}}</v-subheader>
+        <!-- <div class="display-flex align-center"> -->
+        <v-subheader class="pl-0 display-flex align-center">
+          <span
+            v-show="product.price"
+            :class="'display-2 font-weight-medium black--text'"
+          >{{product.isDiscount ? product.discountPrice +'₽' : product.price +'₽'}}</span>
+          <span v-show="!product.price">Цена по запросу</span>
+          <!-- {{product.price ? product.price +'₽' : ''}}</v-subheader> -->
+          <span
+            class="pl-2"
+            v-if="product.isDiscount"
+            style="text-decoration: line-through; font-size:1rem"
+          >{{product.price+'₽'}}</span>
+          <v-chip
+            v-if="product.isDiscount"
+            color="accent"
+            dark
+            class="mont ml-2"
+            style="font-size: 1.1rem"
+          >-{{Math.ceil(100*(product.price-product.discountPrice)/product.price) }}%</v-chip>
+        </v-subheader>
+        <!-- </div> -->
+
         <v-subheader
           class="align-center display-flex pa-0"
         >{{product.weight ? product.weight + 'кг' : ''}}</v-subheader>
@@ -49,10 +81,23 @@
   </v-card>
 </template>
 <style lang="stylus" scoped>
+.product-card-mini-imgs {
+  position: absolute;
+  bottom: 0px;
+  right: 10px;
+  display: flex;
+
+  img {
+    width: 3rem;
+    height: 3rem;
+    object-fit: contain;
+  }
+}
+
 .product-card-img-wrap {
 }
 
-.product-img, .product-card-img-wrap {
+.product-img {
   height: 140px;
   max-height: 140px;
 }
@@ -62,14 +107,14 @@
 }
 
 @media (min-width: 600px) {
-  .product-img, .product-card-img-wrap {
+  .product-img {
     height: 140px;
     max-height: 140px;
   }
 }
 
 @media (min-width: 960px) {
-  .product-img, .product-card-img-wrap {
+  .product-img {
     height: 160px;
     max-height: 160px;
   }

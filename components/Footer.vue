@@ -8,34 +8,36 @@
             <v-list-tile to="/">Главная</v-list-tile>
             <v-list-tile to="/сatalog">Каталог</v-list-tile>
             <v-list-tile to="/manufacturers">Производители</v-list-tile>
+            <v-list-tile to="/about">О компании</v-list-tile>
+            <v-list-tile to="/contacts">Контакты</v-list-tile>
           </v-list>
         </v-flex>
         <v-flex class="mb-4" xs12 md6 lg3>
           <v-subheader>КОНТАКТЫ</v-subheader>
           <v-list style="background: transparent !important;">
-            <v-list-tile avatar href="tel:+799999999">
+            <v-list-tile avatar :href="`tel:${contacts.phone}`">
               <v-list-tile-avatar>
                 <v-icon>phone</v-icon>
               </v-list-tile-avatar>
-              <v-list-tile-content>title</v-list-tile-content>
+              <v-list-tile-content>{{contacts.phone}}</v-list-tile-content>
             </v-list-tile>
-            <v-list-tile avatar href="mailto:inoisy@bk.ru">
+            <v-list-tile avatar :href="`mailto:${contacts.email}`">
               <v-list-tile-avatar>
                 <v-icon>email</v-icon>
               </v-list-tile-avatar>
-              <v-list-tile-content>title</v-list-tile-content>
+              <v-list-tile-content>{{contacts.email}}</v-list-tile-content>
             </v-list-tile>
             <v-list-tile avatar href="#">
               <v-list-tile-avatar>
                 <v-icon>location_on</v-icon>
               </v-list-tile-avatar>
-              <v-list-tile-content>location_on</v-list-tile-content>
+              <v-list-tile-content style="font-size: 14px !important;">{{contacts.addressText}}</v-list-tile-content>
             </v-list-tile>
             <v-list-tile avatar href="#">
               <v-list-tile-avatar>
                 <v-icon>access_time</v-icon>
               </v-list-tile-avatar>
-              <v-list-tile-content>Пн-пт, 9:00-18:00</v-list-tile-content>
+              <v-list-tile-content>{{contacts.accessTime}}</v-list-tile-content>
             </v-list-tile>
           </v-list>
           <!-- <v-list style="background: transparent !important;" class="lumber">
@@ -50,9 +52,12 @@
             <v-list-tile
               v-for="(category,index) in categories"
               :key="index"
-              :to="`/catalog/${category.slug}`"
+              :to="`catalog${category.slug}`"
               style="line-height: normal"
             >{{category.name}}</v-list-tile>
+            <v-list-tile style="line-height: normal" nuxt to="/catalog/halal">
+              <v-list-tile-content>Халяльная продукция</v-list-tile-content>
+            </v-list-tile>
           </v-list>
         </v-flex>
         <v-flex class="mb-4" xs12 md6 lg3 hidden-xs-only>
@@ -79,6 +84,9 @@ export default {
     },
     manufacturers() {
       return this.$store.state.sessionStorage.generalInfo.manufacturers;
+    },
+    contacts() {
+      return this.$store.state.sessionStorage.generalInfo.contacts;
     }
   }
 };
