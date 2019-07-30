@@ -4,7 +4,7 @@
       <v-layout row wrap>
         <v-flex class="mb-4" xs12 md6 lg3>
           <v-subheader>НАВИГАЦИЯ</v-subheader>
-          <v-list style="background: transparent !important;" class>
+          <v-list style="background: transparent !important;" class="footer-list">
             <v-list-tile to="/">Главная</v-list-tile>
             <v-list-tile to="/сatalog">Каталог</v-list-tile>
             <v-list-tile to="/manufacturers">Производители</v-list-tile>
@@ -14,7 +14,7 @@
         </v-flex>
         <v-flex class="mb-4" xs12 md6 lg3>
           <v-subheader>КОНТАКТЫ</v-subheader>
-          <v-list style="background: transparent !important;">
+          <v-list style="background: transparent !important;" class="footer-list">
             <v-list-tile avatar :href="`tel:${contacts.phone}`">
               <v-list-tile-avatar>
                 <v-icon>phone</v-icon>
@@ -31,7 +31,7 @@
               <v-list-tile-avatar>
                 <v-icon>location_on</v-icon>
               </v-list-tile-avatar>
-              <v-list-tile-content style="font-size: 14px !important;">{{contacts.addressText}}</v-list-tile-content>
+              <v-list-tile-content style="font-size: 0.8rem !important;">{{contacts.addressText}}</v-list-tile-content>
             </v-list-tile>
             <v-list-tile avatar href="#">
               <v-list-tile-avatar>
@@ -48,7 +48,7 @@
         </v-flex>
         <v-flex class="mb-4" xs12 md6 lg3 hidden-xs-only>
           <v-subheader>КАТАЛОГ</v-subheader>
-          <v-list style="background: transparent !important;" class>
+          <v-list style="background: transparent !important;" class="footer-list">
             <v-list-tile
               v-for="(category,index) in categories"
               :key="index"
@@ -62,7 +62,7 @@
         </v-flex>
         <v-flex class="mb-4" xs12 md6 lg3 hidden-xs-only>
           <v-subheader>ПРОИЗВОДИТЕЛИ</v-subheader>
-          <v-list style="background: transparent !important;" class>
+          <v-list style="background: transparent !important;" class="footer-list">
             <v-list-tile
               v-for="(manufacturer,index) in manufacturers"
               :key="index"
@@ -75,7 +75,14 @@
     </v-container>
   </v-footer>
 </template>
-
+<style lang="stylus" scoped>
+.footer {
+  background-image: url('~assets/img/footerbg.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+</style>
 <script>
 export default {
   computed: {
@@ -91,12 +98,5 @@ export default {
   }
 };
 </script>
-<style lang="stylus" scoped>
-.footer {
-  background-image: url('~assets/img/footerbg.jpg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-</style>
+
 
