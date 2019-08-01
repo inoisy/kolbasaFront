@@ -6,7 +6,7 @@
       <!-- v-lazy:background-image="require('~/assets/img/bg.jpg')" -->
       <v-container grid-list-lg class="py-5" fluid>
         <div id="contentWrapper" class="display-flex">
-          <v-flex style="min-height: 80vh">
+          <v-flex style="min-height: 73vh" class="display-flex">
             <v-layout row wrap id="products" ref="product" v-show="products.items.length>0">
               <!-- <div >
               v-scroll="handleScroll"-->
@@ -20,7 +20,7 @@
               </div>
               <!-- </div> -->
             </v-layout>
-            <div v-show="$store.state.loading">
+            <div v-show="$store.state.loading" class="ma-auto">
               <v-progress-circular
                 v-if="$store.state.loading"
                 :size="150"
@@ -81,6 +81,7 @@
       <v-card class="pb-4">
         <v-card-text>
           <v-pagination
+            color="accent"
             v-model="pageCurr"
             :length="pagesTotal"
             light
@@ -161,7 +162,17 @@ export default {
     }
   },
   async asyncData(ctx) {
+    console.log("TCL: Data -> asyncData");
     await ctx.store.dispatch("fetchGeneralInfo");
+
+    const storeManufacturers =
+      ctx.store.state.sessionStorage.manufacturerFilter;
+    if (storeManufacturers && storeManufacturers.length > 0) {
+      ctx.query = {
+        manufacturer: storeManufacturers
+      };
+    }
+
     const manufacturers =
       ctx.store.state.sessionStorage.generalInfo.manufacturers;
     const queryManufacturers = ctx.route.query.manufacturer;
@@ -194,10 +205,21 @@ export default {
         ? manufacturers.filter(item => category.manufacturers.includes(item.id))
         : [];
 
+    let sort;
+    if (ctx.route.query.sort && ctx.route.query.sort === "price") {
+      sort = { sort: "price" };
+    } else {
+      sort = { sort: "name" };
+    }
+
+    await ctx.store.commit("sortFilter", sort);
+    await ctx.store.commit("manufacturerFilter", manufacturersSelectedIds);
+    await ctx.store.commit("pageFilter", ctx.route.query.page);
     await ctx.store.dispatch("fetchProducts", {
-      slug: ctx.route.params.category,
-      manufacturer: manufacturersSelectedIds,
-      sort: "name"
+      slug: ctx.route.params.category
+      // manufacturer: manufacturersSelectedIds,
+      // sort: ctx.route.query.sort,
+      // page: ctx.route.query.page
     });
 
     return {
@@ -219,13 +241,14 @@ export default {
           const addObj = {
             sort: "price"
           };
+          await this.$store.commit("sortFilter", addObj);
           await this.$store.dispatch("fetchProducts", {
-            slug: this.$route.params.category,
-            manufacturer: this.$store.state.manufacturerFilter,
-            sort: "price"
+            slug: this.$route.params.category
+            // manufacturer: this.$store.state.manufacturerFilter,
+            // sort: "price"
           });
-          this.$store.commit("sortFilter", addObj);
-          this.$router.push({
+
+          await this.$router.push({
             path: this.$route.path,
             query: { ...this.$route.query, ...addObj }
           });
@@ -233,12 +256,12 @@ export default {
           const addObj = {
             sort: "name"
           };
+          await this.$store.commit("sortFilter", addObj);
           await this.$store.dispatch("fetchProducts", {
-            slug: this.$route.params.category,
-            manufacturer: this.$store.state.manufacturerFilter,
-            sort: "name"
+            slug: this.$route.params.category
+            // manufacturer: this.$store.state.manufacturerFilter,
+            // sort: "name"
           });
-          this.$store.commit("sortFilter", addObj);
         }
       }
       let { sort, ...query } = this.$route.query;
@@ -251,20 +274,18 @@ export default {
       this.pageCurr = 1;
       this.$vuetify.goTo("#contentWrapper");
       if (val.length === 0) {
-        await this.$store.dispatch("fetchProducts", {
-          slug: this.$route.params.category
-        });
-        this.$store.commit("manufacturerFilter", {});
+        await this.$store.commit("manufacturerFilter", {});
         let { manufacturer, ...query } = this.$route.query;
-        this.$router.push({
+        await this.$router.push({
           path: this.$route.path,
           query: query
         });
-      } else {
         await this.$store.dispatch("fetchProducts", {
-          slug: this.$route.params.category,
-          manufacturer: val
+          slug: this.$route.params.category
+          // page: this.$route.query.page,
+          // sort: this.$route.query.sort
         });
+      } else {
         const manufacturers = this.$store.state.sessionStorage.generalInfo
           .manufacturers;
         let manufacturersSelectedIds = [];
@@ -280,10 +301,16 @@ export default {
         const addObj = {
           manufacturer: manufacturersSelectedIds
         };
-        this.$store.commit("manufacturerFilter", manufacturersSelectedIds);
-        this.$router.push({
+        await this.$store.commit("manufacturerFilter", val);
+        await this.$router.push({
           path: this.$route.path,
           query: { ...this.$route.query, ...addObj }
+        });
+        await this.$store.dispatch("fetchProducts", {
+          slug: this.$route.params.category
+          // manufacturer: val,
+          // page: this.$route.query.page,
+          // sort: this.$route.query.sort
         });
       }
 
@@ -303,25 +330,40 @@ export default {
   watch: {
     async pageCurr(val) {
       await this.$vuetify.goTo("#contentWrapper");
-
+      await this.$store.commit("pageFilter", val);
       await this.$store.dispatch("fetchProducts", {
         slug: this.$route.params.category,
+        // manufacturer: this.$route.query.manufacturer,
+        // sort: this.$route.query.sort,
         page: val
       });
+
       if (val > 1) {
         const addObj = {
           page: val
         };
-        this.$router.push({
+        await this.$router.push({
           path: this.$route.path,
           query: { ...this.$route.query, ...addObj }
         });
       } else {
         let { page, ...query } = this.$route.query;
-        this.$router.push({
+        // let { manufacturer, ...query } = this.$route.query;
+        // await this.$store.dispatch("fetchProducts", {
+        //   slug: this.$route.params.category,
+        //   manufacturer: val
+        // });
+        await this.$router.push({
           path: this.$route.path,
           query: query
         });
+        // this.$router.push({
+        //   path: this.$route.path,
+        //   query:{
+        //     ...this.$route.query,
+        //     query
+        //   }
+        // });
       }
       //   console.log("TCL: pageCurr -> val", val);
     }

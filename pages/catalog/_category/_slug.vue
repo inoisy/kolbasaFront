@@ -51,26 +51,26 @@
               style="line-height: 1,5"
             ></div>
             <div class="mb-3 table-wrapper" v-html="product.content"></div>
-            <div class="fs-2 mont font-weight-medium mb-3" v-show="product.price">
-              <!-- <span>{{product.price}} &#8381;</span> -->
+            <div class="fs-2 mont font-weight-medium mb-3" v-show="product.priceNum">
+              <!-- <span>{{product.priceNum}} &#8381;</span> -->
               <span
-                v-show="product.price"
+                v-show="product.priceNum"
                 :class="'display-3 font-weight-bold black--text'"
-              >{{product.isDiscount ? product.discountPrice : product.price}}&#8381;</span>
-              <span v-show="!product.price">Цена по запросу</span>
-              <!-- {{product.price ? product.price +'₽' : ''}}</v-subheader> -->
+              >{{product.isDiscount ? product.discountPrice : product.priceNum}}&#8381;</span>
+              <span v-show="!product.priceNum">Цена по запросу</span>
+              <!-- {{product.priceNum ? product.priceNum +'₽' : ''}}</v-subheader> -->
               <span
                 class="pl-2"
                 v-if="product.isDiscount"
                 style="text-decoration: line-through; font-size:1rem"
-              >{{product.price+'₽'}}</span>
+              >{{product.priceNum+'₽'}}</span>
               <v-chip
                 v-if="product.isDiscount"
                 color="accent"
                 dark
                 class="mont ml-2"
                 style="font-size: 1.1rem"
-              >-{{Math.ceil(100*(product.price-product.discountPrice)/product.price) }}%</v-chip>
+              >-{{Math.ceil(100*(product.priceNum-product.discountPrice)/product.priceNum) }}%</v-chip>
               <span class="display-1 mb-3" v-show="product.weight">/ {{product.weight}} кг.</span>
             </div>
             <div class="display-flex align-center wrap">

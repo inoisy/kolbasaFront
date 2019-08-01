@@ -5,6 +5,7 @@ export const state = () => ({
   loading: false,
   sortFilter: {},
   manufacturerFilter: {},
+  pageFilter: {},
   benefits: [{
     title: "Опыт",
     text: "Работаем с 1996 года - гарантия надежности",

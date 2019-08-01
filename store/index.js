@@ -11,6 +11,9 @@ export const mutations = {
   sortFilter(state, item) {
     state.sessionStorage.sortFilter = item
   },
+  pageFilter(state, item) {
+    state.sessionStorage.pageFilter = item
+  },
   generalInfo(state, item) {
     state.sessionStorage.generalInfo = item
   },
@@ -291,89 +294,115 @@ export const actions = {
     return productItem
   },
   async fetchProducts(ctx, params) {
-    await ctx.commit('loading', true)
     await ctx.commit("products", {
       items: [],
       count: 0
     });
+    await ctx.commit('loading', true)
+
 
     const categoryFind = ctx.state.sessionStorage.generalInfo.categories.find(item => item.slug === params.slug)
 
-    let client = this.app.apolloProvider.defaultClient;
-    const allManufacturerIds = ctx.state.sessionStorage.generalInfo.manufacturers.map(item => item.id)
-    const manufacturerId = params.manufacturer && params.manufacturer.length > 0 ? params.manufacturer : allManufacturerIds
-    // if (params.page) {
-    //   query = query + `&_start=${(params.page-1)*20}`
-    // }
-    const start = params.page ? (params.page - 1) * 20 : 0
-    const sort = params.sort && params.sort === "price" ? "price:asc" : "name:asc"
+    // let client = this.app.apolloProvider.defaultClient;
+    // const allManufacturerIds = ctx.state.sessionStorage.generalInfo.manufacturers.map(item => item.id)
+    // const manufacturerId = params.manufacturer && params.manufacturer.length > 0 ? params.manufacturer : allManufacturerIds
+    // console.log("TCL: fetchProducts -> manufacturerId", manufacturerId)
+    // const start = params.page ? (params.page - 1) * 20 : 0
+    // const sort = params.sort && params.sort === "price" ? "priceNum:desc" : "name:asc"
+
+
     // if () {
     //   query = query + `&_sort=price:asc`
     // } else {
     //   query = query + `&_sort=name:asc`
     // }
-    const {
-      data: productsDataGraphQL
-    } = await client.query({
-      query: gql `
-        query ProductsQuery($categoryId: ID!, $manufacturerId: [ID!], $sort: String!, $start: Int!,$limit: Int!) {
-            category(id: $categoryId) {
-            products(where: {
-              manufacturer: {
-                id_in: $manufacturerId
-              }
-            }, sort: $sort, start: $start,limit:$limit) {
-              id
-              name
-              slug
-              description
-              price
-              discountPrice
-              isDiscount
-              isHalal
-              category{
-                slug
-              }
-              img {
-                url
-              }
-              manufacturer {
-                name
-                img {
-                  url
-                }
-              }
-            }
-          }
-        }
-      `,
-      variables: {
-        manufacturerId: manufacturerId,
-        categoryId: categoryFind.id,
-        sort: sort,
-        start: start,
-        limit: 20
-      }
-    });
-    console.log("TCL: fetchProducts -> productsDataGraphQL", productsDataGraphQL)
+    // const {
+    //   data: productsDataGraphQL
+    // } = await client.query({
+    //   query: gql `
+    //     query ProductsQuery($categoryId: ID!, $manufacturerId: [ID!], $sort: String!, $start: Int!,$limit: Int!) {
+    //         category(id: $categoryId) {
+    //         products(where: {
+    //           manufacturer: {
+    //             id_in: $manufacturerId
+    //           }
+    //         }, sort: $sort, start: $start,limit:$limit) {
+    //           id
+    //           name
+    //           slug
+    //           description
+    //           priceNum
+    //           discountPrice
+    //           isDiscount
+    //           isHalal
+    //           category{
+    //             slug
+    //           }
+    //           img {
+    //             url
+    //           }
+    //           manufacturer {
+    //             name
+    //             img {
+    //               url
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //   `,
+    //   variables: {
+    //     manufacturerId: manufacturerId,
+    //     categoryId: categoryFind.id,
+    //     sort: sort,
+    //     start: start,
+    //     limit: 20
+    //   }
+    // });
+    // console.log("TCL: fetchProducts -> productsDataGraphQL", productsDataGraphQL)
 
     // let products = []
 
     let query = `category=${categoryFind.id}`
-    if (params.manufacturer && params.manufacturer.length > 0) {
-      query = query + params.manufacturer.map(item => `&manufacturer=${item}`).join('')
+    const page = ctx.state.sessionStorage.pageFilter
+    console.log("TCL: fetchProducts -> page", page)
+    const manufacturers = ctx.state.sessionStorage.manufacturerFilter
+    console.log("TCL: fetchProducts -> manufacturers", manufacturers)
+    const sort = ctx.state.sessionStorage.sortFilter.sort
+    console.log("TCL: fetchProducts -> sort", sort)
+    if (page) {
+      query = query + `&_start=${(page - 1) * 20}`
     }
 
+    if (manufacturers && manufacturers.length > 0) {
+      query = query + manufacturers.map(item => `&manufacturer=${item}`).join('')
+    }
+
+    if (sort && sort === "price") {
+      query = query + `&_sort=priceNum:desc`
+    } else {
+      query = query + `&_sort=name:asc`
+    }
+
+
+    // let query = `category=${categoryFind.id}`
+    // if (params.page) {
+    //   query = query + `&_start=${(params.page - 1) * 20}`
+    // }
+    // if (params.manufacturer && params.manufacturer.length > 0) {
+    //   query = query + params.manufacturer.map(item => `&manufacturer=${item}`).join('')
+    // }
+
     // if (params.sort && params.sort === "price") {
-    //   query = query + `&_sort=price:asc`
+    //   query = query + `&_sort=priceNum:desc`
     // } else {
     //   query = query + `&_sort=name:asc`
     // }
-    console.log("TCL: Count query", query)
-
-    // const {
-    //   data: productsData
-    // } = await this.$axios.get(`/products?` + query)
+    console.log("TCL: Count query+", query)
+    console.log("TCL: Count params+", params)
+    const {
+      data: productsData
+    } = await this.$axios.get(`/products?` + query + "&_limit=20")
     const {
       data: productsCount
     } = await this.$axios.get(`/products/count?` + query)
@@ -382,7 +411,7 @@ export const actions = {
     // products = productsData
 
     await ctx.commit("products", {
-      items: productsDataGraphQL.category.products,
+      items: productsData,
       count: productsCount
     });
     await ctx.commit('loading', false)

@@ -6,7 +6,7 @@
     :to="`/catalog/${category}/${product.slug}`"
     @click.capture="cardClick"
   >
-    <div class="product-card-img-wrap py-3" style="position: relative;">
+    <div class="product-card-img-wrap" style="position: relative;">
       <!-- <div class="img-wrapper position-relative"> -->
 
       <img
@@ -48,23 +48,23 @@
         <!-- <div class="display-flex align-center"> -->
         <v-subheader class="pl-0 display-flex align-center">
           <span
-            v-show="product.price"
+            v-show="product.priceNum"
             :class="'display-2 font-weight-medium black--text'"
-          >{{product.isDiscount ? product.discountPrice +'₽' : product.price +'₽'}}</span>
-          <span v-show="!product.price">Цена по запросу</span>
-          <!-- {{product.price ? product.price +'₽' : ''}}</v-subheader> -->
+          >{{product.isDiscount ? product.discountPrice +'₽' : product.priceNum +'₽'}}</span>
+          <span v-show="!product.priceNum">Цена по запросу</span>
+          <!-- {{product.priceNum ? product.priceNum +'₽' : ''}}</v-subheader> -->
           <span
             class="pl-2"
             v-if="product.isDiscount"
             style="text-decoration: line-through; font-size:1rem"
-          >{{product.price+'₽'}}</span>
+          >{{product.priceNum+'₽'}}</span>
           <v-chip
             v-if="product.isDiscount"
             color="accent"
             dark
             class="mont ml-2"
             style="font-size: 1.1rem"
-          >-{{Math.ceil(100*(product.price-product.discountPrice)/product.price) }}%</v-chip>
+          >-{{Math.ceil(100*(product.priceNum-product.discountPrice)/product.priceNum) }}%</v-chip>
         </v-subheader>
         <!-- </div> -->
 
@@ -97,7 +97,7 @@
 .product-card-img-wrap {
 }
 
-.product-img {
+.product-img, .product-card-img-wrap {
   height: 140px;
   max-height: 140px;
 }
@@ -107,14 +107,14 @@
 }
 
 @media (min-width: 600px) {
-  .product-img {
+  .product-img, .product-card-img-wrap {
     height: 140px;
     max-height: 140px;
   }
 }
 
 @media (min-width: 960px) {
-  .product-img {
+  .product-img, .product-card-img-wrap {
     height: 160px;
     max-height: 160px;
   }

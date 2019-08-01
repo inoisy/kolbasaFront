@@ -62,7 +62,7 @@ export default {
               name
               slug
               description
-              price
+              priceNum
               discountPrice
               isDiscount
               isHalal

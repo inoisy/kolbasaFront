@@ -39,7 +39,7 @@
 
             <div
               class="price display-flex display-1 align-center justify-center mx-2 font-weight-medium mont"
-            >{{product.item.price ? product.item.price*product.count : ''}}</div>
+            >{{product.item.priceNum ? product.item.priceNum*product.count : ''}}</div>
           </div>
           <v-divider :key="'item-divider'+index" class="my-1"></v-divider>
         </template>
@@ -83,7 +83,7 @@
         >
           <template slot="items" slot-scope="props">
             <td class>{{ props.item.item.name}}</td>
-            <td class>{{ props.item.item.price}}</td>
+            <td class>{{ props.item.item.priceNum}}</td>
             <td class>{{ props.item.count}}</td>
           </template>
           <template slot="footer">
@@ -130,7 +130,7 @@
   }
 }
 
-.price {
+.priceNum {
   width: 60px;
   min-width: 60px;
 }
@@ -144,7 +144,7 @@
     min-width: 155px;
   }
 
-  .price {
+  .priceNum {
     width: 80px;
     min-width: 80px;
   }
@@ -214,8 +214,8 @@ export default {
       for (let id of Object.keys(this.$store.state.localStorage.basket)) {
         const product = this.$store.state.localStorage.basket[id];
         console.log("TCL: summa -> product", product);
-        if (product.item.price && product.count) {
-          summ = summ + product.count * product.item.price;
+        if (product.item.priceNum && product.count) {
+          summ = summ + product.count * product.item.priceNum;
         }
       }
       console.log("TCL: summa -> acc", summ);
@@ -223,8 +223,8 @@ export default {
       // const summ = this.$store.state.localStorage.basket.reduce(
       //   (acc, product) => {
       //     // console.log("TCL: summa -> val", val);
-      //     if (product.item.price && product.count) {
-      //       acc = acc + product.count * product.item.price;
+      //     if (product.item.priceNum && product.count) {
+      //       acc = acc + product.count * product.item.priceNum;
       //     }
       //     return acc;
       //   },

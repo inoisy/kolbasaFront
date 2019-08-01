@@ -1,8 +1,8 @@
 const pkg = require('./package')
 const os = require("os");
 const sitename = "http://prodaem-kolbasu.ru";
-const imageUrl = process.env.IMAGE_BASE_URL || process.env.BACKEND_URL || "https://kolbasaback.herokuapp.com"
-const backendUrl = process.env.BACKEND_URL || "https://kolbasaback.herokuapp.com"
+const imageUrl = process.env.IMAGE_BASE_URL || process.env.BACKEND_URL || "http://localhost:1337"
+const backendUrl = process.env.BACKEND_URL || "http://localhost:1337"
 // const imageBaseUrl = process.env.IMAGE_BASE_URL || "http://cdn.yakutov.com"
 
 module.exports = {
