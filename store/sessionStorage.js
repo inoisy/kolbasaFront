@@ -45,20 +45,18 @@ export const state = () => ({
   }],
   category: {},
   promo: [{
-      header: "Пс, у нас тут новая колбаска, бесплатные пробники до конца лета!",
-      content: `Capitalise on low hanging fruit to identify a ballpark value added activity to beta test.
-            <br>Override the digital divide with.`,
-      buttontext: "Хочу колбаску!",
-      href: "/catalog/varenaya",
+      header: "Пс, у нас тут ежемесячные акции, заходи- успей купить!",
+      content: `Самые актуальные и свежие акции от компании Альянс Фуд, принимайте участие и получите удовольствие от покупок по выгодным ценам.`,
+      buttontext: "В каталог",
+      href: "/catalog",
       image: require("@/assets/img/promo.jpg")
     },
     {
-      header: "Скидка на ветчину 20%!",
-      content: `  Capi ta lise on low hanging fruit to identify a ballpark value added activity to beta test.
-            <br>Override the digital divide with.`,
-      buttontext: "Хочу ветчину!",
-      href: "/catalog/vetchina",
-      image: require("@/assets/img/promo1.jpg")
+      header: "20 мясных производителей. Каждый найдет то, что ищет. ",
+      content: `Наша компания дорожит своими клиентами, и предоставляет широкий ассортимент продукции первоклассных мясокомбинатов, убедитесь сами, соберите первую корзину.`,
+      buttontext: "Смотреть",
+      href: "/manufacturers",
+      image: require("@/assets/img/promo3.jpg")
     }
   ],
   generalInfo: {},

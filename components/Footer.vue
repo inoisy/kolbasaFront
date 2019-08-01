@@ -2,7 +2,7 @@
   <v-footer class="footer pt-4" dark height="auto">
     <v-container>
       <v-layout row wrap>
-        <v-flex class="mb-4" xs12 md6 lg3>
+        <v-flex class="mb-4" xs12 md6 lg4>
           <v-subheader>НАВИГАЦИЯ</v-subheader>
           <v-list style="background: transparent !important;" class="footer-list">
             <v-list-tile to="/">Главная</v-list-tile>
@@ -12,7 +12,7 @@
             <v-list-tile to="/contacts">Контакты</v-list-tile>
           </v-list>
         </v-flex>
-        <v-flex class="mb-4" xs12 md6 lg3>
+        <v-flex class="mb-4" xs12 md6 lg4>
           <v-subheader>КОНТАКТЫ</v-subheader>
           <v-list style="background: transparent !important;" class="footer-list">
             <v-list-tile avatar :href="`tel:${contacts.phone}`">
@@ -40,13 +40,8 @@
               <v-list-tile-content>{{contacts.accessTime}}</v-list-tile-content>
             </v-list-tile>
           </v-list>
-          <!-- <v-list style="background: transparent !important;" class="lumber">
-              <v-list-tile class="fs-1-3" to="/">Главная</v-list-tile>
-              <v-list-tile class="fs-1-3" to="/сatalog">Каталог</v-list-tile>
-              <v-list-tile class="fs-1-3" to="/manufacturers">Производители</v-list-tile>
-          </v-list>-->
         </v-flex>
-        <v-flex class="mb-4" xs12 md6 lg3 hidden-xs-only>
+        <v-flex class="mb-4" xs12 md6 lg4 hidden-xs-only>
           <v-subheader>КАТАЛОГ</v-subheader>
           <v-list style="background: transparent !important;" class="footer-list">
             <v-list-tile
@@ -60,7 +55,7 @@
             </v-list-tile>
           </v-list>
         </v-flex>
-        <v-flex class="mb-4" xs12 md6 lg3 hidden-xs-only>
+        <!-- <v-flex class="mb-4" xs12 md6 lg3 hidden-xs-only>
           <v-subheader>ПРОИЗВОДИТЕЛИ</v-subheader>
           <v-list style="background: transparent !important;" class="footer-list">
             <v-list-tile
@@ -70,7 +65,7 @@
               style="line-height: normal"
             >{{manufacturer.name}}</v-list-tile>
           </v-list>
-        </v-flex>
+        </v-flex>-->
       </v-layout>
     </v-container>
   </v-footer>

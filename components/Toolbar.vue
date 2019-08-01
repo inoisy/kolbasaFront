@@ -45,7 +45,7 @@
                   nuxt
                   :to="`${item.to}/${child.slug}`"
                 >{{ child.name }}</v-list-tile>
-                <v-list-tile
+                <!-- <v-list-tile
                   v-if="item.to==='/catalog'"
                   class="list-item"
                   active-class="text--accent"
@@ -56,7 +56,7 @@
                   <v-list-tile-avatar class="ml-auto">
                     <img style="width:45px" :src="require('~/assets/halal1.png')" />
                   </v-list-tile-avatar>
-                </v-list-tile>
+                </v-list-tile>-->
               </v-list>
             </v-menu>
 
@@ -87,11 +87,7 @@
         </v-btn>
       </v-toolbar>
     </portal>
-    <!-- <v-slide-y-transition> -->
     <portal-target name="toolbar" v-if="isModal"></portal-target>
-    <!-- </v-slide-y-transition> -->
-
-    <!-- {{$vuetify.breakpoint.mbAndUp}} -->
     <v-navigation-drawer
       v-model="basketDrawer"
       temporary
@@ -99,7 +95,6 @@
       left
       :width="$vuetify.breakpoint.mdAndUp ? '700px' : '500px'"
     >
-      <!-- <div class="position-relative" style="width:100%; height: 100vh"> -->
       <div class="close-btn-wrap mr-4 d-flex" style="height:100px">
         <v-btn class="close-btn mx-0 my-auto" outline icon large @click="basketDrawer=false">
           <v-icon>close</v-icon>
@@ -108,12 +103,23 @@
       <no-ssr>
         <busket />
       </no-ssr>
-
-      <!-- </div> -->
     </v-navigation-drawer>
   </div>
 </template>
 <style lang="stylus" scoped>
+.two-columns {
+  column-count: 2;
+  max-width: 600px;
+
+  .list-item {
+    float: left;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    width: 100%;
+    // max-width: 300px;
+  }
+}
+
 .close-btn-wrap {
   position: absolute;
   top: 0;

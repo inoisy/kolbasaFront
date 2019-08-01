@@ -54,7 +54,7 @@ export default {
     const { data: categoriesData } = await client.query({
       query: gql`
         {
-          categories {
+          categories(sort: "name:asc") {
             name
             slug
             description

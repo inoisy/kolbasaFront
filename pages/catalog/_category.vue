@@ -7,9 +7,8 @@
       <v-container grid-list-lg class="py-5" fluid>
         <div id="contentWrapper" class="display-flex">
           <v-flex style="min-height: 73vh" class="display-flex">
+            <!-- {{products}} -->
             <v-layout row wrap id="products" ref="product" v-show="products.items.length>0">
-              <!-- <div >
-              v-scroll="handleScroll"-->
               <div
                 class="flex xs12 sm6 md4 lg3 xl2"
                 data-aos="fade-up"
@@ -18,7 +17,6 @@
               >
                 <product-card :product="product" :category="category.slug"></product-card>
               </div>
-              <!-- </div> -->
             </v-layout>
             <div v-show="$store.state.loading" class="ma-auto">
               <v-progress-circular
@@ -115,7 +113,7 @@ import { isArray } from "util";
 export default {
   head() {
     return {
-      title: "sdas",
+      title: this.category.title ? this.category.title : "",
       meta: [
         // hid is used as unique identifier. Do not use `vmid` for it as it will not work
         {
@@ -131,9 +129,9 @@ export default {
     // busket() {
     //   return this.$store.state.localStorage.basket;
     // },
-    products() {
-      return this.$store.state.sessionStorage.products;
-    },
+    // products() {
+    //   return this.$store.state.sessionStorage.products;
+    // },
     categories() {
       return this.$store.state.sessionStorage.generalInfo.categories;
     },
@@ -215,7 +213,7 @@ export default {
     await ctx.store.commit("sortFilter", sort);
     await ctx.store.commit("manufacturerFilter", manufacturersSelectedIds);
     await ctx.store.commit("pageFilter", ctx.route.query.page);
-    await ctx.store.dispatch("fetchProducts", {
+    const products = await ctx.store.dispatch("fetchProducts", {
       slug: ctx.route.params.category
       // manufacturer: manufacturersSelectedIds,
       // sort: ctx.route.query.sort,
@@ -223,6 +221,7 @@ export default {
     });
 
     return {
+      products: products,
       category: category,
       manufacturers: manufacturersExist,
       manufacturersSelected: manufacturersSelectedIds
@@ -242,7 +241,7 @@ export default {
             sort: "price"
           };
           await this.$store.commit("sortFilter", addObj);
-          await this.$store.dispatch("fetchProducts", {
+          this.products = await this.$store.dispatch("fetchProducts", {
             slug: this.$route.params.category
             // manufacturer: this.$store.state.manufacturerFilter,
             // sort: "price"
@@ -257,7 +256,7 @@ export default {
             sort: "name"
           };
           await this.$store.commit("sortFilter", addObj);
-          await this.$store.dispatch("fetchProducts", {
+          this.products = await this.$store.dispatch("fetchProducts", {
             slug: this.$route.params.category
             // manufacturer: this.$store.state.manufacturerFilter,
             // sort: "name"
@@ -280,7 +279,7 @@ export default {
           path: this.$route.path,
           query: query
         });
-        await this.$store.dispatch("fetchProducts", {
+        this.products = await this.$store.dispatch("fetchProducts", {
           slug: this.$route.params.category
           // page: this.$route.query.page,
           // sort: this.$route.query.sort
@@ -306,7 +305,7 @@ export default {
           path: this.$route.path,
           query: { ...this.$route.query, ...addObj }
         });
-        await this.$store.dispatch("fetchProducts", {
+        this.products = await this.$store.dispatch("fetchProducts", {
           slug: this.$route.params.category
           // manufacturer: val,
           // page: this.$route.query.page,
@@ -331,7 +330,7 @@ export default {
     async pageCurr(val) {
       await this.$vuetify.goTo("#contentWrapper");
       await this.$store.commit("pageFilter", val);
-      await this.$store.dispatch("fetchProducts", {
+      this.products = await this.$store.dispatch("fetchProducts", {
         slug: this.$route.params.category,
         // manufacturer: this.$route.query.manufacturer,
         // sort: this.$route.query.sort,

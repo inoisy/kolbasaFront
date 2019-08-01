@@ -167,7 +167,7 @@ export const actions = {
              addressCoords
              accessTime
            }
-          categories {
+          categories(sort: "name:asc") {
             id
             name
             slug
@@ -175,7 +175,7 @@ export const actions = {
               url
             }
           }
-          manufacturers {
+          manufacturers(sort: "name:asc") {
             id
             name
             slug
@@ -414,6 +414,11 @@ export const actions = {
       items: productsData,
       count: productsCount
     });
+
     await ctx.commit('loading', false)
+    return {
+      items: productsData,
+      count: productsCount
+    }
   }
 }

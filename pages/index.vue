@@ -11,7 +11,7 @@
         >
           <v-container fill-height class="main-content py-5">
             <v-layout align-center>
-              <v-flex xs12 lg7 xl6 class="text-xs-left justify-center column white--text">
+              <v-flex xs12 sm11 md10 lg7 xl6 class="text-xs-left justify-center column white--text">
                 <h2 style class="header lumber-rough font-weight-medium mb-4" v-text="item.header" />
                 <div class="subheader mb-4 lumber" v-html="item.content" />
                 <v-btn
@@ -119,13 +119,17 @@
             </div>
           </v-flex>
         </div>
-        <div class="layout row wrap align-center justify-center">
+        <div class="layout row wrap align-center justify-center pb-4">
           <div class="xs10 md8 offset-lg1 lg7 xl6 flex d-flex">
             <div class="my-auto">
-              <h2 class="bottom-header d-block mb-4" data-aos="fade-up">Lorem ipsum sit dolor amet</h2>
+              <h2 class="bottom-header d-block mb-3" data-aos="fade-up">Lorem ipsum sit dolor amet</h2>
+              <div
+                class="bottom-text mb-3"
+                data-aos="fade-up"
+              >Capitalise on low hanging fruit to identify a ballpark value added activity to beta test. Override the.</div>
               <div class="bottom-text layout row wrap" data-aos="fade-up">
                 <div
-                  class="flex xs12 sm4 px-3 mb-4"
+                  class="flex xs12 sm4 px-3 mb-3"
                   v-for="(item,index) in benefits"
                   :key="'benefit'+index"
                 >
@@ -164,7 +168,7 @@
 }
 
 .background {
-  background-position: center;
+  background-position: 80% center;
   background-size: cover;
   background-repeat: no-repeat;
 }
@@ -244,6 +248,10 @@
 }
 
 @media (min-width: 600px) {
+  .background {
+    background-position: 75% center;
+  }
+
   .category-wrapper {
     .category-img-wrapper {
       .category-img {
@@ -254,12 +262,22 @@
 }
 
 @media (min-width: 960px) {
+  .background {
+    background-position: 85% center;
+  }
+
   .category-wrapper {
     .category-img-wrapper {
       .category-img {
         height: 150px;
       }
     }
+  }
+}
+
+@media (min-width: 1264px) {
+  .background {
+    background-position: center;
   }
 }
 </style>
@@ -290,6 +308,9 @@ export default {
     MultiItemSlider
   },
   computed: {
+    sliders() {
+      return this.$store.state.sessionStorage.promo;
+    },
     categories() {
       return this.$store.state.sessionStorage.generalInfo.categories;
     },
@@ -332,24 +353,24 @@ export default {
           img: require("@/assets/benefits/1179545.svg")
         }
       ],
-      sliders: [
-        {
-          header: "Пс, у нас тут новая вареная колбаска!",
-          content: `  Capi ta lise on low hanging fruit to identify a ballpark value added activity to beta test.
-            <br>Override the digital divide with.`,
-          buttontext: "Хочу колбаску!",
-          href: "/catalog/varenaya",
-          image: require("@/assets/img/promo.jpg")
-        },
-        {
-          header: "Скидка деликатесы и копчености 10%!",
-          content: `Capitalise on low hanging fruit to identify a ballpark value added activity to beta test.
-            <br>Override the digital divide with.`,
-          buttontext: "Хочу вкусняшек!",
-          href: "/catalog/delikatesy-i-kopchenosti",
-          image: require("@/assets/img/promo1.jpg")
-        }
-      ],
+      // sliders: [
+      //   {
+      //     header: "Пс, у нас тут новая вареная колбаска!",
+      //     content: `  Capi ta lise on low hanging fruit to identify a ballpark value added activity to beta test.
+      //       <br>Override the digital divide with.`,
+      //     buttontext: "Хочу колбаску!",
+      //     href: "/catalog/varenaya",
+      //     image: require("@/assets/img/promo.jpg")
+      //   },
+      //   {
+      //     header: "Скидка деликатесы и копчености 10%!",
+      //     content: `Capitalise on low hanging fruit to identify a ballpark value added activity to beta test.
+      //       <br>Override the digital divide with.`,
+      //     buttontext: "Хочу вкусняшек!",
+      //     href: "/catalog/delikatesy-i-kopchenosti",
+      //     image: require("@/assets/img/promo3.jpg")
+      //   }
+      // ],
 
       promoHeight: "45rem"
     };

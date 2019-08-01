@@ -14,11 +14,7 @@
         v-lazy="product.img ? imageBaseUrl + product.img.url : require('~/assets/no-image.png')"
       />
       <div class="product-card-mini-imgs">
-        <img
-          class="product-card-halal-img"
-          v-if="product.isHalal"
-          :src="require('~/assets/halal1.png')"
-        />
+        <img class="product-card-halal-img" v-if="product.isHalal" src="@/assets/halal1.png" />
         <img
           class="product-card-manufacturer-img d-block"
           v-show="product.manufacturer && product.manufacturer.img"
