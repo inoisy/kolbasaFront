@@ -241,6 +241,7 @@ export default {
             sort: "price"
           };
           await this.$store.commit("sortFilter", addObj);
+          this.products = []
           this.products = await this.$store.dispatch("fetchProducts", {
             slug: this.$route.params.category
             // manufacturer: this.$store.state.manufacturerFilter,
@@ -256,6 +257,7 @@ export default {
             sort: "name"
           };
           await this.$store.commit("sortFilter", addObj);
+          this.products = []
           this.products = await this.$store.dispatch("fetchProducts", {
             slug: this.$route.params.category
             // manufacturer: this.$store.state.manufacturerFilter,
@@ -279,6 +281,7 @@ export default {
           path: this.$route.path,
           query: query
         });
+        this.products = []
         this.products = await this.$store.dispatch("fetchProducts", {
           slug: this.$route.params.category
           // page: this.$route.query.page,
@@ -305,6 +308,7 @@ export default {
           path: this.$route.path,
           query: { ...this.$route.query, ...addObj }
         });
+        this.products = []
         this.products = await this.$store.dispatch("fetchProducts", {
           slug: this.$route.params.category
           // manufacturer: val,
@@ -330,6 +334,7 @@ export default {
     async pageCurr(val) {
       await this.$vuetify.goTo("#contentWrapper");
       await this.$store.commit("pageFilter", val);
+      this.products = []
       this.products = await this.$store.dispatch("fetchProducts", {
         slug: this.$route.params.category,
         // manufacturer: this.$route.query.manufacturer,
