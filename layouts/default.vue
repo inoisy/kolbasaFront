@@ -60,7 +60,8 @@ export default {
           to: "/catalog",
           items: [
             ...this.$store.state.sessionStorage.generalInfo.categories,
-            { name: "Халяльная продукция", slug: "halal" }
+            { name: "Халяльная продукция", slug: "halal" },
+            { name: "Акционная продукция", slug: "discount" }
           ]
         },
         {

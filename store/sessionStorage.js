@@ -47,8 +47,8 @@ export const state = () => ({
   promo: [{
       header: "Пс, у нас тут ежемесячные акции, заходи- успей купить!",
       content: `Самые актуальные и свежие акции от компании Альянс Фуд, принимайте участие и получите удовольствие от покупок по выгодным ценам.`,
-      buttontext: "В каталог",
-      href: "/catalog",
+      buttontext: "Хочу скидки!",
+      href: "/catalog/discount",
       image: require("@/assets/img/promo.jpg")
     },
     {

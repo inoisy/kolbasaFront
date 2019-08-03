@@ -30,9 +30,10 @@ export const mutations = {
     console.log("TCL: addToBasket -> id", product.id)
     // console.log("TCL: addToBasket -> get", state.localStorage.basket[id])
     if (state.localStorage.basket[product.id]) {
+      const count = state.localStorage.basket[product.id].count + 1
       const newItem = {
         [product.id]: {
-          count: state.localStorage.basket[product.id].count + 1,
+          count: count,
           item: product
         }
       }

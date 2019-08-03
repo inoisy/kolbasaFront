@@ -11,7 +11,7 @@
     no-click-animation
     @click:outside="handleClickOutside"
   >
-    <portal-target name="toolbar" ref="portalTarget"></portal-target>
+    <!-- <portal-target name="toolbar" ref="portalTarget"></portal-target> -->
 
     <v-card class="position-relative px-4 pb-4 pt-0 fill-height" style="min-height:45vh">
       <div class="close-btn-wrap mt-2 mr-3">
