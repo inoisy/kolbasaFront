@@ -73,7 +73,26 @@ export const mutations = {
 
 
   },
+  deleteFromBasket(state, product) {
+    const basket = state.localStorage.basket
+    // const count = basket[product.id].count - 1
+    // console.log("TCL: removeFromBasket -> count", count)
+    // if (count < 1) {
+    // const basket = state.localStorage.basket
+    // let {
+    //   id,
+    //   ...basket
+    // } = state.localStorage.basket
+    // console.log("TCL: removeFromBasket -> basket", basket)
+    // const productid = product.id
+    // const basket = state.localStorage.basket
+    // const {
+    //   productid,
+    //   ...basket
+    // } = 
 
+    state.localStorage.basket = _.omit(basket, product.id)
+  },
   removeFromBasket(state, product) {
     const basket = state.localStorage.basket
     const count = basket[product.id].count - 1

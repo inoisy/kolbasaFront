@@ -40,7 +40,13 @@
             <div
               class="price display-flex display-1 align-center justify-center mx-2 font-weight-medium mont"
             >{{product.item.priceNum ? product.item.priceNum*product.count : ''}}</div>
+            <div class="display-flex align-center justify-center">
+              <v-btn icon @click="(e)=>deleteFromBasket(e,product.item)" class="display-flex">
+                <v-icon>delete_outline</v-icon>
+              </v-btn>
+            </div>
           </div>
+
           <v-divider :key="'item-divider'+index" class="my-1"></v-divider>
         </template>
         <v-flex xs12 class="mt-4">
@@ -160,36 +166,18 @@ export default {
     },
     async addToBasket(event, item) {
       console.log("TCL: addToBasket -> item", item);
-      if (item) {
-        await this.$store.commit("addToBasket", item);
-      }
+
+      await this.$store.commit("addToBasket", item);
     },
     async removeFromBasket(event, item) {
       console.log("TCL: removeFromBasket -> item", item);
-      if (item) {
-        await this.$store.commit("removeFromBasket", item);
-      }
-    }
-    // async increment(event, id) {
 
-    // const item = this.$store.state.localStorage.basket.find(
-    //   item => item.item.id === id
-    // );
-    // console.log(
-    //   "TCL: increment -> item",
-    //   this.$store.state.localStorage.basket
-    // );
-    // const val = Number(+item.count + 1);
-    // await this.$store.commit("changeBasket", { id, val });
-    // // this.$set(this.cart, id, val);
-    // await this.$nextTick();
-    // },
-    // async decrement(event, id) {
-    // const val = Number(+this.basketCounts[id] - 1);
-    // await this.$store.commit("changeBasket", { id, val });
-    // // this.$set(this.cart, id, val);
-    // await this.$nextTick();
-    // }
+      await this.$store.commit("removeFromBasket", item);
+    },
+    async deleteFromBasket(event, item) {
+      console.log("TCL: removeFromBasket -> item", item);
+      await this.$store.commit("deleteFromBasket", item);
+    }
   },
   // watch: {
   //   basket() {

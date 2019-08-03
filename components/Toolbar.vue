@@ -154,15 +154,16 @@ export default {
         this.basketDrawer = false;
       }
       return isActive;
+      // return this.basketLength > 0;
     },
     basketLength() {
       const basketl = Object.values(
         this.$store.state.localStorage.basket
       ).reduce((acc, val) => {
-        console.log("TCL: basketLength -> val", val);
+        // console.log("TCL: basketLength -> val", val);
         return acc + val.count;
       }, 0);
-      console.log("TCL: basketLength -> basketLength", basketl);
+      // console.log("TCL: basketLength -> basketLength", basketl);
 
       return basketl;
     },
