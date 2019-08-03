@@ -7,10 +7,10 @@
     style="text-decoration: none; border-radius: 10px"
   >
     <v-layout class="card-inner">
-      <div class="img-wrapper display-flex gray" style=" min-height:13rem; min-width:300px">
+      <div class="img-wrapper display-flex gray pb-3" style=" min-height:13rem; min-width:300px">
         <img
           class="d-block ma-auto"
-          style="max-height:13rem; min-height:150px"
+          style="max-width:250px; max-height:250px; min-height:150px"
           v-lazy="item.img ? imageBaseUrl+item.img.url : require('~/assets/no-image.png')"
           :alt="item.name"
         />

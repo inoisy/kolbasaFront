@@ -28,7 +28,7 @@
               >{{product.item.name}}</nuxt-link>
             </v-flex>
             <div class="quantity align-center display-flex justify-center">
-              <v-btn icon @click="(e)=>removeFromBasket(e,product.item)">
+              <v-btn icon @click="(e)=> removeFromBasket(e,product.item)">
                 <v-icon>remove</v-icon>
               </v-btn>
               {{product.count}}
@@ -160,11 +160,15 @@ export default {
     },
     async addToBasket(event, item) {
       console.log("TCL: addToBasket -> item", item);
-      await this.$store.commit("addToBasket", item);
+      if (item) {
+        await this.$store.commit("addToBasket", item);
+      }
     },
     async removeFromBasket(event, item) {
       console.log("TCL: removeFromBasket -> item", item);
-      await this.$store.commit("removeFromBasket", item);
+      if (item) {
+        await this.$store.commit("removeFromBasket", item);
+      }
     }
     // async increment(event, id) {
 
