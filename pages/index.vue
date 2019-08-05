@@ -111,22 +111,25 @@
           </div>
           <v-flex xs10 md8 offset-lg1 lg7 xl6 class="d-flex mb-5">
             <div class="my-auto">
-              <h2 class="bottom-header d-block" data-aos="fade-up">Lorem ipsum sit dolor amet</h2>
-              <div class="bottom-text" data-aos="fade-up">
-                Capitalise on low hanging fruit to identify a ballpark value added activity to beta test. Override the.
-                Capitalise on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with.
-              </div>
+              <h2 class="bottom-header d-block" data-aos="fade-up">Наши партнеры – наша гордость</h2>
+              <div
+                class="bottom-text"
+                data-aos="fade-up"
+              >Мы нацелены на долгосрочное взаимовыгодное сотрудничество. Поэтому «Альянс Фуд» дорожит каждым партнером. Мы всегда находим возможности для успешной работы как с крупными, так и с мелкими клиентами. Это получается благодаря тому, что мы уже больше 20 лет занимаемся оптовой продажей колбас и готовой мясной продукции, и за десятилетия работы накопили огромный опыт. Обращайтесь и проверьте лично, что с нами у вас будут самые выгодные условия.</div>
             </div>
           </v-flex>
         </div>
         <div class="layout row wrap align-center justify-center pb-4">
           <div class="xs10 md8 offset-lg1 lg7 xl6 flex d-flex">
             <div class="my-auto">
-              <h2 class="bottom-header d-block mb-3" data-aos="fade-up">Lorem ipsum sit dolor amet</h2>
+              <h2
+                class="bottom-header d-block mb-3"
+                data-aos="fade-up"
+              >Почему стоит выбрать именно нас?</h2>
               <div
                 class="bottom-text mb-3"
                 data-aos="fade-up"
-              >Capitalise on low hanging fruit to identify a ballpark value added activity to beta test. Override the.</div>
+              >Мы действительно заинтересованы в том, чтобы бизнес наших партнеров развивался. Поэтому мы делаем все возможное для максимально комфортного сотрудничества.</div>
               <div class="bottom-text layout row wrap" data-aos="fade-up">
                 <div
                   class="flex xs12 sm4 px-3 mb-3"
@@ -341,15 +344,15 @@ export default {
       },
       benefits: [
         {
-          text: "Доставка по России и странам ЕАЭС",
+          text: "Быстрая доставка по РФ и странам ЕАЭС",
           img: require("@/assets/benefits/shipped.svg")
         },
         {
-          text: "Лучшие цены от производителей",
+          text: "Лучшие цены напрямую от производителей",
           img: require("@/assets/benefits/currency.svg")
         },
         {
-          text: "Скидки постоянным партнерам",
+          text: "Отличные скидки у постоянных заказчиков",
           img: require("@/assets/benefits/1179545.svg")
         }
       ],
