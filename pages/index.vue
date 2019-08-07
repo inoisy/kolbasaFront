@@ -180,13 +180,13 @@
 // min-height: 50rem;
 // }
 .header {
-  font-size: 3.5rem;
+  font-size: 2.5rem;
   line-height: normal;
 }
 
 .subheader {
-  font-size: 1.8rem;
-  line-height: 1.3;
+  font-size: 1.3rem;
+  line-height: 1.5;
 }
 
 .button {
@@ -251,6 +251,16 @@
 }
 
 @media (min-width: 600px) {
+  .header {
+    font-size: 3rem;
+    // line-height: normal;
+  }
+
+  .subheader {
+    font-size: 1.5rem;
+    // line-height: 1.3;
+  }
+
   .background {
     background-position: 75% center;
   }
