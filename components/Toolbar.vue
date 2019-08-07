@@ -150,9 +150,8 @@ export default {
   components: { Busket },
   computed: {
     basketActive() {
-      const isActive = this.$store.state.localStorage.basket
-        ? Object.keys(this.$store.state.localStorage.basket).length > 0
-        : false;
+      const basketObj = this.$store.state.localStorage.basket;
+      const isActive = basketObj ? Object.keys(basketObj).length > 0 : false;
       if (!isActive) {
         this.basketDrawer = false;
       }
