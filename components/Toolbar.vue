@@ -75,9 +75,9 @@
       <v-btn icon class="ml-1" :href="'tel:'+phone" large>
         <v-icon medium color="#95282a">phone</v-icon>
       </v-btn>
-      <span class="d-none">{{basketLength}}</span>
+      <!-- <span>{{basketLength}}</span> -->
 
-      <v-badge color="#95282a" overlap :value="basketActive">
+      <v-badge color="#95282a" overlap :value="basketLength>0">
         <template v-slot:badge>{{basketLength}}</template>
         <v-btn icon class="ml-1" @click="basketDrawer=true" large :disabled="!basketActive">
           <v-icon medium color="#95282a">shopping_basket</v-icon>
@@ -150,8 +150,9 @@ export default {
   components: { Busket },
   computed: {
     basketActive() {
-      const isActive =
-        Object.keys(this.$store.state.localStorage.basket).length > 0;
+      const isActive = this.$store.state.localStorage.basket
+        ? Object.keys(this.$store.state.localStorage.basket).length > 0
+        : false;
       if (!isActive) {
         this.basketDrawer = false;
       }
@@ -159,12 +160,13 @@ export default {
       // return this.basketLength > 0;
     },
     basketLength() {
-      const basketl = Object.values(
-        this.$store.state.localStorage.basket
-      ).reduce((acc, val) => {
-        // console.log("TCL: basketLength -> val", val);
-        return acc + val.count;
-      }, 0);
+      const basketObj = this.$store.state.localStorage.basket;
+      const basketl = basketObj
+        ? Object.values(basketObj).reduce((acc, val) => {
+            // console.log("TCL: basketLength -> val", val);
+            return acc + val.count;
+          }, 0)
+        : 0;
       // console.log("TCL: basketLength -> basketLength", basketl);
 
       return basketl;

@@ -10,7 +10,7 @@
       <!-- <div class="img-wrapper position-relative"> -->
 
       <img
-        class="d-block ma-auto product-img"
+        class="d-block ma-auto product-img pt-3 px-3"
         v-lazy="product.img ? imageBaseUrl + product.img.url : require('~/assets/no-image.png')"
       />
       <div class="product-card-mini-imgs">

@@ -26,7 +26,7 @@ export const mutations = {
   products(state, item) {
     state.sessionStorage.products = item
   },
-  addToBasket(state, product) {
+  async addToBasket(state, product) {
     console.log("TCL: addToBasket -> id", product.id)
     // console.log("TCL: addToBasket -> get", state.localStorage.basket[id])
     if (state.localStorage.basket[product.id]) {
@@ -37,11 +37,6 @@ export const mutations = {
           item: product
         }
       }
-      // const newBusket = {
-      //   ...state.localStorage.basket,
-      //   ...newItem
-      // }
-      // state.localStorage.basket = newBusket
       state.localStorage.basket = {
         ...state.localStorage.basket,
         ...newItem
@@ -53,17 +48,6 @@ export const mutations = {
           item: product
         }
       }
-      // const newBusket = {
-      //   ...state.localStorage.basket,
-      //   ...newItem
-      // }
-      // state.localStorage.basket = newBusket
-      // const newItem = {
-      //   [product.id]: {
-      //     count: count,
-      //     item: product
-      //   }
-      // }
       state.localStorage.basket = {
         ...state.localStorage.basket,
         ...newItem
