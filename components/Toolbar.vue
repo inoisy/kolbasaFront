@@ -75,7 +75,9 @@
       <v-btn icon class="ml-1" :href="'tel:'+phone" large>
         <v-icon medium color="#95282a">phone</v-icon>
       </v-btn>
-      <v-badge color="#95282a" overlap :value="basketLength>0">
+      <span class="d-none">{{basketLength}}</span>
+
+      <v-badge color="#95282a" overlap :value="basketActive">
         <template v-slot:badge>{{basketLength}}</template>
         <v-btn icon class="ml-1" @click="basketDrawer=true" large :disabled="!basketActive">
           <v-icon medium color="#95282a">shopping_basket</v-icon>

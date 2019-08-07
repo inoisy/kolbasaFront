@@ -170,6 +170,15 @@ export const actions = {
              addressCoords
              accessTime
            }
+           promos {
+             header
+             content
+             buttontext
+             href
+             img {
+               url
+             }
+           }
           categories(sort: "name:asc") {
             id
             name
@@ -191,6 +200,7 @@ export const actions = {
         `
       })
       const result = {
+        promos: generalData.promos,
         categories: generalData.categories,
         manufacturers: generalData.manufacturers,
         contacts: generalData.contacts[0]

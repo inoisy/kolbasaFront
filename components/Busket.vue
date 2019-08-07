@@ -39,7 +39,7 @@
 
             <div
               class="price display-flex display-1 align-center justify-center mx-2 font-weight-medium mont"
-            >{{product.item.priceNum ? product.item.priceNum*product.count : ''}}</div>
+            >{{product.item.isDiscount ? product.item.discountPrice*product.count : product.item.priceNum*product.count }}</div>
             <div class="display-flex align-center justify-center">
               <v-btn icon @click="(e)=>deleteFromBasket(e,product.item)" class="display-flex">
                 <v-icon>delete_outline</v-icon>
@@ -191,24 +191,13 @@ export default {
       const basketItems = Object.keys(this.$store.state.localStorage.basket);
       for (let id of basketItems) {
         const product = this.$store.state.localStorage.basket[id];
-        if (product.item.priceNum && product.count) {
+        if (product.item.isDiscount && product.item.discountPrice) {
+          summ = summ + product.count * product.item.discountPrice;
+        } else if (product.item.priceNum && product.count) {
           summ = summ + product.count * product.item.priceNum;
         }
       }
-      // console.log("TCL: summa -> acc", summ);
       return summ;
-      // const summ = this.$store.state.localStorage.basket.reduce(
-      //   (acc, product) => {
-      //     // console.log("TCL: summa -> val", val);
-      //     if (product.item.priceNum && product.count) {
-      //       acc = acc + product.count * product.item.priceNum;
-      //     }
-      //     return acc;
-      //   },
-      //   0
-      // );
-      // console.log("TCL: summa -> summ", summ);
-      // return summ;
     },
     isSummValid() {
       return this.summa > 3000;
@@ -218,31 +207,8 @@ export default {
       return this.$vuetify.breakpoint.smAndDown;
     },
     basket() {
-      //   this.$forceUpdate();
-      // this.$forceUpdate();
       return Object.values(this.$store.state.localStorage.basket);
     },
-    // basketCounts: {
-    //   get() {
-    //     const newObj = {};
-    //     const basketItems = this.$store.state.localStorage.basket;
-    //     console.log("TCL: get -> basketItems", basketItems);
-    //     // this.$forceUpdate();
-    //     //   console.log("TCL: data -> basketItems", basketItems);
-    //     for (let item of basketItems) {
-    //       // const count = ;
-    //       // this.$set(this.cart, item.id, count);
-
-    //       // console.log("TCL: data -> count", count);
-    //       newObj[item.id] = Number(item.count);
-    //     }
-    //     return newObj;
-    //   },
-    //   set(newValue) {
-    //     console.log("TCL: set -> newValue", newValue);
-    //     this.basketCounts = newValue;
-    //   }
-    // },
     isBasket() {
       return (
         this.$store.state.localStorage.basket &&

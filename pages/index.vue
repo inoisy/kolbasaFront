@@ -6,7 +6,7 @@
           class="swiper-slide background-wrapper main-background background d-flex"
           v-for="(item,index) in sliders"
           :key="index"
-          :style="`background-image: url(${item.image})`"
+          :style="`background-image: url(${imageBaseUrl+item.img.url})`"
           style="min-height: calc(100vh - 100px)"
         >
           <v-container fill-height class="main-content py-5">
@@ -112,10 +112,10 @@
           <v-flex xs10 md8 offset-lg1 lg7 xl6 class="d-flex mb-5">
             <div class="my-auto">
               <h2 class="bottom-header d-block" data-aos="fade-up">Наши партнеры – наша гордость</h2>
-              <div
-                class="bottom-text"
-                data-aos="fade-up"
-              >Мы нацелены на долгосрочное взаимовыгодное сотрудничество. Поэтому «Альянс Фуд» дорожит каждым партнером. Мы всегда находим возможности для успешной работы как с крупными, так и с мелкими клиентами. Это получается благодаря тому, что мы уже больше 20 лет занимаемся оптовой продажей колбас и готовой мясной продукции, и за десятилетия работы накопили огромный опыт. Обращайтесь и проверьте лично, что с нами у вас будут самые выгодные условия.</div>
+              <div class="bottom-text" data-aos="fade-up">
+                <!-- <p>«Альянс Фуд» предлагает колбасную продукцию на самых выгодных условиях, чтобы вы могли наслаждаться вкуснейшими блюдами с экономией семейного бюджета. Наша цель – установление продолжительного взаимовыгодного сотрудничества, в рамках которого на вашем столе всегда будут находиться свежие колбасы, полуфабрикаты и разнообразные деликатесы превосходного качества.</p> -->
+                <p>Мы сотрудничаем как с крупными предприятиями, так и с частными клиентами. За долгие годы успешной работы нам удалось накопить богатый опыт взаимодействия с поставщиками, благодаря чему мы сохраняем наиболее выгодные условия оформления заказа для своих клиентов.</p>
+              </div>
             </div>
           </v-flex>
         </div>
@@ -129,7 +129,7 @@
               <div
                 class="bottom-text mb-3"
                 data-aos="fade-up"
-              >Мы действительно заинтересованы в том, чтобы бизнес наших партнеров развивался. Поэтому мы делаем все возможное для максимально комфортного сотрудничества.</div>
+              >Мы заинтересованы в успешном развитии вашего бизнеса и стараемся сделать все возможное с нашей стороны. Сотрудничество с нами будет максимально комфортным за счет:</div>
               <div class="bottom-text layout row wrap" data-aos="fade-up">
                 <div
                   class="flex xs12 sm4 px-3 mb-3"
@@ -301,7 +301,8 @@ export default {
         {
           hid: "description",
           name: "description",
-          content: this.page.description
+          content:
+            "Колбаса оптом по самым выгодным ценам от компании Альянс Фуд. Самовывоз со склада в Москве. Доставка по РФ"
         }
       ]
     };
@@ -312,7 +313,7 @@ export default {
   },
   computed: {
     sliders() {
-      return this.$store.state.sessionStorage.promo;
+      return this.$store.state.sessionStorage.generalInfo.promos;
     },
     categories() {
       return this.$store.state.sessionStorage.generalInfo.categories;
@@ -337,11 +338,11 @@ export default {
           prevEl: ".swiper-button-prev"
         }
       },
-      page: {
-        title: "Минимальный заказ от 3000 рублей!",
-        description: `Capi ta lise on low hanging fruit to identify a ballpark value added activity to beta test.
-            <br>Override the digital divide with.`
-      },
+      // page: {
+      //   title: "Минимальный заказ от 3000 рублей!",
+      //   description: `Capi ta lise on low hanging fruit to identify a ballpark value added activity to beta test.
+      //       <br>Override the digital divide with.`
+      // },
       benefits: [
         {
           text: "Быстрая доставка по РФ и странам ЕАЭС",
@@ -352,7 +353,7 @@ export default {
           img: require("@/assets/benefits/currency.svg")
         },
         {
-          text: "Отличные скидки у постоянных заказчиков",
+          text: "Aкции и скидки постоянным заказчикам",
           img: require("@/assets/benefits/1179545.svg")
         }
       ],
