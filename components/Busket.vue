@@ -38,9 +38,9 @@
             </div>
 
             <div
-              class="price display-flex display-1 align-center justify-center mx-2 font-weight-medium mont"
+              class="price display-flex display-1 align-center justify-center font-weight-medium mont"
             >{{product.item.isDiscount ? product.item.discountPrice*product.count : product.item.priceNum*product.count }}</div>
-            <div class="display-flex align-center justify-center">
+            <div class="display-flex align-center justify-center ma-0">
               <v-btn icon @click="(e)=>deleteFromBasket(e,product.item)" class="display-flex">
                 <v-icon>delete_outline</v-icon>
               </v-btn>
@@ -114,8 +114,8 @@
 }
 
 .quantity {
-  width: 100px;
-  min-width: 100px;
+  width: 90px;
+  min-width: 90px;
   display: flex;
   align-items: center;
 
@@ -124,7 +124,7 @@
   }
 }
 
-.priceNum {
+.price {
   width: 60px;
   min-width: 60px;
 }

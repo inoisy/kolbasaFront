@@ -77,7 +77,7 @@
       </v-btn>
       <v-badge color="#95282a" overlap :value="basketLength>0">
         <template v-slot:badge>{{basketLength}}</template>
-        <v-btn icon class="ml-1" @click="basketDrawer=true" large :disabled="!basketActive">
+        <v-btn icon class="ml-1" @click="basketDrawer=true" large :disabled="basketLength<1">
           <v-icon medium color="#95282a">shopping_basket</v-icon>
         </v-btn>
       </v-badge>
@@ -147,26 +147,31 @@ export default {
   },
   components: { Busket },
   computed: {
-    basketActive() {
-      const basketObj = this.$store.state.localStorage.basket;
-      const isActive = basketObj ? Object.keys(basketObj).length > 0 : false;
-      if (!isActive) {
+    // basketActive() {
+    //   const basketObj = this.$store.state.localStorage.basket;
+    //   const isActive = basketObj ? Object.keys(basketObj).length > 0 : false;
+    //   if (!isActive) {
+    //     this.basketDrawer = false;
+    //   }
+    //   return isActive;
+    //   // return this.basketLength > 0;
+    // },
+    basketLength() {
+      // const basketObj = this.$store.state.localStorage.basket;
+      const length = Object.keys(this.$store.state.localStorage.basket).length;
+      if (length < 1) {
         this.basketDrawer = false;
       }
-      return isActive;
-      // return this.basketLength > 0;
-    },
-    basketLength() {
-      const basketObj = this.$store.state.localStorage.basket;
-      const basketl = basketObj
-        ? Object.values(basketObj).reduce((acc, val) => {
-            // console.log("TCL: basketLength -> val", val);
-            return acc + val.count;
-          }, 0)
-        : 0;
+      // }
+      // const basketl = basketObj
+      //   ? Object.values(basketObj).reduce((acc, val) => {
+      //       // console.log("TCL: basketLength -> val", val);
+      //       return acc + val.count;
+      //     }, 0)
+      //   : 0;
       // console.log("TCL: basketLength -> basketLength", basketl);
 
-      return basketl;
+      return length;
     },
     phone() {
       return this.$store.state.sessionStorage.generalInfo.contacts.phone;

@@ -8,7 +8,13 @@
         <div id="contentWrapper" class="display-flex">
           <v-flex style="min-height: 73vh" class="display-flex">
             <!-- {{products}} -->
-            <v-layout row wrap id="products" ref="product" v-show="products.items.length>0">
+            <v-layout
+              row
+              wrap
+              id="products"
+              ref="product"
+              v-show="products.items && products.items.length>0"
+            >
               <div
                 class="flex xs12 sm6 md4 lg3 xl2"
                 data-aos="fade-up"
@@ -198,35 +204,47 @@ export default {
       manufacturer: manufacturersSelectedIds
       //   manufacturer && manufacturer.item ? manufacturer.item.id : null
     });
-    const manufacturersExist =
-      category.manufacturers && category.manufacturers.length > 0
-        ? manufacturers.filter(item => category.manufacturers.includes(item.id))
-        : [];
+    console.log("TCL: Data -> category", category);
 
-    let sort;
-    if (ctx.route.query.sort && ctx.route.query.sort === "price") {
-      sort = { sort: "price" };
+    if (category) {
+      const manufacturersExist =
+        category.manufacturers && category.manufacturers.length > 0
+          ? manufacturers.filter(item =>
+              category.manufacturers.includes(item.id)
+            )
+          : [];
+
+      let sort;
+      if (ctx.route.query.sort && ctx.route.query.sort === "price") {
+        sort = { sort: "price" };
+      } else {
+        sort = { sort: "name" };
+      }
+
+      await ctx.store.commit("sortFilter", sort);
+      await ctx.store.commit("manufacturerFilter", manufacturersSelectedIds);
+      await ctx.store.commit("pageFilter", ctx.route.query.page);
+      const products = await ctx.store.dispatch("fetchProducts", {
+        slug: ctx.route.params.category
+        // manufacturer: manufacturersSelectedIds,
+        // sort: ctx.route.query.sort,
+        // page: ctx.route.query.page
+      });
+
+      return {
+        products: products,
+        category: category,
+        manufacturers: manufacturersExist,
+        manufacturersSelected: manufacturersSelectedIds
+        // manufacturersModel: manufacturersModel
+      };
     } else {
-      sort = { sort: "name" };
+      ctx.error({
+        statusCode: 204,
+        message:
+          "The server successfully processed the request and is not returning any content."
+      });
     }
-
-    await ctx.store.commit("sortFilter", sort);
-    await ctx.store.commit("manufacturerFilter", manufacturersSelectedIds);
-    await ctx.store.commit("pageFilter", ctx.route.query.page);
-    const products = await ctx.store.dispatch("fetchProducts", {
-      slug: ctx.route.params.category
-      // manufacturer: manufacturersSelectedIds,
-      // sort: ctx.route.query.sort,
-      // page: ctx.route.query.page
-    });
-
-    return {
-      products: products,
-      category: category,
-      manufacturers: manufacturersExist,
-      manufacturersSelected: manufacturersSelectedIds
-      // manufacturersModel: manufacturersModel
-    };
   },
   methods: {
     // handleScroll() {
@@ -241,7 +259,7 @@ export default {
             sort: "price"
           };
           await this.$store.commit("sortFilter", addObj);
-          this.products = []
+          this.products = [];
           this.products = await this.$store.dispatch("fetchProducts", {
             slug: this.$route.params.category
             // manufacturer: this.$store.state.manufacturerFilter,
@@ -257,7 +275,7 @@ export default {
             sort: "name"
           };
           await this.$store.commit("sortFilter", addObj);
-          this.products = []
+          this.products = [];
           this.products = await this.$store.dispatch("fetchProducts", {
             slug: this.$route.params.category
             // manufacturer: this.$store.state.manufacturerFilter,
@@ -281,7 +299,7 @@ export default {
           path: this.$route.path,
           query: query
         });
-        this.products = []
+        this.products = [];
         this.products = await this.$store.dispatch("fetchProducts", {
           slug: this.$route.params.category
           // page: this.$route.query.page,
@@ -308,7 +326,7 @@ export default {
           path: this.$route.path,
           query: { ...this.$route.query, ...addObj }
         });
-        this.products = []
+        this.products = [];
         this.products = await this.$store.dispatch("fetchProducts", {
           slug: this.$route.params.category
           // manufacturer: val,
@@ -334,7 +352,7 @@ export default {
     async pageCurr(val) {
       await this.$vuetify.goTo("#contentWrapper");
       await this.$store.commit("pageFilter", val);
-      this.products = []
+      this.products = [];
       this.products = await this.$store.dispatch("fetchProducts", {
         slug: this.$route.params.category,
         // manufacturer: this.$route.query.manufacturer,

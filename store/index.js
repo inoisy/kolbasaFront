@@ -202,11 +202,11 @@ export const actions = {
     if (ctx.state.sessionStorage.category.slug !== params.slug) {
       const categoryFind = ctx.state.sessionStorage.generalInfo.categories.find(item => item.slug === params.slug)
       let client = this.app.apolloProvider.defaultClient;
-
-      const {
-        data: categoryData
-      } = await client.query({
-        query: gql `
+      if (categoryFind && categoryFind.id) {
+        const {
+          data: categoryData
+        } = await client.query({
+          query: gql `
         query CategoryQuery( $id: ID! ) {
           category(id: $id) {
             manufacturers
@@ -219,42 +219,15 @@ export const actions = {
           }
         }
       `,
-        variables: {
-          id: categoryFind.id,
-        }
-      });
-      // let products = []
-      // let count
-      // let query = `category=${categoryFind.id}`
-      // if (params.manufacturer && params.manufacturer.length > 0) {
-      //   query = query + params.manufacturer.map(item => `&manufacturer=${item}`).join('')
-      // }
-      // if (params.page) {
-      //   query = query + `&_start=${(params.page-1)*20}`
-      // }
-      // if (params.sort && params.sort === "price") {
-      //   query = query + `&_sort=price:asc`
-      // } else {
-      //   query = query + `&_sort=name:asc`
-      // }
-      // console.log("TCL: query", query)
+          variables: {
+            id: categoryFind.id,
+          }
+        });
 
-      // const {
-      //   data: productsData
-      // } = await this.$axios.get(`/products?` + query)
-      // const {
-      //   data: productsCount
-      // } = await this.$axios.get(`/products/count?` + query)
+        await ctx.commit("category", categoryData.category);
+        return categoryData.category
+      }
 
-      // count = productsCount
-      // products = productsData
-
-      await ctx.commit("category", categoryData.category);
-      // await ctx.commit("products", {
-      //   items: products,
-      //   count: count
-      // });
-      return categoryData.category
     } else {
       return ctx.state.sessionStorage.category
     }

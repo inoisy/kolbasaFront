@@ -4,8 +4,8 @@
     <section class="background" v-lazy:background-image="require('~/assets/img/bg.jpg')">
       <v-container class="py-5">
         <v-layout row wrap v-if="page && page.content">
-          <div v-html="page.content"></div>
-          <v-divider class="mb-4"></v-divider>
+          <div v-if="page.content" v-html="$md.render(page.content)"></div>
+          <v-divider class="my-4"></v-divider>
         </v-layout>
         <v-layout row wrap v-for="category of categories" :key="category.id" class="mb-4">
           <h2 class="mb-4 flex xs12 d-block" data-aos="fade-up">{{category.name}}</h2>
