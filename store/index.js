@@ -154,15 +154,6 @@ export const actions = {
              addressCoords
              accessTime
            }
-           promos {
-             header
-             content
-             buttontext
-             href
-             img {
-               url
-             }
-           }
           categories(sort: "name:asc") {
             id
             name

@@ -80,7 +80,7 @@
           <v-img
             class="mx-auto my-5 xs10 md10 lg9 xl8 flex"
             contain
-            v-lazy="require('~/assets/delimiter.svg')"
+            :src="require('~/assets/delimiter.svg')"
           ></v-img>
         </div>
 
@@ -94,7 +94,7 @@
           <v-img
             class="mx-auto my-5 xs10 md10 lg9 xl8 flex"
             contain
-            v-lazy="require('~/assets/delimiter.svg')"
+            :src="require('~/assets/delimiter.svg')"
           ></v-img>
         </div>
         <div class="layout row wrap align-center justify-center pt-5">
@@ -314,9 +314,9 @@ export default {
     MultiItemSlider
   },
   computed: {
-    sliders() {
-      return this.$store.state.sessionStorage.generalInfo.promos;
-    },
+    // sliders() {
+    //   return this.$store.state.sessionStorage.generalInfo.promos;
+    // },
     categories() {
       return this.$store.state.sessionStorage.generalInfo.categories;
     },
@@ -383,25 +383,29 @@ export default {
   },
   async asyncData(ctx) {
     await ctx.store.dispatch("fetchGeneralInfo");
-    // let client = ctx.app.apolloProvider.defaultClient;
-    // const { data: categoryData } = await client.query({
-    //   query: gql`
-    //     {
-    //       categories {
-    //         name
-    //         slug
-    //         img {
-    //           url
-    //         }
-    //       }
-    //     }
-    //   `
-    // });
+
+    let client = ctx.app.apolloProvider.defaultClient;
+    const { data: promosData } = await client.query({
+      query: gql`
+        {
+          promos {
+            header
+            content
+            buttontext
+            href
+            img {
+              url
+            }
+          }
+        }
+      `
+    });
     // console.log("TCL: Data -> categoryData", categoryData);
     // const categories=
     // # const data = await ctx.store.dispatch("fetchMainCategories");
     // await ctx.store.dispatch("fetchGeneralInfo");
     return {
+      sliders: promosData.promos
       // categories: categoryData.categories
     };
   }
