@@ -59,21 +59,6 @@ export const mutations = {
   },
   deleteFromBasket(state, product) {
     const basket = state.localStorage.basket
-    // const count = basket[product.id].count - 1
-    // console.log("TCL: removeFromBasket -> count", count)
-    // if (count < 1) {
-    // const basket = state.localStorage.basket
-    // let {
-    //   id,
-    //   ...basket
-    // } = state.localStorage.basket
-    // console.log("TCL: removeFromBasket -> basket", basket)
-    // const productid = product.id
-    // const basket = state.localStorage.basket
-    // const {
-    //   productid,
-    //   ...basket
-    // } = 
 
     state.localStorage.basket = _.omit(basket, product.id)
   },
@@ -82,18 +67,6 @@ export const mutations = {
     const count = basket[product.id].count - 1
     console.log("TCL: removeFromBasket -> count", count)
     if (count < 1) {
-      // const basket = state.localStorage.basket
-      // let {
-      //   id,
-      //   ...basket
-      // } = state.localStorage.basket
-      // console.log("TCL: removeFromBasket -> basket", basket)
-      // const productid = product.id
-      // const basket = state.localStorage.basket
-      // const {
-      //   productid,
-      //   ...basket
-      // } = 
 
       state.localStorage.basket = _.omit(basket, product.id)
     } else {
@@ -107,31 +80,9 @@ export const mutations = {
         ...state.localStorage.basket,
         ...newItem
       }
-      // const newBusket = state.localStorage.basket.filter(item => console.log("TCL: removeFromBasket -> item", item))
-      // set(state.localStorage.basket, product.id, {
-      //   count: count,
-      //   item: product
-      // })
-      // {
-      //   ...state.localStorage.basket,
-      //   ...newItem
-      // }
-      // state.localStorage.basket.s
-      // state.localStorage.basket = newBusket
+
     }
-    //  let { page, ...query } = this.$route.query;
-    // const newItem = {
-    //   [id]: state.localStorage.basket[id] ? state.localStorage.basket[id] - 1 : 1
-    // }
-    // const newBusket = {
-    //   ...state.localStorage.basket,
-    //   ...newItem
-    // }
-    // state.localStorage.basket = newBusket
-    //   state.localStorage.basket = state.localStorage.basket.filter(item => {
-    //     return String(item.id) !== String(productId)
-    //   })
-    //   // console.log("TCL: removeFromBasket -> state.localStorage.basket.filter(item => item._id == productId)", state.localStorage.basket.filter(item => item._id == productId))
+
   },
 
 }
@@ -141,6 +92,15 @@ export const actions = {
     // console.log("TCL: fetchGeneralInfo -> fetchGeneralInfo", Object.keys(ctx.state.sessionStorage.generalInfo).length)
     if (!ctx.state.sessionStorage.generalInfo || Object.keys(ctx.state.sessionStorage.generalInfo).length === 0) {
       // console.log("TCL: fetchGeneralInfo -> FETCH")
+      // const {
+      //   data: contactsData
+      // } = await this.$axios.get("/contacts")
+      // const {
+      //   data: categoriesData
+      // } = await this.$axios.get("/categories?_sort=name:asc")
+      // const {
+      //   data: manufacturersData
+      // } = await this.$axios.get("/manufacturers?_sort=name:asc")
       let client = this.app.apolloProvider.defaultClient;
       const {
         data: generalData
@@ -175,7 +135,6 @@ export const actions = {
         `
       })
       const result = {
-        promos: generalData.promos,
         categories: generalData.categories,
         manufacturers: generalData.manufacturers,
         contacts: generalData.contacts[0]

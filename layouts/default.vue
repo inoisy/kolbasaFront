@@ -58,11 +58,13 @@ export default {
         {
           name: "Каталог",
           to: "/catalog",
-          items: [
-            ...this.$store.state.sessionStorage.generalInfo.categories,
-            { name: "Халяльная продукция", slug: "halal" },
-            { name: "Акционная продукция", slug: "discount" }
-          ]
+          items: this.$store.state.sessionStorage.generalInfo.categories
+            ? [
+                ...this.$store.state.sessionStorage.generalInfo.categories,
+                { name: "Халяльная продукция", slug: "halal" },
+                { name: "Акционная продукция", slug: "discount" }
+              ]
+            : []
         },
         {
           name: "Производители",
