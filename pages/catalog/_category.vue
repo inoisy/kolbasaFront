@@ -239,10 +239,9 @@ export default {
         // manufacturersModel: manufacturersModel
       };
     } else {
-      ctx.error({
-        statusCode: 204,
-        message:
-          "The server successfully processed the request and is not returning any content."
+      return ctx.error({
+        statusCode: 404,
+        message: "Категория не найдена"
       });
     }
   },

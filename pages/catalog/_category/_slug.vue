@@ -321,15 +321,16 @@ export default {
         slug: ctx.params.slug
       });
       console.log("TCL: Data -> product", product);
-
-      // const { data: product } = await ctx.$axios.get(
-      //   `/products?slug=` + ctx.params.slug
-      // );
-      // const productItem = product[0];
-      return {
-        product: product
-        // multiple: product.productmodifications.length > 1
-      };
+      if (product) {
+        return {
+          product: product
+        };
+      } else {
+        return ctx.error({
+          statusCode: 404,
+          message: "Продукт не найден"
+        });
+      }
     }
   },
   computed: {

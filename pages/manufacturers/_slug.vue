@@ -4,7 +4,7 @@
     <div>
       <!-- class="background" v-lazy:background-image="require('~/assets/img/bg.jpg')" -->
       <v-container grid-list-lg class="py-5">
-        <div class="display-1 mb-4">
+        <div class="display-1 mb-4" style="font-size: 1.1rem !important">
           <div
             class="flex xs12"
             data-aos="fade-up"
@@ -87,59 +87,46 @@ export default {
   async asyncData(ctx) {
     const generalInfo = await ctx.store.dispatch("fetchGeneralInfo");
     let client = ctx.app.apolloProvider.defaultClient;
-    const id = generalInfo.manufacturers.find(
+    const manufacturerFind = generalInfo.manufacturers.find(
       item => item.slug === ctx.params.slug
-    ).id;
-    const { data: manufacturerData } = await client.query({
-      variables: {
-        id: id
-      },
-      query: gql`
-        query ManufacturerQuery($id: ID!) {
-          manufacturer(id: $id) {
-            name
-            slug
-            description
-            content
-            img {
-              url
-            }
-            catalog {
-              url
+    );
+    if (manufacturerFind) {
+      const id = manufacturerFind.id;
+      const { data: manufacturerData } = await client.query({
+        variables: {
+          id: id
+        },
+        query: gql`
+          query ManufacturerQuery($id: ID!) {
+            manufacturer(id: $id) {
+              name
+              slug
+              description
+              content
+              img {
+                url
+              }
+              catalog {
+                url
+              }
             }
           }
-          # categories {
-          #   id
-          #   slug
-          #   name
-          #   products(where: { manufacturer: { id: $id } }, limit: 12) {
-          #     id
-          #     name
-          #     slug
-          #     price
-          #     weight
-          #     img {
-          #       url
-          #     }
-          #     manufacturer {
-          #       id
-          #       name
-          #     }
-          #   }
-          # }
-        }
-      `
-    });
-    const { data: categories } = await ctx.$axios.get(
-      `/categories/categoriesByManufacturer/` + id
-    );
-    return {
-      manufacturer: manufacturerData.manufacturer,
-      categories: categories
-      // manufacturerData.categories.filter(
-      //   item => item.products.length > 0
-      // )
-    };
+        `
+      });
+
+      const { data: categories } = await ctx.$axios.get(
+        `/categories/categoriesByManufacturer/` + id
+      );
+      return {
+        manufacturer: manufacturerData.manufacturer,
+        categories: categories
+      };
+    } else {
+      return ctx.error({
+        statusCode: 404,
+        message: "Производитель не найден"
+      });
+    }
   },
   components: { PageHeader, ProductCard },
 

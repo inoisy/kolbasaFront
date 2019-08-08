@@ -197,8 +197,7 @@ export const actions = {
 
   },
   async fetchCategory(ctx, params) {
-    console.log("TCL: fetchCategory -> manufacturer", ctx.state.sessionStorage.category.slug === params.slug)
-    // console.log("TCL: fetchCategory -> slug", params.slug)
+
     if (ctx.state.sessionStorage.category.slug !== params.slug) {
       const categoryFind = ctx.state.sessionStorage.generalInfo.categories.find(item => item.slug === params.slug)
       let client = this.app.apolloProvider.defaultClient;

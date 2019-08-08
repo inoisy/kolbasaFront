@@ -6,7 +6,7 @@
           <v-subheader>НАВИГАЦИЯ</v-subheader>
           <v-list style="background: transparent !important;" class="footer-list">
             <v-list-tile to="/">Главная</v-list-tile>
-            <v-list-tile to="/сatalog">Каталог</v-list-tile>
+            <v-list-tile to="/catalog">Каталог</v-list-tile>
             <v-list-tile to="/manufacturers">Производители</v-list-tile>
             <v-list-tile to="/about">О компании</v-list-tile>
             <v-list-tile to="/contacts">Контакты</v-list-tile>

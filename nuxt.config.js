@@ -4,6 +4,7 @@ const sitename = "http://prodaem-kolbasu.ru";
 const imageUrl = process.env.IMAGE_BASE_URL || process.env.BACKEND_URL || "http://localhost:1337"
 const backendUrl = process.env.BACKEND_URL || "http://localhost:1337"
 // const imageBaseUrl = process.env.IMAGE_BASE_URL || "http://cdn.yakutov.com"
+const axios = require('axios')
 
 module.exports = {
   mode: 'universal',
@@ -107,57 +108,50 @@ module.exports = {
       themeColor: '#d50000'
     }],
     'portal-vue/nuxt',
-    'nuxt-vuex-localstorage'
-    // ['@nuxtjs/sitemap', {
-    //   gzip: true,
-    // async routes() {
-    //   let routes = []
+    'nuxt-vuex-localstorage',
+    '@nuxtjs/redirect-module',
 
-    //   const {
-    //     data: manufacturers
-    //   } = await axios.get(backendUrl + '/manufacturers?_limit=99999')
-    //   console.log("TCL: routes -> manufacturers", manufacturers)
-    //   for (let item of manufacturers) {
-    //     routes.push(`/manufacturers/${item.slug}`)
-    //   }
+    // Redirect option here
+
+    ['@nuxtjs/sitemap', {
+      gzip: true,
+      async routes() {
+        let routes = []
+        const {
+          data: pages
+        } = await axios.get(backendUrl + '/pages?_limit=99999')
+        for (let item of pages) {
+          routes.push(`${item.slug}`)
+        }
+        const {
+          data: manufacturers
+        } = await axios.get(backendUrl + '/manufacturers?_limit=99999')
+        for (let item of manufacturers) {
+          routes.push(`/manufacturers/${item.slug}`)
+        }
+        const {
+          data: categories
+        } = await axios.get(backendUrl + '/categories?_limit=99999')
+        for (let item of categories) {
+          routes.push(`/catalog/${item.slug}`)
+        }
+        for (let category of categories) {
+          //  routes.push(`/catalog/${item.slug}`)
+          for (let product of category.products) {
+            routes.push(`/catalog/${category.slug}/${product.slug}`)
+          }
+        }
 
 
-    //   const {
-    //     data: pages
-    //   } = await axios.get(backendUrl + '/pages?parent.slug=about')
-    //   console.log("TCL: routes -> pages", pages)
-    //   for (let item of pages) {
-    //     routes.push(`/about/${item.slug}`)
-    //   }
+        return routes
+      }
 
-    //   const {
-    //     data: categories
-    //   } = await axios.get(backendUrl + '/categories?ismain=true&_limit=99999')
-    //   for (let category of categories) {
-    //     routes.push(`/catalog/${category.slug}`)
-
-    //   }
-    //   for (let category of categories) {
-    //     for (let subcategory of category.child) {
-    //       routes.push(`/catalog/${category.slug}/${subcategory.slug}`)
-    //     }
-    //   }
-    //   const {
-    //     data: products
-    //   } = await axios.get(backendUrl + '/products?_limit=99999')
-    //   // console.log("TCL: routes ->  products.length", products.length)
-    //   for (let product of products) {
-    //     routes.push(`/product/${product.slug}`)
-    //   }
-
-    //   return routes
-    // }
-
-    // }],
-    // ['@nuxtjs/robots', {
-    //   UserAgent: '*',
-    //   Disallow: '/'
-    // }],
+    }],
+    ['@nuxtjs/robots', {
+      UserAgent: '*',
+      Allow: '/',
+      Sitemap: "http://www.prodaem-kolbasu.ru/sitemap.xml"
+    }],
     // ["nuxt-ssr-cache", {
     // if you're serving multiple host names (with differing
     // results) from the same server, set this option to true.
@@ -187,12 +181,90 @@ module.exports = {
     // ],
     // }],
   ],
-
+  redirect: [{
+    from: '^/catalog/konservy.*',
+    to: '/catalog/polufabrikaty'
+  }, {
+    from: '^/catalog/livery.*',
+    to: '/catalog/pashtety-zelcy-studni'
+  }, {
+    from: '^/catalog/narezka.*',
+    to: '/catalog/syrokopchenaya-kolbasa'
+  }, {
+    from: '^/catalog/pashtety.*',
+    to: '/catalog/pashtety-zelcy-studni'
+  }, {
+    from: '^/catalog/polufabrikaty.*',
+    to: '/catalog/polufabrikaty'
+  }, {
+    from: '^/catalog/studni.*',
+    to: '/catalog/pashtety-zelcy-studni'
+  }, {
+    from: '^/catalog/delikatesy.*',
+    to: '/catalog/delikatesy-vetchina-i-kopchenosti'
+  }, {
+    from: '^/catalog/izdeliya-iz-pticy.*',
+    to: '/catalog/delikatesy-vetchina-i-kopchenosti'
+  }, {
+    from: '^/catalog/delikatesy.*',
+    to: '/catalog/delikatesy-vetchina-i-kopchenosti'
+  }, {
+    from: '^/catalog/kolbasy.*',
+    to: '/catalog/varenaya-kolbasa'
+  }, {
+    from: '^/catalog/kolbasy/varenye.*',
+    to: '/catalog/varenaya-kolbasa'
+  }, {
+    from: '^/catalog/kolbasy/vareno-kopchenye.*',
+    to: '/catalog/varyono-kopchenye-i-polukopchyonye-kolbasy'
+  }, {
+    from: '^/catalog/kolbasy/vetchiny.*',
+    to: '/catalog/delikatesy-vetchina-i-kopchenosti'
+  }, {
+    from: '^/catalog/kolbasy/polukopchenye.*',
+    to: '/catalog/varyono-kopchenye-i-polukopchyonye-kolbasy'
+  }, {
+    from: '^/catalog/kolbasy/syrokopchenye.*',
+    to: '/catalog/syrokopchenaya-kolbasa'
+  }, {
+    from: '^/catalog/proizvoditeli/vegus.*',
+    to: '/manufacturers/vegus'
+  }, {
+    from: '^/catalog/proizvoditeli/vladimirskij-standart.*',
+    to: '/manufacturers/vladimirskiy-standart'
+  }, {
+    from: '^/catalog/proizvoditeli/myasnoj-dom-borodina.*',
+    to: '/manufacturers/mdb'
+  }, {
+    from: '^/catalog/proizvoditeli/kolomenskij-myasokombinat.*',
+    to: '/manufacturers/kolomenskoe'
+  }, {
+    from: '^/catalog/proizvoditeli/klinskij-mk.*',
+    to: '/manufacturers/klinskiy'
+  }, {
+    from: '^/catalog/proizvoditeli/mikoyan.*',
+    to: '/manufacturers/mikoyan'
+  }, {
+    from: '^/catalog/proizvoditeli/ostankino.*',
+    to: '/manufacturers/ostankino'
+  }, {
+    from: '^/catalog/proizvoditeli/remit.*',
+    to: '/manufacturers/remit'
+  }, {
+    from: '^/catalog/proizvoditeli/cherkizovskij-mk.*',
+    to: '/manufacturers/cherkizovo'
+  }, {
+    from: '^/catalog/proizvoditeli/snezhana.*',
+    to: '/manufacturers/snezhana'
+  }, {
+    from: '^/catalog/proizvoditeli/rublevskij-myasokombinat.*',
+    to: '/manufacturers/rublevskiy'
+  }],
   /*
    ** Build configuration
    */
   build: {
-    publicPath: '/js/',
+    // publicPath: '/js/',
     /*
      ** You can extend webpack config here
      */
