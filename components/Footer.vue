@@ -1,5 +1,10 @@
 <template>
-  <v-footer class="footer pt-4" dark height="auto">
+  <v-footer
+    class="footer pt-4"
+    dark
+    height="auto"
+    v-lazy:background-image="require('~/assets/img/footerbg.jpg')"
+  >
     <v-container>
       <v-layout row wrap>
         <v-flex class="mb-4" xs12 md6 lg4>
@@ -72,7 +77,7 @@
 </template>
 <style lang="stylus" scoped>
 .footer {
-  background-image: url('~assets/img/footerbg.jpg');
+  // background-image: url();
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;

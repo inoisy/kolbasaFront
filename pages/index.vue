@@ -29,14 +29,6 @@
           <v-btn class="btn-scroll" @click="$vuetify.goTo('#content-wrapper')" icon flat large dark>
             <v-icon large>keyboard_arrow_down</v-icon>
           </v-btn>
-          <!-- <nuxt-link :to="`/manufacturers/${item.slug}`" class="align-center justify-center">
-          <img
-            v-if="item.img"
-            :src="item.img.url"
-            style="min-width:200px"
-            class="ma-auto d-block img-hover"
-          >
-          </nuxt-link>-->
         </div>
       </div>
       <div class="swiper-button-prev" slot="button-prev">
@@ -88,7 +80,7 @@
           <v-img
             class="mx-auto my-5 xs10 md10 lg9 xl8 flex"
             contain
-            :src="require('~/assets/delimiter.svg')"
+            v-lazy="require('~/assets/delimiter.svg')"
           ></v-img>
         </div>
 
@@ -102,7 +94,7 @@
           <v-img
             class="mx-auto my-5 xs10 md10 lg9 xl8 flex"
             contain
-            :src="require('~/assets/delimiter.svg')"
+            v-lazy="require('~/assets/delimiter.svg')"
           ></v-img>
         </div>
         <div class="layout row wrap align-center justify-center pt-5">
@@ -137,7 +129,7 @@
                   :key="'benefit'+index"
                 >
                   <div class="img-wrapper display-flex mb-3 pt-3">
-                    <img :src="item.img" class="mx-auto d-block" alt style="width: 3.5rem" />
+                    <img v-lazy="item.img" class="mx-auto d-block" alt style="width: 3.5rem" />
                   </div>
                   <div class="display-1 lumber text-xs-center">{{item.text}}</div>
                 </div>
@@ -145,7 +137,7 @@
             </div>
           </div>
           <div class="flex hidden-sm-and-down offset-md0 md4 offset-lg1 lg3" data-aos="fade-up">
-            <img class="bottom-img pl-4" :src="require('~/assets/img/bottomImage2.png')" />
+            <img class="bottom-img pl-4" v-lazy="require('~/assets/img/bottomImage2.png')" />
             <!-- <img class="bottom-img"> -->
           </div>
         </div>
