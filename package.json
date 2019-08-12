@@ -29,7 +29,7 @@
     "lodash": "^4.17.15",
     "nuxt": "^2.8.1",
     "nuxt-social-meta": "0.0.1",
-    "nuxt-ssr-cache": "^1.4.3",
+    "nuxt-ssr-cache": "^1.5.0",
     "nuxt-vuex-localstorage": "^1.2.6",
     "object.omit": "^3.0.0",
     "portal-vue": "^2.1.5",
