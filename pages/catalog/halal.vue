@@ -2,7 +2,7 @@
   <div>
     <page-header title="Халяльная продукция" :breadrumbs="breadcrumbs" />
     <section class="background" v-lazy:background-image="require('~/assets/img/bg.jpg')">
-      <v-container class="py-5">
+      <v-container grid-list-lg class="py-5">
         <v-layout row wrap v-if="page.content">
           <div v-if="page.content" v-html="$md.render(page.content)"></div>
           <v-divider class="mb-4"></v-divider>
@@ -52,6 +52,11 @@ export default {
           pages(where: { name: "halal" }) {
             name
             content
+            header
+            metaDescription
+            file {
+              url
+            }
           }
           categories {
             id

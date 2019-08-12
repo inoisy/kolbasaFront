@@ -61,7 +61,7 @@ export default {
           items: this.$store.state.sessionStorage.generalInfo.categories
             ? [
                 ...this.$store.state.sessionStorage.generalInfo.categories,
-                { name: "Халяльная продукция", slug: "halal" },
+                // { name: "Халяльная продукция", slug: "halal" },
                 { name: "Акционная продукция", slug: "discount" }
               ]
             : []
@@ -74,9 +74,6 @@ export default {
         {
           name: "О компании",
           to: "/about"
-          //   items: this.$store.state.sessionStorage.generalInfo.aboutPages.map(item => {
-          //     return { name: item.title, ...item };
-          //   })
         },
         {
           name: "Контакты",

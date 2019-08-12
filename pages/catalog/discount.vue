@@ -2,9 +2,21 @@
   <div>
     <page-header :title="title" :breadrumbs="breadcrumbs" />
     <section class="background" v-lazy:background-image="require('~/assets/img/bg.jpg')">
-      <v-container class="py-5">
+      <v-container grid-list-lg class="py-5">
         <v-layout row wrap v-if="page && page.content">
-          <div v-if="page.content" v-html="$md.render(page.content)"></div>
+          <div>
+            <div class="content" v-if="page.content" v-html="$md.render(page.content)"></div>
+            <v-btn
+              v-if="page.file"
+              class="ml-0"
+              large
+              color="accent"
+              :href="imageBaseUrl+page.file.url"
+            >
+              <v-icon left dark>save_alt</v-icon>Загрузить каталог
+            </v-btn>
+          </div>
+
           <v-divider class="my-4"></v-divider>
         </v-layout>
         <v-layout row wrap v-for="category of categories" :key="category.id" class="mb-4">
@@ -67,6 +79,11 @@ export default {
           pages(where: { name: "discount" }) {
             name
             content
+            header
+            metaDescription
+            file {
+              url
+            }
           }
           categories {
             id
