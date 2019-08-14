@@ -12,6 +12,43 @@ module.exports = {
     baseUrl: backendUrl,
     imageBaseUrl: imageUrl
   },
+  generate: {
+    interval: 300,
+    dir: 'public',
+    subFolders: false,
+    fallback: "404.html",
+    async routes() {
+      let routes = []
+      const {
+        data: pages
+      } = await axios.get(backendUrl + '/pages?_limit=99999')
+      for (let item of pages) {
+        routes.push(`${item.slug}`)
+      }
+      const {
+        data: manufacturers
+      } = await axios.get(backendUrl + '/manufacturers?_limit=99999')
+      for (let item of manufacturers) {
+        routes.push(`/manufacturers/${item.slug}`)
+      }
+      const {
+        data: categories
+      } = await axios.get(backendUrl + '/categories?_limit=99999')
+      for (let item of categories) {
+        routes.push(`/catalog/${item.slug}`)
+      }
+      for (let category of categories) {
+        //  routes.push(`/catalog/${item.slug}`)
+        for (let product of category.products) {
+          routes.push(`/catalog/${category.slug}/${product.slug}`)
+        }
+      }
+
+
+      return routes
+    }
+  },
+
   /*
    ** Headers of the page
    */
