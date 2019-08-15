@@ -12,6 +12,43 @@ module.exports = {
     baseUrl: backendUrl,
     imageBaseUrl: imageUrl
   },
+  generate: {
+    interval: 300,
+    dir: 'public',
+    subFolders: false,
+    fallback: "404.html",
+    async routes() {
+      let routes = []
+      const {
+        data: pages
+      } = await axios.get(backendUrl + '/pages?_limit=99999')
+      for (let item of pages) {
+        routes.push(`${item.slug}`)
+      }
+      const {
+        data: manufacturers
+      } = await axios.get(backendUrl + '/manufacturers?_limit=99999')
+      for (let item of manufacturers) {
+        routes.push(`/manufacturers/${item.slug}`)
+      }
+      const {
+        data: categories
+      } = await axios.get(backendUrl + '/categories?_limit=99999')
+      for (let item of categories) {
+        routes.push(`/catalog/${item.slug}`)
+      }
+      for (let category of categories) {
+        //  routes.push(`/catalog/${item.slug}`)
+        for (let product of category.products) {
+          routes.push(`/catalog/${category.slug}/${product.slug}`)
+        }
+      }
+
+
+      return routes
+    }
+  },
+
   /*
    ** Headers of the page
    */
@@ -153,33 +190,45 @@ module.exports = {
       Sitemap: "http://www.prodaem-kolbasu.ru/sitemap.xml"
     }],
     ["nuxt-ssr-cache", {
-      // if you're serving multiple host names (with differing
-      // results) from the same server, set this option to true.
-      // (cache keys will be prefixed by your host name)
-      // if your server is behind a reverse-proxy, please use
-      // express or whatever else that uses 'X-Forwarded-Host'
-      // header field to provide req.hostname (actual host name)
-      // useHostPrefix: true,
+        // if you're serving multiple host names (with differing
+        // results) from the same server, set this option to true.
+        // (cache keys will be prefixed by your host name)
+        // if your server is behind a reverse-proxy, please use
+        // express or whatever else that uses 'X-Forwarded-Host'
+        // header field to provide req.hostname (actual host name)
+        // useHostPrefix: true,
 
-      store: {
-        type: 'redis',
-        host: 'localhost',
-        ttl: 4 * 60 * 60,
-        configure: [
-          // these values are configured
-          // on redis upon initialization
-          ['maxmemory', '200mb'],
-          ['maxmemory-policy', 'allkeys-lru'],
+        store: {
+          type: 'redis',
+          host: 'localhost',
+          ttl: 4 * 60 * 60,
+          configure: [
+            // these values are configured
+            // on redis upon initialization
+            ['maxmemory', '200mb'],
+            ['maxmemory-policy', 'allkeys-lru'],
+          ],
+
+        },
+
+        pages: [
+          //   // these are prefixes of pages that need to be cached
+          //   // if you want to cache all pages, just include '/'
+          "/"
         ],
-
       },
-
-      pages: [
-        //   // these are prefixes of pages that need to be cached
-        //   // if you want to cache all pages, just include '/'
-        "/"
+      [
+        '@nuxtjs/yandex-metrika',
+        {
+          id: '54918895',
+          webvisor: true,
+          // clickmap:true,
+          // useCDN:false,
+          // trackLinks:true,
+          // accurateTrackBounce:true,
+        }
       ],
-    }],
+    ],
   ],
   redirect: [{
     from: '^/catalog/konservy.*',
