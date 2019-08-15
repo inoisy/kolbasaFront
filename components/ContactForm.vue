@@ -118,10 +118,9 @@ export default {
         };
         const req = await this.$axios
           .post(process.env.baseUrl + "/email", {
-            to: "noreply@azb-es.ru",
-            from: "noreply@azb-es.ru",
+            to: "zakaz@prodaem-kolbasu.ru",
+            from: "noreply@prodaem-kolbasu.ru",
             subject: `Обращение с сайта`,
-
             text: `Обращение с сайта от ${msg.name}. Телефон: ${msg.phone}. ${busketText}`,
             html: `Обращение с сайта от ${msg.name}.<br/> Телефон: ${msg.phone}.<br/> ${busketHtml}`
           })
