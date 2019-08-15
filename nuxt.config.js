@@ -1,8 +1,8 @@
 const pkg = require('./package')
 const os = require("os");
 const sitename = "http://prodaem-kolbasu.ru";
-const imageUrl = process.env.IMAGE_BASE_URL || process.env.BACKEND_URL || "http://api.yakutov.com"
-const backendUrl = process.env.BACKEND_URL || "http://api.yakutov.com"
+const imageUrl = process.env.IMAGE_BASE_URL || process.env.BACKEND_URL || "http://api.prodaem-kolbasu.ru"
+const backendUrl = process.env.BACKEND_URL || "http://api.prodaem-kolbasu.ru"
 // const imageBaseUrl = process.env.IMAGE_BASE_URL || "http://cdn.yakutov.com"
 const axios = require('axios')
 
@@ -114,6 +114,17 @@ module.exports = {
    ** Nuxt.js modules
    */
   modules: [
+    [
+      '@nuxtjs/yandex-metrika',
+      {
+        id: '54918895',
+        webvisor: true,
+        // clickmap:true,
+        // useCDN:false,
+        // trackLinks:true,
+        // accurateTrackBounce:true,
+      }
+    ],
     ['vue-yandex-maps/nuxt', { // you may define your apiKey, lang and version or skip this.
       apiKey: 'df1793f7-7dbf-4c12-abe4-47fcdf2861b5',
       lang: 'ru_RU',
@@ -217,17 +228,7 @@ module.exports = {
           "/"
         ],
       },
-      [
-        '@nuxtjs/yandex-metrika',
-        {
-          id: '54918895',
-          webvisor: true,
-          // clickmap:true,
-          // useCDN:false,
-          // trackLinks:true,
-          // accurateTrackBounce:true,
-        }
-      ],
+
     ],
   ],
   redirect: [{
