@@ -115,7 +115,7 @@ export default {
       });
 
       const { data: categories } = await ctx.$axios.get(
-        `/categories/categoriesByManufacturer/` + id
+        `/categories/categoriesByManufacturer` + id
       );
       return {
         manufacturer: manufacturerData.manufacturer,

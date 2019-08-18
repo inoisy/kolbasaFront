@@ -103,10 +103,9 @@
           </div>
           <v-flex xs10 md8 offset-lg1 lg7 xl6 class="d-flex mb-5">
             <div class="my-auto">
-              <h2 class="bottom-header d-block" data-aos="fade-up">Наши партнеры – наша гордость</h2>
+              <h2 class="bottom-header d-block" data-aos="fade-up">Мы дорожим нашими партнерами.</h2>
               <div class="bottom-text" data-aos="fade-up">
-                <!-- <p>«Альянс Фуд» предлагает колбасную продукцию на самых выгодных условиях, чтобы вы могли наслаждаться вкуснейшими блюдами с экономией семейного бюджета. Наша цель – установление продолжительного взаимовыгодного сотрудничества, в рамках которого на вашем столе всегда будут находиться свежие колбасы, полуфабрикаты и разнообразные деликатесы превосходного качества.</p> -->
-                <p>Мы сотрудничаем как с крупными предприятиями, так и с частными клиентами. За долгие годы успешной работы нам удалось накопить богатый опыт взаимодействия с поставщиками, благодаря чему мы сохраняем наиболее выгодные условия оформления заказа для своих клиентов.</p>
+                <p>Компания Альянс Фуд предлает выгодные условия для сотрудничества. Наша организация уже больше 20 лет является крупным игроком на рынке продаж готовой мясной продукции, мы стараемся уделять внимание каждому партнеру, от мала до велика. Вы останетесь довольны нашими условиями, сделайте первый шаг к успешному сотрудничеству.</p>
               </div>
             </div>
           </v-flex>
@@ -117,23 +116,11 @@
               <h2
                 class="bottom-header d-block mb-3"
                 data-aos="fade-up"
-              >Почему стоит выбрать именно нас?</h2>
+              >Lorem ipsum dolor sit amet consect</h2>
               <div
                 class="bottom-text mb-3"
                 data-aos="fade-up"
-              >Мы заинтересованы в успешном развитии вашего бизнеса и стараемся сделать все возможное с нашей стороны. Сотрудничество с нами будет максимально комфортным за счет:</div>
-              <div class="bottom-text layout row wrap" data-aos="fade-up">
-                <div
-                  class="flex xs12 sm4 px-3 mb-3"
-                  v-for="(item,index) in benefits"
-                  :key="'benefit'+index"
-                >
-                  <div class="img-wrapper display-flex mb-3 pt-3">
-                    <img v-lazy="item.img" class="mx-auto d-block" alt style="width: 3.5rem" />
-                  </div>
-                  <div class="display-1 lumber text-xs-center">{{item.text}}</div>
-                </div>
-              </div>
+              >Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem facilis fugiat aperiam similique fugit rerum vero dolorum quibusdam perferendis. Tempora, itaque porro quia quaerat nulla ea consequatur possimus atque reiciendis.</div>
             </div>
           </div>
           <div class="flex hidden-sm-and-down offset-md0 md4 offset-lg1 lg3" data-aos="fade-up">
@@ -141,6 +128,40 @@
             <!-- <img class="bottom-img"> -->
           </div>
         </div>
+        <div data-aos="zoom-in">
+          <v-img
+            class="mx-auto my-5 xs10 md10 lg9 xl8 flex"
+            contain
+            :src="require('~/assets/delimiter.svg')"
+          ></v-img>
+        </div>
+
+        <section class="flex xs10 ma-auto">
+          <h2 class="text-xs-center primary--text mb-4">Наши преимущества</h2>
+          <p
+            class="text-xs-center display-2 primary--text mb-5 lumber"
+          >Мы заинтересованы в успешном развитии вашего бизнеса и стараемся сделать все возможное с нашей стороны. Сотрудничество с нами будет максимально комфортным за счет:</p>
+          <div class="benefits bottom-text layout row wrap pb-4" data-aos="fade-up">
+            <div
+              class="flex xs12 sm6 lg4 mb-3 display-flex px-1"
+              v-for="(item,index) in benefits"
+              :key="'benefit'+index"
+            >
+              <div class="img-wrapper display-flex mb-3">
+                <img
+                  v-lazy="item.img"
+                  class="d-block mb-auto pt-1"
+                  alt
+                  style="width: 3.5rem;min-width: 3.5rem"
+                />
+              </div>
+              <div class="pl-3">
+                <h5 class="display-2 lumber font-weight-bold mb-2">{{item.header}}</h5>
+                <p class="display-1 lumber">{{item.text}}</p>
+              </div>
+            </div>
+          </div>
+        </section>
         <!-- <h2 class="text-xs-center mb-4 primary--text">Производители</h2> -->
       </v-container>
     </div>
@@ -149,6 +170,11 @@
 <style lang="stylus" scoped>
 @import 'swiper/dist/css/swiper.css';
 
+// .benefits {
+// .img-wrapper {
+// min-width: 50px;
+// }
+// }
 .btn-scroll {
   position: absolute;
   bottom: 5px;
@@ -340,45 +366,38 @@ export default {
           prevEl: ".swiper-button-prev"
         }
       },
-      // page: {
-      //   title: "Минимальный заказ от 3000 рублей!",
-      //   description: `Capi ta lise on low hanging fruit to identify a ballpark value added activity to beta test.
-      //       <br>Override the digital divide with.`
-      // },
       benefits: [
         {
+          header: "Доставка",
           text: "Быстрая доставка по РФ и странам ЕАЭС",
           img: require("@/assets/benefits/shipped.svg")
         },
         {
+          header: "Цены",
           text: "Лучшие цены напрямую от производителей",
           img: require("@/assets/benefits/currency.svg")
         },
         {
+          header: "Акции",
           text: "Aкции и скидки постоянным заказчикам",
           img: require("@/assets/benefits/1179545.svg")
+        },
+        {
+          header: "Lorem ipsum",
+          text: "Lorem ipsum dolor sit amet consectetur adipis",
+          img: require("@/assets/benefits/shipped.svg")
+        },
+        {
+          header: "Lorem ipsum",
+          text: "Lorem ipsum dolor sit amet consectetur adipisi",
+          img: require("@/assets/benefits/currency.svg")
+        },
+        {
+          header: "Lorem ipsum",
+          text: "Lorem ipsum dolor sit amet consectetur adipisi",
+          img: require("@/assets/benefits/1179545.svg")
         }
-      ],
-      // sliders: [
-      //   {
-      //     header: "Пс, у нас тут новая вареная колбаска!",
-      //     content: `  Capi ta lise on low hanging fruit to identify a ballpark value added activity to beta test.
-      //       <br>Override the digital divide with.`,
-      //     buttontext: "Хочу колбаску!",
-      //     href: "/catalog/varenaya",
-      //     image: require("@/assets/img/promo.jpg")
-      //   },
-      //   {
-      //     header: "Скидка деликатесы и копчености 10%!",
-      //     content: `Capitalise on low hanging fruit to identify a ballpark value added activity to beta test.
-      //       <br>Override the digital divide with.`,
-      //     buttontext: "Хочу вкусняшек!",
-      //     href: "/catalog/delikatesy-i-kopchenosti",
-      //     image: require("@/assets/img/promo3.jpg")
-      //   }
-      // ],
-
-      promoHeight: "45rem"
+      ]
     };
   },
   async asyncData(ctx) {

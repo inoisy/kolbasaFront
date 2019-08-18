@@ -166,7 +166,7 @@ export default {
     }
   },
   async asyncData(ctx) {
-    console.log("TCL: Data -> asyncData");
+    // console.log("TCL: Data -> asyncData");
     await ctx.store.dispatch("fetchGeneralInfo");
 
     const storeManufacturers =
@@ -204,7 +204,7 @@ export default {
       manufacturer: manufacturersSelectedIds
       //   manufacturer && manufacturer.item ? manufacturer.item.id : null
     });
-    console.log("TCL: Data -> category", category);
+    // console.log("TCL: Data -> category", category);
 
     if (category) {
       const manufacturersExist =

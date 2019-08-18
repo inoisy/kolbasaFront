@@ -27,7 +27,7 @@ export const mutations = {
     state.sessionStorage.products = item
   },
   async addToBasket(state, product) {
-    console.log("TCL: addToBasket -> id", product.id)
+    // console.log("TCL: addToBasket -> id", product.id)
     // console.log("TCL: addToBasket -> get", state.localStorage.basket[id])
     if (state.localStorage.basket[product.id]) {
       const count = state.localStorage.basket[product.id].count + 1
@@ -65,7 +65,7 @@ export const mutations = {
   removeFromBasket(state, product) {
     const basket = state.localStorage.basket
     const count = basket[product.id].count - 1
-    console.log("TCL: removeFromBasket -> count", count)
+    // console.log("TCL: removeFromBasket -> count", count)
     if (count < 1) {
 
       state.localStorage.basket = _.omit(basket, product.id)
@@ -90,22 +90,22 @@ export const strict = false
 export const actions = {
   async fetchGeneralInfo(ctx) {
     // console.log("TCL: fetchGeneralInfo -> fetchGeneralInfo", Object.keys(ctx.state.sessionStorage.generalInfo).length)
-    if (!ctx.state.sessionStorage.generalInfo || Object.keys(ctx.state.sessionStorage.generalInfo).length === 0) {
-      // console.log("TCL: fetchGeneralInfo -> FETCH")
-      // const {
-      //   data: contactsData
-      // } = await this.$axios.get("/contacts")
-      // const {
-      //   data: categoriesData
-      // } = await this.$axios.get("/categories?_sort=name:asc")
-      // const {
-      //   data: manufacturersData
-      // } = await this.$axios.get("/manufacturers?_sort=name:asc")
-      let client = this.app.apolloProvider.defaultClient;
-      const {
-        data: generalData
-      } = await client.query({
-        query: gql `
+    // if (!ctx.state.sessionStorage.generalInfo || Object.keys(ctx.state.sessionStorage.generalInfo).length === 0) {
+    // console.log("TCL: fetchGeneralInfo -> FETCH")
+    // const {
+    //   data: contactsData
+    // } = await this.$axios.get("/contacts")
+    // const {
+    //   data: categoriesData
+    // } = await this.$axios.get("/categories?_sort=name:asc")
+    // const {
+    //   data: manufacturersData
+    // } = await this.$axios.get("/manufacturers?_sort=name:asc")
+    let client = this.app.apolloProvider.defaultClient;
+    const {
+      data: generalData
+    } = await client.query({
+      query: gql `
         {
            contacts {
              phone
@@ -133,29 +133,29 @@ export const actions = {
           }
         }
         `
-      })
-      const result = {
-        categories: generalData.categories,
-        manufacturers: generalData.manufacturers,
-        contacts: generalData.contacts[0]
-      }
-      await ctx.commit("generalInfo", result)
-      return result
-    } else {
-      return ctx.state.sessionStorage.generalInfo
+    })
+    const result = {
+      categories: generalData.categories,
+      manufacturers: generalData.manufacturers,
+      contacts: generalData.contacts[0]
     }
+    await ctx.commit("generalInfo", result)
+    return result
+    // } else {
+    //   return ctx.state.sessionStorage.generalInfo
+    // }
 
   },
   async fetchCategory(ctx, params) {
 
-    if (ctx.state.sessionStorage.category.slug !== params.slug) {
-      const categoryFind = ctx.state.sessionStorage.generalInfo.categories.find(item => item.slug === params.slug)
-      let client = this.app.apolloProvider.defaultClient;
-      if (categoryFind && categoryFind.id) {
-        const {
-          data: categoryData
-        } = await client.query({
-          query: gql `
+    // if (ctx.state.sessionStorage.category.slug !== params.slug) {
+    const categoryFind = ctx.state.sessionStorage.generalInfo.categories.find(item => item.slug === params.slug)
+    let client = this.app.apolloProvider.defaultClient;
+    if (categoryFind && categoryFind.id) {
+      const {
+        data: categoryData
+      } = await client.query({
+        query: gql `
         query CategoryQuery( $id: ID! ) {
           category(id: $id) {
             manufacturers
@@ -168,18 +168,18 @@ export const actions = {
           }
         }
       `,
-          variables: {
-            id: categoryFind.id,
-          }
-        });
+        variables: {
+          id: categoryFind.id,
+        }
+      });
 
-        await ctx.commit("category", categoryData.category);
-        return categoryData.category
-      }
-
-    } else {
-      return ctx.state.sessionStorage.category
+      await ctx.commit("category", categoryData.category);
+      return categoryData.category
     }
+
+    // } else {
+    //   return ctx.state.sessionStorage.category
+    // }
 
   },
   async fetchProduct(ctx, params) {
@@ -284,11 +284,11 @@ export const actions = {
 
     let query = `category=${categoryFind.id}`
     const page = ctx.state.sessionStorage.pageFilter
-    console.log("TCL: fetchProducts -> page", page)
+    // console.log("TCL: fetchProducts -> page", page)
     const manufacturers = ctx.state.sessionStorage.manufacturerFilter
-    console.log("TCL: fetchProducts -> manufacturers", manufacturers)
+    // console.log("TCL: fetchProducts -> manufacturers", manufacturers)
     const sort = ctx.state.sessionStorage.sortFilter.sort
-    console.log("TCL: fetchProducts -> sort", sort)
+    // console.log("TCL: fetchProducts -> sort", sort)
     if (page) {
       query = query + `&_start=${(page - 1) * 20}`
     }
@@ -317,8 +317,8 @@ export const actions = {
     // } else {
     //   query = query + `&_sort=name:asc`
     // }
-    console.log("TCL: Count query+", query)
-    console.log("TCL: Count params+", params)
+    // console.log("TCL: Count query+", query)
+    // console.log("TCL: Count params+", params)
     const {
       data: productsData
     } = await this.$axios.get(`/products?` + query + "&_limit=20")
@@ -341,53 +341,3 @@ export const actions = {
     }
   }
 }
-// changeBasket(state, object) {
-//   console.log("TCL: changeBasket -> object", object)
-
-//   if (object.val < 1) {
-//     state.localStorage.basket = state.localStorage.basket.filter(item => {
-//       return String(item.id) !== String(object.id)
-//     })
-//   } else {
-//     const findIndex = state.localStorage.basket.findIndex(item => item.item.id === object.id)
-//     console.log("TCL: changeBasket -> findIndex", findIndex)
-//     const count = object.val
-//     const newItem = {
-//       ...state.localStorage.basket[findIndex].item,
-//       count
-//     }
-//     console.log("TCL: changeBasket -> newItem", newItem)
-//     // state.localStorage.basket.splice(findIndex, 1, newItem)
-//     // const newArray = state.localStorage.basket.splice(findIndex, 1)
-//     // console.log("TCL: changeBasket -> newArray", )
-//     state.localStorage.basket[findIndex] = newItem
-//   }
-
-
-// },
-// incrementBasket(state, productId) {
-//   const findBasket = state.localStorage.basket.findIndex(item => item.id === productId)
-//   const count = state.localStorage.basket[findBasket].count + 1
-//   console.log("TCL: incrementBasket -> count", count)
-//   state.localStorage.basket[findBasket].count = count
-//   console.log("TCL: incrementBasket -> findBasket", findBasket)
-//   //  = state.localStorage.basket.filter(item => {
-//   //   return String(item.id) !== String(productId)
-//   // })
-//   // console.log("TCL: removeFromBasket -> state.localStorage.basket.filter(item => item._id == productId)", state.localStorage.basket.filter(item => item._id == productId))
-// },
-// decrementBasket(state, productId) {
-//   const findBasket = state.localStorage.basket.findIndex(item => item.id === productId)
-//   const count = state.localStorage.basket[findBasket].count - 1
-//   if (count < 1) {
-//     state.localStorage.basket = state.localStorage.basket.filter(item => {
-//       return String(item.id) !== String(productId)
-//     })
-
-//   } else {
-//     state.localStorage.basket[findBasket].count = count
-//     console.log("TCL: decrementBasket -> findBasket", findBasket)
-//   }
-
-//   // console.log("TCL: removeFromBasket -> state.localStorage.basket.filter(item => item._id == productId)", state.localStorage.basket.filter(item => item._id == productId))
-// }
