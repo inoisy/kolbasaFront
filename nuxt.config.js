@@ -1,9 +1,9 @@
 const pkg = require('./package')
 const os = require("os");
-const sitename = "http://prodaem-kolbasu.ru";
-const imageUrl = process.env.IMAGE_BASE_URL || process.env.BACKEND_URL || "http://api.prodaem-kolbasu.ru"
-const backendUrl = process.env.BACKEND_URL || "http://api.prodaem-kolbasu.ru"
-// const imageBaseUrl = process.env.IMAGE_BASE_URL || "http://cdn.yakutov.com"
+const sitename = "https://prodaem-kolbasu.ru";
+const imageUrl = process.env.IMAGE_BASE_URL || process.env.BACKEND_URL || "https://api.prodaem-kolbasu.ru"
+const backendUrl = process.env.BACKEND_URL || "https://api.prodaem-kolbasu.ru"
+// const imageBaseUrl = process.env.IMAGE_BASE_URL || "https://cdn.yakutov.com"
 const axios = require('axios')
 
 module.exports = {
@@ -198,7 +198,7 @@ module.exports = {
     ['@nuxtjs/robots', {
       UserAgent: '*',
       Allow: '/',
-      Sitemap: "http://www.prodaem-kolbasu.ru/sitemap.xml"
+      Sitemap: "https://www.prodaem-kolbasu.ru/sitemap.xml"
     }],
     ["nuxt-ssr-cache", {
         // if you're serving multiple host names (with differing
