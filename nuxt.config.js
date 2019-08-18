@@ -8,6 +8,8 @@ const backendUrl = process.env.BACKEND_URL || backURL
 const imageUrl = process.env.IMAGE_BASE_URL || process.env.BACKEND_URL || backURL
 
 // const imageBaseUrl = process.env.IMAGE_BASE_URL || "http://cdn.yakutov.com"
+
+
 const axios = require('axios')
 
 module.exports = {
@@ -203,6 +205,7 @@ module.exports = {
       UserAgent: '*',
       Allow: '/',
       Sitemap: sitename + "/sitemap.xml"
+
     }],
     ["nuxt-ssr-cache", {
         // if you're serving multiple host names (with differing
