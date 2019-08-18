@@ -93,7 +93,9 @@ export default {
       return this.$store.state.sessionStorage.generalInfo.manufacturers;
     },
     contacts() {
-      return this.$store.state.sessionStorage.generalInfo.contacts;
+      return this.$store.state.sessionStorage.generalInfo.contacts
+        ? this.$store.state.sessionStorage.generalInfo.contacts
+        : "";
     }
   }
 };
