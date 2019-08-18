@@ -174,7 +174,10 @@ export default {
       return length;
     },
     phone() {
-      return this.$store.state.sessionStorage.generalInfo.contacts.phone;
+      return this.$store.state.sessionStorage.generalInfo &&
+        this.$store.state.sessionStorage.generalInfo.contacts
+        ? this.$store.state.sessionStorage.generalInfo.contacts.phone
+        : "";
     },
     isModal() {
       return this.$route.name === "catalog-category-slug" &&
