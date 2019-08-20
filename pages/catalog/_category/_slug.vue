@@ -25,7 +25,7 @@
             <nuxt-link class="text-decoration-none" :to="props.item.to" exact>{{ props.item.text }}</nuxt-link>
           </template>
         </v-breadcrumbs>
-        <v-layout row wrap>
+        <div class="layout row wrap" itemscope itemtype="http://schema.org/Product">
           <v-flex
             xs12
             md8
@@ -35,6 +35,7 @@
             class="right-wrapper display-flex column position-relative"
           >
             <h1
+              itemprop="name"
               class="display-3 mont font-weight-bold mb-4"
               style="line-height: normal;"
             >{{product.name}}</h1>
@@ -45,20 +46,24 @@
               >{{product.manufacturer.name}}</nuxt-link>
             </div>
             <div
+              itemprop="description"
               v-show="product.description"
               v-html="product.description"
               class="mb-4"
               style="line-height: 1,5"
             ></div>
             <div class="mb-3 table-wrapper" v-html="product.content"></div>
-            <div class="fs-2 mont font-weight-medium mb-3" v-show="product.priceNum">
-              <!-- <span>{{product.priceNum}} &#8381;</span> -->
+            <div
+              itemprop="offers"
+              itemscope
+              itemtype="http://schema.org/Offer"
+              class="mont font-weight-medium mb-3"
+            >
               <span
-                v-show="product.priceNum"
-                :class="'display-3 font-weight-bold black--text'"
-              >{{product.isDiscount ? product.discountPrice : product.priceNum}}&#8381;</span>
-              <span v-show="!product.priceNum">Цена по запросу</span>
-              <!-- {{product.priceNum ? product.priceNum +'₽' : ''}}</v-subheader> -->
+                itemprop="price"
+                :class="price ? 'display-3 font-weight-bold black--text' : ''"
+              >{{ price ? price : "Цена по запросу"}}</span>
+              <span itemprop="priceCurrency" class="fs-1-5" v-show="price">RUB</span>
               <span
                 class="pl-2"
                 v-if="product.isDiscount"
@@ -109,6 +114,7 @@
               <v-tooltip left max-width="300px" v-if="product.manufacturer">
                 <template v-slot:activator="{ on }">
                   <img
+                    itemprop="image"
                     class="manufacturer-img"
                     v-if="product.manufacturer.img"
                     :src="imageBaseUrl+product.manufacturer.img.url"
@@ -149,7 +155,7 @@
               :alt="product.name"
             />
           </v-flex>
-        </v-layout>
+        </div>
       </div>
       <div v-show="!showCard">
         <v-btn color="gray" fab @click="showCard=true" class="ml-0 mb-4">
@@ -162,13 +168,6 @@
   </v-dialog>
 </template>
 <style lang="stylus" >
-// .v-dialog:not(.v-dialog--fullscreen) {
-
-// }
-// .dialog-content-wrapper {
-// margin-top: 100px;
-// max-height: calc(90% - 100px) !important;
-// }
 .mini-imgs-wrapper {
   position: absolute;
   right: 0;
@@ -354,6 +353,11 @@ export default {
       return this.$store.state.localStorage.basket[this.product.id]
         ? this.$store.state.localStorage.basket[this.product.id].count
         : null;
+    },
+    price() {
+      return this.product.isDiscount && this.product.discountPrice
+        ? this.product.discountPrice
+        : this.product.priceNum;
     }
   },
   watch: {

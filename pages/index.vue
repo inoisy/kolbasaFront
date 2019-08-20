@@ -103,10 +103,11 @@
           </div>
           <v-flex xs10 md8 offset-lg1 lg7 xl6 class="d-flex mb-5">
             <div class="my-auto">
-              <h2 class="bottom-header d-block" data-aos="fade-up">Мы дорожим нашими партнерами.</h2>
-              <div class="bottom-text" data-aos="fade-up">
-                <p>Компания Альянс Фуд предлает выгодные условия для сотрудничества. Наша организация уже больше 20 лет является крупным игроком на рынке продаж готовой мясной продукции, мы стараемся уделять внимание каждому партнеру, от мала до велика. Вы останетесь довольны нашими условиями, сделайте первый шаг к успешному сотрудничеству.</p>
-              </div>
+              <h2 class="bottom-header d-block" data-aos="fade-up">Мы ценим наших партнеров.</h2>
+              <div
+                class="bottom-text"
+                data-aos="fade-up"
+              >Одним из ключевых направлений маркетинговой политики компании Альянс Фуд является создание, поддержание и развитие взаимовыгодных партнерских отношений. Почти четверть века мы находимся на ведущих ролях в сфере торговли готовой мясной продукцией.</div>
             </div>
           </v-flex>
         </div>
@@ -116,11 +117,11 @@
               <h2
                 class="bottom-header d-block mb-3"
                 data-aos="fade-up"
-              >Lorem ipsum dolor sit amet consect</h2>
+              >Доверяя нам – вы выбираете качество</h2>
               <div
                 class="bottom-text mb-3"
                 data-aos="fade-up"
-              >Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem facilis fugiat aperiam similique fugit rerum vero dolorum quibusdam perferendis. Tempora, itaque porro quia quaerat nulla ea consequatur possimus atque reiciendis.</div>
+              >Для нас не имеет значения статус наших партнеров на рынке или величина их годового товарооборота: со всеми компаньонами мы строим ровные, доверительные отношения.</div>
             </div>
           </div>
           <div class="flex hidden-sm-and-down offset-md0 md4 offset-lg1 lg3" data-aos="fade-up">
@@ -140,10 +141,10 @@
           <h2 class="text-xs-center primary--text mb-4">Наши преимущества</h2>
           <p
             class="text-xs-center display-2 primary--text mb-5 lumber"
-          >Мы заинтересованы в успешном развитии вашего бизнеса и стараемся сделать все возможное с нашей стороны. Сотрудничество с нами будет максимально комфортным за счет:</p>
+          >После первого шага, сделанного навстречу будущему сотрудничеству, вы убедитесь, насколько выгодны и комфортны для развития вашего бизнеса условия, предоставленные нашей организацией.</p>
           <div class="benefits bottom-text layout row wrap pb-4" data-aos="fade-up">
             <div
-              class="flex xs12 sm6 lg4 mb-3 display-flex px-1"
+              class="flex xs12 md6 lg4 mb-3 display-flex px-1"
               v-for="(item,index) in benefits"
               :key="'benefit'+index"
             >
@@ -157,7 +158,7 @@
               </div>
               <div class="pl-3">
                 <h5 class="display-2 lumber font-weight-bold mb-2">{{item.header}}</h5>
-                <p class="display-1 lumber">{{item.text}}</p>
+                <p class="lumber" style="font-size: 1rem">{{item.text}}</p>
               </div>
             </div>
           </div>
@@ -379,23 +380,27 @@ export default {
         },
         {
           header: "Акции",
-          text: "Aкции и скидки постоянным заказчикам",
+          text:
+            "Разнообразные бонусы в виде скидок и акций нашим постоянным клиентам",
           img: require("@/assets/benefits/1179545.svg")
         },
         {
-          header: "Lorem ipsum",
-          text: "Lorem ipsum dolor sit amet consectetur adipis",
-          img: require("@/assets/benefits/shipped.svg")
+          header: "Выбор",
+          text:
+            "Много видов колбас и мясных изделий и этот перечень постоянно увеличивается",
+          img: require("@/assets/benefits/product.svg")
         },
         {
-          header: "Lorem ipsum",
-          text: "Lorem ipsum dolor sit amet consectetur adipisi",
-          img: require("@/assets/benefits/currency.svg")
+          header: "Гарантии",
+          text:
+            "Многоуровневый контроль качества исключает поставки некачественной продукции",
+          img: require("@/assets/benefits/shield.svg")
         },
         {
-          header: "Lorem ipsum",
-          text: "Lorem ipsum dolor sit amet consectetur adipisi",
-          img: require("@/assets/benefits/1179545.svg")
+          header: "Сертификаты",
+          text:
+            "Вся продукция имеет документы, подтверждающие качество и состав изделий",
+          img: require("@/assets/benefits/certificate.svg")
         }
       ]
     };
