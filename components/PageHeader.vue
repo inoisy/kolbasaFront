@@ -2,7 +2,6 @@
   <div class="header d-flex" v-lazy:background-image="require('~/assets/img/promo.jpg')">
     <v-container fill-height :fluid="fluid" class="py-5">
       <v-layout column>
-        <!-- <v-flex class> -->
         <v-breadcrumbs :items="breadrumbs" class="pl-1 pb-4" dark>
           <template slot="item" slot-scope="props">
             <nuxt-link
@@ -12,10 +11,8 @@
             >{{ props.item.text }}</nuxt-link>
           </template>
         </v-breadcrumbs>
-        <!-- </v-flex>
-        <v-flex>-->
-        <h1 class="white--text mb-5">{{title}}</h1>
-        <!-- </v-flex> -->
+        <h1 class="white--text mb-3">{{title}}</h1>
+        <slot></slot>
       </v-layout>
     </v-container>
   </div>

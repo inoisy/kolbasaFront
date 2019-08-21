@@ -1,27 +1,30 @@
 <template>
   <div>
-    <page-header :title="manufacturer.name" :breadrumbs="breadrumbs" />
+    <page-header :title="manufacturer.name" :breadrumbs="breadrumbs">
+      <slot>
+        <div v-if="manufacturer.catalog.length>0">
+          <v-btn
+            v-for="(catalog,index) in manufacturer.catalog"
+            :key="'catalog'+index"
+            class="ml-0"
+            large
+            color="accent"
+            :href="imageBaseUrl+catalog.url"
+          >
+            <v-icon left dark>save_alt</v-icon>Загрузить прайс
+          </v-btn>
+        </div>
+      </slot>
+    </page-header>
     <div>
       <!-- class="background" v-lazy:background-image="require('~/assets/img/bg.jpg')" -->
       <v-container grid-list-lg class="py-5">
         <div class="display-1 mb-4" style="font-size: 1.1rem !important">
           <div
             class="flex xs12"
-            data-aos="fade-up"
             v-html="manufacturer.content && manufacturer.content.length>0 ? $md.render(manufacturer.content) : ''"
           ></div>
-          <div v-if="manufacturer.catalog.length>0" data-aos="fade-up">
-            <v-btn
-              v-for="(catalog,index) in manufacturer.catalog"
-              :key="'catalog'+index"
-              class="ml-0"
-              large
-              color="accent"
-              :href="imageBaseUrl+catalog.url"
-            >
-              <v-icon left dark>save_alt</v-icon>Загрузить каталог
-            </v-btn>
-          </div>
+
           <v-divider class="mt-3" v-show="categories.length>0"></v-divider>
         </div>
 
