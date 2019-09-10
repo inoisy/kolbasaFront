@@ -81,6 +81,10 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+
+  .primary--text.theme--dark {
+    color: #ff7a7a !important;
+  }
 }
 </style>
 <script>

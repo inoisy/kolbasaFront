@@ -161,6 +161,7 @@ export const actions = {
             manufacturers
             name
             slug
+            content
             img {
               url
             }

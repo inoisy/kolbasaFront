@@ -136,12 +136,17 @@ module.exports = {
       lang: 'ru_RU',
       version: '2.1'
     }],
-    ['@nuxtjs/markdownit', {
-      preset: 'default',
-      linkify: true,
-      breaks: true,
-      injected: true
-    }],
+    [
+      "@nuxtjs/markdownit",
+      {
+        injected: true,
+        html: true,
+        xhtmlOut: true,
+        breaks: true,
+        typographer: true,
+        linkify: true
+      }
+    ],
     ['@nuxtjs/axios', {
       baseURL: backendUrl
     }],

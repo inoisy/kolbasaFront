@@ -26,32 +26,16 @@ export default {
     fixedTop() {
       return (
         !this.breakpoint &&
-        this.sidebar.windowScrollTop > this.sidebar.offsetHeight
+        this.sidebar.windowScrollTop > this.sidebar.offsetHeight &&
+        this.sidebar.bottomOffset > 0
       );
     }
-    // sidebarStyles() {
-    //   // const currScroll =
-    //   //   this.sidebar.windowScrollTop + this.sidebar.innerHeight;
-    //   // console.log("TCL: sidebarStyles -> pos1", pos1);
-    //   // const bottomSide = this.sidebar.offsetHeight + this.sidebar.elemHeight;
-    //   // console.log("TCL: sidebarStyles -> pos2", pos2);
-    //   // const bottom = currScroll > bottomSide;
-
-    //   const top = this.sidebar.windowScrollTop > this.sidebar.offsetHeight;
-    //   return {
-    //     "fixed-top": !this.breakpoint && top // && !bottom
-    //     // "fixed-bottom": top && !this.breakpoint && bottom
-    //   };
-    // }
   },
   methods: {
     onResize() {
       const elem = this.$refs.sidebarContent
         ? this.$refs.sidebarContent.parentElement
         : null;
-      // this.parentWidth = elem.clientWidth - 20;
-      //   console.log(elem.clientWidth);
-      // this.windowSize = { x: window.innerWidth, y: window.innerHeight };
       this.sidebar.offsetHeight = elem.offsetTop;
       this.calculateSidebar();
     },
@@ -60,18 +44,12 @@ export default {
         ? this.$refs.sidebarContent.parentElement
         : null;
 
-      // const clientRect = elem ? elem.getBoundingClientRect().y : "";
-      // console.log(
-      //   "TCL: calculateSidebar -> .innerHeight",
-      //   this.$refs.sidebarContent.offsetHeight,
-      //   elem.getBoundingClientRect().bottom
-      // );
-
-      this.sidebar.maxHeight = elem.getBoundingClientRect().bottom - 120;
-      // console.log(
-      //   "TCL: calculateSidebar -> this.sidebar.maxHeight",
-      //   this.sidebar.maxHeight
-      // );
+      const bottomOffset = elem.getBoundingClientRect().bottom - 120;
+      console.log("TCL: calculateSidebar -> bottomOffset", bottomOffset);
+      const clientHeight = window.innerHeight - 120;
+      this.sidebar.maxHeight =
+        bottomOffset > clientHeight ? clientHeight : bottomOffset;
+      this.sidebar.bottomOffset = bottomOffset;
     },
     onScroll() {
       this.sidebar.windowScrollTop =
@@ -93,19 +71,12 @@ export default {
   },
   data() {
     return {
-      // parentWidth: 300,
       offsetTop: 0,
-      // windowSize: {
-      //   x: 0,
-      //   y: 0
-      // },
       sidebar: {
-        // height: 0,
-        // windowHeight: 0,
-        // clientRect: 500,
         windowScrollTop: 0,
         // innerHeight: 0,
-        offsetHeight: 0
+        offsetHeight: 0,
+        bottomOffset: 1000
         // maxHeight: 1000
       }
     };

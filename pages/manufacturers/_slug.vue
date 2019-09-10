@@ -6,7 +6,7 @@
           <v-btn
             v-for="(catalog,index) in manufacturer.catalog"
             :key="'catalog'+index"
-            class="ml-0"
+            class="ml-0 mb-4"
             large
             color="accent"
             :href="imageBaseUrl+catalog.url"

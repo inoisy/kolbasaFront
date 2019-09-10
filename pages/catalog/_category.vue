@@ -13,7 +13,7 @@
               wrap
               id="products"
               ref="product"
-              v-show="products.items && products.items.length>0"
+              v-if="products.items && products.items.length>0"
             >
               <div
                 class="flex xs12 sm6 md4 lg3 xl2"
@@ -24,7 +24,7 @@
                 <product-card :product="product" :category="category.slug"></product-card>
               </div>
             </v-layout>
-            <div v-show="$store.state.loading" class="ma-auto">
+            <div v-else class="ma-auto">
               <v-progress-circular
                 v-if="$store.state.loading"
                 :size="150"
@@ -61,6 +61,7 @@
                   :label="checkbox.name"
                   :key="checkbox.id"
                   :value="checkbox.id"
+                  height="0px"
                 ></v-checkbox>
                 <v-subheader class="pl-0 hidden-sm-and-down">КАТЕГОРИИ</v-subheader>
                 <v-list
@@ -81,8 +82,9 @@
         </div>
       </v-container>
     </section>
+
     <section v-if="pagesTotal>1">
-      <v-card class="pb-4">
+      <v-card :class="!category.content ? 'pb-5' : ''">
         <v-card-text>
           <v-pagination
             color="accent"
@@ -94,6 +96,9 @@
           ></v-pagination>
         </v-card-text>
       </v-card>
+    </section>
+    <section v-if="category.content">
+      <v-container v-html="$md.render(category.content)" class="py-5"></v-container>
     </section>
     <keep-alive>
       <nuxt-child :key="$route.params && $route.params.slug ? $route.params.slug : ''" />
