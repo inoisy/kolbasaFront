@@ -107,7 +107,8 @@ export default {
           to: "/catalog/halal",
           text: "Халяльная продукция"
         }
-      ]
+      ],
+      imageBaseUrl: process.env.imageBaseUrl
     };
   }
 };

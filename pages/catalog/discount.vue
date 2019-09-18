@@ -125,7 +125,8 @@ export default {
   },
   data() {
     return {
-      title: "Акционная продукция"
+      title: "Акционная продукция",
+       imageBaseUrl: process.env.imageBaseUrl,
       //   breadcrumbs:
     };
   }
