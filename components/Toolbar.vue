@@ -36,7 +36,7 @@
               <v-icon>arrow_drop_down</v-icon>
             </v-btn>
 
-            <v-list :class="item.items.length > 6 ? 'two-columns' : ''">
+            <v-list :class="item.items && item.items.length > 6 ? 'two-columns' : ''">
               <template v-for="(category, index) in item.items">
                 <div
                   :key="'list-group'+index"
@@ -152,29 +152,15 @@ export default {
   },
   components: { Busket },
   computed: {
-    // basketActive() {
-    //   const basketObj = this.$store.state.localStorage.basket;
-    //   const isActive = basketObj ? Object.keys(basketObj).length > 0 : false;
-    //   if (!isActive) {
-    //     this.basketDrawer = false;
-    //   }
-    //   return isActive;
-    //   // return this.basketLength > 0;
-    // },
     basketLength() {
       // const basketObj = this.$store.state.localStorage.basket;
-      const length = Object.keys(this.$store.state.localStorage.basket).length;
-      if (length < 1) {
-        this.basketDrawer = false;
+      let length;
+      if (this.$store.state.localStorage.basket) {
+        length = Object.keys(this.$store.state.localStorage.basket).length;
+        if (length < 1) {
+          this.basketDrawer = false;
+        }
       }
-      // }
-      // const basketl = basketObj
-      //   ? Object.values(basketObj).reduce((acc, val) => {
-      //       // console.log("TCL: basketLength -> val", val);
-      //       return acc + val.count;
-      //     }, 0)
-      //   : 0;
-      // console.log("TCL: basketLength -> basketLength", basketl);
 
       return length;
     },

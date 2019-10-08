@@ -33,18 +33,6 @@
               :key="child.id"
             >{{child}}</div>
           </div>
-          <!-- <div v-else>
-            <template v-for="child in category.children">
-              <vertical-card :item="child" :key="child.id" type="catalog" class="mb-4"></vertical-card>
-            </template>
-          </div>-->
-          <!-- v-if="category.children.length===0"
-
-          
-
-          <!-- <nuxt-link :to="`/catalog/${category.slug}`">
-              <h2>{{category.name}}</h2>
-          </nuxt-link>-->
         </template>
       </v-container>
     </section>

@@ -112,9 +112,15 @@
 export default {
   computed: {
     categories() {
-      return this.$store.state.sessionStorage.generalInfo.categories.filter(
-        item => item.parent.length === 0
-      );
+      if (
+        this.$store.state.sessionStorage.generalInfo &&
+        this.$store.state.sessionStorage.generalInfo.categories &&
+        this.$store.state.sessionStorage.generalInfo.categories.length > 0
+      ) {
+        return this.$store.state.sessionStorage.generalInfo.categories.filter(
+          item => item.parent && item.parent.length === 0
+        );
+      } else return [];
     },
     manufacturers() {
       return this.$store.state.sessionStorage.generalInfo.manufacturers;
