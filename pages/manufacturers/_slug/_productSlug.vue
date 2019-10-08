@@ -1,19 +1,13 @@
 <template>
   <v-dialog
-    v-if="$route.params && $route.params.slug "
+    v-if="$route.params && $route.params.productSlug"
     v-model="dialog"
     scrollable
     :width="showCard ? 'auto' : '500px'"
     style="margin-top: 120px;"
     attach=".v-content__wrap"
     content-class="dialog-content-wrapper"
-    persistent
-    no-click-animation
-    @click:outside="handleClickOutside"
   >
-    <!-- && product && Object.keys(product).length >0  -->
-    <!-- <portal-target name="toolbar" ref="portalTarget"></portal-target> -->
-
     <v-card class="position-relative px-4 pb-4 pt-0 fill-height" style="min-height:45vh">
       <div class="close-btn-wrap mt-2 mr-3">
         <v-btn class="close-btn ma-0" color="gray" fab @click="dialog=false">
@@ -104,7 +98,6 @@
                 </v-btn>
                 <span class="font-weight-bold">{{busket}}</span>
                 <v-btn flat icon color="primary" @click="addToBasket" v-show="busket">
-                  <!-- <v-icon >add_shopping_cart</v-icon> -->
                   <v-icon v-show="busket">add</v-icon>
                 </v-btn>
               </v-sheet>
@@ -285,12 +278,12 @@ export default {
   head() {
     return {
       title:
-        this.$route.params && this.$route.params.slug
+        this.$route.params && this.$route.params.productSlug
           ? this.product && this.product.name
             ? this.product.name
             : ""
-          : this.$parent.category && this.$parent.category.name
-          ? this.$parent.category.name
+          : this.$parent.manufacturer && this.$parent.manufacturer.name
+          ? this.$parent.manufacturer.name
           : "",
       meta: [
         // hid is used as unique identifier. Do not use `vmid` for it as it will not work
@@ -298,12 +291,13 @@ export default {
           hid: "description",
           name: "description",
           content:
-            this.$route.params && this.$route.params.slug
+            this.$route.params && this.$route.params.productSlug
               ? this.product && this.product.description
                 ? this.product.description
                 : ""
-              : this.$parent.category && this.$parent.category.description
-              ? this.$parent.category.description
+              : this.$parent.manufacturer &&
+                this.$parent.manufacturer.description
+              ? this.$parent.manufacturer.description
               : ""
         }
       ]
@@ -312,11 +306,12 @@ export default {
   components: { ContactForm },
   async asyncData(ctx) {
     let product = {};
-    if (ctx.params && ctx.params.slug) {
+    if (ctx.params && ctx.params.productSlug) {
       await ctx.store.dispatch("fetchGeneralInfo");
       product = await ctx.store.dispatch("fetchProduct", {
-        slug: ctx.params.slug
+        slug: ctx.params.productSlug
       });
+
       if (!product) {
         return ctx.error({
           statusCode: 404,
@@ -338,11 +333,11 @@ export default {
         {
           to: "/catalog",
           text: "Каталог"
-        },
-        {
-          to: `/catalog/${this.$store.state.sessionStorage.category.slug}`,
-          text: this.$store.state.sessionStorage.category.name
         }
+        // {
+        //   to: `/catalog/${this.$store.state.sessionStorage.category.slug}`,
+        //   text: this.$store.state.sessionStorage.category.name
+        // }
       ];
     },
     busket() {
@@ -359,7 +354,7 @@ export default {
   watch: {
     dialog(val) {
       if (val === false) {
-        this.$router.push({ params: { slug: null } });
+        this.$router.push({ params: { productSlug: null } });
       }
     }
     // weight_selected(val) {

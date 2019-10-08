@@ -49,32 +49,75 @@
           <h2 class="text-xs-center primary--text mt-4">Каталог</h2>
         </div>
         <v-layout class="mb-5 pb-4" row wrap align-center justify-center>
-          <div
-            data-aos="zoom-in"
-            class="flex xs6 sm6 md4 lg3"
-            v-for="(item,i) in categories"
-            :key="i"
-          >
-            <v-card ripple flat color="transparent" class="category-wrapper px-4 pt-3 pb-4">
-              <nuxt-link
-                class="td-none"
-                style="display:flex; flex-direction: column"
-                :to="`/catalog/${item.slug}`"
+          <template v-for="(item,i) in categories">
+            <div
+              data-aos="zoom-in"
+              v-if="item.children.length===0"
+              class="flex xs6 sm6 md4 lg3"
+              :key="item.id"
+            >
+              <v-card ripple flat color="transparent" class="category-wrapper px-4 pt-3 pb-4">
+                <nuxt-link
+                  class="td-none"
+                  style="display:flex; flex-direction: column"
+                  :to="`/catalog/${item.slug}`"
+                >
+                  <div class="category-img-wrapper">
+                    <img
+                      class="category-img ma-auto mb-2"
+                      v-if="item.img"
+                      v-lazy="imageBaseUrl+item.img.url"
+                    />
+                  </div>
+                  <h3
+                    class="category-text text-xs-center lumber font-weight-medium mb-0 primary--text"
+                    style
+                  >{{item.name}}</h3>
+                </nuxt-link>
+              </v-card>
+            </div>
+            <div
+              v-else
+              :key="item.id"
+              data-aos="zoom-in"
+              class="layout row wrap justify-center mt-4"
+            >
+              <div class="flex xs12 mb-3 text-xs-center">
+                <nuxt-link
+                  :to="`/catalog/${item.slug}`"
+                  class="category-text lumber font-weight-medium mb-0 primary--text fs-1-5"
+                >{{item.name}}</nuxt-link>
+              </div>
+
+              <!-- {{item.children.length}} -->
+              <div
+                data-aos="zoom-in"
+                v-for="child in item.children"
+                class="flex xs6 sm6 md4 lg3"
+                :key="child.id"
               >
-                <div class="category-img-wrapper">
-                  <img
-                    class="category-img ma-auto mb-2"
-                    v-if="item.img"
-                    v-lazy="imageBaseUrl+item.img.url"
-                  />
-                </div>
-                <h3
-                  class="category-text text-xs-center lumber font-weight-medium mb-0 primary--text"
-                  style
-                >{{item.name}}</h3>
-              </nuxt-link>
-            </v-card>
-          </div>
+                <v-card ripple flat color="transparent" class="category-wrapper px-4 pt-3 pb-4">
+                  <nuxt-link
+                    class="td-none"
+                    style="display:flex; flex-direction: column"
+                    :to="`/catalog/${child.slug}`"
+                  >
+                    <div class="category-img-wrapper">
+                      <img
+                        class="category-img ma-auto mb-2"
+                        v-if="child.img"
+                        v-lazy="imageBaseUrl+child.img.url"
+                      />
+                    </div>
+                    <h3
+                      class="category-text text-xs-center lumber font-weight-medium mb-0 primary--text"
+                      style
+                    >{{child.name}}</h3>
+                  </nuxt-link>
+                </v-card>
+              </div>
+            </div>
+          </template>
         </v-layout>
         <div data-aos="zoom-in">
           <v-img
@@ -103,7 +146,10 @@
           </div>
           <v-flex xs10 md8 offset-lg1 lg7 xl6 class="d-flex mb-5">
             <div class="my-auto">
-              <h2 class="bottom-header d-block" data-aos="fade-up">Мы ценим наших партнеров.</h2>
+              <h1
+                class="bottom-header d-block"
+                data-aos="fade-up"
+              >Колбаса оптом по самым выгодным для наших парнеров ценам.</h1>
               <div
                 class="bottom-text"
                 data-aos="fade-up"
@@ -142,27 +188,34 @@
           <p
             class="text-xs-center display-2 primary--text mb-5 lumber"
           >После первого шага, сделанного навстречу будущему сотрудничеству, вы убедитесь, насколько выгодны и комфортны для развития вашего бизнеса условия, предоставленные нашей организацией.</p>
-          <div class="benefits bottom-text layout row wrap pb-4" data-aos="fade-up">
+          <div class="benefits bottom-text layout row wrap" data-aos="fade-up">
             <div
               class="flex xs12 md6 lg4 mb-3 display-flex px-1"
               v-for="(item,index) in benefits"
               :key="'benefit'+index"
             >
-              <div class="img-wrapper display-flex mb-3">
+              <div class="img-wrapper mb-3">
                 <img
                   v-lazy="item.img"
-                  class="d-block mb-auto pt-1"
+                  class="d-block pt-1"
                   alt
                   style="width: 3.5rem;min-width: 3.5rem"
                 />
               </div>
               <div class="pl-3">
                 <h5 class="display-2 lumber font-weight-bold mb-2">{{item.header}}</h5>
-                <p class="lumber" style="font-size: 1rem">{{item.text}}</p>
+                <div class="lumber" style="font-size: 1rem">{{item.text}}</div>
               </div>
             </div>
           </div>
         </section>
+        <div data-aos="zoom-in">
+          <v-img
+            class="mx-auto my-5 xs10 md10 lg9 xl8 flex"
+            contain
+            :src="require('~/assets/delimiter.svg')"
+          ></v-img>
+        </div>
         <!-- <h2 class="text-xs-center mb-4 primary--text">Производители</h2> -->
       </v-container>
     </div>
@@ -345,7 +398,17 @@ export default {
     //   return this.$store.state.sessionStorage.generalInfo.promos;
     // },
     categories() {
-      return this.$store.state.sessionStorage.generalInfo.categories;
+      return this.$store.state.sessionStorage.generalInfo.categories
+        .filter(item => item.parent.length === 0)
+        .sort((a, b) => {
+          if (a.children.length > b.children.length) {
+            return 1;
+          }
+          if (a.children.length < b.children.length) {
+            return -1;
+          }
+          // a.children.length < b.children.length});
+        });
     },
     manufacturers() {
       return this.$store.state.sessionStorage.generalInfo.manufacturers;

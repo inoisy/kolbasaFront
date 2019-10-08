@@ -1,11 +1,6 @@
 <template>
-  <v-card
-    hover
-    ripple
-    class="fill-height d-flex column"
-    :to="`/catalog/${category}/${product.slug}`"
-    @click.capture="cardClick"
-  >
+  <v-card hover ripple class="fill-height d-flex column" :to="to" @click.capture="cardClick">
+    <!-- ? `${to}/${product.slug}` : `/catalog/${category}/${product.slug}` -->
     <div class="product-card-img-wrap" style="position: relative;">
       <!-- <div class="img-wrapper position-relative"> -->
 
@@ -145,7 +140,7 @@ export default {
       await this.$store.commit("removeFromBasket", this.product);
     }
   },
-  props: ["category", "product"]
+  props: ["category", "product", "to"]
 };
 </script>
 

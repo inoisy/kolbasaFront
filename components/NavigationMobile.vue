@@ -7,15 +7,26 @@
           <v-list-tile slot="activator" :to="item.to">
             <v-list-tile-content>{{ item.name}}</v-list-tile-content>
           </v-list-tile>
-          <v-list-tile
-            v-for="product in item.items"
-            :key="product.name"
-            nuxt
-            exact
-            :to="`${item.to}/${product.slug}`"
-          >
-            <v-list-tile-content class="ml-4">{{ product.name}}</v-list-tile-content>
-          </v-list-tile>
+
+          <div v-for="product in item.items" :key="product.name">
+            <div v-if="product.children && product.children.length > 0">
+              <v-list-tile nuxt exact :to="`${item.to}/${product.slug}`">
+                <span class="pl-3">{{ product.name}}</span>
+              </v-list-tile>
+              <v-list-tile
+                v-for="child in product.children"
+                :key="child.id"
+                nuxt
+                exact
+                :to="`${item.to}/${child.slug}`"
+              >
+                <span class="pl-5">{{child.name}}</span>
+              </v-list-tile>
+            </div>
+            <v-list-tile nuxt exact :to="`${item.to}/${product.slug}`" v-else>
+              <span class="pl-3">{{ product.name}}</span>
+            </v-list-tile>
+          </div>
         </v-list-group>
         <v-list-tile
           v-else

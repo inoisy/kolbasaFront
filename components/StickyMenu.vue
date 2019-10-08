@@ -45,7 +45,6 @@ export default {
         : null;
 
       const bottomOffset = elem.getBoundingClientRect().bottom - 120;
-      console.log("TCL: calculateSidebar -> bottomOffset", bottomOffset);
       const clientHeight = window.innerHeight - 120;
       this.sidebar.maxHeight =
         bottomOffset > clientHeight ? clientHeight : bottomOffset;

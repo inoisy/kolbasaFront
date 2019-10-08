@@ -27,8 +27,6 @@ export const mutations = {
     state.sessionStorage.products = item
   },
   async addToBasket(state, product) {
-    // console.log("TCL: addToBasket -> id", product.id)
-    // console.log("TCL: addToBasket -> get", state.localStorage.basket[id])
     if (state.localStorage.basket[product.id]) {
       const count = state.localStorage.basket[product.id].count + 1
       const newItem = {
@@ -65,7 +63,6 @@ export const mutations = {
   removeFromBasket(state, product) {
     const basket = state.localStorage.basket
     const count = basket[product.id].count - 1
-    // console.log("TCL: removeFromBasket -> count", count)
     if (count < 1) {
 
       state.localStorage.basket = _.omit(basket, product.id)
@@ -89,35 +86,34 @@ export const mutations = {
 export const strict = false
 export const actions = {
   async fetchGeneralInfo(ctx) {
-    // console.log("TCL: fetchGeneralInfo -> fetchGeneralInfo", Object.keys(ctx.state.sessionStorage.generalInfo).length)
-    // if (!ctx.state.sessionStorage.generalInfo || Object.keys(ctx.state.sessionStorage.generalInfo).length === 0) {
-    // console.log("TCL: fetchGeneralInfo -> FETCH")
-    // const {
-    //   data: contactsData
-    // } = await this.$axios.get("/contacts")
-    // const {
-    //   data: categoriesData
-    // } = await this.$axios.get("/categories?_sort=name:asc")
-    // const {
-    //   data: manufacturersData
-    // } = await this.$axios.get("/manufacturers?_sort=name:asc")
     let client = this.app.apolloProvider.defaultClient;
     const {
       data: generalData
     } = await client.query({
       query: gql `
         {
-           contacts {
-             phone
-             email
-             addressText
-             addressCoords
-             accessTime
-           }
+          contacts {
+            phone
+            email
+            addressText
+            addressCoords
+            accessTime
+          }
           categories(sort: "name:asc") {
             id
             name
             slug
+            parent {
+              id
+            }
+            children {
+              id
+              name
+              slug
+              img{
+                url
+              }
+            }
             img {
               url
             }
@@ -150,6 +146,7 @@ export const actions = {
 
     // if (ctx.state.sessionStorage.category.slug !== params.slug) {
     const categoryFind = ctx.state.sessionStorage.generalInfo.categories.find(item => item.slug === params.slug)
+
     let client = this.app.apolloProvider.defaultClient;
     if (categoryFind && categoryFind.id) {
       const {
@@ -165,12 +162,49 @@ export const actions = {
             img {
               url
             }
-           
+            # products{
+            #   id
+            #   name
+            #   slug
+            
+            #   priceNum
+            #   discountPrice
+            #   isDiscount
+            #   isHalal
+            #   category {
+            #     slug
+            #   }
+            #   img {
+            #     url
+            #   }
+            #   manufacturer {
+            #     name
+            #     img {
+            #       url
+            #     }
+            #   }
+            # }
+            parent {
+              id
+              slug
+              name
+              children {
+                id
+                name
+                slug
+              }
+            }
+            children{
+              id
+              name
+              slug
+            }
           }
         }
       `,
         variables: {
           id: categoryFind.id,
+
         }
       });
 
@@ -201,7 +235,6 @@ export const actions = {
     //     }
     //     `
     // })
-    // console.log("TCL: fetchProduct -> productData", productData)
 
     const {
       data: product
@@ -226,7 +259,6 @@ export const actions = {
     // let client = this.app.apolloProvider.defaultClient;
     // const allManufacturerIds = ctx.state.sessionStorage.generalInfo.manufacturers.map(item => item.id)
     // const manufacturerId = params.manufacturer && params.manufacturer.length > 0 ? params.manufacturer : allManufacturerIds
-    // console.log("TCL: fetchProducts -> manufacturerId", manufacturerId)
     // const start = params.page ? (params.page - 1) * 20 : 0
     // const sort = params.sort && params.sort === "price" ? "priceNum:desc" : "name:asc"
 
@@ -279,17 +311,11 @@ export const actions = {
     //     limit: 20
     //   }
     // });
-    // console.log("TCL: fetchProducts -> productsDataGraphQL", productsDataGraphQL)
-
-    // let products = []
 
     let query = `category=${categoryFind.id}`
     const page = ctx.state.sessionStorage.pageFilter
-    // console.log("TCL: fetchProducts -> page", page)
     const manufacturers = ctx.state.sessionStorage.manufacturerFilter
-    // console.log("TCL: fetchProducts -> manufacturers", manufacturers)
     const sort = ctx.state.sessionStorage.sortFilter.sort
-    // console.log("TCL: fetchProducts -> sort", sort)
     if (page) {
       query = query + `&_start=${(page - 1) * 20}`
     }
@@ -318,11 +344,10 @@ export const actions = {
     // } else {
     //   query = query + `&_sort=name:asc`
     // }
-    // console.log("TCL: Count query+", query)
-    // console.log("TCL: Count params+", params)
+    const limit = params.limit ? params.limit : 20
     const {
       data: productsData
-    } = await this.$axios.get(`/products?` + query + "&_limit=20")
+    } = await this.$axios.get(`/products?` + query + "&_limit=" + limit)
     const {
       data: productsCount
     } = await this.$axios.get(`/products/count?` + query)

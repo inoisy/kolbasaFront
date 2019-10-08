@@ -36,27 +36,32 @@
               <v-icon>arrow_drop_down</v-icon>
             </v-btn>
 
-            <v-list :class="item.items.length > 8 ? 'two-columns' : ''">
-              <v-list-tile
-                class="list-item"
-                active-class="text--accent"
-                v-for="(child, index) in item.items"
-                :key="index"
-                nuxt
-                :to="`${item.to}/${child.slug}`"
-              >{{ child.name }}</v-list-tile>
-              <!-- <v-list-tile
-                  v-if="item.to==='/catalog'"
+            <v-list :class="item.items.length > 6 ? 'two-columns' : ''">
+              <template v-for="(category, index) in item.items">
+                <div
+                  :key="'list-group'+index"
+                  v-if="category && category.children && category.children.length > 0"
+                >
+                  <v-list-tile :to="`/catalog/${category.slug}`">
+                    <span style="line-height: 100%">{{ category.name}}</span>
+                  </v-list-tile>
+                  <v-list-tile
+                    v-for="child in category.children"
+                    :key="child.id"
+                    :to="`/catalog/${child.slug}`"
+                  >
+                    <span class="pl-4">{{child.name}}</span>
+                  </v-list-tile>
+                </div>
+                <v-list-tile
+                  v-else
                   class="list-item"
                   active-class="text--accent"
+                  :key="index"
                   nuxt
-                  :to="`${item.to}/halal`"
-                >
-                  Халяльная продукция
-                  <v-list-tile-avatar class="ml-auto">
-                    <img style="width:45px" :src="require('~/assets/halal1.png')" />
-                  </v-list-tile-avatar>
-              </v-list-tile>-->
+                  :to="`${item.to}/${category.slug}`"
+                >{{ category.name }}</v-list-tile>
+              </template>
             </v-list>
           </v-menu>
 

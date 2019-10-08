@@ -60,7 +60,9 @@ export default {
           to: "/catalog",
           items: this.$store.state.sessionStorage.generalInfo.categories
             ? [
-                ...this.$store.state.sessionStorage.generalInfo.categories,
+                ...this.$store.state.sessionStorage.generalInfo.categories.filter(
+                  item => item.parent.length === 0
+                ),
                 // { name: "Халяльная продукция", slug: "halal" },
                 { name: "Акционная продукция", slug: "discount" }
               ]

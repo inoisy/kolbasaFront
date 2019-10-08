@@ -1,12 +1,49 @@
 <template>
   <div>
-    <page-header :title="category.name" :breadrumbs="breadcrumbs" :fluid="true" />
+    <!-- <keep-alive> -->
+    <nuxt-child />
+    <!-- </keep-alive> -->
+    <!-- :key="$route.params && $route.params.slug ? $route.params.slug : ''"  -->
+    <page-header
+      :title="category.name"
+      :breadrumbs="breadcrumbs"
+      :fluid="true"
+      class="pos-relative"
+    >
+      <div
+        class="subcategories display-flex wrap"
+        style="bottom: 0; position: absolute;"
+        v-if="subcategories && subcategories.length>0"
+      >
+        <!-- <v-btn-toggle v-model="toggle_exclusive" color="tranparent"> -->
+        <v-btn
+          :to="`/catalog/${rootCategory.slug}`"
+          large
+          color="white"
+          class="ma-0"
+          flat
+          style="font-size: 0.9rem !important;"
+        >все {{rootCategory.name}}</v-btn>
+        <template class="child" v-for="child in subcategories">
+          <v-btn
+            :to="`/catalog/${child.slug}`"
+            color="white"
+            large
+            class="ma-0"
+            style="font-size: 0.9rem !important;"
+            flat
+            :key="child.id"
+          >{{child.name}}</v-btn>
+        </template>
+        <!-- </v-btn-toggle> -->
+      </div>
+    </page-header>
     <!-- {{pagesTotal}} -->
     <section class="background">
       <!-- v-lazy:background-image="require('~/assets/img/bg.jpg')" -->
       <v-container grid-list-lg class="py-5" fluid>
         <div id="contentWrapper" class="display-flex">
-          <v-flex style="min-height: 73vh" class="display-flex">
+          <v-flex style="min-height: 73vh">
             <!-- {{products}} -->
             <v-layout
               row
@@ -21,8 +58,54 @@
                 v-for="(product,index) in products.items"
                 :key="index"
               >
-                <product-card :product="product" :category="category.slug"></product-card>
+                <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
               </div>
+            </v-layout>
+            <v-layout v-else-if="multiple" wrap>
+              <div
+                class="flex xs12 mb-4"
+                v-for="(productsGroup,index) in products"
+                :key="'prGr'+index"
+              >
+                <h2>
+                  {{productsGroup.name}}
+                  <v-btn
+                    outline
+                    :to="`/catalog/${productsGroup.slug}`"
+                  >Показать все({{productsGroup.count}})</v-btn>
+                </h2>
+                <v-layout wrap class="mb-3">
+                  <div
+                    class="flex xs12 sm6 md4 lg3 xl2"
+                    data-aos="fade-up"
+                    v-for="(product,prIndex) in productsGroup.items"
+                    :key="prIndex"
+                  >
+                    <product-card
+                      :product="product"
+                      :to="`/catalog/${category.slug}/${product.slug}`"
+                    ></product-card>
+                  </div>
+                </v-layout>
+              </div>
+
+              <v-layout
+                wrap
+                v-if="category.products && category.products.items && category.products.items.length > 0"
+              >
+                <h2 class="flex xs12">Остальные {{category.name}}</h2>
+                <div
+                  class="flex xs12 sm6 md4 lg3 xl2"
+                  data-aos="fade-up"
+                  v-for="(product,prIndex) in category.products.items"
+                  :key="prIndex"
+                >
+                  <product-card
+                    :product="product"
+                    :to="`/catalog/${category.slug}/${product.slug}`"
+                  ></product-card>
+                </div>
+              </v-layout>
             </v-layout>
             <div v-else class="ma-auto">
               <v-progress-circular
@@ -40,20 +123,21 @@
           >
             <sticky-menu class="px-3">
               <portal to="filters">
-                <v-subheader class="pl-0">СОРТИРОВАТЬ ПО</v-subheader>
+                <v-subheader v-show="!multiple" class="pl-0">СОРТИРОВАТЬ ПО</v-subheader>
                 <v-btn-toggle
                   class="mb-3"
                   v-model="sort"
                   @change="sortChange"
                   style="width: 100%"
                   mandatory
+                  v-show="!multiple"
                 >
                   <v-btn flat>Название</v-btn>
                   <v-btn flat>Цена</v-btn>
                 </v-btn-toggle>
-                <v-subheader class="pl-0" v-show="manufacturers.length>1">БРЕНД</v-subheader>
+                <v-subheader class="pl-0" v-show="!multiple && manufacturers.length>1">БРЕНД</v-subheader>
                 <v-checkbox
-                  v-show="manufacturers.length>1"
+                  v-show="!multiple && manufacturers.length>1"
                   v-model="manufacturersSelected"
                   multiple
                   @change="manufacturerChange"
@@ -69,11 +153,63 @@
                   style="background-color:transparent !important"
                   color="transparent"
                 >
+                  <!-- <template v-for="(category, index) in item.items">
+                <div
+                  :key="'list-group'+index"
+                  v-if="category && category.children && category.children.length > 0"
+                >
+                  <v-list-tile :to="`/catalog/${category.slug}`">
+                    <span style="line-height: 100%">{{ category.name}}</span>
+                  </v-list-tile>
                   <v-list-tile
-                    v-for="(item,index) in categories"
-                    :key="index"
-                    :to="`/catalog/${item.slug}`"
-                  >{{item.name}}</v-list-tile>
+                    v-for="child in category.children"
+                    :key="child.id"
+                    class="pl-4"
+                    :to="`/catalog/${child.slug}`"
+                  >{{child.name}}</v-list-tile>
+                </div>
+                <v-list-tile
+                  v-else
+                  class="list-item"
+                  active-class="text--accent"
+                  :key="index"
+                  nuxt
+                  :to="`${item.to}/${category.slug}`"
+                >{{ category.name }}</v-list-tile>
+                  </template>-->
+                  <!-- <v-list-group
+                      :key="index"
+                      v-if="category && category.children && category.children.length > 0"
+                    >
+                      <v-list-tile slot="activator" :to="category.slug">
+                        <span style="line-height: 100%">{{ category.name}}</span>
+                      </v-list-tile>
+                      <v-list-tile
+                        v-for="child in category.children"
+                        :key="child.id"
+                        class="pl-4"
+                      >{{child.name}}</v-list-tile>
+                  </v-list-group>-->
+                  <template v-for="(category,index) in categories">
+                    <div
+                      :key="'list-group'+index"
+                      v-if="category && category.children && category.children.length > 0"
+                    >
+                      <v-list-tile :to="`/catalog/${category.slug}`">
+                        <span style="line-height: 100%">{{ category.name}}</span>
+                      </v-list-tile>
+                      <v-list-tile
+                        v-for="child in category.children"
+                        :key="child.id"
+                        :to="`/catalog/${child.slug}`"
+                      >
+                        <span class="pl-4" style="line-height: 100% !important">{{child.name}}</span>
+                      </v-list-tile>
+                    </div>
+                    <v-list-tile :key="index" v-else :to="`/catalog/${category.slug}`">
+                      <span style="line-height: 100% !important">{{category.name}}</span>
+                    </v-list-tile>
+                  </template>
                 </v-list>
               </portal>
               <portal-target name="filters" v-show="$vuetify.breakpoint.mdAndUp"></portal-target>
@@ -83,7 +219,7 @@
       </v-container>
     </section>
 
-    <section v-if="pagesTotal>1">
+    <section v-if="pagesTotal>1 && !multiple">
       <v-card :class="!category.content ? 'pb-5' : ''">
         <v-card-text>
           <v-pagination
@@ -97,12 +233,9 @@
         </v-card-text>
       </v-card>
     </section>
-    <section v-if="category.content">
+    <section v-if="category.content" class="grey lighten-3">
       <v-container v-html="$md.render(category.content)" class="py-5"></v-container>
     </section>
-    <keep-alive>
-      <nuxt-child :key="$route.params && $route.params.slug ? $route.params.slug : ''" />
-    </keep-alive>
   </div>
 </template>
 <style lang="stylus">
@@ -110,6 +243,14 @@
   .v-list__tile--active {
     background-color: rgba(0, 0, 0, 0.1) !important;
   }
+}
+
+.subcategories {
+  width: 100%;
+  justify-content: center;
+}
+
+@media (min-width: 960px) {
 }
 </style>
 
@@ -137,14 +278,41 @@ export default {
   },
   components: { PageHeader, StickyMenu, ProductCard },
   computed: {
+    subcategories() {
+      return this.category &&
+        this.category.children &&
+        this.category.children.length > 0
+        ? this.category.children
+        : this.category &&
+          this.category.parent &&
+          this.category.parent.length > 0 &&
+          this.category.parent[0].children.length > 0
+        ? this.category.parent[0].children
+        : [];
+    },
+    rootCategory() {
+      return this.category &&
+        this.category.parent &&
+        this.category.parent.length > 0 &&
+        this.category.parent[0]
+        ? this.category.parent[0]
+        : this.category
+        ? this.category
+        : {};
+    },
     // busket() {
     //   return this.$store.state.localStorage.basket;
     // },
     // products() {
     //   return this.$store.state.sessionStorage.products;
     // },
+    multiple() {
+      return Array.isArray(this.products);
+    },
     categories() {
-      return this.$store.state.sessionStorage.generalInfo.categories;
+      return this.$store.state.sessionStorage.generalInfo.categories.filter(
+        item => item.parent.length === 0
+      );
     },
     pagesTotal() {
       // console.log(Math.ceil(this.$store.state.sessionStorage.products.count / 20));
@@ -154,7 +322,7 @@ export default {
     //   return this.$store.state.sessionStorage.generalInfo.manufacturers;
     // },
     breadcrumbs() {
-      return [
+      let base = [
         {
           to: "/",
           text: "Главная"
@@ -162,12 +330,23 @@ export default {
         {
           to: "/catalog",
           text: "Каталог"
-        },
-        {
-          to: this.$route.path,
-          text: this.category.name
         }
       ];
+      if (
+        this.category.parent &&
+        this.category.parent.length > 0 &&
+        this.category.parent[0]
+      ) {
+        base.push({
+          to: `/catalog/${this.category.parent[0].slug}`,
+          text: this.category.parent[0].name
+        });
+      }
+      base.push({
+        to: this.$route.path,
+        text: this.category.name
+      });
+      return base;
     }
   },
   async asyncData(ctx) {
@@ -204,7 +383,7 @@ export default {
         manufacturersSelectedIds.push(finded.id);
       }
     }
-    const category = await ctx.store.dispatch("fetchCategory", {
+    let category = await ctx.store.dispatch("fetchCategory", {
       slug: ctx.route.params.category,
       manufacturer: manufacturersSelectedIds
       //   manufacturer && manufacturer.item ? manufacturer.item.id : null
@@ -229,18 +408,37 @@ export default {
       await ctx.store.commit("sortFilter", sort);
       await ctx.store.commit("manufacturerFilter", manufacturersSelectedIds);
       await ctx.store.commit("pageFilter", ctx.route.query.page);
-      const products = await ctx.store.dispatch("fetchProducts", {
-        slug: ctx.route.params.category
-        // manufacturer: manufacturersSelectedIds,
-        // sort: ctx.route.query.sort,
-        // page: ctx.route.query.page
-      });
+      let products;
 
+      console.log("TCL: Data -> category", category);
+      if (Array.isArray(category.children) && category.children.length > 0) {
+        products = [];
+        for (let child of category.children) {
+          const productsChild = await ctx.store.dispatch("fetchProducts", {
+            slug: child.slug,
+            limit: 8
+          });
+          products.push({ ...child, ...productsChild });
+        }
+        const categoryProducts = {
+          products: await ctx.store.dispatch("fetchProducts", {
+            slug: category.slug,
+            limit: 999
+          })
+        };
+        category = { ...category, ...categoryProducts };
+        // products.push({ ...category, ...categoryProducts });
+      } else {
+        products = await ctx.store.dispatch("fetchProducts", {
+          slug: ctx.route.params.category
+        });
+      }
       return {
         products: products,
         category: category,
         manufacturers: manufacturersExist,
         manufacturersSelected: manufacturersSelectedIds
+        // showMoreButtonShow: products.map(item => item.items.length >= 20)
         // manufacturersModel: manufacturersModel
       };
     } else {
@@ -251,10 +449,26 @@ export default {
     }
   },
   methods: {
-    // handleScroll() {
-    //   return _.throttle(this.throttledMethod, 300);
-    // },
-
+    async handleShowMore(categoryId, index) {
+      console.log("TCL: handleShowMore -> categoryId", categoryId);
+      const currPage = this.products[index].items.length / 20;
+      console.log("TCL: handleShowMore -> currPage", currPage + 1);
+      const newItems = await this.$store.dispatch("fetchProducts", {
+        slug: categoryId,
+        // manufacturer: this.$route.query.manufacturer,
+        // sort: this.$route.query.sort,
+        page: currPage + 1
+      });
+      console.log("TCL: handleShowMore -> newItems", newItems.items);
+      this.products[index].items = [
+        ...this.products[index].items,
+        ...newItems.items
+      ];
+      console.log(
+        "TCL: handleShowMore -> this.products[index].items",
+        this.products[index].items
+      );
+    },
     async sortChange(val) {
       if (Number.isInteger(val)) {
         this.$vuetify.goTo("#contentWrapper");
@@ -269,9 +483,10 @@ export default {
             // manufacturer: this.$store.state.manufacturerFilter,
             // sort: "price"
           });
-
-          await this.$router.push({
-            path: this.$route.path,
+          // this.$route.query = { ...this.$route.query, ...addObj };
+          console.log(this.$route.name);
+          this.$router.push({
+            // path: this.$route.path,
             query: { ...this.$route.query, ...addObj }
           });
         } else if (val === 0) {
@@ -285,13 +500,18 @@ export default {
             // manufacturer: this.$store.state.manufacturerFilter,
             // sort: "name"
           });
+          let { sort, ...query } = this.$route.query;
+          this.$router.push({
+            path: this.$route.path,
+            query: query
+          });
         }
       }
-      let { sort, ...query } = this.$route.query;
-      this.$router.push({
-        path: this.$route.path,
-        query: query
-      });
+      // let { sort, ...query } = this.$route.query;
+      // this.$router.push({
+      //   path: this.$route.path,
+      //   query: query
+      // });
     },
     async manufacturerChange(val) {
       this.pageCurr = 1;

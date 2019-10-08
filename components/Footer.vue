@@ -48,16 +48,37 @@
         </v-flex>
         <v-flex class="mb-4" xs12 md6 lg4 hidden-xs-only>
           <v-subheader>КАТАЛОГ</v-subheader>
+
           <v-list style="background: transparent !important;" class="footer-list">
-            <v-list-tile
+            <template v-for="(category,index) in categories">
+              <div
+                :key="'list-group'+index"
+                v-if="category && category.children && category.children.length > 0"
+              >
+                <v-list-tile :to="`/catalog/${category.slug}`">
+                  <span style="line-height: 100%">{{ category.name}}</span>
+                </v-list-tile>
+                <v-list-tile
+                  v-for="child in category.children"
+                  :key="child.id"
+                  :to="`/catalog/${child.slug}`"
+                >
+                  <span class="pl-4" style="line-height: 100% !important">{{child.name}}</span>
+                </v-list-tile>
+              </div>
+              <v-list-tile :key="index" v-else :to="`/catalog/${category.slug}`">
+                <span style="line-height: 100% !important">{{category.name}}</span>
+              </v-list-tile>
+            </template>
+            <!-- <v-list-tile
               v-for="(category,index) in categories"
               :key="index"
               :to="`catalog${category.slug}`"
               style="line-height: normal"
-            >{{category.name}}</v-list-tile>
-            <v-list-tile style="line-height: normal" nuxt to="/catalog/halal">
+            >{{category.name}}</v-list-tile>-->
+            <!-- <v-list-tile style="line-height: normal" nuxt to="/catalog/halal">
               <v-list-tile-content>Халяльная продукция</v-list-tile-content>
-            </v-list-tile>
+            </v-list-tile>-->
           </v-list>
         </v-flex>
         <!-- <v-flex class="mb-4" xs12 md6 lg3 hidden-xs-only>
@@ -91,7 +112,9 @@
 export default {
   computed: {
     categories() {
-      return this.$store.state.sessionStorage.generalInfo.categories;
+      return this.$store.state.sessionStorage.generalInfo.categories.filter(
+        item => item.parent.length === 0
+      );
     },
     manufacturers() {
       return this.$store.state.sessionStorage.generalInfo.manufacturers;
