@@ -51,7 +51,7 @@ export default {
         }
       `
     });
-    console.log("TCL: Data -> pageData", pageData);
+    // console.log("TCL: Data -> pageData", pageData);
 
     return {
       page: pageData.pages[0]

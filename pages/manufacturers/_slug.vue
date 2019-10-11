@@ -101,31 +101,31 @@ export default {
   },
   methods: {
     async handleShowMore(categoryId) {
-      console.log("TCL: handleShowMore -> categoryId", categoryId);
+      // console.log("TCL: handleShowMore -> categoryId", categoryId);
       let client = this.$apollo;
-      console.log(
-        "TCL: handleShowMore -> this.manufacturer.id",
-        this.manufacturer.id
-      );
+      // console.log(
+      //   "TCL: handleShowMore -> this.manufacturer.id",
+      //   this.manufacturer.id
+      // );
       const categoryIndex = this.categories.findIndex(
         item => item.item.id === categoryId
       );
 
       this.showMoreButtonShow[categoryIndex] = false;
 
-      console.log("TCL: handleShowMore -> categoryIndex", categoryIndex);
+      // console.log("TCL: handleShowMore -> categoryIndex", categoryIndex);
       const productsLength = this.categories[categoryIndex].products.length;
       const { data: products } = await this.$axios.get(
         process.env.baseUrl +
           `/products?category=${categoryId}&manufacturer=${this.manufacturer.id}&_limit=999&_start=${productsLength}`
       );
-      console.log(
-        "TCL: handleShowMore -> ;",
-        process.env.baseUrl +
-          `/products?category=${categoryId}&manufacturer=${this.manufacturer.id}&_limit=999&_start=${productsLength}`
-      );
+      // console.log(
+      //   "TCL: handleShowMore -> ;",
+      //   process.env.baseUrl +
+      //     `/products?category=${categoryId}&manufacturer=${this.manufacturer.id}&_limit=999&_start=${productsLength}`
+      // );
 
-      console.log("TCL: handleShowMore -> products", products);
+      // console.log("TCL: handleShowMore -> products", products);
       if (products.length > 0) {
         this.categories[categoryIndex].products.push(...products);
       }

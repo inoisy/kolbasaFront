@@ -62,7 +62,7 @@ export default {
         }
       `
     });
-    console.log("TCL: Data -> manufacturerData", manufacturerData);
+    // console.log("TCL: Data -> manufacturerData", manufacturerData);
 
     return {
       manufacturers: manufacturerData.manufacturers

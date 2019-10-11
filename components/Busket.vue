@@ -165,17 +165,17 @@ export default {
       this.offer = true;
     },
     async addToBasket(event, item) {
-      console.log("TCL: addToBasket -> item", item);
+      // console.log("TCL: addToBasket -> item", item);
 
       await this.$store.commit("addToBasket", item);
     },
     async removeFromBasket(event, item) {
-      console.log("TCL: removeFromBasket -> item", item);
+      // console.log("TCL: removeFromBasket -> item", item);
 
       await this.$store.commit("removeFromBasket", item);
     },
     async deleteFromBasket(event, item) {
-      console.log("TCL: removeFromBasket -> item", item);
+      // console.log("TCL: removeFromBasket -> item", item);
       await this.$store.commit("deleteFromBasket", item);
     }
   },

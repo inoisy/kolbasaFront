@@ -365,11 +365,10 @@ export default {
   },
   methods: {
     handleClickOutside() {
-      console.log(
-        "TCL: handleClickOutside -> handleClickOutside",
-        this.$refs.portalTarget
-      );
-
+      // console.log(
+      //   "TCL: handleClickOutside -> handleClickOutside",
+      //   this.$refs.portalTarget
+      // );
       // const capture = this.$refs.productCardActions.contains(event.target);
     },
     handleOneClickBuy() {

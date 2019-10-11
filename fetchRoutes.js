@@ -21,7 +21,7 @@ async function main() {
       routes.push(`/catalog/${category.slug}/${product.slug}`)
     }
   }
-  console.log("TCL: main -> routes", routes)
+  // console.log("TCL: main -> routes", routes)
 
 }
 main()

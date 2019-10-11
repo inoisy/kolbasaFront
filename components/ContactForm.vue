@@ -93,7 +93,7 @@ export default {
                 };
               })
             : [];
-        console.log("TCL: submit -> busketItems", busketItems);
+        // console.log("TCL: submit -> busketItems", busketItems);
 
         const busketText =
           busketItems && busket.length > 0
@@ -102,7 +102,7 @@ export default {
                 return acc;
               }, "")
             : "";
-        console.log("TCL: submit -> busketText", busketText);
+        // console.log("TCL: submit -> busketText", busketText);
         const busketHtml =
           busketItems && busket.length > 0
             ? busketItems.reduce((acc, val) => {
@@ -110,7 +110,7 @@ export default {
                 return acc;
               }, "")
             : "";
-        console.log("TCL: submit -> busketHtml", busketHtml);
+        // console.log("TCL: submit -> busketHtml", busketHtml);
 
         const msg = {
           name: this.name,
