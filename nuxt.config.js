@@ -1,5 +1,6 @@
 const pkg = require('./package')
 const os = require("os");
+const routes = require("./routes")
 
 const protocol = "https"
 const sitename = `${protocol}://prodaem-kolbasu.ru`;
@@ -8,7 +9,6 @@ const backendUrl = process.env.BACKEND_URL || backURL
 const imageUrl = process.env.IMAGE_BASE_URL || process.env.BACKEND_URL || backURL
 
 // const imageBaseUrl = process.env.IMAGE_BASE_URL || "http://cdn.yakutov.com"
-
 
 const axios = require('axios')
 
@@ -23,36 +23,37 @@ module.exports = {
     dir: 'public',
     subFolders: false,
     fallback: "404.html",
-    async routes() {
-      let routes = []
-      const {
-        data: pages
-      } = await axios.get(backendUrl + '/pages?_limit=99999')
-      for (let item of pages) {
-        routes.push(`${item.slug}`)
-      }
-      const {
-        data: manufacturers
-      } = await axios.get(backendUrl + '/manufacturers?_limit=99999')
-      for (let item of manufacturers) {
-        routes.push(`/manufacturers/${item.slug}`)
-      }
-      const {
-        data: categories
-      } = await axios.get(backendUrl + '/categories?_limit=99999')
-      for (let item of categories) {
-        routes.push(`/catalog/${item.slug}`)
-      }
-      for (let category of categories) {
-        //  routes.push(`/catalog/${item.slug}`)
-        for (let product of category.products) {
-          routes.push(`/catalog/${category.slug}/${product.slug}`)
-        }
-      }
+    routes
+    // async routes() {
+    //   let routes = []
+    //   const {
+    //     data: pages
+    //   } = await axios.get(backendUrl + '/pages?_limit=99999')
+    //   for (let item of pages) {
+    //     routes.push(`${item.slug}`)
+    //   }
+    //   const {
+    //     data: manufacturers
+    //   } = await axios.get(backendUrl + '/manufacturers?_limit=99999')
+    //   for (let item of manufacturers) {
+    //     routes.push(`/manufacturers/${item.slug}`)
+    //   }
+    //   const {
+    //     data: categories
+    //   } = await axios.get(backendUrl + '/categories?_limit=99999')
+    //   for (let item of categories) {
+    //     routes.push(`/catalog/${item.slug}`)
+    //   }
+    //   for (let category of categories) {
+    //     //  routes.push(`/catalog/${item.slug}`)
+    //     for (let product of category.products) {
+    //       routes.push(`/catalog/${category.slug}/${product.slug}`)
+    //     }
+    //   }
 
 
-      return routes
-    }
+    //   return routes
+    // }
   },
 
   /*
@@ -174,36 +175,37 @@ module.exports = {
 
     ['@nuxtjs/sitemap', {
       gzip: true,
-      async routes() {
-        let routes = []
-        const {
-          data: pages
-        } = await axios.get(backendUrl + '/pages?_limit=99999')
-        for (let item of pages) {
-          routes.push(`${item.slug}`)
-        }
-        const {
-          data: manufacturers
-        } = await axios.get(backendUrl + '/manufacturers?_limit=99999')
-        for (let item of manufacturers) {
-          routes.push(`/manufacturers/${item.slug}`)
-        }
-        const {
-          data: categories
-        } = await axios.get(backendUrl + '/categories?_limit=99999')
-        for (let item of categories) {
-          routes.push(`/catalog/${item.slug}`)
-        }
-        for (let category of categories) {
-          //  routes.push(`/catalog/${item.slug}`)
-          for (let product of category.products) {
-            routes.push(`/catalog/${category.slug}/${product.slug}`)
-          }
-        }
+      routes
+      // async routes() {
+      //   let routes = []
+      //   const {
+      //     data: pages
+      //   } = await axios.get(backendUrl + '/pages?_limit=99999')
+      //   for (let item of pages) {
+      //     routes.push(`${item.slug}`)
+      //   }
+      //   const {
+      //     data: manufacturers
+      //   } = await axios.get(backendUrl + '/manufacturers?_limit=99999')
+      //   for (let item of manufacturers) {
+      //     routes.push(`/manufacturers/${item.slug}`)
+      //   }
+      //   const {
+      //     data: categories
+      //   } = await axios.get(backendUrl + '/categories?_limit=99999')
+      //   for (let item of categories) {
+      //     routes.push(`/catalog/${item.slug}`)
+      //   }
+      //   for (let category of categories) {
+      //     //  routes.push(`/catalog/${item.slug}`)
+      //     for (let product of category.products) {
+      //       routes.push(`/catalog/${category.slug}/${product.slug}`)
+      //     }
+      //   }
 
 
-        return routes
-      }
+      //   return routes
+      // }
 
     }],
     ['@nuxtjs/robots', {

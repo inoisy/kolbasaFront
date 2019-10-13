@@ -3,7 +3,7 @@
     <v-container
       fill-height
       :fluid="fluid"
-      class="pt-5"
+      class="pt-4"
       :style="`padding-bottom: ${paddingHeight}px`"
     >
       <v-layout column>
@@ -16,7 +16,7 @@
             >{{ props.item.text }}</nuxt-link>
           </template>
         </v-breadcrumbs>
-        <h1 class="header-text white--text my-5 text-xs-center">{{title}}</h1>
+        <h1 class="header-text white--text mt-4 mb-5 text-xs-center">{{title}}</h1>
         <div class="slot-wrapper" ref="slot" v-resize="onResize">
           <slot></slot>
         </div>
