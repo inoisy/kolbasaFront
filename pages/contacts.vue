@@ -15,10 +15,10 @@
             </a>
             <span>,&nbsp;&nbsp;</span>
             <a
-              :href="`tel:+79013680821`"
+              :href="`tel:+79263834424`"
               class="link font-weight-medium display-1 d-inline-flex"
               style="min-height:32px"
-            >+7 (901) 368 08 21</a>
+            >+7 (926) 383 44 24</a>
           </div>
           <div class="flex xs12 mb-3" data-aos="fade-up">
             <a
