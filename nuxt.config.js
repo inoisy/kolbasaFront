@@ -121,6 +121,9 @@ module.exports = {
    ** Nuxt.js modules
    */
   modules: [
+    ['@nuxtjs/google-analytics', {
+      id: 'UA-153607412-1'
+    }],
     [
       '@nuxtjs/yandex-metrika',
       {
