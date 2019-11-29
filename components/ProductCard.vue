@@ -5,6 +5,7 @@
       <!-- <div class="img-wrapper position-relative"> -->
 
       <img
+        itemprop="image"
         class="d-block ma-auto product-img pt-3 px-3"
         v-lazy="product.img ? imageBaseUrl + product.img.url : require('~/assets/no-image.png')"
       />
@@ -35,20 +36,32 @@
       <!-- </div> -->
     </div>
     <v-card-text class="pt-0">
-      <div class="display-flex justify-space-between">
+      <div class="display-flex justify-space-between" style="min-height: 48px">
         <!-- <div class="display-flex align-center"> -->
-        <v-subheader class="pl-0 display-flex align-center">
+        <div
+          itemprop="offers"
+          itemscope
+          itemtype="http://schema.org/Offer"
+          class="pl-0 display-flex align-center"
+        >
           <span
+            itemprop="price"
             v-show="product.priceNum"
-            :class="'display-2 font-weight-medium black--text'"
-          >{{product.isDiscount ? product.discountPrice +'₽' : product.priceNum +'₽'}}</span>
+            class="display-2 font-weight-medium black--text"
+          >{{product.isDiscount ? product.discountPrice : product.priceNum}}</span>
           <span v-show="!product.priceNum">Цена по запросу</span>
           <!-- {{product.priceNum ? product.priceNum +'₽' : ''}}</v-subheader> -->
           <span
             class="pl-2"
             v-if="product.isDiscount"
             style="text-decoration: line-through; font-size:1rem"
-          >{{product.priceNum+'₽'}}</span>
+          >{{product.priceNum}}</span>
+          <span
+            itemprop="priceCurrency"
+            content="RUB"
+            class="display-2 font-weight-medium black--text"
+          >₽</span>
+          <!-- +'₽' -->
           <v-chip
             v-if="product.isDiscount"
             color="accent"
@@ -56,18 +69,20 @@
             class="mont ml-2"
             style="font-size: 1.1rem"
           >-{{Math.ceil(100*(product.priceNum-product.discountPrice)/product.priceNum) }}%</v-chip>
-        </v-subheader>
+        </div>
         <!-- </div> -->
 
-        <v-subheader
+        <div
+          itemprop="description"
           class="align-center display-flex pa-0"
-        >{{product.weight ? product.weight + 'кг' : ''}}</v-subheader>
+        >{{product.weight ? product.weight + 'кг' : ''}}</div>
       </div>
 
-      <h3
-        class="mb-0"
-        style="line-height: normal !important; font-size:1rem;font-weight: 600;"
-      >{{product.name}}</h3>
+      <h2
+        itemprop="name"
+        class="mb-0 mont"
+        style="line-height: normal !important; font-size:1.15rem; font-weight: 600;"
+      >{{product.name}}</h2>
     </v-card-text>
   </v-card>
 </template>

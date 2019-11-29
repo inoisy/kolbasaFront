@@ -51,12 +51,17 @@
               id="products"
               ref="product"
               v-if="products.items && products.items.length>0"
+              itemscope
+              itemtype="http://schema.org/ItemList"
             >
               <div
                 class="flex xs12 sm6 md4 lg3 xl2"
                 data-aos="fade-up"
                 v-for="(product,index) in products.items"
                 :key="index"
+                itemprop="itemListElement"
+                itemscope
+                itemtype="http://schema.org/Product"
               >
                 <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
               </div>
@@ -415,8 +420,8 @@ export default {
         products = [];
         for (let child of category.children) {
           const productsChild = await ctx.store.dispatch("fetchProducts", {
-            slug: child.slug,
-            limit: 8
+            slug: child.slug
+            // limit: 16
           });
           products.push({ ...child, ...productsChild });
         }
@@ -613,15 +618,6 @@ export default {
       }
       //   console.log("TCL: pageCurr -> val", val);
     }
-    //   async manufacturersSelected(val) {
-    //     const ids = val;
-    //     await this.$store.dispatch(
-    //       "fetchCategory",
-    //       this.$route.params.category,
-    //       ids
-    //     );
-    //     // console.log("TCL: manufacturerSelected -> val", val);
-    //   }
   },
   data() {
     return {
