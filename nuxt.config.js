@@ -169,43 +169,13 @@ module.exports = {
     }],
     'portal-vue/nuxt',
     'nuxt-vuex-localstorage',
-    '@nuxtjs/redirect-module',
+    // '@nuxtjs/redirect-module',
 
     // Redirect option here
 
     ['@nuxtjs/sitemap', {
       gzip: true,
       routes
-      // async routes() {
-      //   let routes = []
-      //   const {
-      //     data: pages
-      //   } = await axios.get(backendUrl + '/pages?_limit=99999')
-      //   for (let item of pages) {
-      //     routes.push(`${item.slug}`)
-      //   }
-      //   const {
-      //     data: manufacturers
-      //   } = await axios.get(backendUrl + '/manufacturers?_limit=99999')
-      //   for (let item of manufacturers) {
-      //     routes.push(`/manufacturers/${item.slug}`)
-      //   }
-      //   const {
-      //     data: categories
-      //   } = await axios.get(backendUrl + '/categories?_limit=99999')
-      //   for (let item of categories) {
-      //     routes.push(`/catalog/${item.slug}`)
-      //   }
-      //   for (let category of categories) {
-      //     //  routes.push(`/catalog/${item.slug}`)
-      //     for (let product of category.products) {
-      //       routes.push(`/catalog/${category.slug}/${product.slug}`)
-      //     }
-      //   }
-
-
-      //   return routes
-      // }
 
     }],
     ['@nuxtjs/robots', {
@@ -245,85 +215,85 @@ module.exports = {
 
     ],
   ],
-  redirect: [{
-    from: '^/catalog/konservy.*',
-    to: '/catalog/polufabrikaty'
-  }, {
-    from: '^/catalog/livery.*',
-    to: '/catalog/pashtety-zelcy-studni'
-  }, {
-    from: '^/catalog/narezka.*',
-    to: '/catalog/syrokopchenaya-kolbasa'
-  }, {
-    from: '^/catalog/pashtety.*',
-    to: '/catalog/pashtety-zelcy-studni'
-  }, {
-    from: '^/catalog/polufabrikaty.*',
-    to: '/catalog/polufabrikaty'
-  }, {
-    from: '^/catalog/studni.*',
-    to: '/catalog/pashtety-zelcy-studni'
-  }, {
-    from: '^/catalog/delikatesy.*',
-    to: '/catalog/delikatesy-vetchina-i-kopchenosti'
-  }, {
-    from: '^/catalog/izdeliya-iz-pticy.*',
-    to: '/catalog/delikatesy-vetchina-i-kopchenosti'
-  }, {
-    from: '^/catalog/delikatesy.*',
-    to: '/catalog/delikatesy-vetchina-i-kopchenosti'
-  }, {
-    from: '^/catalog/kolbasy.*',
-    to: '/catalog/kolbasa'
-  }, {
-    from: '^/catalog/kolbasy/varenye.*',
-    to: '/catalog/varenaya-kolbasa'
-  }, {
-    from: '^/catalog/kolbasy/vareno-kopchenye.*',
-    to: '/catalog/varyono-kopchenye-i-polukopchyonye-kolbasy'
-  }, {
-    from: '^/catalog/kolbasy/vetchiny.*',
-    to: '/catalog/delikatesy-vetchina-i-kopchenosti'
-  }, {
-    from: '^/catalog/kolbasy/polukopchenye.*',
-    to: '/catalog/varyono-kopchenye-i-polukopchyonye-kolbasy'
-  }, {
-    from: '^/catalog/kolbasy/syrokopchenye.*',
-    to: '/catalog/syrokopchenaya-kolbasa'
-  }, {
-    from: '^/catalog/proizvoditeli/vegus.*',
-    to: '/manufacturers/vegus'
-  }, {
-    from: '^/catalog/proizvoditeli/vladimirskij-standart.*',
-    to: '/manufacturers/vladimirskiy-standart'
-  }, {
-    from: '^/catalog/proizvoditeli/myasnoj-dom-borodina.*',
-    to: '/manufacturers/mdb'
-  }, {
-    from: '^/catalog/proizvoditeli/kolomenskij-myasokombinat.*',
-    to: '/manufacturers/kolomenskoe'
-  }, {
-    from: '^/catalog/proizvoditeli/klinskij-mk.*',
-    to: '/manufacturers/klinskiy'
-  }, {
-    from: '^/catalog/proizvoditeli/mikoyan.*',
-    to: '/manufacturers/mikoyan'
-  }, {
-    from: '^/catalog/proizvoditeli/ostankino.*',
-    to: '/manufacturers/ostankino'
-  }, {
-    from: '^/catalog/proizvoditeli/remit.*',
-    to: '/manufacturers/remit'
-  }, {
-    from: '^/catalog/proizvoditeli/cherkizovskij-mk.*',
-    to: '/manufacturers/cherkizovo'
-  }, {
-    from: '^/catalog/proizvoditeli/snezhana.*',
-    to: '/manufacturers/snezhana'
-  }, {
-    from: '^/catalog/proizvoditeli/rublevskij-myasokombinat.*',
-    to: '/manufacturers/rublevskiy'
-  }],
+  // redirect: [{
+  //   from: '^/catalog/konservy.*',
+  //   to: '/catalog/polufabrikaty'
+  // }, {
+  //   from: '^/catalog/livery.*',
+  //   to: '/catalog/pashtety-zelcy-studni'
+  // }, {
+  //   from: '^/catalog/narezka.*',
+  //   to: '/catalog/syrokopchenaya-kolbasa'
+  // }, {
+  //   from: '^/catalog/pashtety.*',
+  //   to: '/catalog/pashtety-zelcy-studni'
+  // }, {
+  //   from: '^/catalog/polufabrikaty.*',
+  //   to: '/catalog/polufabrikaty'
+  // }, {
+  //   from: '^/catalog/studni.*',
+  //   to: '/catalog/pashtety-zelcy-studni'
+  // }, {
+  //   from: '^/catalog/delikatesy.*',
+  //   to: '/catalog/delikatesy-vetchina-i-kopchenosti'
+  // }, {
+  //   from: '^/catalog/izdeliya-iz-pticy.*',
+  //   to: '/catalog/delikatesy-vetchina-i-kopchenosti'
+  // }, {
+  //   from: '^/catalog/delikatesy.*',
+  //   to: '/catalog/delikatesy-vetchina-i-kopchenosti'
+  // }, {
+  //   from: '^/catalog/kolbasy.*',
+  //   to: '/catalog/kolbasa'
+  // }, {
+  //   from: '^/catalog/kolbasy/varenye.*',
+  //   to: '/catalog/varenaya-kolbasa'
+  // }, {
+  //   from: '^/catalog/kolbasy/vareno-kopchenye.*',
+  //   to: '/catalog/varyono-kopchenye-i-polukopchyonye-kolbasy'
+  // }, {
+  //   from: '^/catalog/kolbasy/vetchiny.*',
+  //   to: '/catalog/delikatesy-vetchina-i-kopchenosti'
+  // }, {
+  //   from: '^/catalog/kolbasy/polukopchenye.*',
+  //   to: '/catalog/varyono-kopchenye-i-polukopchyonye-kolbasy'
+  // }, {
+  //   from: '^/catalog/kolbasy/syrokopchenye.*',
+  //   to: '/catalog/syrokopchenaya-kolbasa'
+  // }, {
+  //   from: '^/catalog/proizvoditeli/vegus.*',
+  //   to: '/manufacturers/vegus'
+  // }, {
+  //   from: '^/catalog/proizvoditeli/vladimirskij-standart.*',
+  //   to: '/manufacturers/vladimirskiy-standart'
+  // }, {
+  //   from: '^/catalog/proizvoditeli/myasnoj-dom-borodina.*',
+  //   to: '/manufacturers/mdb'
+  // }, {
+  //   from: '^/catalog/proizvoditeli/kolomenskij-myasokombinat.*',
+  //   to: '/manufacturers/kolomenskoe'
+  // }, {
+  //   from: '^/catalog/proizvoditeli/klinskij-mk.*',
+  //   to: '/manufacturers/klinskiy'
+  // }, {
+  //   from: '^/catalog/proizvoditeli/mikoyan.*',
+  //   to: '/manufacturers/mikoyan'
+  // }, {
+  //   from: '^/catalog/proizvoditeli/ostankino.*',
+  //   to: '/manufacturers/ostankino'
+  // }, {
+  //   from: '^/catalog/proizvoditeli/remit.*',
+  //   to: '/manufacturers/remit'
+  // }, {
+  //   from: '^/catalog/proizvoditeli/cherkizovskij-mk.*',
+  //   to: '/manufacturers/cherkizovo'
+  // }, {
+  //   from: '^/catalog/proizvoditeli/snezhana.*',
+  //   to: '/manufacturers/snezhana'
+  // }, {
+  //   from: '^/catalog/proizvoditeli/rublevskij-myasokombinat.*',
+  //   to: '/manufacturers/rublevskiy'
+  // }],
   /*
    ** Build configuration
    */
