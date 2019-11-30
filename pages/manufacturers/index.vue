@@ -1,7 +1,8 @@
 <template>
   <div>
     <page-header title="Производители" :breadrumbs="breadrumbs" />
-    <div class="background" v-lazy:background-image="require('~/assets/img/bg.jpg')">
+    <div class="background">
+      <!-- v-lazy:background-image="require('~/assets/img/bg.jpg')" -->
       <v-container class="py-5">
         <!-- <v-layout row wrap> -->
         <div v-for="(item,index) in manufacturers" :key="index" data-aos="fade-up">
