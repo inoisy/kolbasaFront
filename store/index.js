@@ -155,7 +155,7 @@ export const actions = {
         query: gql `
         query CategoryQuery( $id: ID! ) {
           category(id: $id) {
-            manufacturers
+            description
             name
             slug
             content
