@@ -377,7 +377,12 @@ export default {
   head() {
     return {
       title: "Оптовая продажа колбасы",
-
+      link: [
+        {
+          rel: "canonical",
+          href: "https://prodaem-kolbasu.ru"
+        }
+      ],
       meta: [
         // hid is used as unique identifier. Do not use `vmid` for it as it will not work
         {

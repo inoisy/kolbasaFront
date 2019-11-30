@@ -276,32 +276,49 @@ import gql from "graphql-tag";
 import ContactForm from "~/components/ContactForm";
 export default {
   head() {
-    return {
-      title:
-        this.$route.params && this.$route.params.productSlug
-          ? this.product && this.product.name
-            ? this.product.name
-            : ""
-          : this.$parent.manufacturer && this.$parent.manufacturer.name
-          ? this.$parent.manufacturer.name
-          : "",
+    let returnedObj = {
+      title: this.isChildPage
+        ? this.product && this.product.name
+          ? this.product.name
+          : ""
+        : this.$parent.manufacturer && this.$parent.manufacturer.name
+        ? `Мясокомбинат ${this.$parent.manufacturer.name}. Купить колбасы ${this.$parent.manufacturer.name} оптом.`
+        : "",
       meta: [
         // hid is used as unique identifier. Do not use `vmid` for it as it will not work
         {
           hid: "description",
           name: "description",
-          content:
-            this.$route.params && this.$route.params.productSlug
-              ? this.product && this.product.description
-                ? this.product.description
-                : ""
-              : this.$parent.manufacturer &&
-                this.$parent.manufacturer.description
-              ? this.$parent.manufacturer.description
+          content: this.isChildPage
+            ? this.product && this.product.description
+              ? this.product.description
               : ""
+            : this.$parent.manufacturer && this.$parent.manufacturer.description
+            ? this.$parent.manufacturer.description
+            : ""
         }
       ]
     };
+    if (this.isChildPage) {
+      const link = {
+        link: [
+          {
+            rel: "canonical",
+            href:
+              this.product &&
+              this.product.category &&
+              this.product.category.slug
+                ? `https://prodaem-kolbasu.ru/catalog/${this.product.category.slug}/${this.product.slug}`
+                : ""
+          }
+        ]
+      };
+      returnedObj = {
+        ...returnedObj,
+        ...link
+      };
+    }
+    return returnedObj;
   },
   components: { ContactForm },
   async asyncData(ctx) {
@@ -324,6 +341,10 @@ export default {
     };
   },
   computed: {
+    isChildPage() {
+      return this.$route.params && this.$route.params.productSlug;
+    },
+
     breadcrumbs() {
       return [
         {
