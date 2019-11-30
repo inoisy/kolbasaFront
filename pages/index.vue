@@ -56,36 +56,19 @@
               class="flex xs6 sm6 md4 lg3"
               :key="item.id"
             >
-              <v-card ripple flat color="transparent" class="category-wrapper px-4 pt-3 pb-4">
-                <nuxt-link
-                  class="td-none"
-                  style="display:flex; flex-direction: column"
-                  :to="`/catalog/${item.slug}`"
-                >
-                  <div class="category-img-wrapper">
-                    <img
-                      class="category-img ma-auto mb-2"
-                      v-if="item.img"
-                      v-lazy="imageBaseUrl+item.img.url"
-                    />
-                  </div>
-                  <h3
-                    class="category-text text-xs-center lumber font-weight-medium mb-0 primary--text"
-                    style
-                  >{{item.name}}</h3>
-                </nuxt-link>
-              </v-card>
+              <main-page-card :item="item"></main-page-card>
             </div>
             <div
               v-else
               :key="item.id"
-              data-aos="zoom-in"
-              class="layout row wrap justify-center mt-4"
+              class="layout row wrap justify-center mt-4 pt-3 pb-1"
+              style="border: 1px solid #8b8b8b; border-radius: 10px;"
             >
               <div class="flex xs12 mb-3 text-xs-center">
                 <nuxt-link
                   :to="`/catalog/${item.slug}`"
-                  class="category-text lumber font-weight-medium mb-0 primary--text fs-1-5"
+                  class="category-text lumber font-weight-medium mb-0 primary--text fs-1-5 underline-on-hover"
+                  :title="item.name"
                 >{{item.name}}</nuxt-link>
               </div>
 
@@ -96,25 +79,7 @@
                 class="flex xs6 sm6 md4 lg3"
                 :key="child.id"
               >
-                <v-card ripple flat color="transparent" class="category-wrapper px-4 pt-3 pb-4">
-                  <nuxt-link
-                    class="td-none"
-                    style="display:flex; flex-direction: column"
-                    :to="`/catalog/${child.slug}`"
-                  >
-                    <div class="category-img-wrapper">
-                      <img
-                        class="category-img ma-auto mb-2"
-                        v-if="child.img"
-                        v-lazy="imageBaseUrl+child.img.url"
-                      />
-                    </div>
-                    <h3
-                      class="category-text text-xs-center lumber font-weight-medium mb-0 primary--text"
-                      style
-                    >{{child.name}}</h3>
-                  </nuxt-link>
-                </v-card>
+                <main-page-card :item="child"></main-page-card>
               </div>
             </div>
           </template>
@@ -142,7 +107,11 @@
         </div>
         <div class="layout row wrap align-center justify-center pt-5">
           <div class="flex hidden-sm-and-down md4 offset-lg1 lg3 mb-5" data-aos="fade-up">
-            <img class="bottom-img pr-4" v-lazy="require('~/assets/img/bottomImage1.png')" />
+            <img
+              class="bottom-img pr-4"
+              v-lazy="require('~/assets/img/bottomImage1.png')"
+              alt="Колбаса оптом в Москве"
+            />
           </div>
           <v-flex xs10 md8 offset-lg1 lg7 xl6 class="d-flex mb-5">
             <div class="my-auto">
@@ -171,7 +140,11 @@
             </div>
           </div>
           <div class="flex hidden-sm-and-down offset-md0 md4 offset-lg1 lg3" data-aos="fade-up">
-            <img class="bottom-img pl-4" v-lazy="require('~/assets/img/bottomImage2.png')" />
+            <img
+              class="bottom-img pl-4"
+              v-lazy="require('~/assets/img/bottomImage2.png')"
+              alt="Колбаса оптом с доставкой"
+            />
             <!-- <img class="bottom-img"> -->
           </div>
         </div>
@@ -198,24 +171,25 @@
                 <img
                   v-lazy="item.img"
                   class="d-block pt-1"
-                  alt
+                  :alt="`Купить колбасу оптом ${item.header}`"
+                  :title="item.header"
                   style="width: 3.5rem;min-width: 3.5rem"
                 />
               </div>
               <div class="pl-3">
-                <h5 class="display-2 lumber font-weight-bold mb-2">{{item.header}}</h5>
+                <h4 class="display-2 lumber font-weight-bold mb-2">{{item.header}}</h4>
                 <div class="lumber" style="font-size: 1rem">{{item.text}}</div>
               </div>
             </div>
           </div>
         </section>
-        <div data-aos="zoom-in">
+        <!-- <div data-aos="zoom-in">
           <v-img
             class="mx-auto my-5 xs10 md10 lg9 xl8 flex"
             contain
             :src="require('~/assets/delimiter.svg')"
           ></v-img>
-        </div>
+        </div>-->
         <!-- <h2 class="text-xs-center mb-4 primary--text">Производители</h2> -->
       </v-container>
     </div>
@@ -224,11 +198,15 @@
 <style lang="stylus" scoped>
 @import 'swiper/dist/css/swiper.css';
 
-// .benefits {
-// .img-wrapper {
-// min-width: 50px;
-// }
-// }
+.underline-on-hover {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    color: #d50000 !important;
+  }
+}
+
 .btn-scroll {
   position: absolute;
   bottom: 5px;
@@ -268,44 +246,9 @@
   border-width: 2px;
 }
 
-.category-wrapper {
-  .category-text {
-    font-size: 1.33rem;
-    transition: all 0.2s;
-  }
-
-  .category-img-wrapper {
-    .category-img {
-      filter: grayscale(50%);
-      display: block;
-      // min-height: 70px;
-      height: 75px;
-      margin: auto;
-      max-width: 100%;
-      transition: all 0.2s;
-      object-fit: contain;
-    }
-  }
-
-  &:hover {
-    .category-text {
-      transition: all 0.3s ease-in-out;
-      color: #d50000 !important;
-    }
-
-    .category-img-wrapper {
-      .category-img {
-        transition: all 0.3s ease-in-out;
-        filter: none !important;
-        transform: scale(1.05);
-      }
-    }
-  }
-}
-
 // }
 .bottom-header {
-  font-size: 3rem;
+  font-size: 2.3rem;
   color: #4A1F00;
 
   &:first-letter {
@@ -316,7 +259,7 @@
 }
 
 .bottom-text {
-  font-size: 1.6rem;
+  font-size: 1.45rem;
   // line-height: normal;
   font-family: 'Lumberjack';
   color: #4A1F00;
@@ -372,6 +315,7 @@ import gql from "graphql-tag";
 import Logo from "~/components/Logo.vue";
 // import VuetifyLogo from "~/components/VuetifyLogo.vue";
 import MultiItemSlider from "~/components/MultiItemSlider.vue";
+import MainPageCard from "~/components/MainPageCard.vue";
 
 export default {
   head() {
@@ -389,14 +333,15 @@ export default {
           hid: "description",
           name: "description",
           content:
-            "Колбаса оптом по самым выгодным ценам от компании Альянс Фуд. Самовывоз со склада в Москве. Доставка по РФ"
+            "Купить колбасу оптом по самым выгодным ценам от компании Альянс Фуд. Самовывоз со склада в Москве. Доставка по РФ"
         }
       ]
     };
   },
   components: {
     // Logo,
-    MultiItemSlider
+    MultiItemSlider,
+    MainPageCard
   },
   computed: {
     // sliders() {

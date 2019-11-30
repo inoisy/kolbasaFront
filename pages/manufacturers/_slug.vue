@@ -83,7 +83,7 @@ import ProductCard from "~/components/ProductCard";
 export default {
   head() {
     return {
-      title: this.manufacturer.name,
+      title: `Мясокомбинат ${this.manufacturer.name}. Купить колбасы ${this.manufacturer.name} оптом.`,
       meta: [
         // hid is used as unique identifier. Do not use `vmid` for it as it will not work
         {
@@ -119,13 +119,6 @@ export default {
         process.env.baseUrl +
           `/products?category=${categoryId}&manufacturer=${this.manufacturer.id}&_limit=999&_start=${productsLength}`
       );
-      // console.log(
-      //   "TCL: handleShowMore -> ;",
-      //   process.env.baseUrl +
-      //     `/products?category=${categoryId}&manufacturer=${this.manufacturer.id}&_limit=999&_start=${productsLength}`
-      // );
-
-      // console.log("TCL: handleShowMore -> products", products);
       if (products.length > 0) {
         this.categories[categoryIndex].products.push(...products);
       }

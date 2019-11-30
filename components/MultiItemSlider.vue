@@ -12,6 +12,8 @@
             :data-src="item.img ? imageBaseUrl+ item.img.url  : require('~/assets/no-image.png')"
             class="swiper-lazy ma-auto d-block manuf-img"
             style="max-width: 90%"
+            :alt="item.name"
+            :title="item.name"
           />
           <div class="swiper-lazy-preloader"></div>
         </nuxt-link>

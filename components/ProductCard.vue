@@ -1,5 +1,14 @@
 <template>
-  <v-card hover ripple class="fill-height d-flex column" :to="to" @click.capture="cardClick">
+  <v-card
+    :title="product.name"
+    itemscope
+    itemtype="http://schema.org/Product"
+    hover
+    ripple
+    class="fill-height d-flex column"
+    :to="to"
+    @click.capture="cardClick"
+  >
     <!-- ? `${to}/${product.slug}` : `/catalog/${category}/${product.slug}` -->
     <div class="product-card-img-wrap" style="position: relative;">
       <!-- <div class="img-wrapper position-relative"> -->

@@ -55,7 +55,20 @@
                 :key="'list-group'+index"
                 v-if="category && category.children && category.children.length > 0"
               >
-                <v-list-tile :to="`/catalog/${category.slug}`">
+                <v-list-group :key="category.slug">
+                  <v-list-tile slot="activator" :to="`/catalog/${category.slug}`">
+                    <v-list-tile-content>{{ category.name}}</v-list-tile-content>
+                  </v-list-tile>
+                  <v-list-tile
+                    v-for="child in category.children"
+                    :key="child.id"
+                    :to="`/catalog/${child.slug}`"
+                  >
+                    <span class="pl-4" style="line-height: 100% !important">{{child.name}}</span>
+                  </v-list-tile>
+                </v-list-group>
+
+                <!-- <v-list-tile :to="`/catalog/${category.slug}`">
                   <span style="line-height: 100%">{{ category.name}}</span>
                 </v-list-tile>
                 <v-list-tile
@@ -64,7 +77,7 @@
                   :to="`/catalog/${child.slug}`"
                 >
                   <span class="pl-4" style="line-height: 100% !important">{{child.name}}</span>
-                </v-list-tile>
+                </v-list-tile>-->
               </div>
               <v-list-tile :key="index" v-else :to="`/catalog/${category.slug}`">
                 <span style="line-height: 100% !important">{{category.name}}</span>

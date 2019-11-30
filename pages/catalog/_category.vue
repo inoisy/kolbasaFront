@@ -8,6 +8,7 @@
       :title="category.name"
       :breadrumbs="breadcrumbs"
       :fluid="true"
+      :isPadding="subcategories && subcategories.length > 0"
       class="pos-relative"
     >
       <div
@@ -51,17 +52,12 @@
               id="products"
               ref="product"
               v-if="products.items && products.items.length>0"
-              itemscope
-              itemtype="http://schema.org/ItemList"
             >
               <div
                 class="flex xs12 sm6 md4 lg3 xl2"
                 data-aos="fade-up"
                 v-for="(product,index) in products.items"
                 :key="index"
-                itemprop="itemListElement"
-                itemscope
-                itemtype="http://schema.org/Product"
               >
                 <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
               </div>
@@ -271,6 +267,15 @@ export default {
   head() {
     return {
       title: this.category.title ? this.category.title : "",
+      link: [
+        {
+          rel: "canonical",
+          href:
+            this.category && this.category.slug
+              ? `https://prodaem-kolbasu.ru/catalog/${this.category.slug}`
+              : ""
+        }
+      ],
       meta: [
         // hid is used as unique identifier. Do not use `vmid` for it as it will not work
         {
