@@ -285,6 +285,12 @@ export default {
           : this.$parent.manufacturer && this.$parent.manufacturer.name
           ? this.$parent.manufacturer.name
           : "",
+      link: [
+        {
+          rel: "canonical",
+          href: `https://prodaem-kolbasu.ru/catalog/${this.product.category.slug}/${this.product.slug}`
+        }
+      ],
       meta: [
         // hid is used as unique identifier. Do not use `vmid` for it as it will not work
         {
