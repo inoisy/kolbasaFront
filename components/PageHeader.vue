@@ -16,8 +16,8 @@
             >{{ props.item.text }}</nuxt-link>
           </template>
         </v-breadcrumbs>
-        <h1 class="header-text white--text mt-4 mb-5 text-xs-center">{{title}}</h1>
-        <div class="slot-wrapper" ref="slot" v-resize="onResize">
+        <h1 class="header-text white--text mt-4 mb-4 text-xs-center">{{title}}</h1>
+        <div class="slot-wrapper" ref="slot" v-resize="this.isPadding ? onResize : ()=>{}">
           <slot></slot>
         </div>
       </v-layout>
@@ -27,7 +27,22 @@
 
 <script>
 export default {
-  props: ["title", "breadrumbs", "fluid"],
+  props: {
+    title: {
+      type: String
+    },
+    breadrumbs: {
+      type: Array
+    },
+    fluid: {
+      type: Boolean,
+      default: false
+    },
+    isPadding: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       paddingHeight: 0
@@ -36,6 +51,7 @@ export default {
   methods: {
     onResize() {
       if (
+        this.isPadding &&
         this.$refs.slot &&
         this.$refs.slot.children &&
         this.$refs.slot.children.length > 0
@@ -46,6 +62,7 @@ export default {
   },
   mounted() {
     if (
+      this.isPadding &&
       this.$refs.slot &&
       this.$refs.slot.children &&
       this.$refs.slot.children.length > 0

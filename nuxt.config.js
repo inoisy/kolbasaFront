@@ -165,7 +165,7 @@ module.exports = {
       url: sitename,
       title: 'Оптовая продажа колбасы',
       description: 'Оптовая продажа колбасы в Москве и МО. Доставка в регионы.',
-      img: imageUrl + "main.jpg",
+      img: imageUrl + "/uploads/031ba5905e18488794851c8d512b1227.jpg",
       locale: 'ru_RU',
       // twitter: '@UserName',
       themeColor: '#d50000'
