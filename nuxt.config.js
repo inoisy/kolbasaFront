@@ -172,43 +172,13 @@ module.exports = {
     }],
     'portal-vue/nuxt',
     'nuxt-vuex-localstorage',
-    '@nuxtjs/redirect-module',
+    // '@nuxtjs/redirect-module',
 
     // Redirect option here
 
     ['@nuxtjs/sitemap', {
       gzip: true,
       routes
-      // async routes() {
-      //   let routes = []
-      //   const {
-      //     data: pages
-      //   } = await axios.get(backendUrl + '/pages?_limit=99999')
-      //   for (let item of pages) {
-      //     routes.push(`${item.slug}`)
-      //   }
-      //   const {
-      //     data: manufacturers
-      //   } = await axios.get(backendUrl + '/manufacturers?_limit=99999')
-      //   for (let item of manufacturers) {
-      //     routes.push(`/manufacturers/${item.slug}`)
-      //   }
-      //   const {
-      //     data: categories
-      //   } = await axios.get(backendUrl + '/categories?_limit=99999')
-      //   for (let item of categories) {
-      //     routes.push(`/catalog/${item.slug}`)
-      //   }
-      //   for (let category of categories) {
-      //     //  routes.push(`/catalog/${item.slug}`)
-      //     for (let product of category.products) {
-      //       routes.push(`/catalog/${category.slug}/${product.slug}`)
-      //     }
-      //   }
-
-
-      //   return routes
-      // }
 
     }],
     ['@nuxtjs/robots', {
@@ -278,21 +248,6 @@ module.exports = {
   }, {
     from: '^/catalog/kolbasy.*',
     to: '/catalog/kolbasa'
-  }, {
-    from: '^/catalog/kolbasy/varenye.*',
-    to: '/catalog/varenaya-kolbasa'
-  }, {
-    from: '^/catalog/kolbasy/vareno-kopchenye.*',
-    to: '/catalog/varyono-kopchenye-i-polukopchyonye-kolbasy'
-  }, {
-    from: '^/catalog/kolbasy/vetchiny.*',
-    to: '/catalog/delikatesy-vetchina-i-kopchenosti'
-  }, {
-    from: '^/catalog/kolbasy/polukopchenye.*',
-    to: '/catalog/varyono-kopchenye-i-polukopchyonye-kolbasy'
-  }, {
-    from: '^/catalog/kolbasy/syrokopchenye.*',
-    to: '/catalog/syrokopchenaya-kolbasa'
   }, {
     from: '^/catalog/proizvoditeli/vegus.*',
     to: '/manufacturers/vegus'
