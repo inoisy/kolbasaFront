@@ -11,9 +11,6 @@
     no-click-animation
     @click:outside="handleClickOutside"
   >
-    <!-- && product && Object.keys(product).length >0  -->
-    <!-- <portal-target name="toolbar" ref="portalTarget"></portal-target> -->
-
     <v-card class="position-relative px-4 pb-4 pt-0 fill-height" style="min-height:45vh">
       <div class="close-btn-wrap mt-2 mr-3">
         <v-btn class="close-btn ma-0" color="gray" fab @click="dialog=false">
@@ -39,16 +36,15 @@
               itemprop="name"
               class="display-3 mont font-weight-bold mb-4"
               style="line-height: normal;"
-            >{{product.name}}</h1>
-            <div class="manufacturer mb-3" v-if="product.manufacturer">
+              v-text="product && product.name ? product.name : ''"
+            ></h1>
+            <div class="manufacturer mb-3" v-if="manufacturer">
               Производитель:
-              <nuxt-link
-                :to="`/manufacturers/${product.manufacturer.slug}`"
-              >{{product.manufacturer.name}}</nuxt-link>
+              <nuxt-link :to="`/manufacturers/${manufacturer.slug}`" v-text="manufacturer.name"></nuxt-link>
             </div>
             <div
               itemprop="description"
-              v-show="product.description"
+              v-if="product && product.description"
               v-html="product.description"
               class="mb-4"
               style="line-height: 1,5"
@@ -104,7 +100,6 @@
                 </v-btn>
                 <span class="font-weight-bold">{{busket}}</span>
                 <v-btn flat icon color="primary" @click="addToBasket" v-show="busket">
-                  <!-- <v-icon >add_shopping_cart</v-icon> -->
                   <v-icon v-show="busket">add</v-icon>
                 </v-btn>
               </v-sheet>
@@ -112,25 +107,19 @@
           </v-flex>
           <v-flex xs12 md4 lg4 order-xs1 order-md2 class="display-flex image-wrapper">
             <div class="mini-imgs-wrapper">
-              <v-tooltip left max-width="300px" v-if="product.manufacturer">
+              <v-tooltip left max-width="300px" v-if="manufacturer">
                 <template v-slot:activator="{ on }">
                   <img
                     itemprop="image"
                     class="manufacturer-img"
-                    v-if="product.manufacturer.img"
-                    :src="imageBaseUrl+product.manufacturer.img.url"
-                    :alt="product.manufacturer.name"
+                    v-if="manufacturer.img"
+                    :src="imageBaseUrl+manufacturer.img.url"
+                    :alt="manufacturer.name"
                     v-on="on"
                   />
                 </template>
-                <div
-                  style="font-size:1rem;"
-                  class="font-weight-medium mb-2"
-                >{{product.manufacturer.name}}</div>
-                <div
-                  style="font-size:0.8rem;"
-                  class="font-weight-thin"
-                >{{product.manufacturer.description}}</div>
+                <div style="font-size:1rem;" class="font-weight-medium mb-2">{{manufacturer.name}}</div>
+                <div style="font-size:0.8rem;" class="font-weight-thin">{{manufacturer.description}}</div>
               </v-tooltip>
 
               <v-tooltip left max-width="300px">
@@ -193,10 +182,6 @@
 
 .halal-img {
   display: block;
-  // position: absolute;
-  // width: 6rem;
-  // right: 0;
-  // top: 4rem;
 }
 
 .mw500 {
@@ -284,27 +269,25 @@ import ContactForm from "~/components/ContactForm";
 export default {
   head() {
     return {
-      title:
-        this.$route.params && this.$route.params.slug
-          ? this.product && this.product.name
-            ? this.product.name
-            : ""
-          : this.$parent.category && this.$parent.category.name
-          ? this.$parent.category.name
-          : "",
+      title: this.isProduct
+        ? this.product && this.product.name
+          ? `Купить ${this.product.name} оптом`
+          : ""
+        : this.category && this.category.name
+        ? `Купить ${this.category.name} оптом`
+        : "",
       meta: [
         // hid is used as unique identifier. Do not use `vmid` for it as it will not work
         {
           hid: "description",
           name: "description",
-          content:
-            this.$route.params && this.$route.params.slug
-              ? this.product && this.product.description
-                ? this.product.description
-                : ""
-              : this.$parent.category && this.$parent.category.description
-              ? this.$parent.category.description
+          content: this.isProduct
+            ? this.product && this.product.description
+              ? this.product.description
               : ""
+            : this.category && this.category.description
+            ? this.category.description
+            : ""
         }
       ]
     };
@@ -325,10 +308,24 @@ export default {
       }
     }
     return {
-      product: product
+      // product: product
     };
   },
   computed: {
+    product() {
+      return this.$store.state.sessionStorage.product;
+    },
+    manufacturer() {
+      return this.product && this.product.manufacturer
+        ? this.product.manufacturer
+        : {};
+    },
+    category() {
+      return this.$store.state.sessionStorage.category;
+    },
+    isProduct() {
+      return this.$route.params && this.$route.params.slug;
+    },
     breadcrumbs() {
       return [
         {
@@ -362,11 +359,6 @@ export default {
         this.$router.push({ params: { slug: null } });
       }
     }
-    // weight_selected(val) {
-    //   console.log("TCL: weight_selected -> val", val, this.mySwiper);
-    //   this.mySwiper.slideTo(val, 1000, false);
-    //   // console.log(val)
-    // }
   },
   methods: {
     handleClickOutside() {

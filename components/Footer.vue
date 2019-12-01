@@ -67,31 +67,11 @@
                     <span class="pl-4" style="line-height: 100% !important">{{child.name}}</span>
                   </v-list-tile>
                 </v-list-group>
-
-                <!-- <v-list-tile :to="`/catalog/${category.slug}`">
-                  <span style="line-height: 100%">{{ category.name}}</span>
-                </v-list-tile>
-                <v-list-tile
-                  v-for="child in category.children"
-                  :key="child.id"
-                  :to="`/catalog/${child.slug}`"
-                >
-                  <span class="pl-4" style="line-height: 100% !important">{{child.name}}</span>
-                </v-list-tile>-->
               </div>
               <v-list-tile :key="index" v-else :to="`/catalog/${category.slug}`">
                 <span style="line-height: 100% !important">{{category.name}}</span>
               </v-list-tile>
             </template>
-            <!-- <v-list-tile
-              v-for="(category,index) in categories"
-              :key="index"
-              :to="`catalog${category.slug}`"
-              style="line-height: normal"
-            >{{category.name}}</v-list-tile>-->
-            <!-- <v-list-tile style="line-height: normal" nuxt to="/catalog/halal">
-              <v-list-tile-content>Халяльная продукция</v-list-tile-content>
-            </v-list-tile>-->
           </v-list>
         </v-flex>
         <!-- <v-flex class="mb-4" xs12 md6 lg3 hidden-xs-only>
