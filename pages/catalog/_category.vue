@@ -154,44 +154,29 @@
                   style="background-color:transparent !important"
                   color="transparent"
                 >
-                  <!-- <template v-for="(category, index) in item.items">
-                <div
-                  :key="'list-group'+index"
-                  v-if="category && category.children && category.children.length > 0"
-                >
-                  <v-list-tile :to="`/catalog/${category.slug}`">
-                    <span style="line-height: 100%">{{ category.name}}</span>
-                  </v-list-tile>
-                  <v-list-tile
-                    v-for="child in category.children"
-                    :key="child.id"
-                    class="pl-4"
-                    :to="`/catalog/${child.slug}`"
-                  >{{child.name}}</v-list-tile>
-                </div>
-                <v-list-tile
-                  v-else
-                  class="list-item"
-                  active-class="text--accent"
-                  :key="index"
-                  nuxt
-                  :to="`${item.to}/${category.slug}`"
-                >{{ category.name }}</v-list-tile>
-                  </template>-->
-                  <!-- <v-list-group
-                      :key="index"
+                  <template v-for="(category,index) in categories">
+                    <div
+                      :key="'list-group'+index"
                       v-if="category && category.children && category.children.length > 0"
                     >
-                      <v-list-tile slot="activator" :to="category.slug">
-                        <span style="line-height: 100%">{{ category.name}}</span>
-                      </v-list-tile>
-                      <v-list-tile
-                        v-for="child in category.children"
-                        :key="child.id"
-                        class="pl-4"
-                      >{{child.name}}</v-list-tile>
-                  </v-list-group>-->
-                  <template v-for="(category,index) in categories">
+                      <v-list-group :key="category.slug">
+                        <v-list-tile slot="activator" :to="`/catalog/${category.slug}`">
+                          <v-list-tile-content>{{ category.name}}</v-list-tile-content>
+                        </v-list-tile>
+                        <v-list-tile
+                          v-for="child in category.children"
+                          :key="child.id"
+                          :to="`/catalog/${child.slug}`"
+                        >
+                          <span class="pl-4" style="line-height: 100% !important">{{child.name}}</span>
+                        </v-list-tile>
+                      </v-list-group>
+                    </div>
+                    <v-list-tile :key="index" v-else :to="`/catalog/${category.slug}`">
+                      <span style="line-height: 100% !important">{{category.name}}</span>
+                    </v-list-tile>
+                  </template>
+                  <!-- <template v-for="(category,index) in categories">
                     <div
                       :key="'list-group'+index"
                       v-if="category && category.children && category.children.length > 0"
@@ -210,7 +195,7 @@
                     <v-list-tile :key="index" v-else :to="`/catalog/${category.slug}`">
                       <span style="line-height: 100% !important">{{category.name}}</span>
                     </v-list-tile>
-                  </template>
+                  </template>-->
                 </v-list>
               </portal>
               <portal-target name="filters" v-show="$vuetify.breakpoint.mdAndUp"></portal-target>
@@ -266,7 +251,9 @@ import { isArray } from "util";
 export default {
   head() {
     return {
-      title: this.category.title ? this.category.title : "",
+      title: this.category.title
+        ? `Купить ${this.category.title} оптом с доставкой.`
+        : "",
       link: [
         {
           rel: "canonical",
