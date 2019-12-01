@@ -172,7 +172,7 @@ module.exports = {
     }],
     'portal-vue/nuxt',
     'nuxt-vuex-localstorage',
-    // '@nuxtjs/redirect-module',
+    '@nuxtjs/redirect-module',
 
     // Redirect option here
 
