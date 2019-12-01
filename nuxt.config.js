@@ -172,7 +172,7 @@ module.exports = {
     }],
     'portal-vue/nuxt',
     'nuxt-vuex-localstorage',
-    // '@nuxtjs/redirect-module',
+    '@nuxtjs/redirect-module',
 
     // Redirect option here
 
@@ -230,9 +230,6 @@ module.exports = {
   }, {
     from: '^/catalog/pashtety.*',
     to: '/catalog/pashtety-zelcy-studni'
-  }, {
-    from: '^/catalog/polufabrikaty.*',
-    to: '/catalog/polufabrikaty'
   }, {
     from: '^/catalog/studni.*',
     to: '/catalog/pashtety-zelcy-studni'
