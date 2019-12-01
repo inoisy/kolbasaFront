@@ -249,30 +249,30 @@ import ProductCard from "~/components/ProductCard";
 
 import { isArray } from "util";
 export default {
-  head() {
-    return {
-      title: this.category.title
-        ? `Купить ${this.category.title} оптом с доставкой.`
-        : "",
-      link: [
-        {
-          rel: "canonical",
-          href:
-            this.category && this.category.slug
-              ? `https://prodaem-kolbasu.ru/catalog/${this.category.slug}`
-              : ""
-        }
-      ],
-      meta: [
-        // hid is used as unique identifier. Do not use `vmid` for it as it will not work
-        {
-          hid: "description",
-          name: "description",
-          content: this.category.description ? this.category.description : ""
-        }
-      ]
-    };
-  },
+  // head() {
+  //   return {
+  // title: this.category.title
+  //   ? `Купить ${this.category.title} оптом с доставкой.`
+  //   : "",
+  // link: [
+  //   {
+  //     rel: "canonical",
+  //     href:
+  //       this.category && this.category.slug
+  //         ? `https://prodaem-kolbasu.ru/catalog/${this.category.slug}`
+  //         : ""
+  //   }
+  // ],
+  // meta: [
+  //   // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+  //   {
+  //     hid: "description",
+  //     name: "description",
+  //     content: this.category.description ? this.category.description : ""
+  //   }
+  // ]
+  //   };
+  // },
   components: { PageHeader, StickyMenu, ProductCard },
   computed: {
     subcategories() {

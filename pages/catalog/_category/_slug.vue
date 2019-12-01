@@ -276,6 +276,21 @@ export default {
         : this.category && this.category.name
         ? `Купить ${this.category.name} оптом`
         : "",
+      link: [
+        {
+          rel: "canonical",
+          href: this.isProduct
+            ? this.category &&
+              this.category.slug &&
+              this.product &&
+              this.product.slug
+              ? `https://prodaem-kolbasu.ru/catalog/${this.category.slug}/${this.product.slug}`
+              : ""
+            : this.category && this.category.slug
+            ? `https://prodaem-kolbasu.ru/catalog/${this.category.slug}`
+            : ""
+        }
+      ],
       meta: [
         // hid is used as unique identifier. Do not use `vmid` for it as it will not work
         {
