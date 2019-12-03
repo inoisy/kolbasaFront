@@ -234,9 +234,6 @@ module.exports = {
     from: '^/catalog/studni.*',
     to: '/catalog/pashtety-zelcy-studni'
   }, {
-    from: '^/catalog/delikatesy',
-    to: '/catalog/delikatesy-vetchina-i-kopchenosti'
-  }, {
     from: '^/catalog/izdeliya-iz-pticy.*',
     to: '/catalog/delikatesy-vetchina-i-kopchenosti'
   }, {
