@@ -4,23 +4,24 @@
 
     <section class="background" v-lazy:background-image="require('~/assets/img/bg.jpg')">
       <v-container class="py-5">
-        <v-layout row wrap class="mont">
-          <div class="flex xs12 mb-3 align-center display-flex" data-aos="fade-up">
-            <a
+        <v-layout row wrap>
+          <div class="flex xs12 mb-3 align-center display-flex">
+            <v-icon class="mr-3" color="rgba(0,0,0,0.87)">phone</v-icon>
+            <!-- <a
               :href="`tel:${contacts.phone}`"
               class="link font-weight-medium display-1 d-inline-flex"
-            >
-              <v-icon class="mr-3" color="rgba(0,0,0,0.87)">phone</v-icon>
-              {{contacts.phone}}
-            </a>
-            <span>,&nbsp;&nbsp;</span>
-            <a
+            >{{contacts.phone}}</a>-->
+            <div class="ya-phone link font-weight-medium display-1 d-inline-flex">
+              <a :href="`tel:${contacts.phone}`">{{contacts.phone}}</a>
+            </div>
+            <!-- <span>,&nbsp;&nbsp;</span> -->
+            <!-- <a
               :href="`tel:+79261191748`"
               class="link font-weight-medium display-1 d-inline-flex"
               style="min-height:32px"
-            >+7 926 119 17 48</a>
+            >+7 926 119 17 48</a>-->
           </div>
-          <div class="flex xs12 mb-3" data-aos="fade-up">
+          <div class="flex xs12 mb-3">
             <a
               :href="`mailto:${contacts.email}`"
               class="link font-weight-medium display-1 d-inline-flex"
@@ -29,7 +30,7 @@
               {{contacts.email}}
             </a>
           </div>
-          <div class="flex xs12 mb-3" data-aos="fade-up">
+          <div class="flex xs12 mb-3">
             <a
               @click="$vuetify.goTo('#map')"
               class="link font-weight-medium display-1 d-inline-flex"
@@ -38,7 +39,7 @@
               {{contacts.addressText}}
             </a>
           </div>
-          <div class="flex xs12 mb-5" data-aos="fade-up">
+          <div class="flex xs12 mb-5">
             <div class="font-weight-medium display-1 d-inline-flex">
               <v-icon class="mr-3" color="rgba(0,0,0,0.87)">access_time</v-icon>
               {{contacts.accessTime}}
@@ -103,6 +104,10 @@ export default {
 };
 </script>
 <style lang="stylus" scoped>
+.link a {
+  color: rgba(0, 0, 0, 0.87) !important;
+}
+
 .link {
   color: rgba(0, 0, 0, 0.87);
 

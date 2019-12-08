@@ -20,15 +20,15 @@
         <v-flex class="mb-4" xs12 md6 lg4>
           <v-subheader>КОНТАКТЫ</v-subheader>
           <v-list style="background: transparent !important;" class="footer-list">
-            <div class="ya-phone">
-              <a href="tel:+7{code}{phone_short}">{full_phone}</a>
-            </div>
-            <!-- <v-list-tile avatar :href="`tel:${contacts.phone}`">
+            <v-list-tile avatar class>
+              <!-- :href="`tel:${contacts.phone}`" -->
               <v-list-tile-avatar>
                 <v-icon>phone</v-icon>
               </v-list-tile-avatar>
-              <v-list-tile-content>{{contacts.phone}}</v-list-tile-content>
-            </v-list-tile>-->
+              <v-list-tile-content class="ya-phone white--text">
+                <a :href="`tel:${contacts.phone}`">{{contacts.phone}}</a>
+              </v-list-tile-content>
+            </v-list-tile>
             <v-list-tile avatar :href="`mailto:${contacts.email}`">
               <v-list-tile-avatar>
                 <v-icon>email</v-icon>

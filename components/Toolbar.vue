@@ -2,7 +2,7 @@
   <div>
     <!-- <portal to="toolbar"> -->
     <v-toolbar height="100px" fixed app>
-      <div class="flex">
+      <div class="flex mr-2">
         <nuxt-link to="/" class="py-1 fill-height ml-auto d-inline-flex">
           <img :src="require('~/assets/img/logo1.png')" alt="logo" />
         </nuxt-link>
@@ -77,9 +77,19 @@
           >{{item.name}}</v-btn>
         </template>
       </div>
-      <v-btn icon class="ml-1" :href="'tel:'+phone" large>
-        <v-icon medium color="#95282a">phone</v-icon>
-      </v-btn>
+      <!-- <v-btn icon class="ml-1" large> -->
+      <div class="ya-phone-icon ma-1">
+        <a :href="'tel:'+phone" class="pa-2">
+          <i
+            aria-hidden="true"
+            class="v-icon material-icons theme--light"
+            style="font-size: 28px; color: rgb(149, 40, 42); caret-color: rgb(149, 40, 42);"
+          >phone</i>
+        </a>
+      </div>
+
+      <!-- <v-icon medium color="#95282a">phone</v-icon> -->
+      <!-- </v-btn> -->
       <v-badge color="#95282a" overlap :value="basketLength>0">
         <template v-slot:badge>{{basketLength}}</template>
         <v-btn icon class="ml-1" @click="basketDrawer=true" large :disabled="basketLength<1">
