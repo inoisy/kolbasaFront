@@ -45,7 +45,7 @@
 import Toolbar from "~/components/Toolbar";
 import NavigationMobile from "~/components/NavigationMobile";
 import MyFooter from "~/components/Footer";
-
+   
 export default {
   components: { Toolbar, NavigationMobile, MyFooter },
   computed: {

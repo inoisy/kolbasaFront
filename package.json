@@ -22,7 +22,7 @@
     "@nuxtjs/redirect-module": "^0.2.0",
     "@nuxtjs/robots": "^2.2.0",
     "@nuxtjs/sitemap": "^1.2.0",
-    "@nuxtjs/yandex-metrika": "^0.1.2",
+    "@nuxtjs/yandex-metrika": "^1.0.3",
     "aos": "^2.3.4",
     "core-js": "^2.6.5",
     "cross-env": "^5.2.0",
