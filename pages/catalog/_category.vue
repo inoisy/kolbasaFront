@@ -13,13 +13,12 @@
     >
       <div
         class="subcategories display-flex wrap"
-        style="bottom: 0; position: absolute;"
+        style="bottom: 0; position: absolute; left: 0; right: 0"
         v-if="subcategories && subcategories.length>0"
       >
         <!-- <v-btn-toggle v-model="toggle_exclusive" color="tranparent"> -->
         <v-btn
           :to="`/catalog/${rootCategory.slug}`"
-          large
           color="white"
           class="ma-0"
           flat
@@ -29,7 +28,6 @@
           <v-btn
             :to="`/catalog/${child.slug}`"
             color="white"
-            large
             class="ma-0"
             style="font-size: 0.9rem !important;"
             flat

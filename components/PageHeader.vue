@@ -56,7 +56,8 @@ export default {
         this.$refs.slot.children &&
         this.$refs.slot.children.length > 0
       ) {
-        this.paddingHeight = this.$refs.slot.children[0].getBoundingClientRect().height;
+        this.paddingHeight =
+          this.$refs.slot.children[0].getBoundingClientRect().height - 30;
       }
     }
   },
@@ -67,7 +68,8 @@ export default {
       this.$refs.slot.children &&
       this.$refs.slot.children.length > 0
     ) {
-      this.paddingHeight = this.$refs.slot.children[0].getBoundingClientRect().height;
+      this.paddingHeight =
+        this.$refs.slot.children[0].getBoundingClientRect().height - 30;
     }
     // this.paddingHeight = this.$refs.slot.children[0].getBoundingClientRect().height;
     // console.log("ref", this.$refs.slot.children[0].getBoundingClientRect().height);
