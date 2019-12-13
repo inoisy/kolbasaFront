@@ -418,10 +418,13 @@ export default {
         : [];
 
     let sort;
+    let sortNum;
     if (ctx.route.query.sort && ctx.route.query.sort === "price") {
       sort = { sort: "price" };
+      sortNum = 1;
     } else {
       sort = { sort: "name" };
+      sortNum = 0;
     }
 
     await ctx.store.commit("sortFilter", sort);
@@ -456,7 +459,8 @@ export default {
       products: products,
       category: category,
       manufacturers: manufacturersExist,
-      manufacturersSelected: manufacturersSelected
+      manufacturersSelected: manufacturersSelected,
+      sort: sortNum
     };
   },
   methods: {
@@ -492,7 +496,7 @@ export default {
             // sort: "price"
           });
           // this.$route.query = { ...this.$route.query, ...addObj };
-          console.log(this.$route.name);
+          // console.log(this.$route.name);
           this.$router.push({
             // path: this.$route.path,
             query: { ...this.$route.query, ...addObj }
@@ -646,9 +650,9 @@ export default {
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl,
-      modal: false,
-      sort: 0,
-      pageCurr: 1
+      modal: false
+      // sort: 0,
+      // pageCurr: 1
       // pagesTotal: 2
       // manufacturersSelected: []
     };
