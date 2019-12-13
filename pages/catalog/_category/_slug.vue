@@ -271,10 +271,10 @@ export default {
     return {
       title: this.isProduct
         ? this.product && this.product.name
-          ? `Купить ${this.product.name} оптом`
+          ? `Купить ${this.product.name.toLowerCase()} оптом`
           : ""
         : this.category && this.category.name
-        ? `Купить ${this.category.name} оптом`
+        ? `Купить ${this.category.name.toLowerCase()} оптом`
         : "",
       link: [
         {

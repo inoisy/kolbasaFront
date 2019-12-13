@@ -10,4 +10,6 @@ import Vue from 'vue'
 //     once: true
 //   })
 // }
-Vue.use(AOS.init({}));
+Vue.use(AOS.init({
+  once: true
+}));

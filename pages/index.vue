@@ -198,15 +198,6 @@
 <style lang="stylus" scoped>
 @import 'swiper/dist/css/swiper.css';
 
-.underline-on-hover {
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-    color: #d50000 !important;
-  }
-}
-
 .btn-scroll {
   position: absolute;
   bottom: 5px;

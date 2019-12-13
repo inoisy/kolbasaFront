@@ -58,7 +58,7 @@
             v-show="product.priceNum"
             class="display-2 font-weight-medium black--text"
           >{{product.isDiscount ? product.discountPrice : product.priceNum}}</span>
-          <span v-show="!product.priceNum">Цена по запросу</span>
+          <span v-show="!product.priceNum" style="font-size: 0.88rem">Цена по запросу</span>
           <!-- {{product.priceNum ? product.priceNum +'₽' : ''}}</v-subheader> -->
           <span
             class="pl-2"
@@ -66,6 +66,7 @@
             style="text-decoration: line-through; font-size:1rem"
           >{{product.priceNum}}</span>
           <span
+            v-show="product.priceNum"
             itemprop="priceCurrency"
             content="RUB"
             class="display-2 font-weight-medium black--text"
@@ -89,8 +90,8 @@
 
       <h2
         itemprop="name"
-        class="mb-0 mont"
-        style="line-height: normal !important; font-size:1.15rem; font-weight: 600;"
+        class="mb-0 mont mt-1"
+        style="line-height: normal !important; font-size:1.03rem; font-weight: 600;"
       >{{product.name}}</h2>
     </v-card-text>
   </v-card>

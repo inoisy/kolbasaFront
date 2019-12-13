@@ -5,7 +5,7 @@
     <!-- </keep-alive> -->
     <!-- :key="$route.params && $route.params.slug ? $route.params.slug : ''"  -->
     <page-header
-      :title="category.name"
+      :title="`${category.name} оптом`"
       :breadrumbs="breadcrumbs"
       :fluid="true"
       :isPadding="subcategories && subcategories.length > 0"
@@ -46,17 +46,11 @@
         <div id="contentWrapper" class="display-flex">
           <v-flex style="min-height: 73vh">
             <!-- {{products}} -->
-            <v-layout
-              row
-              wrap
-              id="products"
-              ref="product"
-              v-if="products.items && products.items.length>0"
-            >
+            <v-layout row wrap id="products" ref="product" v-if="products && products.length>0">
               <div
                 class="flex xs12 sm6 md4 lg3 xl2"
                 data-aos="fade-up"
-                v-for="(product,index) in products.items"
+                v-for="(product,index) in products"
                 :key="index"
               >
                 <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
@@ -68,13 +62,11 @@
                 v-for="(productsGroup,index) in products"
                 :key="'prGr'+index"
               >
-                <h2>
-                  {{productsGroup.name}}
-                  <v-btn
-                    outline
-                    :to="`/catalog/${productsGroup.slug}`"
-                  >Показать все({{productsGroup.count}})</v-btn>
-                </h2>
+                <nuxt-link
+                  :to="`/catalog/${productsGroup.slug}`"
+                  class="lumber font-weight-medium mb-4 d-inline-block primary--text underline-on-hover"
+                  style="font-size: 2rem;"
+                >{{productsGroup.name}}</nuxt-link>
                 <v-layout wrap class="mb-3">
                   <div
                     class="flex xs12 sm6 md4 lg3 xl2"
@@ -126,7 +118,7 @@
               <portal to="filters">
                 <v-subheader v-show="!multiple" class="pl-0">СОРТИРОВАТЬ ПО</v-subheader>
                 <v-btn-toggle
-                  class="mb-3"
+                  class="mb-2"
                   v-model="sort"
                   @change="sortChange"
                   style="width: 100%"
@@ -137,7 +129,22 @@
                   <v-btn flat>Цена</v-btn>
                 </v-btn-toggle>
                 <v-subheader class="pl-0" v-show="!multiple && manufacturers.length>1">БРЕНД</v-subheader>
-                <v-checkbox
+                <v-radio-group
+                  :value="manufacturersSelected"
+                  :mandatory="false"
+                  @change="onManufacturerChange"
+                  class="mt-0 mb-2"
+                  hide-details
+                >
+                  <v-radio
+                    v-for="(checkbox) in manufacturers"
+                    :label="checkbox.name"
+                    :key="checkbox.id"
+                    :value="checkbox.slug"
+                  ></v-radio>
+                </v-radio-group>
+
+                <!-- <v-checkbox
                   v-show="!multiple && manufacturers.length>1"
                   v-model="manufacturersSelected"
                   multiple
@@ -147,7 +154,7 @@
                   :key="checkbox.id"
                   :value="checkbox.id"
                   height="0px"
-                ></v-checkbox>
+                ></v-checkbox>-->
                 <v-subheader class="pl-0 hidden-sm-and-down">КАТЕГОРИИ</v-subheader>
                 <v-list
                   class="navigation pa-0 hidden-sm-and-down"
@@ -160,10 +167,15 @@
                       v-if="category && category.children && category.children.length > 0"
                     >
                       <v-list-group :key="category.slug">
-                        <v-list-tile slot="activator" :to="`/catalog/${category.slug}`">
+                        <v-list-tile
+                          slot="activator"
+                          :to="`/catalog/${category.slug}`"
+                          height="36px"
+                        >
                           <v-list-tile-content>{{ category.name}}</v-list-tile-content>
                         </v-list-tile>
                         <v-list-tile
+                          height="36px"
                           v-for="child in category.children"
                           :key="child.id"
                           :to="`/catalog/${child.slug}`"
@@ -172,30 +184,15 @@
                         </v-list-tile>
                       </v-list-group>
                     </div>
-                    <v-list-tile :key="index" v-else :to="`/catalog/${category.slug}`">
+                    <v-list-tile
+                      :key="index"
+                      v-else
+                      :to="`/catalog/${category.slug}`"
+                      height="36px"
+                    >
                       <span style="line-height: 100% !important">{{category.name}}</span>
                     </v-list-tile>
                   </template>
-                  <!-- <template v-for="(category,index) in categories">
-                    <div
-                      :key="'list-group'+index"
-                      v-if="category && category.children && category.children.length > 0"
-                    >
-                      <v-list-tile :to="`/catalog/${category.slug}`">
-                        <span style="line-height: 100%">{{ category.name}}</span>
-                      </v-list-tile>
-                      <v-list-tile
-                        v-for="child in category.children"
-                        :key="child.id"
-                        :to="`/catalog/${child.slug}`"
-                      >
-                        <span class="pl-4" style="line-height: 100% !important">{{child.name}}</span>
-                      </v-list-tile>
-                    </div>
-                    <v-list-tile :key="index" v-else :to="`/catalog/${category.slug}`">
-                      <span style="line-height: 100% !important">{{category.name}}</span>
-                    </v-list-tile>
-                  </template>-->
                 </v-list>
               </portal>
               <portal-target name="filters" v-show="$vuetify.breakpoint.mdAndUp"></portal-target>
@@ -204,8 +201,18 @@
         </div>
       </v-container>
     </section>
+    <no-ssr>
+      <infinite-loading
+        v-if="!multiple && products.length >= 20"
+        @infinite="onInfinite"
+        ref="infiniteLoading"
+      >
+        <div slot="no-results"></div>
+        <div slot="no-more"></div>
+      </infinite-loading>
+    </no-ssr>
 
-    <section v-if="pagesTotal>1 && !multiple">
+    <!-- <section v-if="pagesTotal>1 && !multiple">
       <v-card :class="!category.content ? 'pb-5' : ''">
         <v-card-text>
           <v-pagination
@@ -218,7 +225,7 @@
           ></v-pagination>
         </v-card-text>
       </v-card>
-    </section>
+    </section>-->
     <section v-if="category.content" class="grey lighten-3">
       <v-container v-html="$md.render(category.content)" class="py-5"></v-container>
     </section>
@@ -241,6 +248,8 @@
 </style>
 
 <script>
+import InfiniteLoading from "vue-infinite-loading";
+
 // import gql from "graphql-tag";
 // import _ from "lodash";
 import PageHeader from "~/components/PageHeader";
@@ -249,32 +258,11 @@ import ProductCard from "~/components/ProductCard";
 
 import { isArray } from "util";
 export default {
-  // head() {
-  //   return {
-  // title: this.category.title
-  //   ? `Купить ${this.category.title} оптом с доставкой.`
-  //   : "",
-  // link: [
-  //   {
-  //     rel: "canonical",
-  //     href:
-  //       this.category && this.category.slug
-  //         ? `https://prodaem-kolbasu.ru/catalog/${this.category.slug}`
-  //         : ""
-  //   }
-  // ],
-  // meta: [
-  //   // hid is used as unique identifier. Do not use `vmid` for it as it will not work
-  //   {
-  //     hid: "description",
-  //     name: "description",
-  //     content: this.category.description ? this.category.description : ""
-  //   }
-  // ]
-  //   };
-  // },
-  components: { PageHeader, StickyMenu, ProductCard },
+  components: { PageHeader, StickyMenu, ProductCard, InfiniteLoading },
   computed: {
+    // products() {
+    //   return this.$store.state.sessionStorage.easyProducts;
+    // },
     subcategories() {
       return this.category &&
         this.category.children &&
@@ -304,7 +292,7 @@ export default {
     //   return this.$store.state.sessionStorage.products;
     // },
     multiple() {
-      return Array.isArray(this.products);
+      return !Array.isArray(this.products);
     },
     categories() {
       return this.$store.state.sessionStorage.generalInfo.categories.filter(
@@ -346,10 +334,13 @@ export default {
       return base;
     }
   },
+  async mounted(ctx) {
+    await this.$store.commit("pageFilter", 1);
+  },
   async asyncData(ctx) {
-    // console.log("TCL: Data -> asyncData");
     await ctx.store.dispatch("fetchGeneralInfo");
 
+    // await ctx.store.commit("pageFilter", 1);
     const storeManufacturers =
       ctx.store.state.sessionStorage.manufacturerFilter;
     if (storeManufacturers && storeManufacturers.length > 0) {
@@ -357,114 +348,134 @@ export default {
         manufacturer: storeManufacturers
       };
     }
-
+    // let manufacturersSelectedIds = [];
     const manufacturers =
       ctx.store.state.sessionStorage.generalInfo.manufacturers;
-    const queryManufacturers = ctx.route.query.manufacturer;
-    let manufacturersSelectedIds = [];
+    // const queryManufacturer = ctx.route.query.manufacturer;
+    // if(queryManufacturer){
+    //  const finded = manufacturers.find(
+    //   item => item.slug == queryManufacturers
+    // );
+    //         if (finded) {
+    //     manufacturersSelectedId= finded.id;
+    //   }
+    // }
 
-    if (isArray(queryManufacturers)) {
-      for (let queryManufacurer of queryManufacturers) {
-        const finded = manufacturers.find(
-          item => item.slug == queryManufacurer
-        );
-        if (finded) {
-          manufacturersSelectedIds.push(finded.id);
-        }
-      }
-    } else if (queryManufacturers) {
-      const finded = manufacturers.find(
-        item => item.slug == queryManufacturers
-      );
-      if (finded) {
-        manufacturersSelectedIds.push(finded.id);
-      }
-    }
+    // const queryManufacturers = ctx.route.query.manufacturer;
+    let manufacturersSelected = ctx.route.query.manufacturer;
+
+    // if (isArray(queryManufacturers)) {
+    //   for (let queryManufacurer of queryManufacturers) {
+    //     const finded = manufacturers.find(
+    //       item => item.slug == queryManufacurer
+    //     );
+    //     if (finded) {
+    //       manufacturersSelectedIds.push(finded.id);
+    //     }
+    //   }
+    // } else if (queryManufacturers) {
+    //   const finded = manufacturers.find(
+    //     item => item.slug == queryManufacturers
+    //   );
+    //   if (finded) {
+    //     manufacturersSelectedIds.push(finded.id);
+    //   }
+    // }
+    // const queryManufacturers = ctx.route.query.manufacturer;
+    // let manufacturersSelectedIds = [];
+
+    // if (isArray(queryManufacturers)) {
+    //   for (let queryManufacurer of queryManufacturers) {
+    //     const finded = manufacturers.find(
+    //       item => item.slug == queryManufacurer
+    //     );
+    //     if (finded) {
+    //       manufacturersSelectedIds.push(finded.id);
+    //     }
+    //   }
+    // } else if (queryManufacturers) {
+    //   const finded = manufacturers.find(
+    //     item => item.slug == queryManufacturers
+    //   );
+    //   if (finded) {
+    //     manufacturersSelectedIds.push(finded.id);
+    //   }
+    // }
     let category = await ctx.store.dispatch("fetchCategory", {
       slug: ctx.route.params.category,
-      manufacturer: manufacturersSelectedIds
-      //   manufacturer && manufacturer.item ? manufacturer.item.id : null
+      manufacturer: manufacturersSelected
     });
-    // console.log("TCL: Data -> category", category);
 
-    if (category) {
-      const manufacturersExist =
-        category.manufacturers && category.manufacturers.length > 0
-          ? manufacturers.filter(item =>
-              category.manufacturers.includes(item.id)
-            )
-          : [];
-
-      let sort;
-      if (ctx.route.query.sort && ctx.route.query.sort === "price") {
-        sort = { sort: "price" };
-      } else {
-        sort = { sort: "name" };
-      }
-
-      await ctx.store.commit("sortFilter", sort);
-      await ctx.store.commit("manufacturerFilter", manufacturersSelectedIds);
-      await ctx.store.commit("pageFilter", ctx.route.query.page);
-      let products;
-
-      console.log("TCL: Data -> category", category);
-      if (Array.isArray(category.children) && category.children.length > 0) {
-        products = [];
-        for (let child of category.children) {
-          const productsChild = await ctx.store.dispatch("fetchProducts", {
-            slug: child.slug
-            // limit: 16
-          });
-          products.push({ ...child, ...productsChild });
-        }
-        const categoryProducts = {
-          products: await ctx.store.dispatch("fetchProducts", {
-            slug: category.slug,
-            limit: 999
-          })
-        };
-        category = { ...category, ...categoryProducts };
-        // products.push({ ...category, ...categoryProducts });
-      } else {
-        products = await ctx.store.dispatch("fetchProducts", {
-          slug: ctx.route.params.category
-        });
-      }
-      return {
-        products: products,
-        category: category,
-        manufacturers: manufacturersExist,
-        manufacturersSelected: manufacturersSelectedIds
-        // showMoreButtonShow: products.map(item => item.items.length >= 20)
-        // manufacturersModel: manufacturersModel
-      };
-    } else {
+    if (!category) {
       return ctx.error({
         statusCode: 404,
         message: "Категория не найдена"
       });
     }
+    const manufacturersExist =
+      category.manufacturers && category.manufacturers.length > 0
+        ? manufacturers.filter(item => category.manufacturers.includes(item.id))
+        : [];
+
+    let sort;
+    if (ctx.route.query.sort && ctx.route.query.sort === "price") {
+      sort = { sort: "price" };
+    } else {
+      sort = { sort: "name" };
+    }
+
+    await ctx.store.commit("sortFilter", sort);
+    await ctx.store.commit("manufacturerFilter", manufacturersSelected);
+    // await ctx.store.commit("pageFilter", ctx.route.query.page);
+
+    let products;
+
+    if (Array.isArray(category.children) && category.children.length > 0) {
+      products = {};
+      for (let child of category.children) {
+        const productsChild = await ctx.store.dispatch("fetchProducts", {
+          slug: child.slug
+        });
+        products[child.id] = { ...child, ...productsChild };
+      }
+
+      const categoryProducts = {
+        products: await ctx.store.dispatch("easyFetchProducts", {
+          slug: category.slug,
+          limit: 999
+        })
+      };
+      await ctx.store.commit("easyProducts", products);
+      category = { ...category, ...categoryProducts };
+    } else {
+      products = await ctx.store.dispatch("easyFetchProducts", {
+        slug: ctx.route.params.category
+      });
+    }
+    return {
+      products: products,
+      category: category,
+      manufacturers: manufacturersExist,
+      manufacturersSelected: manufacturersSelected
+    };
   },
   methods: {
-    async handleShowMore(categoryId, index) {
-      console.log("TCL: handleShowMore -> categoryId", categoryId);
-      const currPage = this.products[index].items.length / 20;
-      console.log("TCL: handleShowMore -> currPage", currPage + 1);
-      const newItems = await this.$store.dispatch("fetchProducts", {
-        slug: categoryId,
-        // manufacturer: this.$route.query.manufacturer,
-        // sort: this.$route.query.sort,
-        page: currPage + 1
+    async onInfinite($state) {
+      await this.$store.commit("pageFilterInc");
+
+      const newProducts = await this.$store.dispatch("easyFetchMoreProducts", {
+        slug: this.$route.params.category
+        // page: 2
       });
-      console.log("TCL: handleShowMore -> newItems", newItems.items);
-      this.products[index].items = [
-        ...this.products[index].items,
-        ...newItems.items
-      ];
-      console.log(
-        "TCL: handleShowMore -> this.products[index].items",
-        this.products[index].items
-      );
+      console.log("TCL: onInfinite -> newProducts", newProducts.length);
+      // this.products = this.products.push(newProducts);
+      if (newProducts.length) {
+        this.products = [...this.products, ...newProducts];
+        $state.loaded();
+      } else {
+        $state.complete();
+      }
+      // }, 1000);
     },
     async sortChange(val) {
       if (Number.isInteger(val)) {
@@ -475,7 +486,7 @@ export default {
           };
           await this.$store.commit("sortFilter", addObj);
           this.products = [];
-          this.products = await this.$store.dispatch("fetchProducts", {
+          this.products = await this.$store.dispatch("easyFetchProducts", {
             slug: this.$route.params.category
             // manufacturer: this.$store.state.manufacturerFilter,
             // sort: "price"
@@ -492,7 +503,7 @@ export default {
           };
           await this.$store.commit("sortFilter", addObj);
           this.products = [];
-          this.products = await this.$store.dispatch("fetchProducts", {
+          this.products = await this.$store.dispatch("easyFetchProducts", {
             slug: this.$route.params.category
             // manufacturer: this.$store.state.manufacturerFilter,
             // sort: "name"
@@ -510,37 +521,34 @@ export default {
       //   query: query
       // });
     },
-    async manufacturerChange(val) {
-      this.pageCurr = 1;
+    async onManufacturerChange(val) {
+      // console.log("TCL: onManufacturerChange -> val", val);
+      // console.log(
+      //   "TCL: onManufacturerChange -> this.manufacturersSelected",
+      //   this.manufacturersSelected
+      // );
+      await this.$store.commit("pageFilter", 1);
       this.$vuetify.goTo("#contentWrapper");
-      if (val.length === 0) {
-        await this.$store.commit("manufacturerFilter", {});
+      if (!val || val === this.manufacturersSelected) {
+        // console.log(
+        //   "TCL: onManufacturerChange -> val == this.manufacturersSelected",
+        //   val == this.manufacturersSelected
+        // );
+        this.manufacturersSelected = null;
+        await this.$store.commit("manufacturerFilter", null);
         let { manufacturer, ...query } = this.$route.query;
         await this.$router.push({
           path: this.$route.path,
           query: query
         });
         this.products = [];
-        this.products = await this.$store.dispatch("fetchProducts", {
+        this.products = await this.$store.dispatch("easyFetchProducts", {
           slug: this.$route.params.category
-          // page: this.$route.query.page,
-          // sort: this.$route.query.sort
         });
       } else {
-        const manufacturers = this.$store.state.sessionStorage.generalInfo
-          .manufacturers;
-        let manufacturersSelectedIds = [];
-
-        for (let queryManufacurer of val) {
-          const finded = manufacturers.find(
-            item => item.id == queryManufacurer
-          );
-          if (finded && finded.slug) {
-            manufacturersSelectedIds.push(finded.slug);
-          }
-        }
+        this.manufacturersSelected = val;
         const addObj = {
-          manufacturer: manufacturersSelectedIds
+          manufacturer: val
         };
         await this.$store.commit("manufacturerFilter", val);
         await this.$router.push({
@@ -548,69 +556,93 @@ export default {
           query: { ...this.$route.query, ...addObj }
         });
         this.products = [];
-        this.products = await this.$store.dispatch("fetchProducts", {
+        this.products = await this.$store.dispatch("easyFetchProducts", {
           slug: this.$route.params.category
-          // manufacturer: val,
-          // page: this.$route.query.page,
-          // sort: this.$route.query.sort
         });
       }
-
-      // } else {
-      //   const query = this.$route.query.sort
-      //     ? { sort: this.$route.query.sort }
-      //     : {};
-
-      //   await this.$store.dispatch(
-      //     "fetchCategory",
-      //     this.$route.params.category
-      //   );
-
-      // }
     }
-  },
-  watch: {
-    async pageCurr(val) {
-      await this.$vuetify.goTo("#contentWrapper");
-      await this.$store.commit("pageFilter", val);
-      this.products = [];
-      this.products = await this.$store.dispatch("fetchProducts", {
-        slug: this.$route.params.category,
-        // manufacturer: this.$route.query.manufacturer,
-        // sort: this.$route.query.sort,
-        page: val
-      });
+    // async manufacturerChange(val) {
+    //   this.pageCurr = 1;
+    //   this.$vuetify.goTo("#contentWrapper");
+    //   if (val.length === 0) {
+    //     await this.$store.commit("manufacturerFilter", {});
+    //     let { manufacturer, ...query } = this.$route.query;
+    //     await this.$router.push({
+    //       path: this.$route.path,
+    //       query: query
+    //     });
+    //     this.products = [];
+    //     this.products = await this.$store.dispatch("fetchProducts", {
+    //       slug: this.$route.params.category
+    //     });
+    //   } else {
+    //     const manufacturers = this.$store.state.sessionStorage.generalInfo
+    //       .manufacturers;
+    //     let manufacturersSelectedIds = [];
 
-      if (val > 1) {
-        const addObj = {
-          page: val
-        };
-        await this.$router.push({
-          path: this.$route.path,
-          query: { ...this.$route.query, ...addObj }
-        });
-      } else {
-        let { page, ...query } = this.$route.query;
-        // let { manufacturer, ...query } = this.$route.query;
-        // await this.$store.dispatch("fetchProducts", {
-        //   slug: this.$route.params.category,
-        //   manufacturer: val
-        // });
-        await this.$router.push({
-          path: this.$route.path,
-          query: query
-        });
-        // this.$router.push({
-        //   path: this.$route.path,
-        //   query:{
-        //     ...this.$route.query,
-        //     query
-        //   }
-        // });
-      }
-      //   console.log("TCL: pageCurr -> val", val);
-    }
+    //     for (let queryManufacurer of val) {
+    //       const finded = manufacturers.find(
+    //         item => item.id == queryManufacurer
+    //       );
+    //       if (finded && finded.slug) {
+    //         manufacturersSelectedIds.push(finded.slug);
+    //       }
+    //     }
+    //     const addObj = {
+    //       manufacturer: manufacturersSelectedIds
+    //     };
+    //     await this.$store.commit("manufacturerFilter", val);
+    //     await this.$router.push({
+    //       path: this.$route.path,
+    //       query: { ...this.$route.query, ...addObj }
+    //     });
+    //     this.products = [];
+    //     this.products = await this.$store.dispatch("fetchProducts", {
+    //       slug: this.$route.params.category
+    //     });
+    //   }
+    // }
   },
+  // watch: {
+  //   async pageCurr(val) {
+  //     await this.$vuetify.goTo("#contentWrapper");
+  //     await this.$store.commit("pageFilter", val);
+  //     this.products = [];
+  //     this.products = await this.$store.dispatch("fetchProducts", {
+  //       slug: this.$route.params.category,
+  //       page: val
+  //     });
+
+  //     if (val > 1) {
+  //       const addObj = {
+  //         page: val
+  //       };
+  //       await this.$router.push({
+  //         path: this.$route.path,
+  //         query: { ...this.$route.query, ...addObj }
+  //       });
+  //     } else {
+  //       let { page, ...query } = this.$route.query;
+  //       // let { manufacturer, ...query } = this.$route.query;
+  //       // await this.$store.dispatch("fetchProducts", {
+  //       //   slug: this.$route.params.category,
+  //       //   manufacturer: val
+  //       // });
+  //       await this.$router.push({
+  //         path: this.$route.path,
+  //         query: query
+  //       });
+  //       // this.$router.push({
+  //       //   path: this.$route.path,
+  //       //   query:{
+  //       //     ...this.$route.query,
+  //       //     query
+  //       //   }
+  //       // });
+  //     }
+  //     //   console.log("TCL: pageCurr -> val", val);
+  //   }
+  // },
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl,

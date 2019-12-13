@@ -28,16 +28,22 @@
           <v-divider class="mt-3" v-show="categories.length>0"></v-divider>
         </div>
 
-        <v-layout row wrap v-for="(category,index) of categories" :key="category.id" class="mb-5">
+        <v-layout row wrap v-for="(category,index) of categories" :key="category.id" class="mb-0">
           <v-flex xs12 class="display-flex align-center wrap" data-aos="fade-up">
-            <h2 class="mr-4 mb-4">{{category.item.name}}</h2>
+            <nuxt-link
+              :to="`/catalog/${category.item.slug}?manufacturer=${manufacturer.slug}`"
+              class="lumber font-weight-bold mb-3 d-inline-block primary--text underline-on-hover"
+              style="font-size: 2.4rem;"
+              v-text="`${category.item.name} ${manufacturer.name}`"
+            ></nuxt-link>
+            <!-- <h2 class="mr-4 mb-3">{{category.item.name}}</h2>
             <v-btn
               class="ma-0 mb-4"
               :to="`/catalog/${category.item.slug}?manufacturer=${manufacturer.slug}`"
               color="accent"
               outline
               large
-            >Показать все</v-btn>
+            >Показать все</v-btn>-->
           </v-flex>
 
           <div
@@ -51,6 +57,10 @@
               :to="`/manufacturers/${manufacturer.slug}/${product.slug}`"
             ></product-card>
           </div>
+          <v-flex xs12>
+            <v-divider class="mt-3 mb-1"></v-divider>
+          </v-flex>
+
           <!-- <div class="flex xs12" data-aos="fade-up" v-show="showMoreButtonShow[index]">
             <v-btn
               @click="handleShowMore(category.item.id)"

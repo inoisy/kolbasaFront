@@ -113,7 +113,10 @@ module.exports = {
     }, {
       src: "@/plugins/swiper.js",
       ssr: false
-    },
+    }, {
+      src: '@/plugins/infiniteLoading.js',
+      ssr: false
+    }
   ],
   // robots: ,
   // cache: ,
