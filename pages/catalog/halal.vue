@@ -1,7 +1,7 @@
 <template>
   <div>
     <page-header title="Халяльная продукция" :breadrumbs="breadcrumbs" />
-    <section class="background" v-lazy:background-image="require('~/assets/img/bg.jpg')">
+    <section class="background">
       <v-container grid-list-lg class="py-5">
         <v-layout row wrap v-if="page.content">
           <div v-if="page.content" v-html="$md.render(page.content)"></div>
@@ -102,6 +102,10 @@ export default {
         {
           to: "/",
           text: "Главная"
+        },
+        {
+          to: "/catalog",
+          text: "Каталог"
         },
         {
           to: "/catalog/halal",

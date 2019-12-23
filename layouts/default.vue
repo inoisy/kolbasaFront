@@ -3,7 +3,6 @@
     <div>
       <img src="https://mc.yandex.ru/watch/54918895" style="position:absolute; left:-9999px;" alt />
     </div>
-    <!-- /Yandex.Metrika counter -->
     <toolbar :menuItems="menuItems" @showDrawer="drawer = true" />
     <navigation-mobile
       :menuItems="menuItems"
@@ -14,10 +13,7 @@
     <v-content class="dash">
       <nuxt />
     </v-content>
-    <my-footer class="pos-relative" />
-    <!-- <noscript> -->
-
-    <!-- </noscript> -->
+    <my-footer class="pos-relative" :menuItems="menuItems" />
   </v-app>
 </template>
 <style lang="stylus" scoped>
@@ -70,8 +66,8 @@ export default {
                 ...this.$store.state.sessionStorage.generalInfo.categories.filter(
                   item => item.parent.length === 0
                 ),
-                // { name: "Халяльная продукция", slug: "halal" },
-                { name: "Акционная продукция", slug: "discount" }
+                { name: "Акционная продукция", slug: "discount" },
+                { name: "Халяльная продукция", slug: "halal" }
               ]
             : []
         },

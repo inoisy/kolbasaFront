@@ -36,10 +36,11 @@
               <v-icon>arrow_drop_down</v-icon>
             </v-btn>
 
-            <v-list :class="item.items && item.items.length > 6 ? 'two-columns' : ''">
+            <v-list class="two-columns pa-0">
               <template v-for="(category, index) in item.items">
                 <div
                   :key="'list-group'+index"
+                  class="list-item"
                   v-if="category && category.children && category.children.length > 0"
                 >
                   <v-list-tile :to="`/catalog/${category.slug}`">
@@ -125,11 +126,12 @@
 .two-columns {
   column-count: 2;
   max-width: 600px;
+  position: relative;
 
   .list-item {
     float: left;
-    page-break-inside: avoid;
-    break-inside: avoid;
+    // page-break-inside: avoid;
+    break-inside: avoid-column;
     width: 100%;
     // max-width: 300px;
   }

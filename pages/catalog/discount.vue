@@ -62,6 +62,10 @@ export default {
           text: "Главная"
         },
         {
+          to: "/catalog",
+          text: "Каталог"
+        },
+        {
           to: this.$route.path,
           text: this.title
         }
@@ -126,7 +130,7 @@ export default {
   data() {
     return {
       title: "Акционная продукция",
-       imageBaseUrl: process.env.imageBaseUrl,
+      imageBaseUrl: process.env.imageBaseUrl
       //   breadcrumbs:
     };
   }

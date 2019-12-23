@@ -62,8 +62,8 @@
               >
                 <nuxt-link
                   :to="`/catalog/${productsGroup.slug}`"
-                  class="lumber font-weight-medium mb-4 d-inline-block primary--text underline-on-hover"
-                  style="font-size: 2rem;"
+                  class="lumber font-weight-bold mb-4 d-inline-block primary--text underline-on-hover"
+                  style="font-size: 2.3rem;"
                 >{{productsGroup.name}}</nuxt-link>
                 <v-layout wrap class="mb-3">
                   <div
@@ -82,13 +82,13 @@
 
               <v-layout
                 wrap
-                v-if="category.products && category.products.items && category.products.items.length > 0"
+                v-if="category.products && category.products && category.products.length > 0"
               >
                 <h2 class="flex xs12">Остальные {{category.name}}</h2>
                 <div
                   class="flex xs12 sm6 md4 lg3 xl2"
                   data-aos="fade-up"
-                  v-for="(product,prIndex) in category.products.items"
+                  v-for="(product,prIndex) in category.products"
                   :key="prIndex"
                 >
                   <product-card
