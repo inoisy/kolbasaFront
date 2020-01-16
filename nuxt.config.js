@@ -127,21 +127,25 @@ module.exports = {
     ['@nuxtjs/google-analytics', {
       id: 'UA-153607412-1'
     }],
-    // [
-    //   '@nuxtjs/yandex-metrika',
-    //   {
-    //     id: '54918895',
-    //     clickmap: true,
-    //     trackLinks: true,
-    //     accurateTrackBounce: true,
-    //     webvisor: true,
-    //     triggerEvent: true
-    //     // clickmap:true,
-    //     // useCDN:false,
-    //     // trackLinks:true,
-    //     // accurateTrackBounce:true,
-    //   }
-    // ],
+    [
+      '@nuxtjs/yandex-metrika',
+      {
+        id: '54918895',
+        clickmap: true,
+        trackLinks: true,
+        accurateTrackBounce: true,
+        webvisor: true
+        //     clickmap: true,
+        //     trackLinks: true,
+        //     accurateTrackBounce: true,
+        //     webvisor: true,
+        //     triggerEvent: true
+        //     // clickmap:true,
+        //     // useCDN:false,
+        //     // trackLinks:true,
+        //     // accurateTrackBounce:true,
+      }
+    ],
     ['vue-yandex-maps/nuxt', { // you may define your apiKey, lang and version or skip this.
       apiKey: 'df1793f7-7dbf-4c12-abe4-47fcdf2861b5',
       lang: 'ru_RU',
