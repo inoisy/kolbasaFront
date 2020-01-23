@@ -157,6 +157,7 @@
                         <v-list-tile
                           slot="activator"
                           :to="`/catalog/${category.slug}`"
+                          :title="category.name"
                           height="36px"
                         >
                           <v-list-tile-content>{{ category.name}}</v-list-tile-content>
@@ -166,12 +167,14 @@
                           v-for="child in category.children"
                           :key="child.id"
                           :to="`/catalog/${child.slug}`"
+                          :title="child.name"
                         >
                           <span class="pl-4" style="line-height: 100% !important">{{child.name}}</span>
                         </v-list-tile>
                       </v-list-group>
                     </div>
                     <v-list-tile
+                      :title="category.name"
                       :key="index"
                       v-else
                       :to="`/catalog/${category.slug}`"
