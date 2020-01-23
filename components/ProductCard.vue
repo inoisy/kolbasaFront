@@ -16,13 +16,23 @@
       <img
         itemprop="image"
         class="d-block ma-auto product-img pt-3 px-3"
+        :title="product.name"
+        :alt="product.name"
         v-lazy="product.img ? imageBaseUrl + product.img.url : require('~/assets/no-image.png')"
       />
       <div class="product-card-mini-imgs">
-        <img class="product-card-halal-img" v-if="product.isHalal" src="@/assets/halal1.png" />
+        <img
+          class="product-card-halal-img"
+          v-if="product.isHalal"
+          src="@/assets/halal1.png"
+          title="Халяльная продукция"
+          alt="Халяльная продукция"
+        />
         <img
           class="product-card-manufacturer-img d-block"
-          v-show="product.manufacturer && product.manufacturer.img"
+          :title="product.manufacturer.name"
+          :alt="product.manufacturer.name"
+          v-if="product.manufacturer && product.manufacturer.img"
           v-lazy="product.manufacturer && product.manufacturer.img ? imageBaseUrl + product.manufacturer.img.url : require('~/assets/no-image.png')"
         />
       </div>
@@ -32,12 +42,19 @@
         ref="productCardActions"
         style="position:absolute; right: 0;top: 0;"
       >
-        <v-btn flat icon color="primary" @click="removeFromBasket" v-show="busket">
+        <v-btn
+          flat
+          icon
+          color="primary"
+          @click="removeFromBasket"
+          v-show="busket"
+          title="remove From Basket"
+        >
           <v-icon>remove</v-icon>
         </v-btn>
         <span v-show="busket" class="font-weight-bold display-1 mont mx-1">{{busket}}</span>
 
-        <v-btn flat icon color="primary" @click="addToBasket">
+        <v-btn flat icon color="primary" @click="addToBasket" title="add To Basket">
           <v-icon v-show="!busket">add_shopping_cart</v-icon>
           <v-icon v-show="busket">add</v-icon>
         </v-btn>

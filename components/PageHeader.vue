@@ -12,6 +12,7 @@
             <nuxt-link
               class="text-decoration-none white--text"
               :to="props.item.to"
+              :title="props.item.text"
               exact
             >{{ props.item.text }}</nuxt-link>
           </template>
@@ -81,6 +82,7 @@ export default {
 </script>
 <style lang="stylus" scoped>
 .header {
+  background-color: #131313;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;

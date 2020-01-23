@@ -3,8 +3,12 @@
     <!-- <portal to="toolbar"> -->
     <v-toolbar height="100px" fixed app>
       <div class="flex mr-2">
-        <nuxt-link to="/" class="py-1 fill-height ml-auto d-inline-flex">
-          <img :src="require('~/assets/img/logo1.png')" alt="logo" />
+        <nuxt-link to="/" class="py-1 fill-height ml-auto d-inline-flex" title="Логотип Альянс Фуд">
+          <img
+            :src="require('~/assets/img/logo1.png')"
+            alt="Логотип Альянс Фуд"
+            title="Логотип Альянс Фуд"
+          />
         </nuxt-link>
       </div>
 
@@ -31,6 +35,7 @@
               nuxt
               :to="item.to"
               color="#95282a"
+              title="arrow_drop_down"
             >
               {{item.name}}
               <v-icon>arrow_drop_down</v-icon>
@@ -43,13 +48,14 @@
                   class="list-item"
                   v-if="category && category.children && category.children.length > 0"
                 >
-                  <v-list-tile :to="`/catalog/${category.slug}`">
+                  <v-list-tile :to="`/catalog/${category.slug}`" :title="category.name">
                     <span style="line-height: 100%">{{ category.name}}</span>
                   </v-list-tile>
                   <v-list-tile
                     v-for="child in category.children"
                     :key="child.id"
                     :to="`/catalog/${child.slug}`"
+                    :title="child.name"
                   >
                     <span class="pl-4">{{child.name}}</span>
                   </v-list-tile>
@@ -61,6 +67,7 @@
                   :key="index"
                   nuxt
                   :to="`${item.to}/${category.slug}`"
+                  :title="category.name"
                 >{{ category.name }}</v-list-tile>
               </template>
             </v-list>
@@ -75,12 +82,12 @@
             class="ma-0 fill-height header-link"
             :to="item.to"
             color="#95282a"
+            :title="item.name"
           >{{item.name}}</v-btn>
         </template>
       </div>
-      <!-- <v-btn icon class="ml-1" large> -->
       <div class="ya-phone-icon ma-1">
-        <a :href="'tel:'+phone" class="pa-2">
+        <a :href="'tel:'+phone" class="pa-2" title="phone">
           <i
             aria-hidden="true"
             class="v-icon material-icons theme--light"
@@ -93,12 +100,19 @@
       <!-- </v-btn> -->
       <v-badge color="#95282a" overlap :value="basketLength>0">
         <template v-slot:badge>{{basketLength}}</template>
-        <v-btn icon class="ml-1" @click="basketDrawer=true" large :disabled="basketLength<1">
+        <v-btn
+          icon
+          class="ml-1"
+          @click="basketDrawer=true"
+          large
+          :disabled="basketLength<1"
+          title="shopping_basket"
+        >
           <v-icon medium color="#95282a">shopping_basket</v-icon>
         </v-btn>
       </v-badge>
 
-      <v-btn icon class="ml-1 hidden-md-and-up" @click="$emit('showDrawer')" large>
+      <v-btn icon class="ml-1 hidden-md-and-up" @click="$emit('showDrawer')" large title="Меню">
         <v-icon medium color="#95282a">menu</v-icon>
       </v-btn>
     </v-toolbar>
@@ -112,7 +126,14 @@
       :width="$vuetify.breakpoint.mdAndUp ? '700px' : '500px'"
     >
       <div class="close-btn-wrap mr-4 d-flex" style="height:100px">
-        <v-btn class="close-btn mx-0 my-auto" outline icon large @click="basketDrawer=false">
+        <v-btn
+          class="close-btn mx-0 my-auto"
+          outline
+          icon
+          large
+          @click="basketDrawer=false"
+          title="close"
+        >
           <v-icon>close</v-icon>
         </v-btn>
       </div>

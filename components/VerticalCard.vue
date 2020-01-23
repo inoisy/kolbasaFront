@@ -5,6 +5,7 @@
     ripple
     class="card-wrapper flex xs12 text-xs-left mont font-weight-medium pa-3"
     style="text-decoration: none; border-radius: 10px"
+    :title="item.name"
   >
     <v-layout class="card-inner">
       <div class="img-wrapper display-flex gray pb-3" style=" min-height:13rem; min-width:300px">
@@ -13,6 +14,7 @@
           style="max-width:250px; max-height:250px; min-height:150px"
           v-lazy="item.img ? imageBaseUrl+item.img.url : require('~/assets/no-image.png')"
           :alt="item.name"
+          :title="item.name"
         />
       </div>
       <v-flex class="card-text-wrapper display-flex">

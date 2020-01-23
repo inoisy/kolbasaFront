@@ -22,28 +22,41 @@
                   style
                   color="accent"
                   dark
+                  :title="item.buttontext"
                 >{{item.buttontext}}</v-btn>
               </v-flex>
             </v-layout>
           </v-container>
-          <v-btn class="btn-scroll" @click="$vuetify.goTo('#content-wrapper')" icon flat large dark>
+          <v-btn
+            class="btn-scroll"
+            @click="$vuetify.goTo('#content-wrapper')"
+            icon
+            flat
+            large
+            dark
+            title="arrow_down"
+          >
             <v-icon large>keyboard_arrow_down</v-icon>
           </v-btn>
         </div>
       </div>
       <div class="swiper-button-prev" slot="button-prev">
-        <v-btn icon flat dark large>
+        <v-btn icon flat dark large title="navigate_before">
           <v-icon large>navigate_before</v-icon>
         </v-btn>
       </div>
       <div class="swiper-button-next" slot="button-next">
-        <v-btn icon flat dark large>
+        <v-btn icon flat dark large title="navigate_next">
           <v-icon large>navigate_next</v-icon>
         </v-btn>
       </div>
     </div>
 
-    <div class="background" v-lazy:background-image="require('~/assets/img/bg.jpg')">
+    <div
+      class="background"
+      v-lazy:background-image="require('~/assets/img/bg.jpg')"
+      style="background-color: #f0f0f0; background-repeat: repeat; background-size: 100%;"
+    >
       <v-container class="py-5" style="min-height: 100vh" id="content-wrapper">
         <div data-aos="zoom-in">
           <h2 class="text-xs-center primary--text mt-4">Каталог</h2>
@@ -89,6 +102,8 @@
             class="mx-auto my-5 xs10 md10 lg9 xl8 flex"
             contain
             :src="require('~/assets/delimiter.svg')"
+            title="Разделитель"
+            alt="Разделитель"
           ></v-img>
         </div>
 
@@ -111,6 +126,7 @@
               class="bottom-img pr-4"
               v-lazy="require('~/assets/img/bottomImage1.png')"
               alt="Колбаса оптом в Москве"
+              title="Колбаса оптом"
             />
           </div>
           <v-flex xs10 md8 offset-lg1 lg7 xl6 class="d-flex mb-5">
@@ -144,6 +160,7 @@
               class="bottom-img pl-4"
               v-lazy="require('~/assets/img/bottomImage2.png')"
               alt="Колбаса оптом с доставкой"
+              title="Колбаса оптом"
             />
             <!-- <img class="bottom-img"> -->
           </div>
@@ -215,6 +232,7 @@
   background-position: 80% center;
   background-size: cover;
   background-repeat: no-repeat;
+  background-color: #131313;
 }
 
 // .main-background {
@@ -324,7 +342,7 @@ export default {
           hid: "description",
           name: "description",
           content:
-            "Купить колбасу оптом по самым выгодным ценам от компании Альянс Фуд. Самовывоз со склада в Москве. Доставка по РФ"
+            "Альянс Фуд - колбаса и другие мясные изделия оптом по самым выгодным ценам от компании Альянс Фуд. Самовывоз со склада в Москве. Доставка по РФ"
         }
       ]
     };

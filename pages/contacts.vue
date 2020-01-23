@@ -2,7 +2,11 @@
   <div>
     <page-header :title="title" :breadrumbs="breadrumbs" />
 
-    <section class="background" v-lazy:background-image="require('~/assets/img/bg.jpg')">
+    <section
+      class="background"
+      v-lazy:background-image="require('~/assets/img/bg.jpg')"
+      style="background-color: #f0f0f0; background-repeat: repeat; background-size: 100%;"
+    >
       <v-container class="py-5">
         <v-layout row wrap>
           <div class="flex xs12 mb-3 align-center display-flex">
@@ -64,16 +68,24 @@
 
 <script>
 import PageHeader from "~/components/PageHeader";
-
+const pageName = "Контакты";
 export default {
   head() {
     return {
-      title: "Контакты"
+      title: pageName,
+      meta: [
+        // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+        {
+          hid: "description",
+          name: "description",
+          content: pageName + " " + process.env.description
+        }
+      ]
     };
   },
   data() {
     return {
-      title: "Контакты",
+      title: pageName,
       breadrumbs: [
         {
           to: "/",

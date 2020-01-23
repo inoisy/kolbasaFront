@@ -8,17 +8,19 @@
     :to="`/catalog/${item.slug}`"
     :title="item.name"
   >
-    <!-- <nuxt-link
-     
-    >-->
     <div class="category-img-wrapper">
-      <img class="category-img ma-auto mb-2" v-if="item.img" v-lazy="imageBaseUrl+item.img.url" />
+      <img
+        class="category-img ma-auto mb-2"
+        v-if="item.img"
+        v-lazy="imageBaseUrl+item.img.url"
+        :alt="item.name"
+        :title="item.name"
+      />
     </div>
     <h3
       class="category-text text-xs-center lumber font-weight-medium mb-0 primary--text"
       style
     >{{item.name}}</h3>
-    <!-- </nuxt-link> -->
   </v-card>
 </template>
 <style lang="stylus" scoped>

@@ -4,13 +4,13 @@
     <v-list class="pt-0">
       <template v-for="(item,i) in menuItems">
         <v-list-group v-if="item.items && item.items.length>0" :key="item.to">
-          <v-list-tile slot="activator" :to="item.to">
+          <v-list-tile slot="activator" :to="item.to" :title="item.name">
             <v-list-tile-content>{{ item.name}}</v-list-tile-content>
           </v-list-tile>
 
           <div v-for="product in item.items" :key="product.name">
             <div v-if="product.children && product.children.length > 0">
-              <v-list-tile nuxt exact :to="`${item.to}/${product.slug}`">
+              <v-list-tile nuxt exact :to="`${item.to}/${product.slug}`" :title="product.name">
                 <span class="pl-3">{{ product.name}}</span>
               </v-list-tile>
               <v-list-tile
@@ -19,11 +19,12 @@
                 nuxt
                 exact
                 :to="`${item.to}/${child.slug}`"
+                :title="child.name"
               >
                 <span class="pl-5">{{child.name}}</span>
               </v-list-tile>
             </div>
-            <v-list-tile nuxt exact :to="`${item.to}/${product.slug}`" v-else>
+            <v-list-tile :title="product.name" nuxt exact :to="`${item.to}/${product.slug}`" v-else>
               <span class="pl-3">{{ product.name}}</span>
             </v-list-tile>
           </div>
@@ -36,6 +37,7 @@
           nuxt
           ripple
           exact
+          :title="item.name"
         >
           <v-list-tile-title>{{item.name}}</v-list-tile-title>
         </v-list-tile>

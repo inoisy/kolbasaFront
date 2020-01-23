@@ -17,7 +17,12 @@
       <div v-show="showCard">
         <v-breadcrumbs :items="breadcrumbs" class="pl-1 pr-5">
           <template slot="item" slot-scope="props">
-            <nuxt-link class="text-decoration-none" :to="props.item.to" exact>{{ props.item.text }}</nuxt-link>
+            <nuxt-link
+              :title="props.item.text"
+              class="text-decoration-none"
+              :to="props.item.to"
+              exact
+            >{{ props.item.text }}</nuxt-link>
           </template>
         </v-breadcrumbs>
         <div class="layout row wrap" itemscope itemtype="http://schema.org/Product">
@@ -38,6 +43,7 @@
               Производитель:
               <nuxt-link
                 :to="`/manufacturers/${product.manufacturer.slug}`"
+                :title="product.manufacturer.name"
               >{{product.manufacturer.name}}</nuxt-link>
             </div>
             <div
@@ -80,7 +86,8 @@
                 class="product-button ml-0 mont"
                 large
                 @click="handleOneClickBuy"
-              >КУпить в один клик</v-btn>
+                title="Купить в один клик"
+              >Купить в один клик</v-btn>
               <v-btn
                 color="#d50000"
                 class="ml-0 mont product-button"
@@ -88,16 +95,24 @@
                 @click="addToBasket"
                 v-show="!busket"
                 style="color:white"
+                title="Добавить в корзину"
               >Добавить в корзину</v-btn>
               <v-sheet
                 class="product-button align-center display-flex justify-center"
                 color="grey lighten-2"
               >
-                <v-btn flat icon color="primary" @click="removeFromBasket" v-show="busket">
+                <v-btn
+                  flat
+                  icon
+                  color="primary"
+                  @click="removeFromBasket"
+                  v-show="busket"
+                  title="remove"
+                >
                   <v-icon>remove</v-icon>
                 </v-btn>
                 <span class="font-weight-bold">{{busket}}</span>
-                <v-btn flat icon color="primary" @click="addToBasket" v-show="busket">
+                <v-btn flat icon color="primary" @click="addToBasket" v-show="busket" title="add">
                   <v-icon v-show="busket">add</v-icon>
                 </v-btn>
               </v-sheet>
@@ -113,6 +128,7 @@
                     v-if="product.manufacturer.img"
                     :src="imageBaseUrl+product.manufacturer.img.url"
                     :alt="product.manufacturer.name"
+                    :title="product.manufacturer.name"
                     v-on="on"
                   />
                 </template>
@@ -133,6 +149,8 @@
                     v-if="product.isHalal"
                     :src="require('~/assets/halal1.png')"
                     v-on="on"
+                    alt="Халяльный продукт"
+                    title="Халяльный продукт"
                   />
                 </template>
                 <div style="font-size:1rem;" class="font-weight-medium mb-2">Халяльная продукция</div>
@@ -147,12 +165,13 @@
               class="item-img d-block mx-auto mb-auto"
               :src="product.img ? imageBaseUrl+product.img.url : require('~/assets/no-image.png')"
               :alt="product.name"
+              :title="product.name"
             />
           </v-flex>
         </div>
       </div>
       <div v-show="!showCard">
-        <v-btn color="gray" fab @click="showCard=true" class="ml-0 mb-4">
+        <v-btn color="gray" fab @click="showCard=true" class="ml-0 mb-4" title="arrow_back">
           <v-icon>arrow_back</v-icon>
         </v-btn>
         <h2 class="mb-5 mont display-3 font-weight-bold">Купить в один клик</h2>
@@ -357,7 +376,7 @@ export default {
         }
         // {
         //   to: `/catalog/${this.$store.state.sessionStorage.category.slug}`,
-        //   text: this.$store.state.sessionStorage.category.name
+        //   text: this.$store.state.se ssionStorage.category.name
         // }
       ];
     },

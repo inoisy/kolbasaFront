@@ -1,28 +1,15 @@
 <template>
   <div>
     <page-header title="Производители" :breadrumbs="breadrumbs" />
-    <div class="background">
-      <!-- v-lazy:background-image="require('~/assets/img/bg.jpg')" -->
+    <div
+      class="background"
+      v-lazy:background-image="require('~/assets/img/bg.jpg')"
+      style="background-color: #f0f0f0; background-repeat: repeat; background-size: 100%;"
+    >
       <v-container class="py-5">
-        <!-- <v-layout row wrap> -->
         <div v-for="(item,index) in manufacturers" :key="index" data-aos="fade-up">
           <vertical-card :item="item" type="manufacturers" class="mb-4"></vertical-card>
-          <!-- <v-card :to="`/manufacturers/${item.slug}`" class="pa-3 display-flex wrap" hover ripple>
-              <v-flex xs12 sm3 lg2 class="display-flex">
-                <img
-                  style="max-height: 20rem"
-                  class="d-block ma-auto"
-                  :src="item.img ? imageBaseUrl+item.img.url : require('~/assets/no-image.png')"
-                  :alt="item.name"
-                />
-              </v-flex>
-              <v-flex xs12 sm9 lg10>
-                <h2 class="display-2 mont mb-3 font-weight-bold">{{item.name}}</h2>
-                <div class="display-1 mont">{{item.description}}</div>
-              </v-flex>
-          </v-card>-->
         </div>
-        <!-- </v-layout> -->
       </v-container>
     </div>
   </div>
@@ -37,7 +24,7 @@ import VerticalCard from "~/components/VerticalCard";
 export default {
   head() {
     return {
-      title: "Производители"
+      title: "Производители(мясокомбинаты)"
     };
   },
   data() {

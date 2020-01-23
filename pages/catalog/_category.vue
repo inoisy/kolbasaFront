@@ -16,9 +16,9 @@
         style="bottom: 0; position: absolute; left: 0; right: 0"
         v-if="subcategories && subcategories.length>0"
       >
-        <!-- <v-btn-toggle v-model="toggle_exclusive" color="tranparent"> -->
         <v-btn
           :to="`/catalog/${rootCategory.slug}`"
+          :title="rootCategory.name"
           color="white"
           class="ma-0"
           flat
@@ -32,6 +32,7 @@
             style="font-size: 0.9rem !important;"
             flat
             :key="child.id"
+            :title="child.name"
           >{{child.name}}</v-btn>
         </template>
         <!-- </v-btn-toggle> -->
@@ -43,8 +44,7 @@
       <v-container grid-list-lg class="py-5" fluid>
         <div id="contentWrapper" class="display-flex">
           <v-flex style="min-height: 73vh">
-            <!-- {{products}} -->
-            <v-layout row wrap id="products" ref="product" v-if="products && products.length>0">
+            <v-layout row wrap id="products" ref="product" v-if="!multiple">
               <div
                 class="flex xs12 sm6 md4 lg3 xl2"
                 data-aos="fade-up"
@@ -57,19 +57,20 @@
             <v-layout v-else-if="multiple" wrap>
               <div
                 class="flex xs12 mb-4"
-                v-for="(productsGroup,index) in products"
+                v-for="(productsGroup,index) in category.children"
                 :key="'prGr'+index"
               >
                 <nuxt-link
                   :to="`/catalog/${productsGroup.slug}`"
                   class="lumber font-weight-bold mb-4 d-inline-block primary--text underline-on-hover"
                   style="font-size: 2.3rem;"
+                  :title="productsGroup.name"
                 >{{productsGroup.name}}</nuxt-link>
                 <v-layout wrap class="mb-3">
                   <div
                     class="flex xs12 sm6 md4 lg3 xl2"
                     data-aos="fade-up"
-                    v-for="(product,prIndex) in productsGroup.items"
+                    v-for="(product,prIndex) in productsGroup.products"
                     :key="prIndex"
                   >
                     <product-card
@@ -114,7 +115,7 @@
           >
             <sticky-menu class="px-3">
               <portal to="filters">
-                <v-subheader v-show="!multiple" class="pl-0">СОРТИРОВАТЬ ПО</v-subheader>
+                <!-- <v-subheader v-show="!multiple" class="pl-0">СОРТИРОВАТЬ ПО</v-subheader>
                 <v-btn-toggle
                   class="mb-2"
                   v-model="sort"
@@ -125,8 +126,8 @@
                 >
                   <v-btn flat>Название</v-btn>
                   <v-btn flat>Цена</v-btn>
-                </v-btn-toggle>
-                <v-subheader class="pl-0" v-show="!multiple && manufacturers.length>1">БРЕНД</v-subheader>
+                </v-btn-toggle>-->
+                <!-- <v-subheader class="pl-0" v-show="!multiple && manufacturers.length>1">БРЕНД</v-subheader>
                 <v-radio-group
                   :value="manufacturersSelected"
                   :mandatory="false"
@@ -140,19 +141,7 @@
                     :key="checkbox.id"
                     :value="checkbox.slug"
                   ></v-radio>
-                </v-radio-group>
-
-                <!-- <v-checkbox
-                  v-show="!multiple && manufacturers.length>1"
-                  v-model="manufacturersSelected"
-                  multiple
-                  @change="manufacturerChange"
-                  v-for="(checkbox) in manufacturers"
-                  :label="checkbox.name"
-                  :key="checkbox.id"
-                  :value="checkbox.id"
-                  height="0px"
-                ></v-checkbox>-->
+                </v-radio-group>-->
                 <v-subheader class="pl-0 hidden-sm-and-down">КАТЕГОРИИ</v-subheader>
                 <v-list
                   class="navigation pa-0 hidden-sm-and-down"
@@ -201,7 +190,7 @@
     </section>
     <no-ssr>
       <infinite-loading
-        v-if="!multiple && products.length >= 20"
+        v-if="!multiple && products && products.length >= 20"
         @infinite="onInfinite"
         ref="infiniteLoading"
       >
@@ -290,7 +279,11 @@ export default {
     //   return this.$store.state.sessionStorage.products;
     // },
     multiple() {
-      return !Array.isArray(this.products);
+      return (
+        this.category &&
+        this.category.children &&
+        this.category.children.length > 0
+      );
     },
     categories() {
       return this.$store.state.sessionStorage.generalInfo.categories.filter(
@@ -301,9 +294,6 @@ export default {
       // console.log(Math.ceil(this.$store.state.sessionStorage.products.count / 20));
       return Math.ceil(this.$store.state.sessionStorage.products.count / 20);
     },
-    // manufacturers() {
-    //   return this.$store.state.sessionStorage.generalInfo.manufacturers;
-    // },
     breadcrumbs() {
       let base = [
         {
@@ -332,9 +322,9 @@ export default {
       return base;
     }
   },
-  async mounted(ctx) {
-    await this.$store.commit("pageFilter", 1);
-  },
+  // async mounted(ctx) {
+  //   await this.$store.commit("pageFilter", 1);
+  // },
   async asyncData(ctx) {
     await ctx.store.dispatch("fetchGeneralInfo");
 
@@ -349,56 +339,8 @@ export default {
     // let manufacturersSelectedIds = [];
     const manufacturers =
       ctx.store.state.sessionStorage.generalInfo.manufacturers;
-    // const queryManufacturer = ctx.route.query.manufacturer;
-    // if(queryManufacturer){
-    //  const finded = manufacturers.find(
-    //   item => item.slug == queryManufacturers
-    // );
-    //         if (finded) {
-    //     manufacturersSelectedId= finded.id;
-    //   }
-    // }
-
-    // const queryManufacturers = ctx.route.query.manufacturer;
     let manufacturersSelected = ctx.route.query.manufacturer;
 
-    // if (isArray(queryManufacturers)) {
-    //   for (let queryManufacurer of queryManufacturers) {
-    //     const finded = manufacturers.find(
-    //       item => item.slug == queryManufacurer
-    //     );
-    //     if (finded) {
-    //       manufacturersSelectedIds.push(finded.id);
-    //     }
-    //   }
-    // } else if (queryManufacturers) {
-    //   const finded = manufacturers.find(
-    //     item => item.slug == queryManufacturers
-    //   );
-    //   if (finded) {
-    //     manufacturersSelectedIds.push(finded.id);
-    //   }
-    // }
-    // const queryManufacturers = ctx.route.query.manufacturer;
-    // let manufacturersSelectedIds = [];
-
-    // if (isArray(queryManufacturers)) {
-    //   for (let queryManufacurer of queryManufacturers) {
-    //     const finded = manufacturers.find(
-    //       item => item.slug == queryManufacurer
-    //     );
-    //     if (finded) {
-    //       manufacturersSelectedIds.push(finded.id);
-    //     }
-    //   }
-    // } else if (queryManufacturers) {
-    //   const finded = manufacturers.find(
-    //     item => item.slug == queryManufacturers
-    //   );
-    //   if (finded) {
-    //     manufacturersSelectedIds.push(finded.id);
-    //   }
-    // }
     let category = await ctx.store.dispatch("fetchCategory", {
       slug: ctx.route.params.category,
       manufacturer: manufacturersSelected
@@ -410,55 +352,56 @@ export default {
         message: "Категория не найдена"
       });
     }
-    const manufacturersExist =
-      category.manufacturers && category.manufacturers.length > 0
-        ? manufacturers.filter(item => category.manufacturers.includes(item.id))
-        : [];
+    // const manufacturersExist =
+    //   category.manufacturers && category.manufacturers.length > 0
+    //     ? manufacturers.filter(item => category.manufacturers.includes(item.id))
+    //     : [];
 
-    let sort;
-    let sortNum;
-    if (ctx.route.query.sort && ctx.route.query.sort === "price") {
-      sort = { sort: "price" };
-      sortNum = 1;
-    } else {
-      sort = { sort: "name" };
-      sortNum = 0;
-    }
+    // let sort;
+    // let sortNum;
+    // if (ctx.route.query.sort && ctx.route.query.sort === "price") {
+    //   sort = { sort: "price" };
+    //   sortNum = 1;
+    // } else {
+    //   sort = { sort: "name" };
+    //   sortNum = 0;
+    // }
 
-    await ctx.store.commit("sortFilter", sort);
-    await ctx.store.commit("manufacturerFilter", manufacturersSelected);
+    // await ctx.store.commit("sortFilter", sort);
+    // await ctx.store.commit("manufacturerFilter", manufacturersSelected);
+
     // await ctx.store.commit("pageFilter", ctx.route.query.page);
 
     let products;
 
-    if (Array.isArray(category.children) && category.children.length > 0) {
-      products = {};
-      for (let child of category.children) {
-        const productsChild = await ctx.store.dispatch("fetchProducts", {
-          slug: child.slug
-        });
-        products[child.id] = { ...child, ...productsChild };
-      }
-
-      const categoryProducts = {
-        products: await ctx.store.dispatch("easyFetchProducts", {
-          slug: category.slug,
-          limit: 999
-        })
-      };
-      await ctx.store.commit("easyProducts", products);
-      category = { ...category, ...categoryProducts };
+    if (category.children && category.children.length > 0) {
+      //   products = {};
+      //   for (let child of category.children) {
+      //     const productsChild = await ctx.store.dispatch("fetchProducts", {
+      //       slug: child.slug
+      //     });
+      //     products[child.id] = { ...child, ...productsChild };
+      //   }
+      //   const categoryProducts = {
+      //     products: await ctx.store.dispatch("easyFetchProducts", {
+      //       slug: category.slug,
+      //       limit: 999
+      //     })
+      //   };
+      //   await ctx.store.commit("easyProducts", products);
+      //   category = { ...category, ...categoryProducts };
     } else {
-      products = await ctx.store.dispatch("easyFetchProducts", {
-        slug: ctx.route.params.category
-      });
+      products = category.products;
+      //   products = await ctx.store.dispatch("easyFetchProducts", {
+      //     slug: ctx.route.params.category
+      //   });
     }
     return {
       products: products,
       category: category,
-      manufacturers: manufacturersExist,
-      manufacturersSelected: manufacturersSelected,
-      sort: sortNum
+      // manufacturers: manufacturersExist,
+      manufacturersSelected: manufacturersSelected
+      // sort: sortNum
     };
   },
   methods: {
@@ -467,17 +410,17 @@ export default {
 
       const newProducts = await this.$store.dispatch("easyFetchMoreProducts", {
         slug: this.$route.params.category
-        // page: 2
       });
-      console.log("TCL: onInfinite -> newProducts", newProducts.length);
-      // this.products = this.products.push(newProducts);
-      if (newProducts.length) {
+
+      if (newProducts && newProducts.length) {
+        console.log("TCL: onInfinite -> newProducts", newProducts);
+        console.log("TCL: onInfinite -> .this.products", this.products);
+
         this.products = [...this.products, ...newProducts];
         $state.loaded();
       } else {
         $state.complete();
       }
-      // }, 1000);
     },
     async sortChange(val) {
       if (Number.isInteger(val)) {
@@ -563,96 +506,12 @@ export default {
         });
       }
     }
-    // async manufacturerChange(val) {
-    //   this.pageCurr = 1;
-    //   this.$vuetify.goTo("#contentWrapper");
-    //   if (val.length === 0) {
-    //     await this.$store.commit("manufacturerFilter", {});
-    //     let { manufacturer, ...query } = this.$route.query;
-    //     await this.$router.push({
-    //       path: this.$route.path,
-    //       query: query
-    //     });
-    //     this.products = [];
-    //     this.products = await this.$store.dispatch("fetchProducts", {
-    //       slug: this.$route.params.category
-    //     });
-    //   } else {
-    //     const manufacturers = this.$store.state.sessionStorage.generalInfo
-    //       .manufacturers;
-    //     let manufacturersSelectedIds = [];
-
-    //     for (let queryManufacurer of val) {
-    //       const finded = manufacturers.find(
-    //         item => item.id == queryManufacurer
-    //       );
-    //       if (finded && finded.slug) {
-    //         manufacturersSelectedIds.push(finded.slug);
-    //       }
-    //     }
-    //     const addObj = {
-    //       manufacturer: manufacturersSelectedIds
-    //     };
-    //     await this.$store.commit("manufacturerFilter", val);
-    //     await this.$router.push({
-    //       path: this.$route.path,
-    //       query: { ...this.$route.query, ...addObj }
-    //     });
-    //     this.products = [];
-    //     this.products = await this.$store.dispatch("fetchProducts", {
-    //       slug: this.$route.params.category
-    //     });
-    //   }
-    // }
   },
-  // watch: {
-  //   async pageCurr(val) {
-  //     await this.$vuetify.goTo("#contentWrapper");
-  //     await this.$store.commit("pageFilter", val);
-  //     this.products = [];
-  //     this.products = await this.$store.dispatch("fetchProducts", {
-  //       slug: this.$route.params.category,
-  //       page: val
-  //     });
 
-  //     if (val > 1) {
-  //       const addObj = {
-  //         page: val
-  //       };
-  //       await this.$router.push({
-  //         path: this.$route.path,
-  //         query: { ...this.$route.query, ...addObj }
-  //       });
-  //     } else {
-  //       let { page, ...query } = this.$route.query;
-  //       // let { manufacturer, ...query } = this.$route.query;
-  //       // await this.$store.dispatch("fetchProducts", {
-  //       //   slug: this.$route.params.category,
-  //       //   manufacturer: val
-  //       // });
-  //       await this.$router.push({
-  //         path: this.$route.path,
-  //         query: query
-  //       });
-  //       // this.$router.push({
-  //       //   path: this.$route.path,
-  //       //   query:{
-  //       //     ...this.$route.query,
-  //       //     query
-  //       //   }
-  //       // });
-  //     }
-  //     //   console.log("TCL: pageCurr -> val", val);
-  //   }
-  // },
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl,
       modal: false
-      // sort: 0,
-      // pageCurr: 1
-      // pagesTotal: 2
-      // manufacturersSelected: []
     };
   }
 };

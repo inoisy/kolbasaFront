@@ -1,7 +1,7 @@
 <template>
   <div>
     <nuxt-child />
-    <page-header :title="manufacturer.name" :breadrumbs="breadrumbs">
+    <page-header :title="`Мясокомбинат ${manufacturer.name} оптом`" :breadrumbs="breadrumbs">
       <slot>
         <div v-if="manufacturer.catalog.length>0" class="display-flex justify-center">
           <v-btn
@@ -19,11 +19,8 @@
     </page-header>
     <div>
       <v-container grid-list-lg class="py-5">
-        <div class="display-1 mb-4" style="font-size: 1.1rem !important">
-          <div
-            class="flex xs12"
-            v-html="manufacturer.content && manufacturer.content.length>0 ? $md.render(manufacturer.content) : ''"
-          ></div>
+        <div v-if="isContent" class="display-1 mb-4" style="font-size: 1.1rem !important">
+          <div class="flex xs12" v-html="isContent ? $md.render(manufacturer.content) : ''"></div>
 
           <v-divider class="mt-3" v-show="categories.length>0"></v-divider>
         </div>
@@ -32,9 +29,10 @@
           <v-flex xs12 class="display-flex align-center wrap" data-aos="fade-up">
             <nuxt-link
               :to="`/catalog/${category.item.slug}?manufacturer=${manufacturer.slug}`"
+              :title="manufacturer.name"
               class="lumber font-weight-bold mb-3 d-inline-block primary--text underline-on-hover"
               style="font-size: 2.4rem;"
-              v-text="`${category.item.name} ${manufacturer.name}`"
+              v-text="`${category.item.name} ${manufacturer.name} оптом`"
             ></nuxt-link>
             <!-- <h2 class="mr-4 mb-3">{{category.item.name}}</h2>
             <v-btn
@@ -132,44 +130,6 @@ export default {
       if (products.length > 0) {
         this.categories[categoryIndex].products.push(...products);
       }
-      // if (products.length < 10) {
-      //   ;
-      // }
-      // const { data: categoriesData } = await client.query({
-      //   variables: {
-      //     id: this.manufacturer.id,
-      //     categoryId: id,
-      //     start: productsLength
-      //   },
-      //   query: gql`
-      //     query CategoriesByManufacturersQuery(
-      //       $id: ID!
-      //       $categoryId: ID!
-      //       $start: Int
-      //     ) {
-      //       category(id: $categoryId) {
-      //         products(
-      //           where: { manufacturer: { id: $id } }
-      //           limit: 10
-      //           start: $start
-      //         ) {
-      //           id
-      //           name
-      //           slug
-      //           priceNum
-      //           discountPrice
-      //           weight
-      //         }
-      //       }
-      //     }
-      //   `
-      // });
-      // const products = categoriesData.category.products;
-
-      // console.log("TCL: productsLength", productsLength);
-
-      // console.log("TCL: category", categoryIndex);
-      // console.log("TCL: handleShowMore -> products", products);
     }
   },
   async asyncData(ctx) {
@@ -206,44 +166,6 @@ export default {
       const { data: categoriesData } = await ctx.$axios.get(
         `/categories/categoriesByManufacturer/` + id
       );
-      console.log("TCL: Data -> categoriesData", categoriesData);
-      // const { data: categoriesData } = await client.query({
-      //   variables: {
-      //     id: id
-      //   },
-      //   query: gql`
-      //     query CategoriesByManufacturersQuery($id: ID!) {
-      //       categories {
-      //         id
-      //         name
-      //         slug
-      //         products(where: { manufacturer: { id: $id } }, limit: 10) {
-      //           id
-      //           name
-      //           slug
-      //           priceNum
-      //           discountPrice
-      //           weight
-      //           category {
-      //             slug
-      //           }
-      //           manufacturer {
-      //             slug
-      //             img {
-      //               url
-      //             }
-      //           }
-      //           img {
-      //             url
-      //           }
-      //         }
-      //       }
-      //     }
-      //   `
-      // });
-      // await ctx.$axios.get(
-      //   `/categories/categoriesByManufacturer/` + id
-      // );
       return {
         manufacturer: manufacturerData.manufacturer,
         categories: categoriesData,
@@ -261,6 +183,9 @@ export default {
   components: { PageHeader, ProductCard },
 
   computed: {
+    isContent() {
+      return this.manufacturer.content && this.manufacturer.content.length > 0;
+    },
     // manufacturer() {
     //   return this.$store.state.manufacturer;
     // },

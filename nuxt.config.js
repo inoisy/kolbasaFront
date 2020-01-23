@@ -12,9 +12,15 @@ const imageUrl = process.env.IMAGE_BASE_URL || process.env.BACKEND_URL || backUR
 
 const axios = require('axios')
 
+const name = "Альянс Фуд"
+const description = "Альянс Фуд. Колбаса и другие мясные изделия оптом по ценам производителя. Самовывоз со склада в Москве. Доставка по РФ и СНГ."
+
+
 module.exports = {
   mode: 'universal',
   env: {
+    name: name,
+    description: description,
     baseUrl: backendUrl,
     imageBaseUrl: imageUrl
   },
@@ -60,8 +66,8 @@ module.exports = {
    ** Headers of the page
    */
   head: {
-    title: 'Альянс Фуд',
-    titleTemplate: '%s - Альянс Фуд',
+    title: name,
+    titleTemplate: `%s - ${name}`,
     meta: [{
         charset: 'utf-8'
       },
@@ -72,7 +78,7 @@ module.exports = {
       {
         hid: 'description',
         name: 'description',
-        content: pkg.description
+        content: description
       }
     ],
     link: [{
@@ -174,8 +180,8 @@ module.exports = {
     }],
     ['nuxt-social-meta', {
       url: sitename,
-      title: 'Оптовая продажа колбасы',
-      description: 'Оптовая продажа колбасы в Москве и МО. Доставка в регионы.',
+      title: name,
+      description: description,
       img: imageUrl + "/uploads/031ba5905e18488794851c8d512b1227.jpg",
       locale: 'ru_RU',
       // twitter: '@UserName',
@@ -238,9 +244,6 @@ module.exports = {
   }, {
     from: '^/catalog/narezka.*',
     to: '/catalog/syrokopchenaya-kolbasa'
-  }, {
-    from: '^/catalog/pashtety.*',
-    to: '/catalog/pashtety-zelcy-studni'
   }, {
     from: '^/catalog/studni.*',
     to: '/catalog/pashtety-zelcy-studni'

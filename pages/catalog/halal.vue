@@ -1,6 +1,6 @@
 <template>
   <div>
-    <page-header title="Халяльная продукция" :breadrumbs="breadcrumbs" />
+    <page-header title="Халяльная продукция оптом" :breadrumbs="breadcrumbs" />
     <section class="background">
       <v-container grid-list-lg class="py-5">
         <v-layout row wrap v-if="page.content">
@@ -8,7 +8,7 @@
           <v-divider class="mb-4"></v-divider>
         </v-layout>
         <v-layout row wrap v-for="category of categories" :key="category.id" class="mb-4">
-          <h2 class="mb-4 flex xs12 d-block" data-aos="fade-up">{{category.name}}</h2>
+          <h2 class="mb-4 flex xs12 d-block" data-aos="fade-up">{{category.name}} халяльная оптом</h2>
           <div
             class="flex xs12 sm6 md4 lg3 xl2"
             data-aos="fade-up"

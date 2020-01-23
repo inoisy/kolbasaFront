@@ -171,29 +171,28 @@ export const actions = {
             img {
               url
             }
-            manufacturers
-            # products{
-            #   id
-            #   name
-            #   slug
-            
-            #   priceNum
-            #   discountPrice
-            #   isDiscount
-            #   isHalal
-            #   category {
-            #     slug
-            #   }
-            #   img {
-            #     url
-            #   }
-            #   manufacturer {
-            #     name
-            #     img {
-            #       url
-            #     }
-            #   }
-            # }
+            products{
+              id
+              name
+              slug
+              weight
+              priceNum
+              discountPrice
+              isDiscount
+              isHalal
+              category {
+                slug
+              }
+              img {
+                url
+              }
+              manufacturer {
+                name
+                img {
+                  url
+                }
+              }
+            }
             parent {
               id
               slug
@@ -208,6 +207,28 @@ export const actions = {
               id
               name
               slug
+              products(limit:25){
+                id
+                name
+                slug
+                weight
+                priceNum
+                discountPrice
+                isDiscount
+                isHalal
+                category {
+                  slug
+                }
+                img {
+                  url
+                }
+                manufacturer {
+                  name
+                  img {
+                    url
+                  }
+                }
+              }
             }
           }
         }
@@ -228,6 +249,7 @@ export const actions = {
 
   },
   async fetchProduct(ctx, params) {
+    // await ctx.commit("product", {});
     // let client = this.app.apolloProvider.defaultClient;
     // const {
     //   data: productData
@@ -393,7 +415,7 @@ export const actions = {
     // let countcount = productsCount
     // products = productsData
 
-    await ctx.commit("pushEasyProducts", productsData);
+    // await ctx.commit("pushEasyProducts", productsData);
 
     await ctx.commit('loading', false)
     return productsData

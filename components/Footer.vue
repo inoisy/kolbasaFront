@@ -14,6 +14,7 @@
               v-for="menuItem in menuItems"
               :key="menuItem.to"
               :to="menuItem.to"
+              :title="menuItem.name"
             >{{menuItem.name}}</v-list-tile>
             <!-- <v-list-tile to="/catalog">Каталог</v-list-tile>
             <v-list-tile to="/manufacturers">Производители</v-list-tile>
@@ -25,21 +26,22 @@
           <v-subheader>КОНТАКТЫ</v-subheader>
           <v-list style="background: transparent !important;" class="footer-list">
             <v-list-tile avatar itemprop="name">ООО "АЛЬЯНС ФУД"</v-list-tile>
-            <v-list-tile avatar class>
+            <v-list-tile avatar class title="telephone" :href="`tel:${contacts.phone}`">
               <v-list-tile-avatar>
                 <v-icon>phone</v-icon>
               </v-list-tile-avatar>
-              <v-list-tile-content class="ya-phone white--text">
-                <a itemprop="telephone" :href="`tel:${contacts.phone}`">{{contacts.phone}}</a>
-              </v-list-tile-content>
+              <v-list-tile-content
+                class="ya-phone white--text"
+                itemprop="telephone"
+              >{{contacts.phone}}</v-list-tile-content>
             </v-list-tile>
-            <v-list-tile avatar :href="`mailto:${contacts.email}`">
+            <v-list-tile avatar :href="`mailto:${contacts.email}`" title="email">
               <v-list-tile-avatar>
                 <v-icon>email</v-icon>
               </v-list-tile-avatar>
               <v-list-tile-content itemprop="email">{{contacts.email}}</v-list-tile-content>
             </v-list-tile>
-            <v-list-tile avatar href="#">
+            <v-list-tile avatar href="#" title="address">
               <v-list-tile-avatar>
                 <v-icon>location_on</v-icon>
               </v-list-tile-avatar>
@@ -54,7 +56,7 @@
                 <span itemprop="streetAddress">Михайловский проезд, д.3</span>
               </div>
             </v-list-tile>
-            <v-list-tile avatar href="#">
+            <v-list-tile avatar href="#" title="openingHours">
               <v-list-tile-avatar>
                 <v-icon>access_time</v-icon>
               </v-list-tile-avatar>
@@ -75,19 +77,29 @@
                 v-if="category && category.children && category.children.length > 0"
               >
                 <v-list-group :key="category.slug">
-                  <v-list-tile slot="activator" :to="`/catalog/${category.slug}`">
+                  <v-list-tile
+                    :to="`/catalog/${category.slug}`"
+                    :title="category.name"
+                    slot="activator"
+                  >
                     <v-list-tile-content>{{ category.name}}</v-list-tile-content>
                   </v-list-tile>
                   <v-list-tile
                     v-for="child in category.children"
                     :key="child.id"
                     :to="`/catalog/${child.slug}`"
+                    :title="child.name"
                   >
                     <span class="pl-4" style="line-height: 100% !important">{{child.name}}</span>
                   </v-list-tile>
                 </v-list-group>
               </div>
-              <v-list-tile :key="index" v-else :to="`/catalog/${category.slug}`">
+              <v-list-tile
+                :key="index"
+                v-else
+                :to="`/catalog/${category.slug}`"
+                :title="category.name"
+              >
                 <span style="line-height: 100% !important">{{category.name}}</span>
               </v-list-tile>
             </template>
@@ -108,15 +120,15 @@
     </v-container>
   </v-footer>
 </template>
-<style lang="stylus" scoped>
+<style lang="stylus" >
 .footer {
   // background-image: url();
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
 
-  .primary--text.theme--dark {
-    color: #ff7a7a !important;
+  .v-list__tile--active {
+    color: #da6e6e !important;
   }
 }
 </style>

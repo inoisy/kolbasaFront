@@ -7,7 +7,11 @@
         v-for="(item,index) in items"
         :key="index"
       >
-        <nuxt-link :to="`/manufacturers/${item.slug}`" class="align-center justify-center pa-3">
+        <nuxt-link
+          :to="`/manufacturers/${item.slug}`"
+          class="align-center justify-center pa-3"
+          :title="item.name"
+        >
           <img
             :data-src="item.img ? imageBaseUrl+ item.img.url  : require('~/assets/no-image.png')"
             class="swiper-lazy ma-auto d-block manuf-img"
@@ -20,12 +24,12 @@
       </div>
     </div>
     <div class="swiper-button-prev" slot="button-prev">
-      <v-btn icon flat large>
+      <v-btn icon flat large title="navigate_before">
         <v-icon large>navigate_before</v-icon>
       </v-btn>
     </div>
     <div class="swiper-button-next" slot="button-next">
-      <v-btn icon flat large>
+      <v-btn icon flat large title="navigate_next">
         <v-icon large>navigate_next</v-icon>
       </v-btn>
     </div>

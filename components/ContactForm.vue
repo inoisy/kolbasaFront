@@ -23,7 +23,14 @@
     ></v-text-field>
 
     <v-flex xs12 class>
-      <v-btn class="ml-0" color="accent" @click="submit" large :disabled="$v.$anyError">Отправить</v-btn>
+      <v-btn
+        class="ml-0"
+        color="accent"
+        @click="submit"
+        large
+        :disabled="$v.$anyError"
+        title="Отправить"
+      >Отправить</v-btn>
     </v-flex>
 
     <v-slide-y-transition>

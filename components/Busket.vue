@@ -25,14 +25,15 @@
                 v-if="product.item.category && product.item.category.slug"
                 :to="`/catalog/${product.item.category.slug}/${product.item.slug}`"
                 class="mont d-block my-auto text-decoration-none"
+                :title="product.item.name"
               >{{product.item.name}}</nuxt-link>
             </v-flex>
             <div class="quantity align-center display-flex justify-center">
-              <v-btn icon @click="(e)=> removeFromBasket(e,product.item)">
+              <v-btn icon @click="(e)=> removeFromBasket(e,product.item)" title="remove">
                 <v-icon>remove</v-icon>
               </v-btn>
               {{product.count}}
-              <v-btn icon @click="(e)=>addToBasket(e,product.item)">
+              <v-btn icon @click="(e)=>addToBasket(e,product.item)" title="add">
                 <v-icon>add</v-icon>
               </v-btn>
             </div>
@@ -41,7 +42,12 @@
               class="price display-flex display-1 align-center justify-center font-weight-medium mont"
             >{{product.item.isDiscount ? product.item.discountPrice*product.count : product.item.priceNum*product.count }}</div>
             <div class="display-flex align-center justify-center ma-0">
-              <v-btn icon @click="(e)=>deleteFromBasket(e,product.item)" class="display-flex">
+              <v-btn
+                icon
+                @click="(e)=>deleteFromBasket(e,product.item)"
+                class="display-flex"
+                title="delete"
+              >
                 <v-icon>delete_outline</v-icon>
               </v-btn>
             </div>
@@ -64,6 +70,7 @@
             large
             @click="handleOfferClick"
             v-show="isSummValid"
+            title="Оформить заказ"
           >Оформить заказ</v-btn>
         </v-flex>
       </div>
@@ -71,7 +78,7 @@
     <div v-if="offer && isSummValid">
       <v-toolbar class="grey lighten-2 px-2" height="100px">
         <div class="toolbar-inner pr-5">
-          <v-btn outline @click="offer=false" icon large class="ma-0">
+          <v-btn outline @click="offer=false" icon large class="ma-0" title="arrow_back">
             <v-icon>arrow_back</v-icon>
           </v-btn>
           <h2 class="mb-0 ml-3 display-3 mont font-weight-bold">Оформление заказа</h2>

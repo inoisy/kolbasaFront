@@ -1,24 +1,14 @@
 <template>
   <div>
     <page-header title="Каталог" :breadrumbs="breadrumbs" />
-    <section class="background">
+    <section
+      class="background"
+      v-lazy:background-image="require('~/assets/img/bg.jpg')"
+      style="background-color: #f0f0f0; background-repeat: repeat; background-size: 100%;"
+    >
       <!-- v-lazy:background-image="require('~/assets/img/bg.jpg')" -->
       <v-container grid-list-lg class="py-5">
         <template v-for="(category,index) in categories">
-          <!-- <div :key="index" data-aos="fade-up" class="catalog-card layout wrap mb-5">
-            <h2 class="xs12 flex">
-              {{category.name}}
-              <v-btn outline :to="`/catalog/${category.slug}`">Показать все</v-btn>
-            </h2>
-            <div
-              class="flex xs12 sm6 md4 lg3 xl2"
-              data-aos="fade-up"
-              v-for="(product,prIndex) in category.products"
-              :key="prIndex"
-            >
-              <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
-            </div>
-          </div>-->
           <vertical-card
             v-if="category.children.length===0"
             :item="category"
@@ -26,12 +16,24 @@
             class="mb-4 d-block"
             :key="index"
           ></vertical-card>
-          <div v-else :key="index">
-            <div
-              class="catalog-card layout wrap mb-4"
+          <div
+            v-else
+            :key="index"
+            class="pa-3 mb-4 pb-4 pl-4"
+            style="border: 1px solid #c1c1c1; border-radius: 10px;"
+          >
+            <nuxt-link
+              :to="`/catalog/${category.slug}`"
+              class="mb-3 d-block category-text lumber font-weight-medium mb-0 primary--text fs-1-5 underline-on-hover"
+              :title="category.name"
+            >{{category.name}}</nuxt-link>
+            <vertical-card
+              class="catalog-card layout wrap mt-3"
               v-for="child in category.children"
+              :item="child"
+              type="catalog"
               :key="child.id"
-            >{{child}}</div>
+            ></vertical-card>
           </div>
         </template>
       </v-container>
@@ -53,7 +55,16 @@ import gql from "graphql-tag";
 export default {
   head() {
     return {
-      title: "Каталог"
+      title: "Каталог. Колбаса и другие мясные изделия оптом.",
+      meta: [
+        // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+        {
+          hid: "description",
+          name: "description",
+          content:
+            "Каталог Альянс Фуд. Колбаса и другие мясные изделия оптом по ценам производителя. Самовывоз со склада в Москве. Доставка по РФ"
+        }
+      ]
     };
   },
   components: { PageHeader, VerticalCard, ProductCard },
@@ -86,28 +97,6 @@ export default {
             parent {
               id
             }
-            products(limit: 8) {
-              id
-              name
-              slug
-              description
-              priceNum
-              discountPrice
-              isDiscount
-              isHalal
-              category {
-                slug
-              }
-              img {
-                url
-              }
-              manufacturer {
-                name
-                img {
-                  url
-                }
-              }
-            }
             children {
               id
               name
@@ -132,9 +121,17 @@ export default {
     //   return acc;
     // }, new Map());
     return {
-      categories: categoriesData.categories.filter(
-        item => item.children.length === 0
-      )
+      categories: categoriesData.categories
+        .filter(item => item.parent.length === 0)
+        .sort((a, b) => {
+          if (a.children.length > b.children.length) {
+            return 1;
+          }
+          if (a.children.length < b.children.length) {
+            return -1;
+          }
+          // a.children.length < b.children.length});
+        })
     };
   },
   computed: {
