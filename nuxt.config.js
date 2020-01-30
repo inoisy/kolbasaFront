@@ -236,6 +236,9 @@ module.exports = {
     ],
   ],
   redirect: [{
+    from: '^/catalog/pashtety-zelcy-studni.*',
+    to: '/catalog/holodec-studen-zelc'
+  }, {
     from: '^/catalog/konservy.*',
     to: '/catalog/polufabrikaty'
   }, {

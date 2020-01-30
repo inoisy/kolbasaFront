@@ -27,16 +27,8 @@
             v-for="product of category.products"
             :key="product.id"
           >
-            <product-card :product="product" :category="category.slug"></product-card>
+            <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
           </div>
-          <!-- <div class="flex xs12" data-aos="fade-up"> -->
-          <!-- <v-btn
-            :to="`/catalog/${category.slug}?manufacturer=${manufacturer.slug}`"
-            class="mt-4 ml-0"
-            color="accent"
-            large
-          >Показать все товары</v-btn>-->
-          <!-- </div> -->
         </v-layout>
       </v-container>
     </section>

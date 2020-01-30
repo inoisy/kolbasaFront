@@ -49,7 +49,7 @@
           <div
             v-if="product && product.content"
             class="mb-3 table-wrapper"
-            v-html="product.content"
+            v-html="$md.render(product.content)"
           ></div>
           <div
             itemprop="offers"

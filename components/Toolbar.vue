@@ -35,7 +35,7 @@
               nuxt
               :to="item.to"
               color="#95282a"
-              title="arrow_drop_down"
+              :title="item.name"
             >
               {{item.name}}
               <v-icon>arrow_drop_down</v-icon>
@@ -96,8 +96,6 @@
         </a>
       </div>
 
-      <!-- <v-icon medium color="#95282a">phone</v-icon> -->
-      <!-- </v-btn> -->
       <v-badge color="#95282a" overlap :value="basketLength>0">
         <template v-slot:badge>{{basketLength}}</template>
         <v-btn
@@ -151,10 +149,9 @@
 
   .list-item {
     float: left;
-    // page-break-inside: avoid;
+    line-height: 1;
     break-inside: avoid-column;
     width: 100%;
-    // max-width: 300px;
   }
 }
 
