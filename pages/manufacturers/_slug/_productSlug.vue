@@ -216,7 +216,7 @@
 }
 
 .close-btn-wrap {
-  position: sticky;
+  position: absolute;
   right: 0px;
   top: 20px;
   display: flex;
@@ -251,6 +251,7 @@
 
   .item-img {
     max-height: 300px;
+    object-fit: contain;
   }
 }
 

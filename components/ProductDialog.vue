@@ -1,7 +1,7 @@
 <template>
   <v-card class="position-relative px-4 pb-4 pt-0 fill-height" style="min-height:45vh">
     <div class="close-btn-wrap mt-2 mr-3">
-      <v-btn class="close-btn ma-0" color="gray" fab @click="dialog=false">
+      <v-btn class="close-btn ma-0" fab @click="dialog=false">
         <v-icon>close</v-icon>
       </v-btn>
     </div>
@@ -205,7 +205,7 @@
 }
 
 .close-btn-wrap {
-  position: sticky;
+  position: absolute;
   right: 0px;
   top: 20px;
   display: flex;
@@ -240,6 +240,7 @@
 
   .item-img {
     max-height: 300px;
+    object-fit: contain;
   }
 }
 

@@ -114,8 +114,8 @@
             style="width: 300px; min-width: 300px; max-width: 300px; margin-left: auto;"
           >
             <sticky-menu class="px-3">
-              <portal to="filters">
-                <!-- <v-subheader v-show="!multiple" class="pl-0">СОРТИРОВАТЬ ПО</v-subheader>
+              <!-- <portal to="filters"> -->
+              <!-- <v-subheader v-show="!multiple" class="pl-0">СОРТИРОВАТЬ ПО</v-subheader>
                 <v-btn-toggle
                   class="mb-2"
                   v-model="sort"
@@ -126,8 +126,8 @@
                 >
                   <v-btn flat>Название</v-btn>
                   <v-btn flat>Цена</v-btn>
-                </v-btn-toggle>-->
-                <!-- <v-subheader class="pl-0" v-show="!multiple && manufacturers.length>1">БРЕНД</v-subheader>
+              </v-btn-toggle>-->
+              <!-- <v-subheader class="pl-0" v-show="!multiple && manufacturers.length>1">БРЕНД</v-subheader>
                 <v-radio-group
                   :value="manufacturersSelected"
                   :mandatory="false"
@@ -141,51 +141,51 @@
                     :key="checkbox.id"
                     :value="checkbox.slug"
                   ></v-radio>
-                </v-radio-group>-->
-                <v-subheader class="pl-0 hidden-sm-and-down">КАТЕГОРИИ</v-subheader>
-                <v-list
-                  class="navigation pa-0 hidden-sm-and-down"
-                  style="background-color:transparent !important"
-                  color="transparent"
-                >
-                  <template v-for="(category,index) in categories">
-                    <div
-                      :key="'list-group'+index"
-                      v-if="category && category.children && category.children.length > 0"
-                    >
-                      <v-list-group :key="category.slug">
-                        <v-list-tile
-                          slot="activator"
-                          :to="`/catalog/${category.slug}`"
-                          :title="category.name"
-                          height="36px"
-                        >
-                          <v-list-tile-content>{{ category.name}}</v-list-tile-content>
-                        </v-list-tile>
-                        <v-list-tile
-                          height="36px"
-                          v-for="child in category.children"
-                          :key="child.id"
-                          :to="`/catalog/${child.slug}`"
-                          :title="child.name"
-                        >
-                          <span class="pl-4" style="line-height: 100% !important">{{child.name}}</span>
-                        </v-list-tile>
-                      </v-list-group>
-                    </div>
-                    <v-list-tile
-                      :title="category.name"
-                      :key="index"
-                      v-else
-                      :to="`/catalog/${category.slug}`"
-                      height="36px"
-                    >
-                      <span style="line-height: 100% !important">{{category.name}}</span>
-                    </v-list-tile>
-                  </template>
-                </v-list>
-              </portal>
-              <portal-target name="filters" v-show="$vuetify.breakpoint.mdAndUp"></portal-target>
+              </v-radio-group>-->
+              <v-subheader class="pl-0 hidden-sm-and-down">КАТЕГОРИИ</v-subheader>
+              <v-list
+                class="navigation pa-0 hidden-sm-and-down"
+                style="background-color:transparent !important"
+                color="transparent"
+              >
+                <template v-for="(category,index) in categories">
+                  <div
+                    :key="'list-group'+index"
+                    v-if="category && category.children && category.children.length > 0"
+                  >
+                    <v-list-group :key="category.slug">
+                      <v-list-tile
+                        slot="activator"
+                        :to="`/catalog/${category.slug}`"
+                        :title="category.name"
+                        height="36px"
+                      >
+                        <v-list-tile-content>{{ category.name}}</v-list-tile-content>
+                      </v-list-tile>
+                      <v-list-tile
+                        height="36px"
+                        v-for="child in category.children"
+                        :key="child.id"
+                        :to="`/catalog/${child.slug}`"
+                        :title="child.name"
+                      >
+                        <span class="pl-4" style="line-height: 100% !important">{{child.name}}</span>
+                      </v-list-tile>
+                    </v-list-group>
+                  </div>
+                  <v-list-tile
+                    :title="category.name"
+                    :key="index"
+                    v-else
+                    :to="`/catalog/${category.slug}`"
+                    height="36px"
+                  >
+                    <span style="line-height: 100% !important">{{category.name}}</span>
+                  </v-list-tile>
+                </template>
+              </v-list>
+              <!-- </portal>
+              <portal-target name="filters" v-show="$vuetify.breakpoint.mdAndUp"></portal-target>-->
             </sticky-menu>
           </v-flex>
         </div>
@@ -226,22 +226,20 @@
   .v-list__tile--active {
     background-color: rgba(0, 0, 0, 0.1) !important;
   }
+
+  .v-list__tile__content {
+    line-height: 1;
+  }
 }
 
 .subcategories {
   width: 100%;
   justify-content: center;
 }
-
-@media (min-width: 960px) {
-}
 </style>
 
 <script>
 import InfiniteLoading from "vue-infinite-loading";
-
-// import gql from "graphql-tag";
-// import _ from "lodash";
 import PageHeader from "~/components/PageHeader";
 import StickyMenu from "~/components/StickyMenu";
 import ProductCard from "~/components/ProductCard";
@@ -416,8 +414,8 @@ export default {
       });
 
       if (newProducts && newProducts.length) {
-        console.log("TCL: onInfinite -> newProducts", newProducts);
-        console.log("TCL: onInfinite -> .this.products", this.products);
+        // console.log("TCL: onInfinite -> newProducts", newProducts);
+        // console.log("TCL: onInfinite -> .this.products", this.products);
 
         this.products = [...this.products, ...newProducts];
         $state.loaded();

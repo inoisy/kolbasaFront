@@ -43,9 +43,9 @@
         </v-list-tile>
       </template>
     </v-list>
-    <div class="filter-wrapper px-3" v-if="isModal" v-show="$vuetify.breakpoint.smAndDown">
+    <!-- <div class="filter-wrapper px-3" v-if="isModal" v-show="$vuetify.breakpoint.smAndDown">
       <portal-target name="filters"></portal-target>
-    </div>
+    </div>-->
   </v-navigation-drawer>
 </template>
 

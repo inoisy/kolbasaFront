@@ -13,8 +13,6 @@
     <product-dialog :product="product"></product-dialog>
   </v-dialog>
 </template>
-
-
 <script>
 import gql from "graphql-tag";
 // import ContactForm from "~/components/ContactForm";

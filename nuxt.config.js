@@ -187,7 +187,7 @@ module.exports = {
       // twitter: '@UserName',
       themeColor: '#d50000'
     }],
-    'portal-vue/nuxt',
+    // 'portal-vue/nuxt',
     'nuxt-vuex-localstorage',
     '@nuxtjs/redirect-module',
 
@@ -294,6 +294,11 @@ module.exports = {
    ** Build configuration
    */
   build: {
+    babel: {
+      sourceType: 'unambiguous',
+    },
+    transpile: [/^vuetify/, /^aos/, /^vue-awesome-swiper/, /^@nuxtjs.*/, /^vue2-google-maps($|\/)/, "vue-particles", "nuxt-vuex-localstorage"],
+
     // publicPath: '/js/',
     /*
      ** You can extend webpack config here
