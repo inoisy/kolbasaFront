@@ -16,7 +16,7 @@
             >{{ props.item.text }}</nuxt-link>
           </template>
         </v-breadcrumbs>
-        <h1 class="lumber header-text white--text text-center px-4">{{title}}</h1>
+        <h1 class="lumber header-text white--text text-center px-4 my-5">{{title}}</h1>
         <div class="slot-wrapper" ref="slot">
           <slot></slot>
         </div>
