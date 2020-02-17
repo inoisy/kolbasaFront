@@ -18,7 +18,7 @@
       />
     </div>
     <h3
-      class="category-text text-xs-center lumber font-weight-medium mb-0 primary--text"
+      class="category-text text-center lumber font-weight-medium mb-0 primary--text"
       style
     >{{item.name}}</h3>
   </v-card>
@@ -26,8 +26,9 @@
 <style lang="stylus" scoped>
 .category-wrapper {
   .category-text {
-    font-size: 1.33rem;
+    font-size: 1.2rem;
     transition: all 0.2s;
+    line-height: 1.2;
   }
 
   .category-img-wrapper {

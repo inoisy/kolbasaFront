@@ -7,44 +7,41 @@
   >
     <v-container>
       <v-layout row wrap>
-        <v-flex class="mb-4" xs12 md6 lg4>
+        <v-flex class="mb-10" xs12 md6 lg4>
           <v-subheader>НАВИГАЦИЯ</v-subheader>
           <v-list style="background: transparent !important;" class="footer-list">
-            <v-list-tile
+            <v-list-item
               v-for="menuItem in menuItems"
               :key="menuItem.to"
               :to="menuItem.to"
               :title="menuItem.name"
-            >{{menuItem.name}}</v-list-tile>
-            <!-- <v-list-tile to="/catalog">Каталог</v-list-tile>
-            <v-list-tile to="/manufacturers">Производители</v-list-tile>
-            <v-list-tile to="/about">О компании</v-list-tile>
-            <v-list-tile to="/contacts">Контакты</v-list-tile>-->
+              color="accent"
+            >{{menuItem.name}}</v-list-item>
           </v-list>
         </v-flex>
-        <div class="flex mb-4 xs12 md6 lg4" itemscope itemtype="http://schema.org/LocalBusiness">
+        <div class="flex mb-10 xs12 md6 lg4" itemscope itemtype="http://schema.org/LocalBusiness">
           <v-subheader>КОНТАКТЫ</v-subheader>
           <v-list style="background: transparent !important;" class="footer-list">
-            <v-list-tile avatar itemprop="name">ООО "АЛЬЯНС ФУД"</v-list-tile>
-            <v-list-tile avatar class title="telephone" :href="`tel:${contacts.phone}`">
-              <v-list-tile-avatar>
+            <v-list-item color="accent" itemprop="name">ООО "АЛЬЯНС ФУД"</v-list-item>
+            <v-list-item color="accent" class title="telephone" :href="`tel:${contacts.phone}`">
+              <v-list-item-icon>
                 <v-icon>phone</v-icon>
-              </v-list-tile-avatar>
-              <v-list-tile-content
+              </v-list-item-icon>
+              <v-list-item-content
                 class="ya-phone white--text"
                 itemprop="telephone"
-              >{{contacts.phone}}</v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile avatar :href="`mailto:${contacts.email}`" title="email">
-              <v-list-tile-avatar>
+              >{{contacts.phone}}</v-list-item-content>
+            </v-list-item>
+            <v-list-item color="accent" :href="`mailto:${contacts.email}`" title="email">
+              <v-list-item-icon>
                 <v-icon>email</v-icon>
-              </v-list-tile-avatar>
-              <v-list-tile-content itemprop="email">{{contacts.email}}</v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile avatar href="#" title="address">
-              <v-list-tile-avatar>
+              </v-list-item-icon>
+              <v-list-item-content itemprop="email">{{contacts.email}}</v-list-item-content>
+            </v-list-item>
+            <v-list-item color="accent" @click title="address">
+              <v-list-item-icon>
                 <v-icon>location_on</v-icon>
-              </v-list-tile-avatar>
+              </v-list-item-icon>
               <div
                 itemprop="address"
                 itemscope
@@ -55,19 +52,19 @@
                 <span itemprop="addressLocality">Москва</span>
                 <span itemprop="streetAddress">Михайловский проезд, д.3</span>
               </div>
-            </v-list-tile>
-            <v-list-tile avatar href="#" title="openingHours">
-              <v-list-tile-avatar>
+            </v-list-item>
+            <v-list-item color="accent" @click title="openingHours">
+              <v-list-item-icon>
                 <v-icon>access_time</v-icon>
-              </v-list-tile-avatar>
-              <v-list-tile-content
+              </v-list-item-icon>
+              <v-list-item-content
                 itemprop="openingHours"
                 datetime="Mo-Fr 09:00−18:00"
-              >{{contacts.accessTime}}</v-list-tile-content>
-            </v-list-tile>
+              >{{contacts.accessTime}}</v-list-item-content>
+            </v-list-item>
           </v-list>
         </div>
-        <v-flex class="mb-4" xs12 md6 lg4 hidden-xs-only>
+        <v-flex class="mb-10" xs12 md6 lg4 hidden-xs-only>
           <v-subheader>КАТАЛОГ</v-subheader>
 
           <v-list style="background: transparent !important;" class="footer-list">
@@ -76,44 +73,45 @@
                 :key="'list-group'+index"
                 v-if="category && category.children && category.children.length > 0"
               >
-                <v-list-group :key="category.slug">
-                  <v-list-tile
+                <v-list-group :key="category.slug" color="accent">
+                  <v-list-item
                     :to="`/catalog/${category.slug}`"
                     :title="category.name"
                     slot="activator"
                   >
-                    <v-list-tile-content>{{ category.name}}</v-list-tile-content>
-                  </v-list-tile>
-                  <v-list-tile
+                    <v-list-item-content>{{ category.name}}</v-list-item-content>
+                  </v-list-item>
+                  <v-list-item
                     v-for="child in category.children"
                     :key="child.id"
                     :to="`/catalog/${child.slug}`"
                     :title="child.name"
                   >
                     <span class="pl-4" style="line-height: 100% !important">{{child.name}}</span>
-                  </v-list-tile>
+                  </v-list-item>
                 </v-list-group>
               </div>
-              <v-list-tile
+              <v-list-item
+                color="accent"
                 :key="index"
                 v-else
                 :to="`/catalog/${category.slug}`"
                 :title="category.name"
               >
                 <span style="line-height: 100% !important">{{category.name}}</span>
-              </v-list-tile>
+              </v-list-item>
             </template>
           </v-list>
         </v-flex>
-        <!-- <v-flex class="mb-4" xs12 md6 lg3 hidden-xs-only>
+        <!-- <v-flex class="mb-10" xs12 md6 lg3 hidden-xs-only>
           <v-subheader>ПРОИЗВОДИТЕЛИ</v-subheader>
           <v-list style="background: transparent !important;" class="footer-list">
-            <v-list-tile
+            <v-list-item
               v-for="(manufacturer,index) in manufacturers"
               :key="index"
               :to="`/manufacturers/${manufacturer.slug}`"
               style="line-height: normal"
-            >{{manufacturer.name}}</v-list-tile>
+            >{{manufacturer.name}}</v-list-item>
           </v-list>
         </v-flex>-->
       </v-layout>

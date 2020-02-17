@@ -9,11 +9,11 @@
           :style="`background-image: url(${imageBaseUrl+item.img.url})`"
           style="min-height: calc(100vh - 100px)"
         >
-          <v-container fill-height class="main-content py-5">
+          <v-container fill-height class="main-content py-12 ma-auto">
             <v-layout align-center>
               <v-flex xs12 sm11 md10 lg7 xl6 class="text-xs-left justify-center column white--text">
-                <h2 style class="header lumber-rough font-weight-medium mb-4" v-text="item.header" />
-                <div class="subheader mb-4 lumber" v-html="item.content" />
+                <h2 style class="header lumber-rough font-weight-medium mb-8" v-text="item.header" />
+                <div class="subheader mb-8 lumber" v-html="item.content" />
                 <v-btn
                   v-if="item.buttontext"
                   :to="item.href"
@@ -31,7 +31,6 @@
             class="btn-scroll"
             @click="$vuetify.goTo('#content-wrapper')"
             icon
-            flat
             large
             dark
             title="arrow_down"
@@ -41,12 +40,12 @@
         </div>
       </div>
       <div class="swiper-button-prev" slot="button-prev">
-        <v-btn icon flat dark large title="navigate_before">
+        <v-btn icon dark large title="navigate_before">
           <v-icon large>navigate_before</v-icon>
         </v-btn>
       </div>
       <div class="swiper-button-next" slot="button-next">
-        <v-btn icon flat dark large title="navigate_next">
+        <v-btn icon dark large title="navigate_next">
           <v-icon large>navigate_next</v-icon>
         </v-btn>
       </div>
@@ -57,11 +56,22 @@
       v-lazy:background-image="require('~/assets/img/bg.jpg')"
       style="background-color: #f0f0f0; background-repeat: repeat; background-size: 100%;"
     >
-      <v-container class="py-5" style="min-height: 100vh" id="content-wrapper">
-        <div data-aos="zoom-in">
-          <h2 class="text-xs-center primary--text mt-4">Каталог</h2>
-        </div>
-        <v-layout class="mb-5 pb-4" row wrap align-center justify-center>
+      <v-container grid-list-lg class="py-12" style="min-height: 100vh" id="content-wrapper">
+        <v-layout row wrap>
+          <v-btn
+            color="accent"
+            tile
+            text
+            x-large
+            class="ma-auto d-inline-flex"
+            data-aos="zoom-in"
+            to="/catalog"
+          >
+            <h2 class="primary--text lumber">Каталог</h2>
+          </v-btn>
+        </v-layout>
+
+        <div class="mb-5 pb-4">
           <template v-for="(item,i) in categories">
             <div
               data-aos="zoom-in"
@@ -77,15 +87,19 @@
               class="layout row wrap justify-center mt-4 pt-3 pb-1"
               style="border: 1px solid #8b8b8b; border-radius: 10px;"
             >
-              <div class="flex xs12 mb-3 text-xs-center">
-                <nuxt-link
+              <div class="flex xs12 mb-4 text-center">
+                <v-btn
+                  color="accent"
+                  tile
+                  text
+                  large
                   :to="`/catalog/${item.slug}`"
-                  class="category-text lumber font-weight-medium mb-0 primary--text fs-1-5 underline-on-hover"
+                  class="lumber font-weight-medium mb-0 fs-1-5"
                   :title="item.name"
-                >{{item.name}}</nuxt-link>
+                >
+                  <h3 class="primary--text lumber">{{item.name}}</h3>
+                </v-btn>
               </div>
-
-              <!-- {{item.children.length}} -->
               <div
                 data-aos="zoom-in"
                 v-for="child in item.children"
@@ -96,7 +110,7 @@
               </div>
             </div>
           </template>
-        </v-layout>
+        </div>
         <div data-aos="zoom-in">
           <v-img
             class="mx-auto my-5 xs10 md10 lg9 xl8 flex"
@@ -107,8 +121,19 @@
           ></v-img>
         </div>
 
-        <section class="py-5">
-          <h2 data-aos="zoom-in" class="text-xs-center mb-5 primary--text d-block">Производители</h2>
+        <section class="py-12 d-flex column">
+          <v-btn
+            color="accent"
+            tile
+            text
+            x-large
+            class="ma-auto d-inline-flex mx-auto"
+            data-aos="zoom-in"
+            to="/manufacturers"
+          >
+            <h2 class="primary--text lumber">Производители</h2>
+          </v-btn>
+          <!-- <h2 data-aos="zoom-in" class="text-center mb-5 primary--text d-block"></h2> -->
           <div class="d-flex justify-center layout">
             <multi-item-slider :items="manufacturers" />
           </div>
@@ -132,7 +157,7 @@
           <v-flex xs10 md8 offset-lg1 lg7 xl6 class="d-flex mb-5">
             <div class="my-auto">
               <h1
-                class="bottom-header d-block"
+                class="bottom-header d-block mb-6"
                 data-aos="fade-up"
               >Колбаса оптом по самым выгодным для наших парнеров ценам.</h1>
               <div
@@ -146,11 +171,11 @@
           <div class="xs10 md8 offset-lg1 lg7 xl6 flex d-flex">
             <div class="my-auto">
               <h2
-                class="bottom-header d-block mb-3"
+                class="bottom-header d-block mb-6"
                 data-aos="fade-up"
               >Доверяя нам – вы выбираете качество</h2>
               <div
-                class="bottom-text mb-3"
+                class="bottom-text mb-6"
                 data-aos="fade-up"
               >Для нас не имеет значения статус наших партнеров на рынке или величина их годового товарооборота: со всеми компаньонами мы строим ровные, доверительные отношения.</div>
             </div>
@@ -174,17 +199,17 @@
         </div>
 
         <section class="flex xs10 ma-auto">
-          <h2 class="text-xs-center primary--text mb-4">Наши преимущества</h2>
+          <h2 class="bottom-header text-center primary--text mb-8">Наши преимущества</h2>
           <p
-            class="text-xs-center display-2 primary--text mb-5 lumber"
+            class="text-center primary--text lumber mb-8 fs-1-3"
           >После первого шага, сделанного навстречу будущему сотрудничеству, вы убедитесь, насколько выгодны и комфортны для развития вашего бизнеса условия, предоставленные нашей организацией.</p>
           <div class="benefits bottom-text layout row wrap" data-aos="fade-up">
             <div
-              class="flex xs12 md6 lg4 mb-3 display-flex px-1"
+              class="flex xs12 md6 lg4 mb-6 display-flex px-1"
               v-for="(item,index) in benefits"
               :key="'benefit'+index"
             >
-              <div class="img-wrapper mb-3">
+              <div class="img-wrapper mb-6">
                 <img
                   v-lazy="item.img"
                   class="d-block pt-1"
@@ -194,7 +219,7 @@
                 />
               </div>
               <div class="pl-3">
-                <h4 class="display-2 lumber font-weight-bold mb-2">{{item.header}}</h4>
+                <h4 class="lumber font-weight-bold mb-2">{{item.header}}</h4>
                 <div class="lumber" style="font-size: 1rem">{{item.text}}</div>
               </div>
             </div>
@@ -210,24 +235,26 @@
         <div class="layout row wrap align-center justify-center pt-5">
           <v-flex xs10 md8 offset-lg1 lg8 class="d-flex mb-5">
             <div class="my-auto">
-              <h2 class="bottom-header d-block" data-aos="fade-up">Халяльная продукция оптом.</h2>
+              <h2 class="bottom-header mb-6 d-block" data-aos="fade-up">Халяльная продукция оптом.</h2>
               <div class="lumber" data-aos="fade-up">
                 <p>Халяль&nbsp;&ndash; это экологически чистый продукт из мяса, отличающийся своими превосходными вкусовыми свойствами.</p>
                 <p>Продукция&nbsp;халяль&nbsp;отличается чистотой в физическом плане и в духовном. Ее готовят по соответствующим канонам, принятым в исламе. Мясные продукты, изготовленные в соответствии с&nbsp;халяль&nbsp;не имеют вредных добавок и консервантов, способных искусственно увеличивать их долговечность.</p>
                 <p>Халяль&nbsp;&ndash; это вкусно и безопасно! Убедитесь в этом лично, попробовав продукцию, представленную в нашей товарной линейке, которую можно купить оптом по самым доступным ценам.</p>
                 <v-btn
                   to="/catalog/halal"
-                  class="button ml-0 flex px-3 py-4 lumber mt-3"
-                  large
+                  class="button ml-0 flex lumber mt-3"
                   style
                   color="accent"
                   dark
                   title="Халяльная продукция"
-                >Смотреть продукцию</v-btn>
+                >Смотреть халаяльную продукцию</v-btn>
               </div>
             </div>
           </v-flex>
-          <div class="flex hidden-sm-and-down md4 offset-lg1 lg2 mb-5" data-aos="fade-up">
+          <div
+            class="flex hidden-sm-and-down offset-md1 md3 offset-lg1 lg2 mb-5"
+            data-aos="fade-up"
+          >
             <img
               class="pr-4"
               v-lazy="require('~/assets/halal1.png')"
@@ -236,7 +263,7 @@
             />
           </div>
         </div>
-        <!-- <h2 class="text-xs-center mb-4 primary--text">Халяльная продукция оптом</h2>
+        <!-- <h2 class="text-center mb-10 primary--text">Халяльная продукция оптом</h2>
         <p>Халяль&nbsp;&ndash; это экологически чистый продукт из мяса, отличающийся своими превосходными вкусовыми свойствами.</p>
         <p>Продукция&nbsp;халяль&nbsp;отличается чистотой в физическом плане и в духовном. Ее готовят по соответствующим канонам, принятым в исламе. Мясные продукты, изготовленные в соответствии с&nbsp;халяль&nbsp;не имеют вредных добавок и консервантов, способных искусственно увеличивать их долговечность.</p>
         <p>Халяль&nbsp;&ndash; это вкусно и безопасно! Убедитесь в этом лично, попробовав продукцию, представленную в нашей товарной линейке, которую можно купить оптом по самым доступным ценам.</p>-->
@@ -281,7 +308,7 @@
 }
 
 .button {
-  font-size: 1.6rem;
+  // font-size: 1.6rem;
   border-color: white !important;
   border-style: dashed;
   border-width: 2px;
@@ -291,11 +318,13 @@
 .bottom-header {
   font-size: 2.3rem;
   color: #4A1F00;
+  font-family: 'Lumberjack';
+  line-height: normal;
 
   &:first-letter {
     color: #95282A;
     font-size: 4rem;
-    font-family: 'Lumberjack Rough';
+    // font-family: 'Lumberjack Rough';
   }
 }
 
@@ -353,8 +382,6 @@
 
 <script>
 import gql from "graphql-tag";
-import Logo from "~/components/Logo.vue";
-// import VuetifyLogo from "~/components/VuetifyLogo.vue";
 import MultiItemSlider from "~/components/MultiItemSlider.vue";
 import MainPageCard from "~/components/MainPageCard.vue";
 
@@ -380,7 +407,6 @@ export default {
     };
   },
   components: {
-    // Logo,
     MultiItemSlider,
     MainPageCard
   },

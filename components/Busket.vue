@@ -1,111 +1,138 @@
 <template>
-  <div>
-    <div v-show="!offer" class="mb-4">
-      <v-toolbar class="grey lighten-2 px-2" height="100px">
-        <div class="toolbar-inner">
-          <h2 class="mb-0 display-3 mont font-weight-bold">Корзина</h2>
-        </div>
-      </v-toolbar>
-      <div class="px-4 py-5" v-if="basket && basket.length > 0">
-        <template v-for="(product,index) in basket" class>
-          <div class="mb-1 layout row item-wrapper" :key="'item-wrapper'+index">
-            <div
-              class="img-wrapper display-flex gray xs2 flex pr-3 hidden-xs-only"
-              style="max-width:80px; width:80px"
-            >
-              <img
-                class="d-block ma-auto"
-                style="height:80px; max-width:80px; width:80px; object-fit: contain;"
-                v-lazy="product.item.img ? imageBaseUrl+product.item.img.url : require('~/assets/no-image.png')"
-                :alt="product.item.name"
-              />
-            </div>
-            <v-flex class="d-flex">
+  <div class="pb-6 basketWrapper">
+    <v-app-bar class="grey lighten-3 px-2" height="100px" fixed flat id="basketHeader">
+      <v-btn
+        v-if="offer && isSummValid"
+        outlined
+        @click="offer=false"
+        icon
+        large
+        class="mr-3 ml-0"
+        title="arrow_back"
+      >
+        <v-icon>arrow_back</v-icon>
+      </v-btn>
+      <h2 class="mb-0 font-weight-bold">{{offer && isSummValid ? 'Оформление заказа' : 'Корзина'}}</h2>
+      <v-btn @click="basketClose" title="Закрыть" class="ml-auto mr-0" outlined icon large>
+        <v-icon>close</v-icon>
+      </v-btn>
+    </v-app-bar>
+    <div v-show="!offer" class="px-4 pt-4">
+      <v-simple-table class="mb-6">
+        <thead>
+          <tr>
+            <th colspan="2">Наименование</th>
+            <th class="px-1 text-center">Количество</th>
+            <th class="px-1 text-center">Цена</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(product,index) in basket" :key="'product-item-wrapper'+index">
+            <td class="px-1">
+              <v-avatar>
+                <img
+                  style="object-fit: cover;"
+                  v-lazy="product.item.img ? imageBaseUrl+product.item.img.url : require('~/assets/no-image.png')"
+                  :alt="product.item.name"
+                />
+              </v-avatar>
+            </td>
+
+            <td class="px-1">
               <nuxt-link
                 v-if="product.item.category && product.item.category.slug"
                 :to="`/catalog/${product.item.category.slug}/${product.item.slug}`"
-                class="mont d-block my-auto text-decoration-none"
+                class="d-block underline-on-hover"
                 :title="product.item.name"
               >{{product.item.name}}</nuxt-link>
-            </v-flex>
-            <div class="quantity align-center display-flex justify-center">
-              <v-btn icon @click="(e)=> removeFromBasket(e,product.item)" title="remove">
-                <v-icon>remove</v-icon>
-              </v-btn>
-              {{product.count}}
-              <v-btn icon @click="(e)=>addToBasket(e,product.item)" title="add">
-                <v-icon>add</v-icon>
-              </v-btn>
-            </div>
+            </td>
+            <td class="px-1">
+              <product-quantity
+                style="max-width: 185px"
+                :product="product.item"
+                :qty="product.count"
+              ></product-quantity>
 
-            <div
-              class="price display-flex display-1 align-center justify-center font-weight-medium mont"
-            >{{product.item.isDiscount ? product.item.discountPrice*product.count : product.item.priceNum*product.count }}</div>
-            <div class="display-flex align-center justify-center ma-0">
+              <!-- <v-text-field
+                :value="product.count"
+                @click:append-outer.stop="(e)=>addToBasket(e,product.item)"
+                @click:prepend.stop="(e)=> removeFromBasket(e,product.item.id)"
+                @change="(e)=>changeBasket(e,product.item.id)"
+                class="quantity"
+                dense
+                single-line
+                hide-details
+                outlined
+                prepend-icon="remove"
+                type="number"
+                append-outer-icon="add"
+              ></v-text-field>-->
+            </td>
+            <td class="px-1">
+              <div
+                class="price ml-1 display-flex align-center justify-center font-weight-medium"
+              >{{product.item.isDiscount ? product.item.discountPrice*product.count : product.item.priceNum*product.count }}</div>
+            </td>
+            <td class="px-1">
               <v-btn
                 icon
-                @click="(e)=>deleteFromBasket(e,product.item)"
+                @click="(e)=>deleteFromBasket(e,product.item.id)"
                 class="display-flex"
-                title="delete"
+                title="Удалить"
               >
-                <v-icon>delete_outline</v-icon>
+                <v-icon>close</v-icon>
               </v-btn>
-            </div>
-          </div>
-
-          <v-divider :key="'item-divider'+index" class="my-1"></v-divider>
-        </template>
-        <v-flex xs12 class="mt-4">
-          <div class="mb-3 display-1 mont text-xs-right pr-3">
-            Итого:
-            <span class="font-weight-bold">{{summa}}</span>
-          </div>
-          <v-alert type="error" :value="!isSummValid" class="mt-4">
-            Сумма заказа ниже 3000.
-            Наберите товаров еще на {{3000-summa}} рублей.
-          </v-alert>
-          <v-btn
-            color="accent"
-            class="ml-0"
-            large
-            @click="handleOfferClick"
-            v-show="isSummValid"
-            title="Оформить заказ"
-          >Оформить заказ</v-btn>
-        </v-flex>
+            </td>
+          </tr>
+        </tbody>
+      </v-simple-table>
+      <div>
+        <!-- <v-btn @click="clearBasket" outlined class="mb-4">Очистить корзину</v-btn> -->
+        <div class="mb-6 text-xs-right pr-3">
+          Итого:
+          <span class="font-weight-bold">{{summa}}</span>
+        </div>
+        <v-alert type="error" :value="!isSummValid" class="mt-4">
+          Сумма заказа ниже 3000.
+          Наберите товаров еще на {{3000-summa}} рублей.
+        </v-alert>
+        <v-btn
+          color="accent"
+          class="ml-0"
+          large
+          @click="handleOfferClick"
+          v-show="isSummValid"
+          title="Оформить заказ"
+        >Оформить заказ</v-btn>
       </div>
     </div>
-    <div v-if="offer && isSummValid">
-      <v-toolbar class="grey lighten-2 px-2" height="100px">
-        <div class="toolbar-inner pr-5">
-          <v-btn outline @click="offer=false" icon large class="ma-0" title="arrow_back">
-            <v-icon>arrow_back</v-icon>
-          </v-btn>
-          <h2 class="mb-0 ml-3 display-3 mont font-weight-bold">Оформление заказа</h2>
-        </div>
-      </v-toolbar>
-      <div class="px-4 py-5">
-        <v-subheader class="mb-3 pl-0">ВВЕДИТЕ ВАШИ ДАННЫЕ</v-subheader>
-        <contact-form class />
-        <v-divider class="my-4"></v-divider>
-        <v-subheader class="pl-0">ВАШ ЗАКАЗ</v-subheader>
-        <v-data-table
-          :items="basket"
-          :hide-actions="true"
-          :headers="[{ text: 'Наименование', sortable: false, value: 'name' },{ text: 'Цена', sortable: false, value: 'price' },{ text: 'Количество', sortable: false, value: 'Quan' }]"
-        >
-          <template slot="items" slot-scope="props">
-            <td class>{{ props.item.item.name}}</td>
-            <td class>{{ props.item.item.priceNum}}</td>
-            <td class>{{ props.item.count}}</td>
-          </template>
-          <template slot="footer">
+    <div v-if="offer && isSummValid" class="px-4 pt-4">
+      <v-subheader class="mb-4 pl-0">ВВЕДИТЕ ВАШИ ДАННЫЕ</v-subheader>
+      <contact-form class />
+      <v-divider class="mt-10 mb-6"></v-divider>
+      <v-subheader class="pl-0">ВАШ ЗАКАЗ</v-subheader>
+      <v-simple-table>
+        <thead>
+          <tr>
+            <th class="text-left pl-0">Наименование</th>
+            <th class="text-center">Цена</th>
+            <th class="text-center">Количество</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in basket" :key="item.item.name">
+            <td class="text-left pl-0">{{ item.item.name }}</td>
+            <td class="text-center">{{ item.item.priceNum }}</td>
+            <td class="text-center">{{ item.count}}</td>
+          </tr>
+          <tr>
             <td class></td>
-            <td class>Итого</td>
-            <td class>{{summa}}</td>
-          </template>
-        </v-data-table>
-      </div>
+            <td class="text-right">Итого</td>
+            <td class="text-center">{{summa}}</td>
+          </tr>
+        </tbody>
+      </v-simple-table>
     </div>
   </div>
 </template>
@@ -121,19 +148,15 @@
 }
 
 .quantity {
-  width: 90px;
-  min-width: 90px;
-  display: flex;
-  align-items: center;
-
-  input {
-    text-align: center !important;
-  }
+  // width: 100px;
+  min-width: 100px;
+  // display: flex;
+  // align-items: center;
 }
 
 .price {
-  width: 60px;
-  min-width: 60px;
+  // flex-basis: 50px;
+  min-width: 50px;
 }
 
 @media (max-width: 600px) {
@@ -144,18 +167,15 @@
     width: 155px;
     min-width: 155px;
   }
-
-  .priceNum {
-    width: 80px;
-    min-width: 80px;
-  }
 }
 </style>
 
 <script>
 import ContactForm from "~/components/ContactForm";
+import ProductQuantity from "~/components/ProductQuantity";
+
 export default {
-  components: { ContactForm },
+  components: { ContactForm, ProductQuantity },
   data() {
     //   return newObj;
     return {
@@ -167,31 +187,41 @@ export default {
       //   basket: this.$store.state.localStorage.basket
     };
   },
-  methods: {
-    handleOfferClick() {
-      this.offer = true;
-    },
-    async addToBasket(event, item) {
-      // console.log("TCL: addToBasket -> item", item);
-
-      await this.$store.commit("addToBasket", item);
-    },
-    async removeFromBasket(event, item) {
-      // console.log("TCL: removeFromBasket -> item", item);
-
-      await this.$store.commit("removeFromBasket", item);
-    },
-    async deleteFromBasket(event, item) {
-      // console.log("TCL: removeFromBasket -> item", item);
-      await this.$store.commit("deleteFromBasket", item);
+  watch: {
+    basket() {
+      if (this.basket.length === 0) {
+        this.basketClose();
+      }
     }
   },
-  // watch: {
-  //   basket() {
-  //     this.$set(this.cart, this.$store.state.localStorage.basket);
-  //     console.log("watch basket");
-  //   }
-  // },
+  methods: {
+    async basketClose() {
+      return await this.$emit("close");
+    },
+    async handleOfferClick() {
+      this.offer = true;
+    },
+    async clearBasket() {
+      await this.$store.commit("clearBasket");
+    },
+    // async changeBasket(qty, id) {
+    //   const quantity = parseInt(qty);
+    //   if (quantity > 0) {
+    //     await this.$store.commit("changeBasket", { id, qty: quantity });
+    //   } else if (quantity == 0) {
+    //     await this.$store.commit("deleteFromBasket", id);
+    //   }
+    // },
+    // async addToBasket(event, item) {
+    //   await this.$store.commit("addToBasket", item);
+    // },
+    // async removeFromBasket(event, id) {
+    //   await this.$store.commit("removeFromBasket", id);
+    // },
+    async deleteFromBasket(event, id) {
+      await this.$store.commit("deleteFromBasket", id);
+    }
+  },
   computed: {
     summa() {
       let summ = 0;

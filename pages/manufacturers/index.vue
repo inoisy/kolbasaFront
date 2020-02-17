@@ -2,14 +2,20 @@
   <div>
     <page-header title="Производители" :breadrumbs="breadrumbs" />
     <div
-      class="background"
+      class="background background-repeat"
       v-lazy:background-image="require('~/assets/img/bg.jpg')"
-      style="background-color: #f0f0f0; background-repeat: repeat; background-size: 100%;"
     >
-      <v-container class="py-5">
-        <div v-for="(item,index) in manufacturers" :key="index" data-aos="fade-up">
-          <vertical-card :item="item" type="manufacturers" class="mb-4"></vertical-card>
-        </div>
+      <v-container class="py-12" grid-list-lg>
+        <!-- <div> -->
+        <vertical-card
+          v-for="(item,index) in manufacturers"
+          :key="index"
+          data-aos="fade-up"
+          :item="item"
+          type="manufacturers"
+          class="mb-6"
+        ></vertical-card>
+        <!-- </div> -->
       </v-container>
     </div>
   </div>

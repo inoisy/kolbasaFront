@@ -1,9 +1,6 @@
 <template>
   <div>
-    <!-- <keep-alive> -->
     <nuxt-child />
-    <!-- </keep-alive> -->
-    <!-- :key="$route.params && $route.params.slug ? $route.params.slug : ''"  -->
     <page-header
       :title="`${category.name} оптом`"
       :breadrumbs="breadcrumbs"
@@ -11,17 +8,13 @@
       :isPadding="subcategories && subcategories.length > 0"
       class="pos-relative"
     >
-      <div
-        class="subcategories display-flex wrap"
-        style="bottom: 0; position: absolute; left: 0; right: 0"
-        v-if="subcategories && subcategories.length>0"
-      >
+      <div class="subcategories display-flex wrap" v-if="subcategories && subcategories.length>0">
         <v-btn
           :to="`/catalog/${rootCategory.slug}`"
           :title="rootCategory.name"
           color="white"
           class="ma-0"
-          flat
+          text
           style="font-size: 0.9rem !important;"
         >все {{rootCategory.name}}</v-btn>
         <template class="child" v-for="child in subcategories">
@@ -30,119 +23,87 @@
             color="white"
             class="ma-0"
             style="font-size: 0.9rem !important;"
-            flat
+            text
             :key="child.id"
             :title="child.name"
           >{{child.name}}</v-btn>
         </template>
-        <!-- </v-btn-toggle> -->
       </div>
     </page-header>
-    <!-- {{pagesTotal}} -->
-    <section class="background">
-      <!-- v-lazy:background-image="require('~/assets/img/bg.jpg')" -->
-      <v-container grid-list-lg class="py-5" fluid>
-        <div id="contentWrapper" class="display-flex">
-          <v-flex style="min-height: 73vh">
-            <v-layout row wrap id="products" ref="product" v-if="!multiple">
+    <section
+      class="background background-repeat"
+      v-lazy:background-image="require('~/assets/img/bg.jpg')"
+    >
+      <v-container grid-list-lg id="contentWrapper" class="display-flex py-9" fluid>
+        <!-- <div  class=""> -->
+        <!-- <v-flex style="min-height: 73vh"> -->
+        <v-layout row wrap id="products" ref="product" v-if="!multiple">
+          <div
+            class="flex xs12 sm6 md4 lg3 xl2"
+            data-aos="fade-up"
+            v-for="(product,index) in products"
+            :key="index"
+          >
+            <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
+          </div>
+        </v-layout>
+        <v-layout v-else-if="multiple" wrap>
+          <div
+            class="flex xs12"
+            v-for="(productsGroup,index) in category.children"
+            :key="'prGr'+index"
+          >
+            <nuxt-link
+              :to="`/catalog/${productsGroup.slug}`"
+              class="lumber font-weight-bold mb-6 d-inline-block primary--text underline-on-hover"
+              style="font-size: 2.3rem;"
+              :title="productsGroup.name"
+            >{{productsGroup.name}}</nuxt-link>
+            <v-layout wrap class="mb-6">
               <div
                 class="flex xs12 sm6 md4 lg3 xl2"
                 data-aos="fade-up"
-                v-for="(product,index) in products"
-                :key="index"
+                v-for="(product,prIndex) in productsGroup.products"
+                :key="prIndex"
               >
                 <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
               </div>
             </v-layout>
-            <v-layout v-else-if="multiple" wrap>
-              <div
-                class="flex xs12 mb-4"
-                v-for="(productsGroup,index) in category.children"
-                :key="'prGr'+index"
-              >
-                <nuxt-link
-                  :to="`/catalog/${productsGroup.slug}`"
-                  class="lumber font-weight-bold mb-4 d-inline-block primary--text underline-on-hover"
-                  style="font-size: 2.3rem;"
-                  :title="productsGroup.name"
-                >{{productsGroup.name}}</nuxt-link>
-                <v-layout wrap class="mb-3">
-                  <div
-                    class="flex xs12 sm6 md4 lg3 xl2"
-                    data-aos="fade-up"
-                    v-for="(product,prIndex) in productsGroup.products"
-                    :key="prIndex"
-                  >
-                    <product-card
-                      :product="product"
-                      :to="`/catalog/${category.slug}/${product.slug}`"
-                    ></product-card>
-                  </div>
-                </v-layout>
-              </div>
+          </div>
 
-              <v-layout
-                wrap
-                v-if="category.products && category.products && category.products.length > 0"
-              >
-                <h2 class="flex xs12">Остальные {{category.name}}</h2>
-                <div
-                  class="flex xs12 sm6 md4 lg3 xl2"
-                  data-aos="fade-up"
-                  v-for="(product,prIndex) in category.products"
-                  :key="prIndex"
-                >
-                  <product-card
-                    :product="product"
-                    :to="`/catalog/${category.slug}/${product.slug}`"
-                  ></product-card>
-                </div>
-              </v-layout>
-            </v-layout>
-            <div v-else class="ma-auto">
-              <v-progress-circular
-                v-if="$store.state.loading"
-                :size="150"
-                color="#95282a"
-                indeterminate
-                class="mx-auto my-5 d-flex"
-              ></v-progress-circular>
-            </div>
-          </v-flex>
-          <v-flex
-            hidden-sm-and-down
-            style="width: 300px; min-width: 300px; max-width: 300px; margin-left: auto;"
+          <v-layout
+            wrap
+            v-if="category.products && category.products && category.products.length > 0"
+            class="px-2"
           >
-            <sticky-menu class="px-3">
-              <!-- <portal to="filters"> -->
-              <!-- <v-subheader v-show="!multiple" class="pl-0">СОРТИРОВАТЬ ПО</v-subheader>
-                <v-btn-toggle
-                  class="mb-2"
-                  v-model="sort"
-                  @change="sortChange"
-                  style="width: 100%"
-                  mandatory
-                  v-show="!multiple"
-                >
-                  <v-btn flat>Название</v-btn>
-                  <v-btn flat>Цена</v-btn>
-              </v-btn-toggle>-->
-              <!-- <v-subheader class="pl-0" v-show="!multiple && manufacturers.length>1">БРЕНД</v-subheader>
-                <v-radio-group
-                  :value="manufacturersSelected"
-                  :mandatory="false"
-                  @change="onManufacturerChange"
-                  class="mt-0 mb-2"
-                  hide-details
-                >
-                  <v-radio
-                    v-for="(checkbox) in manufacturers"
-                    :label="checkbox.name"
-                    :key="checkbox.id"
-                    :value="checkbox.slug"
-                  ></v-radio>
-              </v-radio-group>-->
-              <v-subheader class="pl-0 hidden-sm-and-down">КАТЕГОРИИ</v-subheader>
+            <h2 class="flex xs12">Остальные {{category.name}}</h2>
+
+            <div
+              class="flex xs12 sm6 md4 lg3 xl2"
+              data-aos="fade-up"
+              v-for="(product,prIndex) in category.products"
+              :key="prIndex"
+            >
+              <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
+            </div>
+          </v-layout>
+        </v-layout>
+        <div v-else class="ma-auto">
+          <v-progress-circular
+            v-if="$store.state.loading"
+            :size="150"
+            color="#95282a"
+            indeterminate
+            class="mx-auto my-5 d-flex"
+          ></v-progress-circular>
+        </div>
+        <div
+          class="flex hidden-sm-and-down"
+          style="width: 300px; min-width: 300px; max-width: 300px; margin-left: auto;"
+        >
+          <sticky-menu class="px-3 pb-1">
+            <v-subheader class="pl-0 hidden-sm-and-down">КАТЕГОРИИ</v-subheader>
+            <v-card>
               <v-list
                 class="navigation pa-0 hidden-sm-and-down"
                 style="background-color:transparent !important"
@@ -153,27 +114,30 @@
                     :key="'list-group'+index"
                     v-if="category && category.children && category.children.length > 0"
                   >
-                    <v-list-group :key="category.slug">
-                      <v-list-tile
+                    <v-list-group :key="category.slug" class="aside-nav">
+                      <v-list-item
                         slot="activator"
                         :to="`/catalog/${category.slug}`"
                         :title="category.name"
                         height="36px"
                       >
-                        <v-list-tile-content>{{ category.name}}</v-list-tile-content>
-                      </v-list-tile>
-                      <v-list-tile
+                        <v-list-item-content>{{ category.name}}</v-list-item-content>
+                      </v-list-item>
+                      <v-list-item
                         height="36px"
                         v-for="child in category.children"
                         :key="child.id"
                         :to="`/catalog/${child.slug}`"
                         :title="child.name"
                       >
-                        <span class="pl-4" style="line-height: 100% !important">{{child.name}}</span>
-                      </v-list-tile>
+                        <v-list-item-content
+                          class="pl-9"
+                          style="line-height: 100% !important"
+                        >{{child.name}}</v-list-item-content>
+                      </v-list-item>
                     </v-list-group>
                   </div>
-                  <v-list-tile
+                  <v-list-item
                     :title="category.name"
                     :key="index"
                     v-else
@@ -181,17 +145,18 @@
                     height="36px"
                   >
                     <span style="line-height: 100% !important">{{category.name}}</span>
-                  </v-list-tile>
+                  </v-list-item>
                 </template>
               </v-list>
-              <!-- </portal>
-              <portal-target name="filters" v-show="$vuetify.breakpoint.mdAndUp"></portal-target>-->
-            </sticky-menu>
-          </v-flex>
+            </v-card>
+
+            <!-- </portal>
+            <portal-target name="filters" v-show="$vuetify.breakpoint.mdAndUp"></portal-target>-->
+          </sticky-menu>
         </div>
       </v-container>
     </section>
-    <no-ssr>
+    <client-only>
       <infinite-loading
         v-if="!multiple && products && products.length >= 20"
         @infinite="onInfinite"
@@ -200,39 +165,16 @@
         <div slot="no-results"></div>
         <div slot="no-more"></div>
       </infinite-loading>
-    </no-ssr>
-
-    <!-- <section v-if="pagesTotal>1 && !multiple">
-      <v-card :class="!category.content ? 'pb-5' : ''">
-        <v-card-text>
-          <v-pagination
-            color="accent"
-            v-model="pageCurr"
-            :length="pagesTotal"
-            light
-            class="justify-center align-center"
-            style="display:flex"
-          ></v-pagination>
-        </v-card-text>
-      </v-card>
-    </section>-->
-    <section v-if="category.content" class="grey lighten-3">
-      <v-container v-html="$md.render(category.content)" class="py-5"></v-container>
+    </client-only>
+    <section v-if="category.content" class="content-wrapper grey lighten-3">
+      <v-container v-html="$md.render(category.content)" class="py-9"></v-container>
     </section>
   </div>
 </template>
 <style lang="stylus">
-.navigation {
-  .v-list__tile--active {
-    background-color: rgba(0, 0, 0, 0.1) !important;
-  }
-
-  .v-list__tile__content {
-    line-height: 1;
-  }
-}
-
+// }
 .subcategories {
+  margin-top: -20px;
   width: 100%;
   justify-content: center;
 }
@@ -338,9 +280,10 @@ export default {
       };
     }
     // let manufacturersSelectedIds = [];
-    const manufacturers =
-      ctx.store.state.sessionStorage.generalInfo.manufacturers;
+    // const manufacturers =
+    //   ctx.store.state.sessionStorage.generalInfo.manufacturers;
     let manufacturersSelected = ctx.route.query.manufacturer;
+    // console.log("TCL: Data -> manufacturersSelected", manufacturersSelected);
 
     let category = await ctx.store.dispatch("fetchCategory", {
       slug: ctx.route.params.category,
@@ -353,52 +296,14 @@ export default {
         message: "Категория не найдена"
       });
     }
-    // const manufacturersExist =
-    //   category.manufacturers && category.manufacturers.length > 0
-    //     ? manufacturers.filter(item => category.manufacturers.includes(item.id))
-    //     : [];
+    // let products;
 
-    // let sort;
-    // let sortNum;
-    // if (ctx.route.query.sort && ctx.route.query.sort === "price") {
-    //   sort = { sort: "price" };
-    //   sortNum = 1;
+    // if (category.children && category.children.length > 0) {
     // } else {
-    //   sort = { sort: "name" };
-    //   sortNum = 0;
+    //   products = category.products;
     // }
-
-    // await ctx.store.commit("sortFilter", sort);
-    // await ctx.store.commit("manufacturerFilter", manufacturersSelected);
-
-    // await ctx.store.commit("pageFilter", ctx.route.query.page);
-
-    let products;
-
-    if (category.children && category.children.length > 0) {
-      //   products = {};
-      //   for (let child of category.children) {
-      //     const productsChild = await ctx.store.dispatch("fetchProducts", {
-      //       slug: child.slug
-      //     });
-      //     products[child.id] = { ...child, ...productsChild };
-      //   }
-      //   const categoryProducts = {
-      //     products: await ctx.store.dispatch("easyFetchProducts", {
-      //       slug: category.slug,
-      //       limit: 999
-      //     })
-      //   };
-      //   await ctx.store.commit("easyProducts", products);
-      //   category = { ...category, ...categoryProducts };
-    } else {
-      products = category.products;
-      //   products = await ctx.store.dispatch("easyFetchProducts", {
-      //     slug: ctx.route.params.category
-      //   });
-    }
     return {
-      products: products,
+      products: category.products,
       category: category,
       // manufacturers: manufacturersExist,
       manufacturersSelected: manufacturersSelected

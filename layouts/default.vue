@@ -1,19 +1,27 @@
 <template>
   <v-app>
-    <!-- <div>
-      <img src="https://mc.yandex.ru/watch/54918895" style="position:absolute; left:-9999px;" alt />
-    </div> -->
-    <toolbar :menuItems="menuItems" @showDrawer="drawer = true" />
+    <toolbar :menuItems="menuItems" @showDrawer="drawer = true" @showBasket="basketDrawer=true" />
     <navigation-mobile
       :menuItems="menuItems"
       :drawer="drawer"
       @changeDrawer="(val) => drawer = val"
     />
-
     <v-content class="dash">
       <nuxt />
     </v-content>
     <my-footer class="pos-relative" :menuItems="menuItems" />
+    <v-navigation-drawer
+      v-model="basketDrawer"
+      temporary
+      fixed
+      left
+      :width="$vuetify.breakpoint.mdAndUp ? '700px' : '500px'"
+      style="padding-top: 100px;"
+    >
+      <client-only>
+        <busket v-on:close="basketDrawer=false" />
+      </client-only>
+    </v-navigation-drawer>
   </v-app>
 </template>
 <style lang="stylus" scoped>
@@ -48,9 +56,10 @@
 import Toolbar from "~/components/Toolbar";
 import NavigationMobile from "~/components/NavigationMobile";
 import MyFooter from "~/components/Footer";
+import Busket from "~/components/Busket";
 
 export default {
-  components: { Toolbar, NavigationMobile, MyFooter },
+  components: { Toolbar, NavigationMobile, MyFooter, Busket },
   computed: {
     menuItems() {
       return [
@@ -87,31 +96,11 @@ export default {
       ];
     }
   },
-  // mounted() {
-  //   (function(m, e, t, r, i, k, a) {
-  //     m[i] =
-  //       m[i] ||
-  //       function() {
-  //         (m[i].a = m[i].a || []).push(arguments);
-  //       };
-  //     m[i].l = 1 * new Date();
-  //     (k = e.createElement(t)),
-  //       (a = e.getElementsByTagName(t)[0]),
-  //       (k.async = 1),
-  //       (k.src = r),
-  //       a.parentNode.insertBefore(k, a);
-  //   })(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
-  //   ym(54918895, "init", {
-  //     clickmap: true,
-  //     trackLinks: true,
-  //     accurateTrackBounce: true,
-  //     webvisor: true
-  //   });
-  // },
   data() {
     return {
-      drawer: false
+      drawer: false,
+      basketDrawer: false
     };
   }
 };

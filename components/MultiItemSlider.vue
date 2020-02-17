@@ -24,12 +24,12 @@
       </div>
     </div>
     <div class="swiper-button-prev" slot="button-prev">
-      <v-btn icon flat large title="navigate_before">
+      <v-btn icon large title="navigate_before">
         <v-icon large>navigate_before</v-icon>
       </v-btn>
     </div>
     <div class="swiper-button-next" slot="button-next">
-      <v-btn icon flat large title="navigate_next">
+      <v-btn icon large title="navigate_next">
         <v-icon large>navigate_next</v-icon>
       </v-btn>
     </div>

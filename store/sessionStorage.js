@@ -7,6 +7,7 @@ export const state = () => ({
   pageFilter: 1,
   easyProducts: [],
   category: {},
+  manufacturer: {},
   generalInfo: {},
   products: {
     items: [],

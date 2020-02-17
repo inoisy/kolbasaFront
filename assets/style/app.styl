@@ -1,11 +1,31 @@
 // Import Vuetify styling
 
 
-$body-font-family = 'Mont'
-$heading-font-family = 'Lumberjack Rough'
-@import '~vuetify/src/stylus/main.styl'
-.application {
-	font-family: $body-font-family;
+// $body-font-family = 'Mont'
+// $heading-font-family = 'Lumberjack Rough'
+// @import '~vuetify/src/stylus/main.styl'
+// .application {
+// 	font-family: $body-font-family;
+// }
+// .fill-height {
+//     height: 100%;
+// }
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+// .basketWrapper .v-text-field input {
+//   text-align: center;
+  
+// }
+.v-navigation-drawer--temporary {
+    z-index: 4000 !important;
+}
+.v-toolbar__content, .v-toolbar__extension{
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+
 }
 .ya-phone a, .ya-phone-icon a{
     text-decoration: none;
@@ -23,12 +43,24 @@ $heading-font-family = 'Lumberjack Rough'
     z-index: 3000;
 }
 .dialog-content-wrapper {
-  margin-top: 100px;
-  max-height: calc(90% - 100px) !important;
-  margin-bottom: 5px;
+  margin-top: 80px !important;
+  max-height: calc(90% - 80px) !important;
+  // margin-bottom: 5px;
+}
+@media (min-width: 960px) {
+    .dialog-content-wrapper {
+    max-width: 900px !important;
+  }
+}
+@media (min-width: 1264px) {
+  .dialog-content-wrapper {
+    max-width: 1185px !important;
+  }
 }
 .quantity {
-
+  .v-input__control{
+    min-width: 45px;
+  }
   input {
     text-align: center !important;
   }
@@ -38,39 +70,6 @@ $heading-font-family = 'Lumberjack Rough'
     font-weight: 300;
     height: 2.5rem !important;
 }
-// FONTS
-// @font-face {
-// 	font-family: 'Lumberjack Rough Shadow';
-// 	src: url('~assets/fonts/Lumberjack/LumberjackRoughShadow.eot');
-// 	src: local('Lumberjack Rough Shadow'), local('LumberjackRoughShadow'),
-// 		url('~assets/fonts/Lumberjack/LumberjackRoughShadow.eot?#iefix') format('embedded-opentype'),
-// 		url('~assets/fonts/Lumberjack/LumberjackRoughShadow.woff') format('woff'),
-// 		url('~assets/fonts/Lumberjack/LumberjackRoughShadow.ttf') format('truetype');
-// 	font-weight: normal;
-// 	font-style: normal;
-// }
-
-// @font-face {
-// 	font-family: 'Lumberjack Rough';
-// 	src: url('~assets/fonts/Lumberjack/LumberjackRough.eot');
-// 	src: local('Lumberjack Rough'), local('LumberjackRough'),
-// 		url('~assets/fonts/Lumberjack/LumberjackRough.eot?#iefix') format('embedded-opentype'),
-// 		url('~assets/fonts/Lumberjack/LumberjackRough.woff') format('woff'),
-// 		url('~assets/fonts/Lumberjack/LumberjackRough.ttf') format('truetype');
-// 	font-weight: normal;
-// 	font-style: normal;
-// }
-
-// @font-face {
-// 	font-family: 'Lumberjack Inline Rough';
-// 	src: url('~assets/fonts/Lumberjack/LumberjackInlineRough.eot');
-// 	src: local('Lumberjack Inline Rough'), local('LumberjackInlineRough'),
-// 		url('~assets/fonts/Lumberjack/LumberjackInlineRough.eot?#iefix') format('embedded-opentype'),
-// 		url('~assets/fonts/Lumberjack/LumberjackInlineRough.woff') format('woff'),
-// 		url('~assets/fonts/Lumberjack/LumberjackInlineRough.ttf') format('truetype');
-// 	font-weight: normal;
-// 	font-style: normal;
-// }
 .underline-on-hover {
   text-decoration: none;
 
@@ -80,244 +79,163 @@ $heading-font-family = 'Lumberjack Rough'
   }
 }
 
-@font-face {
-	font-family: 'Lumberjack';
-	src: url('~assets/fonts/Lumberjack/Lumberjack.eot');
-	src: local('Lumberjack'),
-		url('~assets/fonts/Lumberjack/Lumberjack.eot?#iefix') format('embedded-opentype'),
-		url('~assets/fonts/Lumberjack/Lumberjack.woff') format('woff'),
-		url('~assets/fonts/Lumberjack/Lumberjack.ttf') format('truetype');
-	font-weight: normal;
-	font-style: normal;
-}
+// @font-face {
+// 	font-family: 'Lumberjack';
+// 	src: url('~assets/fonts/Lumberjack/Lumberjack.eot');
+// 	src: local('Lumberjack'),
+// 		url('~assets/fonts/Lumberjack/Lumberjack.eot?#iefix') format('embedded-opentype'),
+// 		url('~assets/fonts/Lumberjack/Lumberjack.woff') format('woff'),
+// 		url('~assets/fonts/Lumberjack/Lumberjack.ttf') format('truetype');
+// 	font-weight: normal;
+// 	font-style: normal;
+// }
+
 
 
 // @font-face {
 //     font-family: 'Mont';
-//     src: url('~assets/fonts/Mont/Mont-Black.eot');
-//     src: local('Mont Black'), local('Mont-Black'),
-//         url('~assets/fonts/Mont/Mont-Black.eot?#iefix') format('embedded-opentype'),
-//         url('~assets/fonts/Mont/Mont-Black.woff2') format('woff2'),
-//         url('~assets/fonts/Mont/Mont-Black.woff') format('woff'),
-//         url('~assets/fonts/Mont/Mont-Black.ttf') format('truetype');
-//     font-weight: 900;
+//     src: url('~assets/fonts/Mont/Mont-ExtraLight.eot');
+//     src: local('Mont ExtraLight'), local('Mont-ExtraLight'),
+//         url('~assets/fonts/Mont/Mont-ExtraLight.eot?#iefix') format('embedded-opentype'),
+//         url('~assets/fonts/Mont/Mont-ExtraLight.woff2') format('woff2'),
+//         url('~assets/fonts/Mont/Mont-ExtraLight.woff') format('woff'),
+//         url('~assets/fonts/Mont/Mont-ExtraLight.ttf') format('truetype');
+//     font-weight: 200;
 //     font-style: normal;
 // }
 
 // @font-face {
 //     font-family: 'Mont';
-//     src: url('~assets/fonts/Mont/Mont-ThinItalic.eot');
-//     src: local('Mont Thin Italic'), local('Mont-ThinItalic'),
-//         url('~assets/fonts/Mont/Mont-ThinItalic.eot?#iefix') format('embedded-opentype'),
-//         url('~assets/fonts/Mont/Mont-ThinItalic.woff2') format('woff2'),
-//         url('~assets/fonts/Mont/Mont-ThinItalic.woff') format('woff'),
-//         url('~assets/fonts/Mont/Mont-ThinItalic.ttf') format('truetype');
-//     font-weight: 100;
-//     font-style: italic;
-// }
-
-@font-face {
-    font-family: 'Mont';
-    src: url('~assets/fonts/Mont/Mont-ExtraLight.eot');
-    src: local('Mont ExtraLight'), local('Mont-ExtraLight'),
-        url('~assets/fonts/Mont/Mont-ExtraLight.eot?#iefix') format('embedded-opentype'),
-        url('~assets/fonts/Mont/Mont-ExtraLight.woff2') format('woff2'),
-        url('~assets/fonts/Mont/Mont-ExtraLight.woff') format('woff'),
-        url('~assets/fonts/Mont/Mont-ExtraLight.ttf') format('truetype');
-    font-weight: 200;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Mont';
-    src: url('~assets/fonts/Mont/Mont-Bold.eot');
-    src: local('Mont Bold'), local('Mont-Bold'),
-        url('~assets/fonts/Mont/Mont-Bold.eot?#iefix') format('embedded-opentype'),
-        url('~assets/fonts/Mont/Mont-Bold.woff2') format('woff2'),
-        url('~assets/fonts/Mont/Mont-Bold.woff') format('woff'),
-        url('~assets/fonts/Mont/Mont-Bold.ttf') format('truetype');
-    font-weight: bold;
-    font-style: normal;
-}
-
-// @font-face {
-//     font-family: 'Mont';
-//     src: url('~assets/fonts/Mont/Mont-HeavyItalic.eot');
-//     src: local('Mont Heavy Italic'), local('Mont-HeavyItalic'),
-//         url('~assets/fonts/Mont/Mont-HeavyItalic.eot?#iefix') format('embedded-opentype'),
-//         url('~assets/fonts/Mont/Mont-HeavyItalic.woff2') format('woff2'),
-//         url('~assets/fonts/Mont/Mont-HeavyItalic.woff') format('woff'),
-//         url('~assets/fonts/Mont/Mont-HeavyItalic.ttf') format('truetype');
-//     font-weight: 800;
-//     font-style: italic;
-// }
-
-// @font-face {
-//     font-family: 'Mont';
-//     src: url('~assets/fonts/Mont/Mont-BlackItalic.eot');
-//     src: local('Mont Black Italic'), local('Mont-BlackItalic'),
-//         url('~assets/fonts/Mont/Mont-BlackItalic.eot?#iefix') format('embedded-opentype'),
-//         url('~assets/fonts/Mont/Mont-BlackItalic.woff2') format('woff2'),
-//         url('~assets/fonts/Mont/Mont-BlackItalic.woff') format('woff'),
-//         url('~assets/fonts/Mont/Mont-BlackItalic.ttf') format('truetype');
-//     font-weight: 900;
-//     font-style: italic;
-// }
-
-// @font-face {
-//     font-family: 'Mont';
-//     src: url('~assets/fonts/Mont/Mont-ExtraLightItalic.eot');
-//     src: local('Mont ExtraLight Italic'), local('Mont-ExtraLightItalic'),
-//         url('~assets/fonts/Mont/Mont-ExtraLightItalic.eot?#iefix') format('embedded-opentype'),
-//         url('~assets/fonts/Mont/Mont-ExtraLightItalic.woff2') format('woff2'),
-//         url('~assets/fonts/Mont/Mont-ExtraLightItalic.woff') format('woff'),
-//         url('~assets/fonts/Mont/Mont-ExtraLightItalic.ttf') format('truetype');
-//     font-weight: 200;
-//     font-style: italic;
-// }
-
-@font-face {
-    font-family: 'Mont';
-    src: url('~assets/fonts/Mont/Mont-Heavy.eot');
-    src: local('Mont Heavy'), local('Mont-Heavy'),
-        url('~assets/fonts/Mont/Mont-Heavy.eot?#iefix') format('embedded-opentype'),
-        url('~assets/fonts/Mont/Mont-Heavy.woff2') format('woff2'),
-        url('~assets/fonts/Mont/Mont-Heavy.woff') format('woff'),
-        url('~assets/fonts/Mont/Mont-Heavy.ttf') format('truetype');
-    font-weight: 800;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Mont';
-    src: url('~assets/fonts/Mont/Mont-SemiBold.eot');
-    src: local('Mont SemiBold'), local('Mont-SemiBold'),
-        url('~assets/fonts/Mont/Mont-SemiBold.eot?#iefix') format('embedded-opentype'),
-        url('~assets/fonts/Mont/Mont-SemiBold.woff2') format('woff2'),
-        url('~assets/fonts/Mont/Mont-SemiBold.woff') format('woff'),
-        url('~assets/fonts/Mont/Mont-SemiBold.ttf') format('truetype');
-    font-weight: 600;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Mont';
-    src: url('~assets/fonts/Mont/Mont-RegularItalic.eot');
-    src: local('Mont Regular Italic'), local('Mont-RegularItalic'),
-        url('~assets/fonts/Mont/Mont-RegularItalic.eot?#iefix') format('embedded-opentype'),
-        url('~assets/fonts/Mont/Mont-RegularItalic.woff2') format('woff2'),
-        url('~assets/fonts/Mont/Mont-RegularItalic.woff') format('woff'),
-        url('~assets/fonts/Mont/Mont-RegularItalic.ttf') format('truetype');
-    font-weight: normal;
-    font-style: italic;
-}
-
-// @font-face {
-//     font-family: 'Mont';
-//     src: url('~assets/fonts/Mont/Mont-BoldItalic.eot');
-//     src: local('Mont Bold Italic'), local('Mont-BoldItalic'),
-//         url('~assets/fonts/Mont/Mont-BoldItalic.eot?#iefix') format('embedded-opentype'),
-//         url('~assets/fonts/Mont/Mont-BoldItalic.woff2') format('woff2'),
-//         url('~assets/fonts/Mont/Mont-BoldItalic.woff') format('woff'),
-//         url('~assets/fonts/Mont/Mont-BoldItalic.ttf') format('truetype');
+//     src: url('~assets/fonts/Mont/Mont-Bold.eot');
+//     src: local('Mont Bold'), local('Mont-Bold'),
+//         url('~assets/fonts/Mont/Mont-Bold.eot?#iefix') format('embedded-opentype'),
+//         url('~assets/fonts/Mont/Mont-Bold.woff2') format('woff2'),
+//         url('~assets/fonts/Mont/Mont-Bold.woff') format('woff'),
+//         url('~assets/fonts/Mont/Mont-Bold.ttf') format('truetype');
 //     font-weight: bold;
+//     font-style: normal;
+// }
+
+
+// @font-face {
+//     font-family: 'Mont';
+//     src: url('~assets/fonts/Mont/Mont-Heavy.eot');
+//     src: local('Mont Heavy'), local('Mont-Heavy'),
+//         url('~assets/fonts/Mont/Mont-Heavy.eot?#iefix') format('embedded-opentype'),
+//         url('~assets/fonts/Mont/Mont-Heavy.woff2') format('woff2'),
+//         url('~assets/fonts/Mont/Mont-Heavy.woff') format('woff'),
+//         url('~assets/fonts/Mont/Mont-Heavy.ttf') format('truetype');
+//     font-weight: 800;
+//     font-style: normal;
+// }
+
+// @font-face {
+//     font-family: 'Mont';
+//     src: url('~assets/fonts/Mont/Mont-SemiBold.eot');
+//     src: local('Mont SemiBold'), local('Mont-SemiBold'),
+//         url('~assets/fonts/Mont/Mont-SemiBold.eot?#iefix') format('embedded-opentype'),
+//         url('~assets/fonts/Mont/Mont-SemiBold.woff2') format('woff2'),
+//         url('~assets/fonts/Mont/Mont-SemiBold.woff') format('woff'),
+//         url('~assets/fonts/Mont/Mont-SemiBold.ttf') format('truetype');
+//     font-weight: 600;
+//     font-style: normal;
+// }
+
+// @font-face {
+//     font-family: 'Mont';
+//     src: url('~assets/fonts/Mont/Mont-RegularItalic.eot');
+//     src: local('Mont Regular Italic'), local('Mont-RegularItalic'),
+//         url('~assets/fonts/Mont/Mont-RegularItalic.eot?#iefix') format('embedded-opentype'),
+//         url('~assets/fonts/Mont/Mont-RegularItalic.woff2') format('woff2'),
+//         url('~assets/fonts/Mont/Mont-RegularItalic.woff') format('woff'),
+//         url('~assets/fonts/Mont/Mont-RegularItalic.ttf') format('truetype');
+//     font-weight: normal;
+//     font-style: italic;
+// }
+
+
+// @font-face {
+//     font-family: 'Mont';
+//     src: url('~assets/fonts/Mont/Mont-LightItalic.eot');
+//     src: local('Mont Light Italic'), local('Mont-LightItalic'),
+//         url('~assets/fonts/Mont/Mont-LightItalic.eot?#iefix') format('embedded-opentype'),
+//         url('~assets/fonts/Mont/Mont-LightItalic.woff2') format('woff2'),
+//         url('~assets/fonts/Mont/Mont-LightItalic.woff') format('woff'),
+//         url('~assets/fonts/Mont/Mont-LightItalic.ttf') format('truetype');
+//     font-weight: 300;
 //     font-style: italic;
 // }
 
 // @font-face {
 //     font-family: 'Mont';
-//     src: url('~assets/fonts/Mont/Mont-SemiBoldItalic.eot');
-//     src: local('Mont SemiBold Italic'), local('Mont-SemiBoldItalic'),
-//         url('~assets/fonts/Mont/Mont-SemiBoldItalic.eot?#iefix') format('embedded-opentype'),
-//         url('~assets/fonts/Mont/Mont-SemiBoldItalic.woff2') format('woff2'),
-//         url('~assets/fonts/Mont/Mont-SemiBoldItalic.woff') format('woff'),
-//         url('~assets/fonts/Mont/Mont-SemiBoldItalic.ttf') format('truetype');
-//     font-weight: 600;
-//     font-style: italic;
+//     src: url('~assets/fonts/Mont/Mont-Thin.eot');
+//     src: local('Mont Thin'), local('Mont-Thin'),
+//         url('~assets/fonts/Mont/Mont-Thin.eot?#iefix') format('embedded-opentype'),
+//         url('~assets/fonts/Mont/Mont-Thin.woff2') format('woff2'),
+//         url('~assets/fonts/Mont/Mont-Thin.woff') format('woff'),
+//         url('~assets/fonts/Mont/Mont-Thin.ttf') format('truetype');
+//     font-weight: 100;
+//     font-style: normal;
 // }
 
-@font-face {
-    font-family: 'Mont';
-    src: url('~assets/fonts/Mont/Mont-LightItalic.eot');
-    src: local('Mont Light Italic'), local('Mont-LightItalic'),
-        url('~assets/fonts/Mont/Mont-LightItalic.eot?#iefix') format('embedded-opentype'),
-        url('~assets/fonts/Mont/Mont-LightItalic.woff2') format('woff2'),
-        url('~assets/fonts/Mont/Mont-LightItalic.woff') format('woff'),
-        url('~assets/fonts/Mont/Mont-LightItalic.ttf') format('truetype');
-    font-weight: 300;
-    font-style: italic;
-}
+// @font-face {
+//     font-family: 'Mont';
+//     src: url('~assets/fonts/Mont/Mont-Regular.eot');
+//     src: local('Mont Regular'), local('Mont-Regular'),
+//         url('~assets/fonts/Mont/Mont-Regular.eot?#iefix') format('embedded-opentype'),
+//         url('~assets/fonts/Mont/Mont-Regular.woff2') format('woff2'),
+//         url('~assets/fonts/Mont/Mont-Regular.woff') format('woff'),
+//         url('~assets/fonts/Mont/Mont-Regular.ttf') format('truetype');
+//     font-weight: normal;
+//     font-style: normal;
+// }
 
-@font-face {
-    font-family: 'Mont';
-    src: url('~assets/fonts/Mont/Mont-Thin.eot');
-    src: local('Mont Thin'), local('Mont-Thin'),
-        url('~assets/fonts/Mont/Mont-Thin.eot?#iefix') format('embedded-opentype'),
-        url('~assets/fonts/Mont/Mont-Thin.woff2') format('woff2'),
-        url('~assets/fonts/Mont/Mont-Thin.woff') format('woff'),
-        url('~assets/fonts/Mont/Mont-Thin.ttf') format('truetype');
-    font-weight: 100;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Mont';
-    src: url('~assets/fonts/Mont/Mont-Regular.eot');
-    src: local('Mont Regular'), local('Mont-Regular'),
-        url('~assets/fonts/Mont/Mont-Regular.eot?#iefix') format('embedded-opentype'),
-        url('~assets/fonts/Mont/Mont-Regular.woff2') format('woff2'),
-        url('~assets/fonts/Mont/Mont-Regular.woff') format('woff'),
-        url('~assets/fonts/Mont/Mont-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Mont';
-    src: url('~assets/fonts/Mont/Mont-Light.eot');
-    src: local('Mont Light'), local('Mont-Light'),
-        url('~assets/fonts/Mont/Mont-Light.eot?#iefix') format('embedded-opentype'),
-        url('~assets/fonts/Mont/Mont-Light.woff2') format('woff2'),
-        url('~assets/fonts/Mont/Mont-Light.woff') format('woff'),
-        url('~assets/fonts/Mont/Mont-Light.ttf') format('truetype');
-    font-weight: 300;
-    font-style: normal;
-}
+// @font-face {
+//     font-family: 'Mont';
+//     src: url('~assets/fonts/Mont/Mont-Light.eot');
+//     src: local('Mont Light'), local('Mont-Light'),
+//         url('~assets/fonts/Mont/Mont-Light.eot?#iefix') format('embedded-opentype'),
+//         url('~assets/fonts/Mont/Mont-Light.woff2') format('woff2'),
+//         url('~assets/fonts/Mont/Mont-Light.woff') format('woff'),
+//         url('~assets/fonts/Mont/Mont-Light.ttf') format('truetype');
+//     font-weight: 300;
+//     font-style: normal;
+// }
 
 
 
 
 ul{
-margin-bottom: 1rem
+    margin-bottom: 1rem
 }
     
-h1 {
-  	font-size: 3.5rem;
-	margin-bottom: 2rem;
-	font-family: 'Lumberjack';
-    line-height: normal;
-}
+// h1 {
+//   	font-size: 3.5rem;
+// 	margin-bottom: 2rem;
+// 	font-family: 'Lumberjack';
+//     line-height: normal;
+// }
   
-h2{    
-	font-size: 2.8rem;
-    margin-bottom: 1.5rem;
-	font-family: 'Lumberjack';
-	line-height: normal;
-    line-height: normal;
-}
+// h2{    
+// 	font-size: 2.8rem;
+//     margin-bottom: 1.5rem;
+// 	font-family: 'Lumberjack';
+// 	line-height: normal;
+//     line-height: normal;
+// }
 
-h3{
- font-size: 1.75rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    line-height: normal;
-}
+// h3{
+//  font-size: 1.75rem;
+//     font-weight: 600;
+//     margin-bottom: 1rem;
+//     line-height: normal;
+// }
    
 
-h4{
-font-size: 1.5rem;
+// h4{
+// font-size: 1.5rem;
 
-}
+// }
 
 .fs-1{
 	font-size:1rem;	
@@ -332,38 +250,38 @@ font-size: 1.5rem;
 	font-size:2rem;
 }
 
-.display-5{
-        font-size: 3rem !important;
-    line-height: normal !important;
-    font-family: $body-font-family !important;
-    }
+// .display-5{
+//         font-size: 3rem !important;
+//     line-height: normal !important;
+//     font-family: $body-font-family !important;
+//     }
 
 
-.display-4{
-        font-size: 2.5rem !important;
-    line-height: normal !important;
-    font-family: $body-font-family !important;
+// .display-4{
+//         font-size: 2.5rem !important;
+//     line-height: normal !important;
+//     font-family: $body-font-family !important;
 
-    }
+//     }
 
-.display-3 {
-        font-size: 2rem !important;
-    line-height: normal !important;
-    font-family: $body-font-family !important;
+// .display-3 {
+//         font-size: 2rem !important;
+//     line-height: normal !important;
+//     font-family: $body-font-family !important;
 
-    }
+//     }
 
-.display-2 {
-    font-size: 1.5rem !important;
-    line-height: normal !important;
-    font-family: $body-font-family  !important;
-    }
+// .display-2 {
+//     font-size: 1.5rem !important;
+//     line-height: normal !important;
+//     font-family: $body-font-family  !important;
+//     }
     
-.display-1{
-    font-size: 1.2rem !important;
-    line-height: 1.5 !important;
-    font-family: $body-font-family  !important;
-}
+// .display-1{
+//     font-size: 1.2rem !important;
+//     line-height: 1.5 !important;
+//     font-family: $body-font-family  !important;
+// }
 
 .lumber-rough{
     font-family: 'Lumberjack Rough' !important; 
@@ -411,18 +329,45 @@ img{
 // .main {
 //   min-height: 60vh;
 // }
-
+.v-list-group__header {
+  padding-left: 0 !important;
+}
 .background {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+  
+}
+.background-repeat{
+    background-color: rgb(240, 240, 240);
+    background-repeat: repeat !important;
+    background-size: 100%  !important;
 }
 
 .text-decoration-none{
     text-decoration: none;
 }
 
+.content-wrapper {
+  h2 {
+    margin-bottom: 1rem;
+  }
+  table {
+    border-radius: 2px;
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    max-width: 100%;
 
+    tr:not(:last-child) {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
+    td, th {
+      height: 36px;
+    }
+  }
+}
 
 html{
  	font-size:14px !important;
@@ -435,14 +380,13 @@ img[lazy=loading] {
 
 
 @media (min-width:576px) {
-	html{
+	html {
 		font-size:16px !important;
 	}
 }
     
 @media (min-width:1199px) {
-    html{
-		font-size:18px !important;
+    html {
+        font-size:18px !important;
 	}
 }
-

@@ -1,19 +1,28 @@
 <template>
-  <v-navigation-drawer :value="drawer" temporary fixed right touchless @input="change" class="pt-2">
+  <v-navigation-drawer
+    :value="drawer"
+    temporary
+    fixed
+    right
+    touchless
+    @input="change"
+    class="pt-2"
+    width="22.5rem"
+  >
     <v-subheader>НАВИГАЦИЯ</v-subheader>
     <v-list class="pt-0">
       <template v-for="(item,i) in menuItems">
         <v-list-group v-if="item.items && item.items.length>0" :key="item.to">
-          <v-list-tile slot="activator" :to="item.to" :title="item.name">
-            <v-list-tile-content>{{ item.name}}</v-list-tile-content>
-          </v-list-tile>
+          <v-list-item slot="activator" :to="item.to" :title="item.name">
+            <v-list-item-content>{{ item.name}}</v-list-item-content>
+          </v-list-item>
 
           <div v-for="product in item.items" :key="product.name">
             <div v-if="product.children && product.children.length > 0">
-              <v-list-tile nuxt exact :to="`${item.to}/${product.slug}`" :title="product.name">
-                <span class="pl-3">{{ product.name}}</span>
-              </v-list-tile>
-              <v-list-tile
+              <v-list-item nuxt exact :to="`${item.to}/${product.slug}`" :title="product.name">
+                <v-list-item-title class="pl-6">{{ product.name}}</v-list-item-title>
+              </v-list-item>
+              <v-list-item
                 v-for="child in product.children"
                 :key="child.id"
                 nuxt
@@ -21,15 +30,15 @@
                 :to="`${item.to}/${child.slug}`"
                 :title="child.name"
               >
-                <span class="pl-5">{{child.name}}</span>
-              </v-list-tile>
+                <v-list-item-title class="pl-10">{{child.name}}</v-list-item-title>
+              </v-list-item>
             </div>
-            <v-list-tile :title="product.name" nuxt exact :to="`${item.to}/${product.slug}`" v-else>
-              <span class="pl-3">{{ product.name}}</span>
-            </v-list-tile>
+            <v-list-item v-else :title="product.name" nuxt exact :to="`${item.to}/${product.slug}`">
+              <v-list-item-title class="pl-6">{{ product.name}}</v-list-item-title>
+            </v-list-item>
           </div>
         </v-list-group>
-        <v-list-tile
+        <v-list-item
           v-else
           active-class="text--accent"
           :key="item.name"
@@ -39,8 +48,8 @@
           exact
           :title="item.name"
         >
-          <v-list-tile-title>{{item.name}}</v-list-tile-title>
-        </v-list-tile>
+          <v-list-item-title>{{item.name}}</v-list-item-title>
+        </v-list-item>
       </template>
     </v-list>
     <!-- <div class="filter-wrapper px-3" v-if="isModal" v-show="$vuetify.breakpoint.smAndDown">

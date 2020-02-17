@@ -1,10 +1,13 @@
 <template>
   <div>
     <page-header title="Халяльная продукция оптом" :breadrumbs="breadcrumbs" />
-    <section class="background">
-      <v-container grid-list-lg class="py-5">
-        <v-layout row wrap v-for="category of categories" :key="category.id" class="mb-4">
-          <h2 class="mb-4 flex xs12 d-block" data-aos="fade-up">{{category.name}} халяльная оптом</h2>
+    <section
+      class="background background-repeat"
+      v-lazy:background-image="require('~/assets/img/bg.jpg')"
+    >
+      <v-container grid-list-lg class="py-12">
+        <v-layout row wrap v-for="category of categories" :key="category.id" class="mb-10">
+          <h2 class="mb-5 flex xs12 d-block" data-aos="fade-up">{{category.name}} халяль оптом</h2>
           <div
             class="flex xs12 sm6 md4 lg3 xl2"
             data-aos="fade-up"
@@ -24,7 +27,7 @@
         </v-layout>
         <v-layout row wrap v-if="page.content">
           <v-divider class="my-4"></v-divider>
-          <div v-if="page.content" v-html="$md.render(page.content)"></div>
+          <div class="content-wrapper" v-if="page.content" v-html="$md.render(page.content)"></div>
         </v-layout>
       </v-container>
     </section>

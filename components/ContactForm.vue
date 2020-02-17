@@ -16,7 +16,7 @@
       solo
       v-model="phone"
       :error-messages="phoneErrors"
-      mask="(###) ### - ####"
+      v-mask="mask"
       label="Телефон"
       required
       @blur="$v.phone.$touch()"
@@ -29,8 +29,8 @@
         @click="submit"
         large
         :disabled="$v.$anyError"
-        title="Отправить"
-      >Отправить</v-btn>
+        title="Подтвердить заказ"
+      >Подтвердить заказ</v-btn>
     </v-flex>
 
     <v-slide-y-transition>
@@ -54,9 +54,9 @@
 
 
 <script>
-// import axios from "axios";
-
 import { validationMixin } from "vuelidate";
+import { mask } from "vue-the-mask";
+
 import {
   required,
   maxLength,
@@ -66,10 +66,12 @@ import {
 } from "vuelidate/lib/validators";
 export default {
   mixins: [validationMixin],
+  directives: {
+    mask
+  },
   validations: {
     name: { required, maxLength: maxLength(35), minLength: minLength(3) },
-
-    phone: { required, minLength: minLength(10), maxLength: maxLength(15) }
+    phone: { required, minLength: minLength(10), maxLength: maxLength(19) }
   },
   data: () => ({
     formMessage: "",
@@ -77,7 +79,8 @@ export default {
     formError: false,
     name: "",
     phone: "",
-    valid: ""
+    valid: "",
+    mask: "+7 (###) ### - ####"
   }),
   methods: {
     clear() {
@@ -87,8 +90,6 @@ export default {
     },
     async submit() {
       this.$v.$touch();
-
-      //   console.log(this.$v);
       if (!this.$v.$anyError) {
         const busket = Object.values(this.$store.state.localStorage.basket);
         const busketItems =
@@ -100,8 +101,6 @@ export default {
                 };
               })
             : [];
-        // console.log("TCL: submit -> busketItems", busketItems);
-
         const busketText =
           busketItems && busket.length > 0
             ? busketItems.reduce((acc, val) => {
@@ -109,7 +108,6 @@ export default {
                 return acc;
               }, "")
             : "";
-        // console.log("TCL: submit -> busketText", busketText);
         const busketHtml =
           busketItems && busket.length > 0
             ? busketItems.reduce((acc, val) => {
@@ -157,8 +155,7 @@ export default {
     phoneErrors() {
       const errors = [];
       if (!this.$v.phone.$dirty) return errors;
-      !this.$v.phone.maxLength &&
-        errors.push("Phone must be at most 15 characters long");
+      !this.$v.phone.maxLength && errors.push("Слишком длинный телефон");
       !this.$v.phone.minLength && errors.push("Слишком короткий телефон");
       !this.$v.phone.required && errors.push("Введите телефон");
       return errors;

@@ -1,5 +1,5 @@
-const pkg = require('./package')
-const os = require("os");
+// const pkg = require('./package')
+// const os = require("os");
 const routes = require("./routes")
 
 const protocol = "https"
@@ -10,7 +10,7 @@ const imageUrl = process.env.IMAGE_BASE_URL || process.env.BACKEND_URL || backUR
 
 // const imageBaseUrl = process.env.IMAGE_BASE_URL || "http://cdn.yakutov.com"
 
-const axios = require('axios')
+// const axios = require('axios')
 
 const name = "Альянс Фуд"
 const description = "Альянс Фуд. Колбаса и другие мясные изделия оптом по ценам производителя. Самовывоз со склада в Москве. Доставка по РФ и СНГ."
@@ -30,36 +30,6 @@ module.exports = {
     subFolders: false,
     fallback: "404.html",
     routes
-    // async routes() {
-    //   let routes = []
-    //   const {
-    //     data: pages
-    //   } = await axios.get(backendUrl + '/pages?_limit=99999')
-    //   for (let item of pages) {
-    //     routes.push(`${item.slug}`)
-    //   }
-    //   const {
-    //     data: manufacturers
-    //   } = await axios.get(backendUrl + '/manufacturers?_limit=99999')
-    //   for (let item of manufacturers) {
-    //     routes.push(`/manufacturers/${item.slug}`)
-    //   }
-    //   const {
-    //     data: categories
-    //   } = await axios.get(backendUrl + '/categories?_limit=99999')
-    //   for (let item of categories) {
-    //     routes.push(`/catalog/${item.slug}`)
-    //   }
-    //   for (let category of categories) {
-    //     //  routes.push(`/catalog/${item.slug}`)
-    //     for (let product of category.products) {
-    //       routes.push(`/catalog/${category.slug}/${product.slug}`)
-    //     }
-    //   }
-
-
-    //   return routes
-    // }
   },
 
   /*
@@ -111,7 +81,7 @@ module.exports = {
    ** Plugins to load before mounting the App
    */
   plugins: [
-    '@/plugins/vuetify',
+    // '@/plugins/vuetify',
     "@/plugins/lazyload.js",
     {
       src: '@/plugins/aos.js',
@@ -124,12 +94,9 @@ module.exports = {
       ssr: false
     }
   ],
-  // robots: ,
-  // cache: ,
-  /*
-   ** Nuxt.js modules
-   */
+
   modules: [
+
     ['@nuxtjs/google-analytics', {
       id: 'UA-153607412-1'
     }],
@@ -141,15 +108,6 @@ module.exports = {
         trackLinks: true,
         accurateTrackBounce: true,
         webvisor: true
-        //     clickmap: true,
-        //     trackLinks: true,
-        //     accurateTrackBounce: true,
-        //     webvisor: true,
-        //     triggerEvent: true
-        //     // clickmap:true,
-        //     // useCDN:false,
-        //     // trackLinks:true,
-        //     // accurateTrackBounce:true,
       }
     ],
     ['vue-yandex-maps/nuxt', { // you may define your apiKey, lang and version or skip this.
@@ -234,6 +192,26 @@ module.exports = {
       },
 
     ],
+    ['@nuxtjs/vuetify', {
+      treeShake: true,
+      defaultAssets: {
+        font: {
+          family: 'Open Sans'
+        },
+        icons: "md"
+      },
+      customVariables: ['~/assets/variables.scss'],
+      theme: {
+        themes: {
+          light: {
+            // secondary: '#b0bec5',
+            // error: '#b71c1c',
+            primary: '#4A1F00',
+            accent: "#d50000",
+          },
+        },
+      },
+    }],
   ],
   redirect: [{
     from: '^/catalog/pashtety-zelcy-studni.*',
@@ -297,7 +275,7 @@ module.exports = {
     babel: {
       sourceType: 'unambiguous',
     },
-    transpile: [/^vuetify/, /^aos/, /^vue-awesome-swiper/, /^@nuxtjs.*/, /^vue2-google-maps($|\/)/, "vue-particles", "nuxt-vuex-localstorage"],
+    transpile: ["@nuxtjs/vuetify", /^aos/, /^vue-awesome-swiper/, /^@nuxtjs.*/, "vue-particles", "nuxt-vuex-localstorage"],
 
     // publicPath: '/js/',
     /*

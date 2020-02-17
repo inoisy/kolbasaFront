@@ -43,8 +43,8 @@ export default {
         ? this.$refs.sidebarContent.parentElement
         : null;
 
-      const bottomOffset = elem.getBoundingClientRect().bottom - 120;
-      const clientHeight = window.innerHeight - 120;
+      const bottomOffset = elem.getBoundingClientRect().bottom - 64;
+      const clientHeight = window.innerHeight - 64;
       this.sidebar.maxHeight =
         bottomOffset > clientHeight ? clientHeight : bottomOffset;
       this.sidebar.bottomOffset = bottomOffset;
@@ -120,7 +120,7 @@ export default {
 .fixed-top {
   position: fixed;
   width: inherit;
-  top: 80px;
+  top: 56px;
   height: 100%;
   overflow-y: auto;
   // padding-bottom: 90px;
@@ -128,7 +128,7 @@ export default {
 
 @media only screen and (min-width: 960px) {
   .fixed-top, .fixed-bottom {
-    top: 110px;
+    top: 64px;
     // padding-bottom: 160px;
   }
 }

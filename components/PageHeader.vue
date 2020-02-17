@@ -1,13 +1,12 @@
 <template>
-  <div class="header d-flex pb-5" v-lazy:background-image="require('~/assets/img/promo.jpg')">
-    <v-container
-      fill-height
-      :fluid="fluid"
-      class="pt-4"
-      :style="`padding-bottom: ${paddingHeight}px`"
-    >
-      <v-layout column>
-        <v-breadcrumbs :items="breadrumbs" class="pl-1 pb-4" dark>
+  <div class="header d-flex" v-lazy:background-image="require('~/assets/img/promo.jpg')">
+    <v-container fill-height :fluid="fluid" grid-list-lg>
+      <v-layout
+        column
+        style="min-height: 40vh;"
+        :class="isPadding ? 'justify-space-between' : 'justify-space-around'"
+      >
+        <v-breadcrumbs :items="breadrumbs" dark class="px-4 py-3">
           <template slot="item" slot-scope="props">
             <nuxt-link
               class="text-decoration-none white--text"
@@ -17,8 +16,8 @@
             >{{ props.item.text }}</nuxt-link>
           </template>
         </v-breadcrumbs>
-        <h1 class="header-text white--text mt-4 mb-4 text-xs-center">{{title}}</h1>
-        <div class="slot-wrapper" ref="slot" v-resize="this.isPadding ? onResize : ()=>{}">
+        <h1 class="lumber header-text white--text text-center px-4">{{title}}</h1>
+        <div class="slot-wrapper" ref="slot">
           <slot></slot>
         </div>
       </v-layout>
@@ -43,41 +42,7 @@ export default {
       type: Boolean,
       default: false
     }
-  },
-  data() {
-    return {
-      paddingHeight: 0
-    };
-  },
-  methods: {
-    onResize() {
-      if (
-        this.isPadding &&
-        this.$refs.slot &&
-        this.$refs.slot.children &&
-        this.$refs.slot.children.length > 0
-      ) {
-        this.paddingHeight =
-          this.$refs.slot.children[0].getBoundingClientRect().height - 30;
-      }
-    }
-  },
-  mounted() {
-    if (
-      this.isPadding &&
-      this.$refs.slot &&
-      this.$refs.slot.children &&
-      this.$refs.slot.children.length > 0
-    ) {
-      this.paddingHeight =
-        this.$refs.slot.children[0].getBoundingClientRect().height - 30;
-    }
-    // this.paddingHeight = this.$refs.slot.children[0].getBoundingClientRect().height;
-    // console.log("ref", this.$refs.slot.children[0].getBoundingClientRect().height);
   }
-  // computed(){
-  //   return
-  // }
 };
 </script>
 <style lang="stylus" scoped>
@@ -86,11 +51,12 @@ export default {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  min-height: 35vh;
+  min-height: 40vh;
 }
 
 .header-text {
   font-size: 2.2rem;
+  line-height: 1.2;
 }
 
 @media (min-width: 600px) {

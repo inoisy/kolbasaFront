@@ -4,18 +4,15 @@
     v-model="dialog"
     scrollable
     :width="showCard ? 'auto' : '500px'"
-    style="margin-top: 120px;"
     attach=".v-content__wrap"
     content-class="dialog-content-wrapper"
-    persistent
-    no-click-animation
+    :persistent="false"
   >
-    <product-dialog :product="product"></product-dialog>
+    <product-dialog :product="product" :isManufacturer="false"></product-dialog>
   </v-dialog>
 </template>
 <script>
 import gql from "graphql-tag";
-// import ContactForm from "~/components/ContactForm";
 import ProductDialog from "~/components/ProductDialog";
 export default {
   head() {
@@ -53,7 +50,7 @@ export default {
               : `${this.product.name} оптом. ${this.product.name} от компании Альянс Фуд с доставкой по всей РФ и СНГ по самым выгодным оптовым ценам от производителя.`
             : this.category && this.category.description
             ? this.category.description.slice(0, 310)
-            : ""
+            : `${this.category.name} оптом. ${this.category.name} от компании Альянс Фуд с доставкой по всей РФ и СНГ по самым выгодным оптовым ценам от производителя.`
         }
       ]
     };
@@ -81,14 +78,6 @@ export default {
     };
   },
   computed: {
-    // product() {
-    //   return this.$store.state.sessionStorage.product;
-    // },
-    // manufacturer() {
-    //   return this.product && this.product.manufacturer
-    //     ? this.product.manufacturer
-    //     : {};
-    // },
     category() {
       return this.isProduct
         ? this.product.category
@@ -99,57 +88,7 @@ export default {
     isProduct() {
       return this.$route.params && this.$route.params.slug;
     }
-    // breadcrumbs() {
-    //   return [
-    //     {
-    //       to: "/",
-    //       text: "Главная"
-    //     },
-    //     {
-    //       to: "/catalog",
-    //       text: "Каталог"
-    //     },
-    //     {
-    //       to:
-    //         this.product && this.product.category
-    //           ? `/catalog/${this.product.category.slug}`
-    //           : "",
-    //       text:
-    //         this.product && this.product.category
-    //           ? this.product.category.name
-    //           : ""
-    //     }
-    //   ];
-    // }
-    // busket() {
-    //   return this.$store.state.localStorage.basket[this.product.id]
-    //     ? this.$store.state.localStorage.basket[this.product.id].count
-    //     : null;
-    // },
-    // price() {
-    //   return this.product.isDiscount && this.product.discountPrice
-    //     ? this.product.discountPrice
-    //     : this.product.priceNum;
-    // }
   },
-  // watch: {
-  //   dialog(val) {
-  //     if (val === false) {
-  //       this.$router.push({ params: { slug: null } });
-  //     }
-  //   }
-  // },
-  // methods: {
-  //   handleOneClickBuy() {
-  //     this.showCard = false;
-  //   },
-  //   async addToBasket(event) {
-  //     await this.$store.commit("addToBasket", this.product);
-  //   },
-  //   async removeFromBasket(event) {
-  //     await this.$store.commit("removeFromBasket", this.product);
-  //   }
-  // },
   props: ["products"],
   data() {
     return {

@@ -1,8 +1,11 @@
 <template>
   <div>
     <page-header :title="title" :breadrumbs="breadcrumbs" />
-    <section class="background" v-lazy:background-image="require('~/assets/img/bg.jpg')">
-      <v-container grid-list-lg class="py-5">
+    <section
+      class="background background-repeat"
+      v-lazy:background-image="require('~/assets/img/bg.jpg')"
+    >
+      <v-container grid-list-lg class="py-12">
         <v-layout row wrap v-if="page && page.content">
           <div>
             <div class="content" v-if="page.content" v-html="$md.render(page.content)"></div>
@@ -19,8 +22,8 @@
 
           <v-divider class="my-4"></v-divider>
         </v-layout>
-        <v-layout row wrap v-for="category of categories" :key="category.id" class="mb-4">
-          <h2 class="mb-4 flex xs12 d-block" data-aos="fade-up">{{category.name}}</h2>
+        <v-layout row wrap v-for="category of categories" :key="category.id" class="mb-10">
+          <h2 class="mb-10 flex xs12 d-block" data-aos="fade-up">{{category.name}}</h2>
           <div
             class="flex xs12 sm6 md4 lg3 xl2"
             data-aos="fade-up"

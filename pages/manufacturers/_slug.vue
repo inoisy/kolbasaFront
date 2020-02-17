@@ -7,42 +7,36 @@
           <v-btn
             v-for="(catalog,index) in manufacturer.catalog"
             :key="'catalog'+index"
-            class="ml-0 mb-4"
+            class
             large
             color="accent"
             :href="imageBaseUrl+catalog.url"
+            :title="`Каталог ${manufacturer.name}`"
           >
             <v-icon left dark>save_alt</v-icon>Загрузить прайс
           </v-btn>
         </div>
       </slot>
     </page-header>
-    <div>
-      <v-container grid-list-lg class="py-5">
-        <div v-if="isContent" class="display-1 mb-4" style="font-size: 1.1rem !important">
+    <div
+      class="background background-repeat"
+      v-lazy:background-image="require('~/assets/img/bg.jpg')"
+    >
+      <v-container grid-list-lg class="py-12">
+        <div v-if="isContent" class="mb-6 content-wrapper">
           <div class="flex xs12" v-html="isContent ? $md.render(manufacturer.content) : ''"></div>
-
           <v-divider class="mt-3" v-show="categories.length>0"></v-divider>
         </div>
 
         <v-layout row wrap v-for="(category,index) of categories" :key="category.id" class="mb-0">
-          <v-flex xs12 class="display-flex align-center wrap" data-aos="fade-up">
+          <h2 class="display-flex align-center wrap xs12 mb-3 flex" data-aos="fade-up">
             <nuxt-link
               :to="`/catalog/${category.item.slug}?manufacturer=${manufacturer.slug}`"
               :title="manufacturer.name"
-              class="lumber font-weight-bold mb-3 d-inline-block primary--text underline-on-hover"
-              style="font-size: 2.4rem;"
+              class="lumber font-weight-bold d-inline-block primary--text underline-on-hover"
               v-text="`${category.item.name} ${manufacturer.name} оптом`"
             ></nuxt-link>
-            <!-- <h2 class="mr-4 mb-3">{{category.item.name}}</h2>
-            <v-btn
-              class="ma-0 mb-4"
-              :to="`/catalog/${category.item.slug}?manufacturer=${manufacturer.slug}`"
-              color="accent"
-              outline
-              large
-            >Показать все</v-btn>-->
-          </v-flex>
+          </h2>
 
           <div
             class="flex xs12 sm6 md4 lg3 xl2"
@@ -58,21 +52,9 @@
           <v-flex xs12>
             <v-divider class="mt-3 mb-1"></v-divider>
           </v-flex>
-
-          <!-- <div class="flex xs12" data-aos="fade-up" v-show="showMoreButtonShow[index]">
-            <v-btn
-              @click="handleShowMore(category.item.id)"
-              class="mt-4 ml-0"
-              color="accent"
-              large
-            >Показать еще</v-btn>
-          </div>-->
         </v-layout>
       </v-container>
     </div>
-    <!-- <keep-alive>
-       :key="$route.params && $route.params.slug ? $route.params.slug : ''" 
-    </keep-alive>-->
   </div>
 </template>
 <style>
@@ -109,19 +91,12 @@ export default {
   },
   methods: {
     async handleShowMore(categoryId) {
-      // console.log("TCL: handleShowMore -> categoryId", categoryId);
       let client = this.$apollo;
-      // console.log(
-      //   "TCL: handleShowMore -> this.manufacturer.id",
-      //   this.manufacturer.id
-      // );
       const categoryIndex = this.categories.findIndex(
         item => item.item.id === categoryId
       );
 
       this.showMoreButtonShow[categoryIndex] = false;
-
-      // console.log("TCL: handleShowMore -> categoryIndex", categoryIndex);
       const productsLength = this.categories[categoryIndex].products.length;
       const { data: products } = await this.$axios.get(
         process.env.baseUrl +
@@ -140,34 +115,13 @@ export default {
     );
     if (manufacturerFind) {
       const id = manufacturerFind.id;
-      const { data: manufacturerData } = await client.query({
-        variables: {
-          id: id
-        },
-        query: gql`
-          query ManufacturerQuery($id: ID!) {
-            manufacturer(id: $id) {
-              id
-              name
-              slug
-              description
-              content
-              img {
-                url
-              }
-              catalog {
-                url
-              }
-            }
-          }
-        `
-      });
-      // console.log("TCL: Data -> manufacturerData", manufacturerData);
+      let manufacturerData = await ctx.store.dispatch("fetchManufacturer", id);
+
       const { data: categoriesData } = await ctx.$axios.get(
         `/categories/categoriesByManufacturer/` + id
       );
       return {
-        manufacturer: manufacturerData.manufacturer,
+        manufacturer: manufacturerData,
         categories: categoriesData,
         showMoreButtonShow: categoriesData.map(
           item => item.products.length >= 10
@@ -198,11 +152,11 @@ export default {
         {
           to: "/manufacturers",
           text: "Производители"
+        },
+        {
+          to: this.$route.path,
+          text: this.manufacturer.name
         }
-        // {
-        //   to: this.$route.path,
-        //   text: this.manufacturer.name
-        // }
       ];
     }
 

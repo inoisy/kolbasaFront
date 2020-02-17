@@ -2,29 +2,27 @@
   <div>
     <page-header title="Каталог" :breadrumbs="breadrumbs" />
     <section
-      class="background"
+      class="background background-repeat"
       v-lazy:background-image="require('~/assets/img/bg.jpg')"
-      style="background-color: #f0f0f0; background-repeat: repeat; background-size: 100%;"
     >
-      <!-- v-lazy:background-image="require('~/assets/img/bg.jpg')" -->
-      <v-container grid-list-lg class="py-5">
+      <v-container grid-list-lg class="py-12">
         <template v-for="(category,index) in categories">
           <vertical-card
             v-if="category.children.length===0"
             :item="category"
             type="catalog"
-            class="mb-4 d-block"
+            class="mb-10 d-block"
             :key="index"
           ></vertical-card>
           <div
             v-else
             :key="index"
-            class="pa-3 mb-4 pb-4 pl-4"
+            class="pa-3 mb-10 pb-4 pl-4"
             style="border: 1px solid #c1c1c1; border-radius: 10px;"
           >
             <nuxt-link
               :to="`/catalog/${category.slug}`"
-              class="mb-3 d-block category-text lumber font-weight-medium mb-0 primary--text fs-1-5 underline-on-hover"
+              class="mb-6 d-block category-text lumber font-weight-medium mb-0 primary--text fs-1-5 underline-on-hover"
               :title="category.name"
             >{{category.name}}</nuxt-link>
             <vertical-card

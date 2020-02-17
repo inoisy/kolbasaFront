@@ -1,21 +1,19 @@
 <template>
   <v-card
     :title="product.name"
+    :to="to"
+    @click.capture="cardClick"
+    color="white"
     itemscope
     itemtype="http://schema.org/Product"
     hover
     ripple
     class="fill-height d-flex column"
-    :to="to"
-    @click.capture="cardClick"
   >
-    <!-- ? `${to}/${product.slug}` : `/catalog/${category}/${product.slug}` -->
     <div class="product-card-img-wrap" style="position: relative;">
-      <!-- <div class="img-wrapper position-relative"> -->
-
       <img
         itemprop="image"
-        class="d-block ma-auto product-img pt-3 px-3"
+        class="d-block ma-auto product-img pa-3"
         :title="product.name"
         :alt="product.name"
         v-lazy="product.img ? imageBaseUrl + product.img.url : require('~/assets/no-image.png')"
@@ -38,12 +36,11 @@
       </div>
 
       <div
-        class="product-card-actions grey lighten-3"
+        class="product-card-actions grey lighten-2 pa-1"
         ref="productCardActions"
         style="position:absolute; right: 0;top: 0;"
       >
         <v-btn
-          flat
           icon
           color="primary"
           @click="removeFromBasket"
@@ -52,9 +49,9 @@
         >
           <v-icon>remove</v-icon>
         </v-btn>
-        <span v-show="busket" class="font-weight-bold display-1 mont mx-1">{{busket}}</span>
+        <span v-show="busket" class="font-weight-bold mx-1">{{busket}}</span>
 
-        <v-btn flat icon color="primary" @click="addToBasket" title="add To Basket">
+        <v-btn icon color="primary" @click="addToBasket" title="add To Basket">
           <v-icon v-show="!busket">add_shopping_cart</v-icon>
           <v-icon v-show="busket">add</v-icon>
         </v-btn>
@@ -62,7 +59,7 @@
       <!-- </div> -->
     </div>
     <v-card-text class="pt-0">
-      <div class="display-flex justify-space-between" style="min-height: 48px">
+      <div class="display-flex justify-space-between mb-2">
         <!-- <div class="display-flex align-center"> -->
         <div
           itemprop="offers"
@@ -73,27 +70,28 @@
           <span
             itemprop="price"
             v-show="product.priceNum"
-            class="display-2 font-weight-medium black--text"
+            class="font-weight-medium black--text fs-1-5"
           >{{product.isDiscount ? product.discountPrice : product.priceNum}}</span>
           <span v-show="!product.priceNum" style="font-size: 0.88rem">Цена по запросу</span>
           <!-- {{product.priceNum ? product.priceNum +'₽' : ''}}</v-subheader> -->
           <span
-            class="pl-2"
+            class="pl-2 fs-1-5"
             v-if="product.isDiscount"
             style="text-decoration: line-through; font-size:1rem"
           >{{product.priceNum}}</span>
+          &nbsp;
           <span
             v-show="product.priceNum"
             itemprop="priceCurrency"
             content="RUB"
-            class="display-2 font-weight-medium black--text"
+            class="font-weight-medium black--text fs-1-5"
           >₽</span>
           <!-- +'₽' -->
           <v-chip
             v-if="product.isDiscount"
             color="accent"
             dark
-            class="mont ml-2"
+            class="ml-2"
             style="font-size: 1.1rem"
           >-{{Math.ceil(100*(product.priceNum-product.discountPrice)/product.priceNum) }}%</v-chip>
         </div>
@@ -107,7 +105,7 @@
 
       <h2
         itemprop="name"
-        class="mb-0 mont mt-1"
+        class="mb-0 mt-1 black--text font-weight-regular"
         style="line-height: normal !important; font-size:1.03rem; font-weight: 600;"
       >{{product.name}}</h2>
     </v-card-text>
@@ -179,7 +177,7 @@ export default {
       await this.$store.commit("addToBasket", this.product);
     },
     async removeFromBasket(event) {
-      await this.$store.commit("removeFromBasket", this.product);
+      await this.$store.commit("removeFromBasket", this.product.id);
     }
   },
   props: ["category", "product", "to"]

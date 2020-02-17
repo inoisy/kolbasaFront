@@ -1,11 +1,9 @@
 <template>
-  <v-card class="position-relative px-4 pb-4 pt-0 fill-height" style="min-height:45vh">
-    <div class="close-btn-wrap mt-2 mr-3">
-      <v-btn class="close-btn ma-0" fab @click="dialog=false">
-        <v-icon>close</v-icon>
+  <v-sheet light class="fill-height position-relative">
+    <v-app-bar height="80px" flat>
+      <v-btn v-show="!showCard" color="gray" fab @click="showCard=true" class="mr-4" title="Назад">
+        <v-icon>arrow_back</v-icon>
       </v-btn>
-    </div>
-    <div v-show="showCard">
       <v-breadcrumbs :items="breadcrumbs" class="pl-1 pr-5">
         <template slot="item" slot-scope="props">
           <nuxt-link
@@ -16,22 +14,21 @@
           >{{ props.item.text }}</nuxt-link>
         </template>
       </v-breadcrumbs>
-      <div class="layout row wrap" itemscope itemtype="http://schema.org/Product">
-        <v-flex
-          xs12
-          md8
-          lg8
-          order-xs2
-          order-md1
-          class="right-wrapper display-flex column position-relative"
-        >
+      <v-btn class="ml-auto" fab @click="dialog=false">
+        <v-icon>close</v-icon>
+      </v-btn>
+    </v-app-bar>
+
+    <v-container grid-list-lg class="position-relative fill-height">
+      <v-layout row wrap v-show="showCard" itemscope itemtype="http://schema.org/Product">
+        <v-flex xs12 md8 lg8 order-xs2 order-md1 class="display-flex column position-relative pl-4">
           <h1
             itemprop="name"
-            class="display-3 mont font-weight-bold mb-4"
+            class="font-weight-bold mb-5"
             style="line-height: normal;"
             v-text="product && product.name ? product.name : ''"
           ></h1>
-          <div class="manufacturer mb-3" v-if="manufacturer">
+          <div class="manufacturer mb-5" v-if="manufacturer">
             Производитель:
             <nuxt-link
               :to="`/manufacturers/${manufacturer.slug}`"
@@ -43,23 +40,23 @@
             itemprop="description"
             v-if="product && product.description"
             v-html="product.description"
-            class="mb-4"
+            class="mb-5"
             style="line-height: 1,5"
           ></div>
           <div
             v-if="product && product.content"
-            class="mb-3 table-wrapper"
+            class="mb-5 content-wrapper"
             v-html="$md.render(product.content)"
           ></div>
           <div
             itemprop="offers"
             itemscope
             itemtype="http://schema.org/Offer"
-            class="mont font-weight-medium mb-3"
+            class="font-weight-medium mb-2"
           >
             <span
               itemprop="price"
-              :class="price ? 'display-3 font-weight-bold black--text' : ''"
+              :class="price ? 'fs-2 font-weight-bold black--text' : ''"
             >{{ price ? price : "Цена по запросу"}}</span>
             <span itemprop="priceCurrency" class="fs-1-5" v-show="price">RUB</span>
             <span
@@ -71,23 +68,23 @@
               v-if="isDiscount"
               color="accent"
               dark
-              class="mont ml-2"
+              class="ml-2"
               style="font-size: 1.1rem"
             >-{{discountPriceProcent}}%</v-chip>
-            <span class="display-1 mb-3" v-if="product && product.weight">/ {{product.weight}} кг.</span>
+            <span class="mb-5" v-if="product && product.weight">/ {{product.weight}} кг.</span>
           </div>
           <div class="display-flex align-center wrap">
             <v-btn
               dark
               color="#d50000"
-              class="product-button ml-0 mont"
+              class="product-button ml-0 mr-3 mt-3"
               large
               @click="handleOneClickBuy"
               title="Купить в один клик"
             >Купить в один клик</v-btn>
             <v-btn
               color="#d50000"
-              class="ml-0 mont product-button"
+              class="ml-0 product-button mt-3"
               large
               @click="addToBasket"
               v-show="!busket"
@@ -95,64 +92,38 @@
               title="Добавить в корзину"
             >Добавить в корзину</v-btn>
             <v-sheet
-              class="product-button align-center display-flex justify-center"
+              v-if="busket"
+              class="product-button align-center display-flex justify-center mt-3 py-1"
               color="grey lighten-2"
             >
-              <v-btn
-                flat
-                icon
-                color="primary"
-                @click="removeFromBasket"
-                v-show="busket"
-                title="remove"
-              >
+              <product-quantity style="max-width: 150px" :product="product" :qty="busket"></product-quantity>
+              <!-- <v-btn icon color="primary" @click="removeFromBasket" title="remove">
                 <v-icon>remove</v-icon>
               </v-btn>
-              <span class="font-weight-bold">{{busket}}</span>
-              <v-btn
-                flat
-                icon
-                color="primary"
-                @click="addToBasket"
-                v-show="busket"
-                title="add to busket"
-              >
-                <v-icon v-show="busket">add</v-icon>
-              </v-btn>
+              <span class="font-weight-bold mx-2">{{busket}}</span>
+              <v-btn icon color="primary" @click="addToBasket" title="add to busket">
+                <v-icon>add</v-icon>
+              </v-btn>-->
             </v-sheet>
           </div>
         </v-flex>
         <v-flex xs12 md4 lg4 order-xs1 order-md2 class="display-flex image-wrapper">
-          <div class="mini-imgs-wrapper">
-            <v-tooltip left max-width="300px" v-if="manufacturer">
-              <template v-slot:activator="{ on }">
-                <img
-                  itemprop="image"
-                  class="manufacturer-img"
-                  v-if="manufacturer.img"
-                  :src="imageBaseUrl+manufacturer.img.url"
-                  :alt="manufacturer.name"
-                  :title="manufacturer.name"
-                  v-on="on"
-                />
-              </template>
-              <div style="font-size:1rem;" class="font-weight-medium mb-2">{{manufacturer.name}}</div>
-              <div style="font-size:0.8rem;" class="font-weight-thin">{{manufacturer.description}}</div>
-            </v-tooltip>
-
-            <v-tooltip left max-width="300px">
-              <template v-slot:activator="{ on }">
-                <img
-                  class="halal-img"
-                  v-if="product && product.isHalal"
-                  :src="require('~/assets/halal1.png')"
-                  alt="Халяльная продукция"
-                  title="Халяльная продукция"
-                  v-on="on"
-                />
-              </template>
-              <div style="font-size:1rem;" class="font-weight-medium mb-2">Халяльная продукция</div>
-            </v-tooltip>
+          <div class="mini-imgs-wrapper pa-1">
+            <img
+              itemprop="image"
+              class="manufacturer-img"
+              v-if="manufacturer.img"
+              :src="imageBaseUrl+manufacturer.img.url"
+              :alt="manufacturer.name"
+              :title="manufacturer.name"
+            />
+            <img
+              class="halal-img"
+              v-if="product && product.isHalal"
+              :src="require('~/assets/halal1.png')"
+              alt="Халяльная продукция"
+              title="Халяльная продукция"
+            />
           </div>
 
           <img
@@ -162,133 +133,24 @@
             :title="product && product.name ? product.name:''"
           />
         </v-flex>
+      </v-layout>
+      <div v-show="!showCard" class="pb-12 pt-8 mx-auto">
+        <h2 class="fs-2 mb-5 font-weight-bold">Купить в один клик</h2>
+        <contact-form></contact-form>
       </div>
-    </div>
-    <div v-show="!showCard">
-      <v-btn color="gray" fab @click="showCard=true" class="ml-0 mb-4" title="arrow_back">
-        <v-icon>arrow_back</v-icon>
-      </v-btn>
-      <h2 class="mb-5 mont display-3 font-weight-bold">Купить в один клик</h2>
-      <contact-form></contact-form>
-    </div>
-  </v-card>
+    </v-container>
+  </v-sheet>
 </template>
-<style lang="stylus" >
-.mini-imgs-wrapper {
-  position: absolute;
-  right: 0;
-  top: 20px;
 
-  .manufacturer-img {
-    // position: absolute;
-    height: 3.5rem;
-    width: 3.5rem;
-    object-fit: contain;
-    // right: 0;
-    // bottom: 0;
-  }
-
-  .halal-img {
-    height: 3.5rem;
-    width: 3.5rem;
-    padding: 7px;
-    object-fit: contain;
-  }
-}
-
-.halal-img {
-  display: block;
-}
-
-.mw500 {
-  max-width: 500px;
-}
-
-.close-btn-wrap {
-  position: absolute;
-  right: 0px;
-  top: 20px;
-  display: flex;
-  z-index: 9999;
-  margin-bottom: -56px;
-  width: 44px;
-  margin-left: auto;
-}
-
-.table-wrapper table {
-  border-radius: 2px;
-  border-collapse: collapse;
-  border-spacing: 0;
-  width: 100%;
-  max-width: 100%;
-
-  tr:not(:last-child) {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-  }
-
-  // th:first-child {
-  // padding: 0 24px;
-  // }
-  td, th {
-    height: 36px;
-  }
-}
-
-.image-wrapper {
-  margin-bottom: 30px;
-  position: relative;
-
-  .item-img {
-    max-height: 300px;
-    object-fit: contain;
-  }
-}
-
-.swiper-button-next, .swiper-button-prev {
-  background-image: none !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.product-button {
-  min-width: 200px;
-}
-
-@media (max-width: 600px) {
-  .product-button {
-    width: 100%;
-  }
-}
-
-@media (min-width: 960px) {
-  .image-wrapper {
-    padding-left: 1rem;
-    margin-bottom: 0;
-  }
-
-  .dialog-content-wrapper {
-    max-width: 900px !important;
-  }
-}
-
-@media (min-width: 1264px) {
-  .dialog-content-wrapper {
-    max-width: 1185px !important;
-  }
-}
-</style>
 <script>
 import ContactForm from "~/components/ContactForm";
+import ProductQuantity from "~/components/ProductQuantity";
 
 export default {
-  components: { ContactForm },
+  components: { ContactForm, ProductQuantity },
 
-  props: ["product"],
+  props: ["product", "isManufacturer"],
   computed: {
-    // product() {
-    //   return this.$store.state.sessionStorage.product;
-    // },
     discountPriceProcent() {
       return this.product && this.isDiscount
         ? Math.ceil(
@@ -301,9 +163,6 @@ export default {
       return this.product
         ? this.product.isDiscount && this.product.discountPrice
         : false;
-    },
-    isProduct() {
-      return this.$route.params && this.$route.params.slug;
     },
     breadcrumbs() {
       return [
@@ -349,17 +208,16 @@ export default {
   watch: {
     dialog(val) {
       if (val === false) {
-        this.$router.push({ params: { slug: null } });
+        this.isManufacturer
+          ? this.$router.push({ params: { productSlug: null } })
+          : this.$router.push({ params: { slug: null } });
       }
     }
   },
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl,
-      //   dialogm1: "",
       dialog: true,
-      //   // weight_selected: 0,
-      //   activeTab: null,
       showCard: true
     };
   },
@@ -376,3 +234,56 @@ export default {
   }
 };
 </script>
+<style lang="stylus" scoped >
+// .noscroll {
+// overflow: hidden;
+// }
+.mini-imgs-wrapper {
+  position: absolute;
+  right: 10px;
+  top: 0;
+
+  .manufacturer-img {
+    // position: absolute;
+    height: 3.5rem;
+    width: 3.5rem;
+    object-fit: contain;
+  }
+
+  .halal-img {
+    height: 3.5rem;
+    width: 3.5rem;
+    padding: 7px;
+    object-fit: contain;
+  }
+}
+
+.halal-img {
+  display: block;
+}
+
+.mw500 {
+  max-width: 500px;
+}
+
+.product-button {
+  min-width: 200px;
+}
+
+.image-wrapper {
+  margin-bottom: 1.1rem;
+  position: relative;
+
+  .item-img {
+    max-height: 300px;
+    object-fit: contain;
+  }
+}
+
+@media (min-width: 960px) {
+  .image-wrapper {
+    padding-left: 1rem;
+    margin-bottom: 0;
+  }
+}
+</style>

@@ -23,6 +23,9 @@ export const mutations = {
   category(state, item) {
     state.sessionStorage.category = item
   },
+  manufacturer(state, item) {
+    state.sessionStorage.manufacturer = item
+  },
   product(state, item) {
     state.sessionStorage.product = item
   },
@@ -37,7 +40,7 @@ export const mutations = {
   },
   async addToBasket(state, product) {
     if (state.localStorage.basket[product.id]) {
-      const count = state.localStorage.basket[product.id].count + 1
+      const count = +state.localStorage.basket[product.id].count + 1
       const newItem = {
         [product.id]: {
           count: count,
@@ -64,22 +67,40 @@ export const mutations = {
 
 
   },
-  deleteFromBasket(state, product) {
+  clearBasket(state) {
+    state.localStorage.basket = {}
+  },
+  changeBasket(state, item) {
+    // console.log("TCL: changeBasket -> item", item)
+    const newItem = {
+      [item.id]: {
+        count: item.qty,
+        item: state.localStorage.basket[item.id].item
+      }
+    }
+    state.localStorage.basket = {
+      ...state.localStorage.basket,
+      ...newItem
+    }
+  },
+  deleteFromBasket(state, id) {
+    // console.log("TCL: deleteFromBasket -> product", id)
     const basket = state.localStorage.basket
 
-    state.localStorage.basket = _.omit(basket, product.id)
+    state.localStorage.basket = _.omit(basket, id)
   },
-  removeFromBasket(state, product) {
-    const basket = state.localStorage.basket
-    const count = basket[product.id].count - 1
+  removeFromBasket(state, id) {
+    // const basket = 
+    const count = state.localStorage.basket[id].count - 1
+
     if (count < 1) {
 
-      state.localStorage.basket = _.omit(basket, product.id)
+      state.localStorage.basket = _.omit(state.localStorage.basket, id)
     } else {
       const newItem = {
-        [product.id]: {
+        [id]: {
           count: count,
-          item: product
+          item: state.localStorage.basket[id].item
         }
       }
       state.localStorage.basket = {
@@ -151,10 +172,44 @@ export const actions = {
     // }
 
   },
+  async fetchManufacturer(ctx, id) {
+
+    //  const categoryFind = ctx.state.sessionStorage.generalInfo.categories.find(item => item.slug === params.slug)
+    let client = this.app.apolloProvider.defaultClient;
+    const {
+      data: manufacturerData
+    } = await client.query({
+      variables: {
+        id: id
+      },
+      query: gql `
+          query ManufacturerQuery($id: ID!) {
+            manufacturer(id: $id) {
+              id
+              name
+              slug
+              description
+              content
+              img {
+                url
+              }
+              catalog {
+                url
+              }
+            }
+          }
+        `
+    });
+    await ctx.commit("manufacturer", manufacturerData.manufacturer);
+    return manufacturerData.manufacturer
+
+  },
   async fetchCategory(ctx, params) {
+    // console.log("TCL: fetchCategory -> params", params)
 
     // if (ctx.state.sessionStorage.category.slug !== params.slug) {
     const categoryFind = ctx.state.sessionStorage.generalInfo.categories.find(item => item.slug === params.slug)
+    // console.log("TCL: fetchCategory -> categoryFind", categoryFind)
 
     let client = this.app.apolloProvider.defaultClient;
     if (categoryFind && categoryFind.id) {

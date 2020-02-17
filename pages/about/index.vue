@@ -7,8 +7,8 @@
       v-lazy:background-image="require('~/assets/img/bg.jpg')"
       style="background-color: #f0f0f0; background-repeat: repeat; background-size: 100%;"
     >
-      <v-container class="py-5">
-        <div class="mont layout row wrap" style="font-size:1.1rem" v-html="page.content"></div>
+      <v-container class="py-12">
+        <div class="layout row wrap" style="font-size:1.1rem" v-html="page.content"></div>
       </v-container>
     </section>
   </div>

@@ -1,65 +1,45 @@
 <template>
   <div>
     <page-header :title="title" :breadrumbs="breadrumbs" />
-
     <section
-      class="background"
+      class="background background-repeat"
       v-lazy:background-image="require('~/assets/img/bg.jpg')"
-      style="background-color: #f0f0f0; background-repeat: repeat; background-size: 100%;"
     >
-      <v-container class="py-5">
-        <v-layout row wrap>
-          <div class="flex xs12 mb-3 align-center display-flex">
-            <v-icon class="mr-3" color="rgba(0,0,0,0.87)">phone</v-icon>
-            <!-- <a
-              :href="`tel:${contacts.phone}`"
-              class="link font-weight-medium display-1 d-inline-flex"
-            >{{contacts.phone}}</a>-->
-            <div class="ya-phone link font-weight-medium display-1 d-inline-flex">
-              <a :href="`tel:${contacts.phone}`">{{contacts.phone}}</a>
-            </div>
-            <!-- <span>,&nbsp;&nbsp;</span> -->
-            <!-- <a
-              :href="`tel:+79261191748`"
-              class="link font-weight-medium display-1 d-inline-flex"
-              style="min-height:32px"
-            >+7 926 119 17 48</a>-->
-          </div>
-          <div class="flex xs12 mb-3">
+      <v-container grid-list-lg>
+        <v-layout row wrap class="py-12">
+          <v-flex
+            v-for="(contact,i) in contacts"
+            :key="`contact-${i}`"
+            class="mb-2 fs-1-3"
+            xs12
+            d-flex
+            align-center
+          >
             <a
-              :href="`mailto:${contacts.email}`"
-              class="link font-weight-medium display-1 d-inline-flex"
+              v-if="contact.href"
+              :href="contact.href"
+              class="link font-weight-medium d-inline-flex align-center"
             >
-              <v-icon class="mr-3" color="rgba(0,0,0,0.87)">mail</v-icon>
-              {{contacts.email}}
+              <v-icon class="mr-3" color="rgba(0,0,0,0.87)">{{contact.icon}}</v-icon>
+              {{contact.text}}
             </a>
-          </div>
-          <div class="flex xs12 mb-3">
-            <a
-              @click="$vuetify.goTo('#map')"
-              class="link font-weight-medium display-1 d-inline-flex"
-            >
-              <v-icon class="mr-3" color="rgba(0,0,0,0.87)">location_on</v-icon>
-              {{contacts.addressText}}
-            </a>
-          </div>
-          <div class="flex xs12 mb-5">
-            <div class="font-weight-medium display-1 d-inline-flex">
-              <v-icon class="mr-3" color="rgba(0,0,0,0.87)">access_time</v-icon>
-              {{contacts.accessTime}}
+            <div v-else class="font-weight-medium d-inline-flex align-center">
+              <v-icon class="mr-3" color="rgba(0,0,0,0.87)">{{contact.icon}}</v-icon>
+              {{contact.text}}
             </div>
-          </div>
-          <no-ssr>
+          </v-flex>
+        </v-layout>
+        <v-layout row wrap id="map">
+          <client-only>
             <yandex-map
-              id="map"
-              :coords="contacts.addressCoords"
+              :coords="addressCoords"
               zoom="16"
               style="width: 100%; height: 35rem;"
-              class="mb-3"
+              class="mb-6"
             >
-              <ymap-marker marker-id="1" marker-type="placemark" :coords="contacts.addressCoords"></ymap-marker>
+              <ymap-marker marker-id="1" marker-type="placemark" :coords="addressCoords"></ymap-marker>
             </yandex-map>
-          </no-ssr>
+          </client-only>
         </v-layout>
       </v-container>
     </section>
@@ -74,7 +54,6 @@ export default {
     return {
       title: pageName,
       meta: [
-        // hid is used as unique identifier. Do not use `vmid` for it as it will not work
         {
           hid: "description",
           name: "description",
@@ -99,19 +78,47 @@ export default {
     };
   },
   async asyncData(ctx) {
-    // async asyncData(ctx) {
-
-    const generalData = await ctx.store.dispatch("fetchGeneralInfo");
-    // console.log("TCL: //Data -> generalData", generalData);
-    return {
-      contacts: generalData.contacts
-    };
+    await ctx.store.dispatch("fetchGeneralInfo");
   },
   components: { PageHeader },
   computed: {
-    // contacts() {
-    //   return this.$store.state.generalInfo.contacts;
-    // }
+    contacts() {
+      const contacts = this.$store.state.sessionStorage.generalInfo
+        ? this.$store.state.sessionStorage.generalInfo.contacts
+        : null;
+      const contactsArr = [];
+      if (contacts) {
+        contactsArr.push(
+          {
+            icon: "phone",
+            href: `tel:${contacts.phone}`,
+            text: contacts.phone
+          },
+          {
+            icon: "mail",
+            href: `mailto:${contacts.email}`,
+            text: contacts.email
+          },
+          {
+            icon: "location_on",
+            href: ``,
+            text: contacts.addressText
+          },
+          {
+            icon: "access_time",
+            href: ``,
+            text: contacts.accessTime
+          }
+        );
+      }
+      return contactsArr;
+    },
+    addressCoords() {
+      const contacts = this.$store.state.sessionStorage.generalInfo
+        ? this.$store.state.sessionStorage.generalInfo.contacts
+        : null;
+      return contacts ? contacts.addressCoords : [];
+    }
   }
 };
 </script>

@@ -1,79 +1,32 @@
 <template>
   <v-card
     :to="`/${type}/${item.slug}`"
+    color="white"
     hover
     ripple
-    class="card-wrapper flex xs12 text-xs-left mont font-weight-medium pa-3"
+    class="card-wrapper flex xs12 text-xs-left font-weight-medium pa-3"
     style="text-decoration: none; border-radius: 10px"
     :title="item.name"
   >
-    <v-layout class="card-inner">
-      <div class="img-wrapper display-flex gray pb-3" style=" min-height:13rem; min-width:300px">
+    <v-layout row wrap class="card-inner">
+      <v-flex xs12 md4 lg3 class="img-wrapper display-flex gray py-4" style>
         <img
           class="d-block ma-auto"
-          style="max-width:250px; max-height:250px; min-height:150px"
+          style="max-width: 220px; height:150px; object-fit: contain;"
           v-lazy="item.img ? imageBaseUrl+item.img.url : require('~/assets/no-image.png')"
           :alt="item.name"
           :title="item.name"
         />
-      </div>
-      <v-flex class="card-text-wrapper display-flex">
+      </v-flex>
+      <v-flex xs12 md8 lg9 class="card-text-wrapper display-flex">
         <div class="card-text-inner my-auto">
-          <h2 class="card-header display-2 mont mb-3">{{item.name}}</h2>
-          <div class="card-text mb-0 mont" v-text="item.description"></div>
+          <h2 class="card-header mb-3">{{item.name}}</h2>
+          <div class="card-text mb-0" v-text="item.description"></div>
         </div>
       </v-flex>
     </v-layout>
   </v-card>
 </template>
-<style lang="stylus">
-.card-wrapper {
-  .card-inner {
-    flex-direction: column;
-  }
-
-  .img-wrapper {
-    img {
-      padding: 0 20px;
-      object-fit: contain;
-      // max-width: 90%;
-    }
-  }
-
-  .card-header {
-    font-weight: 600 !important;
-  }
-
-  .card-text {
-    font-size: 1.1rem;
-    font-weight: 400 !important;
-  }
-}
-
-@media (min-width: 960px) {
-  .card-wrapper {
-    .card-inner {
-      flex-direction: row;
-    }
-
-    .img-wrapper {
-      // padding-right: 20px !important;
-      img {
-      }
-    }
-
-    .card-header {
-      // font-weight: 600 !important;
-    }
-
-    .card-text-inner {
-      padding-top: 1rem;
-      padding-bottom: 1rem;
-      padding-right: 2.2rem;
-    }
-  }
-}
-</style>
 
 <script>
 export default {
