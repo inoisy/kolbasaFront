@@ -16,7 +16,6 @@
       fixed
       left
       :width="$vuetify.breakpoint.mdAndUp ? '700px' : '500px'"
-      style="padding-top: 100px;"
     >
       <client-only>
         <busket v-on:close="basketDrawer=false" />

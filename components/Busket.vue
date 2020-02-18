@@ -1,12 +1,6 @@
 <template>
   <div class="pb-6 basketWrapper">
-    <v-app-bar
-      class="grey lighten-3 px-2"
-      height="100px"
-      fixed
-      flat
-      style="z-index: 5000 !important;"
-    >
+    <v-app-bar class="grey lighten-3 px-2" height="100px" flat>
       <v-btn
         v-if="offer && isSummValid"
         outlined

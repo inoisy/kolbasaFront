@@ -12,7 +12,7 @@
           <v-container fill-height class="main-content py-12 ma-auto">
             <v-layout align-center>
               <v-flex xs12 sm11 md10 lg7 xl6 class="text-xs-left justify-center column white--text">
-                <h2 style class="header lumber-rough font-weight-medium mb-8" v-text="item.header" />
+                <h2 style class="header lumber font-weight-medium mb-8" v-text="item.header" />
                 <div class="subheader mb-8 lumber" v-html="item.content" />
                 <v-btn
                   v-if="item.buttontext"
