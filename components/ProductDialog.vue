@@ -63,7 +63,7 @@
               class="pl-2"
               v-if="isDiscount"
               style="text-decoration: line-through; font-size:1rem"
-            >{{price+'&#8381;'}}</span>
+            >{{price+'Р'}}</span>
             <v-chip
               v-if="isDiscount"
               color="accent"

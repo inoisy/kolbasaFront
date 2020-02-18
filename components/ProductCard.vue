@@ -73,7 +73,7 @@
             class="font-weight-medium black--text fs-1-5"
           >{{product.isDiscount ? product.discountPrice : product.priceNum}}</span>
           <span v-show="!product.priceNum" style="font-size: 0.88rem">Цена по запросу</span>
-          <!-- {{product.priceNum ? product.priceNum +'&#8381;' : ''}}</v-subheader> -->
+          <!-- {{product.priceNum ? product.priceNum +'Р' : ''}}</v-subheader> -->
           <span
             class="pl-2 fs-1-5"
             v-if="product.isDiscount"
@@ -85,8 +85,8 @@
             itemprop="priceCurrency"
             content="RUB"
             class="font-weight-medium black--text fs-1-5"
-          >&#8381;</span>
-          <!-- +'&#8381;' -->
+          >Р</span>
+          <!-- +'Р' -->
           <v-chip
             v-if="product.isDiscount"
             color="accent"
