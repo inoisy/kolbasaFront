@@ -148,7 +148,8 @@
         <div class="layout row wrap align-center justify-center pt-5">
           <div class="flex hidden-sm-and-down md4 offset-lg1 lg3 mb-5" data-aos="fade-up">
             <img
-              class="bottom-img pr-4"
+              class="bottom-img pr-4 d-block ma-auto"
+              style="max-width: 350px"
               v-lazy="require('~/assets/img/bottomImage1.png')"
               alt="Колбаса оптом в Москве"
               title="Колбаса оптом"
@@ -182,12 +183,12 @@
           </div>
           <div class="flex hidden-sm-and-down offset-md0 md4 offset-lg1 lg3" data-aos="fade-up">
             <img
-              class="bottom-img pl-4"
+              class="bottom-img pl-4 d-block ma-auto"
+              style="max-width: 350px"
               v-lazy="require('~/assets/img/bottomImage2.png')"
               alt="Колбаса оптом с доставкой"
               title="Колбаса оптом"
             />
-            <!-- <img class="bottom-img"> -->
           </div>
         </div>
         <div data-aos="zoom-in">
@@ -199,17 +200,17 @@
         </div>
 
         <section class="flex xs10 ma-auto">
-          <h2 class="bottom-header text-center primary--text mb-8">Наши преимущества</h2>
+          <h2 class="bottom-header text-center primary--text mb-6">Наши преимущества</h2>
           <p
-            class="text-center primary--text lumber mb-8 fs-1-3"
+            class="text-center primary--text lumber mb-6 fs-1-3"
           >После первого шага, сделанного навстречу будущему сотрудничеству, вы убедитесь, насколько выгодны и комфортны для развития вашего бизнеса условия, предоставленные нашей организацией.</p>
           <div class="benefits bottom-text layout row wrap" data-aos="fade-up">
             <div
-              class="flex xs12 md6 lg4 mb-6 display-flex px-1"
+              class="flex xs12 md6 lg4 display-flex"
               v-for="(item,index) in benefits"
               :key="'benefit'+index"
             >
-              <div class="img-wrapper mb-6">
+              <div class="img-wrapper">
                 <img
                   v-lazy="item.img"
                   class="d-block pt-1"
@@ -227,7 +228,7 @@
         </section>
         <div data-aos="zoom-in">
           <v-img
-            class="mx-auto my-5 xs10 md10 lg9 xl8 flex"
+            class="mx-auto mt-8 mb-5 xs10 md10 lg9 xl8 flex"
             contain
             :src="require('~/assets/delimiter.svg')"
           ></v-img>

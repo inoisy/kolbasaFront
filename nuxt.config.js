@@ -1,6 +1,10 @@
 // const pkg = require('./package')
 // const os = require("os");
+// import fs from 'fs'
+const path = require('path')
+const fs = require('fs')
 const routes = require("./routes")
+const apolloFetch = require('apollo-fetch');
 
 const protocol = "https"
 const sitename = `${protocol}://prodaem-kolbasu.ru`;
@@ -18,6 +22,65 @@ const description = "Альянс Фуд. Колбаса и другие мяс�
 
 module.exports = {
   mode: 'universal',
+  hooks: {
+    build: {
+      async before(builder) {
+        // console.log("TCL: before -> builder", builder)
+        const uri = backendUrl + '/graphql'
+        const query = `
+          {
+            contacts {
+              phone
+              email
+              addressText
+              addressCoords
+              accessTime
+            }
+            categories(sort: "name:asc") {
+              id
+              name
+              slug
+              parent {
+                id
+              }
+              children {
+                id
+                name
+                slug
+                img {
+                  url
+                }
+              }
+              img {
+                url
+              }
+            }
+            manufacturers(sort: "name:asc") {
+              id
+              name
+              slug
+
+              img {
+                url
+              }
+            }
+          }
+        `
+        const fetchApollo = apolloFetch.createApolloFetch({
+          uri
+        });
+
+        const data = await fetchApollo({
+          query
+        })
+        // console.log("TCL: before -> data", data)
+        // console.log("TCL: done -> builder", builder)
+        const extraFilePath = path.join(builder.nuxt.options.srcDir, 'assets', 'generalData.json')
+        // console.log("TCL: before -> extraFilePath", extraFilePath)
+        await fs.writeFileSync(extraFilePath, JSON.stringify(data.data))
+      }
+    }
+  },
   env: {
     name: name,
     description: description,

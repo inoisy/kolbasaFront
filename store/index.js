@@ -116,60 +116,66 @@ export const mutations = {
 export const strict = false
 export const actions = {
   async fetchGeneralInfo(ctx) {
-    let client = this.app.apolloProvider.defaultClient;
-    const {
-      data: generalData
-    } = await client.query({
-      query: gql `
-        {
-          contacts {
-            phone
-            email
-            addressText
-            addressCoords
-            accessTime
-          }
-          categories(sort: "name:asc") {
-            id
-            name
-            slug
-            parent {
-              id
-            }
-            children {
-              id
-              name
-              slug
-              img{
-                url
-              }
-            }
-            img {
-              url
-            }
-          }
-          manufacturers(sort: "name:asc") {
-            id
-            name
-            slug
-            
-            img {
-              url
-            }
-          }
-        }
-        `
-    })
+    const data = require("~/assets/generalData.json")
+    // console.log("TCL: fetchGeneralInfo -> data", data)
     const result = {
-      categories: generalData.categories,
-      manufacturers: generalData.manufacturers,
-      contacts: generalData.contacts[0]
+      categories: data.categories,
+      manufacturers: data.manufacturers,
+      contacts: data.contacts[0]
     }
     await ctx.commit("generalInfo", result)
     return result
-    // } else {
-    //   return ctx.state.sessionStorage.generalInfo
+    // let client = this.app.apolloProvider.defaultClient;
+    // const {
+    //   data: generalData
+    // } = await client.query({
+    //   query: gql `
+    //     {
+    //       contacts {
+    //         phone
+    //         email
+    //         addressText
+    //         addressCoords
+    //         accessTime
+    //       }
+    //       categories(sort: "name:asc") {
+    //         id
+    //         name
+    //         slug
+    //         parent {
+    //           id
+    //         }
+    //         children {
+    //           id
+    //           name
+    //           slug
+    //           img{
+    //             url
+    //           }
+    //         }
+    //         img {
+    //           url
+    //         }
+    //       }
+    //       manufacturers(sort: "name:asc") {
+    //         id
+    //         name
+    //         slug
+
+    //         img {
+    //           url
+    //         }
+    //       }
+    //     }
+    //     `
+    // })
+    // const result = {
+    //   categories: generalData.categories,
+    //   manufacturers: generalData.manufacturers,
+    //   contacts: generalData.contacts[0]
     // }
+    // await ctx.commit("generalInfo", result)
+    // return result
 
   },
   async fetchManufacturer(ctx, id) {

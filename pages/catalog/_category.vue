@@ -188,6 +188,7 @@ import ProductCard from "~/components/ProductCard";
 
 import { isArray } from "util";
 export default {
+  // scrollToTop: true,
   components: { PageHeader, StickyMenu, ProductCard, InfiniteLoading },
   computed: {
     // products() {
