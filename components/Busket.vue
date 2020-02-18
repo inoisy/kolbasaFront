@@ -1,6 +1,12 @@
 <template>
   <div class="pb-6 basketWrapper">
-    <v-app-bar class="grey lighten-3 px-2" height="100px" fixed flat id="basketHeader">
+    <v-app-bar
+      class="grey lighten-3 px-2"
+      height="100px"
+      fixed
+      flat
+      style="z-index: 5000 !important;"
+    >
       <v-btn
         v-if="offer && isSummValid"
         outlined
@@ -8,7 +14,7 @@
         icon
         large
         class="mr-3 ml-0"
-        title="arrow_back"
+        title="Назад"
       >
         <v-icon>arrow_back</v-icon>
       </v-btn>
@@ -53,21 +59,6 @@
                 :product="product.item"
                 :qty="product.count"
               ></product-quantity>
-
-              <!-- <v-text-field
-                :value="product.count"
-                @click:append-outer.stop="(e)=>addToBasket(e,product.item)"
-                @click:prepend.stop="(e)=> removeFromBasket(e,product.item.id)"
-                @change="(e)=>changeBasket(e,product.item.id)"
-                class="quantity"
-                dense
-                single-line
-                hide-details
-                outlined
-                prepend-icon="remove"
-                type="number"
-                append-outer-icon="add"
-              ></v-text-field>-->
             </td>
             <td class="px-1">
               <div

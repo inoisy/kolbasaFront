@@ -271,11 +271,11 @@ export default {
 }
 
 .image-wrapper {
-  margin-bottom: 1.1rem;
+  // margin-bottom: 1.1rem;
   position: relative;
 
   .item-img {
-    max-height: 300px;
+    max-height: 165px;
     object-fit: contain;
   }
 }
@@ -284,6 +284,10 @@ export default {
   .image-wrapper {
     padding-left: 1rem;
     margin-bottom: 0;
+
+    .item-img {
+      max-height: 300px;
+    }
   }
 }
 </style>
