@@ -78,7 +78,7 @@
 
             <div
               class="flex xs12 sm6 md4 lg3 xl2"
-              :data-aos="prIndex > 8 ? 'fade-up' : ''"
+              data-aos="fade-up"
               v-for="(product,prIndex) in category.products"
               :key="prIndex"
             >
