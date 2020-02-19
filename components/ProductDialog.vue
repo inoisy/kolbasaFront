@@ -14,7 +14,7 @@
           >{{ props.item.text }}</nuxt-link>
         </template>
       </v-breadcrumbs>
-      <v-btn class="ml-auto" fab @click="dialog=false">
+      <v-btn class="ml-auto" fab @click="closeDialog">
         <v-icon>close</v-icon>
       </v-btn>
     </v-app-bar>
@@ -149,7 +149,7 @@ import ProductQuantity from "~/components/ProductQuantity";
 export default {
   components: { ContactForm, ProductQuantity },
 
-  props: ["product", "isManufacturer"],
+  props: ["product"],
   computed: {
     discountPriceProcent() {
       return this.product && this.isDiscount
@@ -205,23 +205,18 @@ export default {
         : "";
     }
   },
-  watch: {
-    dialog(val) {
-      if (val === false) {
-        this.isManufacturer
-          ? this.$router.push({ params: { productSlug: null } })
-          : this.$router.push({ params: { slug: null } });
-      }
-    }
-  },
+
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl,
-      dialog: true,
+      // dialog: true,
       showCard: true
     };
   },
   methods: {
+    async closeDialog() {
+      await this.$emit("closeProductDialog");
+    },
     handleOneClickBuy() {
       this.showCard = false;
     },
@@ -235,9 +230,6 @@ export default {
 };
 </script>
 <style lang="stylus" scoped >
-// .noscroll {
-// overflow: hidden;
-// }
 .mini-imgs-wrapper {
   position: absolute;
   right: 10px;

@@ -8,11 +8,10 @@
     content-class="dialog-content-wrapper"
     :persistent="false"
   >
-    <product-dialog :product="product" :isManufacturer="false"></product-dialog>
+    <product-dialog :product="product" @closeProductDialog="dialog=false"></product-dialog>
   </v-dialog>
 </template>
 <script>
-import gql from "graphql-tag";
 import ProductDialog from "~/components/ProductDialog";
 export default {
   head() {
@@ -56,7 +55,6 @@ export default {
     };
   },
   components: {
-    // ContactForm,
     ProductDialog
   },
   async asyncData(ctx) {
@@ -77,6 +75,13 @@ export default {
       product: product
     };
   },
+  watch: {
+    dialog(val) {
+      if (val === false) {
+        this.$router.push({ params: { slug: null } });
+      }
+    }
+  },
   computed: {
     category() {
       return this.isProduct
@@ -93,10 +98,10 @@ export default {
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl,
-      dialogm1: "",
+      // dialogm1: "",
       dialog: true,
       // weight_selected: 0,
-      activeTab: null,
+      // activeTab: null,
       showCard: true
     };
   }

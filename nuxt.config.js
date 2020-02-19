@@ -160,6 +160,7 @@ module.exports = {
 
   modules: [
 
+
     ['@nuxtjs/google-analytics', {
       id: 'UA-153607412-1'
     }],
@@ -208,7 +209,6 @@ module.exports = {
       // twitter: '@UserName',
       themeColor: '#d50000'
     }],
-    // 'portal-vue/nuxt',
     'nuxt-vuex-localstorage',
     '@nuxtjs/redirect-module',
 
@@ -248,8 +248,8 @@ module.exports = {
         },
 
         pages: [
-          //   // these are prefixes of pages that need to be cached
-          //   // if you want to cache all pages, just include '/'
+          // these are prefixes of pages that need to be cached
+          // if you want to cache all pages, just include '/'
           "/"
         ],
       },
@@ -275,6 +275,7 @@ module.exports = {
         },
       },
     }],
+
   ],
   redirect: [{
     from: '^/catalog/pashtety-zelcy-studni.*',

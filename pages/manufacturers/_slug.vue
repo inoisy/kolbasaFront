@@ -7,7 +7,7 @@
           <v-btn
             v-for="(catalog,index) in manufacturer.catalog"
             :key="'catalog'+index"
-            class
+            class="mb-4"
             large
             color="accent"
             :href="imageBaseUrl+catalog.url"
@@ -57,13 +57,6 @@
     </div>
   </div>
 </template>
-<style>
-.background {
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-</style>
 <script>
 import gql from "graphql-tag";
 
@@ -75,7 +68,6 @@ export default {
     return {
       title: `Мясокомбинат ${this.manufacturer.name}. Купить колбасы ${this.manufacturer.name} оптом.`,
       meta: [
-        // hid is used as unique identifier. Do not use `vmid` for it as it will not work
         {
           hid: "description",
           name: "description",
@@ -89,50 +81,29 @@ export default {
       imageBaseUrl: process.env.imageBaseUrl
     };
   },
-  methods: {
-    async handleShowMore(categoryId) {
-      let client = this.$apollo;
-      const categoryIndex = this.categories.findIndex(
-        item => item.item.id === categoryId
-      );
-
-      this.showMoreButtonShow[categoryIndex] = false;
-      const productsLength = this.categories[categoryIndex].products.length;
-      const { data: products } = await this.$axios.get(
-        process.env.baseUrl +
-          `/products?category=${categoryId}&manufacturer=${this.manufacturer.id}&_limit=999&_start=${productsLength}`
-      );
-      if (products.length > 0) {
-        this.categories[categoryIndex].products.push(...products);
-      }
-    }
-  },
   async asyncData(ctx) {
     const generalInfo = await ctx.store.dispatch("fetchGeneralInfo");
-    let client = ctx.app.apolloProvider.defaultClient;
     const manufacturerFind = generalInfo.manufacturers.find(
       item => item.slug === ctx.params.slug
     );
-    if (manufacturerFind) {
-      const id = manufacturerFind.id;
-      let manufacturerData = await ctx.store.dispatch("fetchManufacturer", id);
-
-      const { data: categoriesData } = await ctx.$axios.get(
-        `/categories/categoriesByManufacturer/` + id
-      );
-      return {
-        manufacturer: manufacturerData,
-        categories: categoriesData,
-        showMoreButtonShow: categoriesData.map(
-          item => item.products.length >= 10
-        )
-      };
-    } else {
+    if (!manufacturerFind) {
       return ctx.error({
         statusCode: 404,
         message: "Производитель не найден"
       });
     }
+    let manufacturerData = await ctx.store.dispatch(
+      "fetchManufacturer",
+      manufacturerFind.id
+    );
+
+    const { data: categoriesData } = await ctx.$axios.get(
+      `/categories/categoriesByManufacturer/` + manufacturerFind.id
+    );
+    return {
+      manufacturer: manufacturerData,
+      categories: categoriesData
+    };
   },
   components: { PageHeader, ProductCard },
 
@@ -140,9 +111,6 @@ export default {
     isContent() {
       return this.manufacturer.content && this.manufacturer.content.length > 0;
     },
-    // manufacturer() {
-    //   return this.$store.state.manufacturer;
-    // },
     breadrumbs() {
       return [
         {
@@ -159,10 +127,6 @@ export default {
         }
       ];
     }
-
-    // manufacturers() {
-    //   return this.$store.state.generalInfo.manufacturers;
-    // }
   }
 };
 </script>
