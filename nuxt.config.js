@@ -3,8 +3,12 @@
 // import fs from 'fs'
 const path = require('path')
 const fs = require('fs')
-const routes = require("./routes")
+
 const apolloFetch = require('apollo-fetch');
+
+const routes = require("./routes")
+const redirectRoutes = require("./redirectRoutes")
+// console.log("TCL: redirectRoutes", redirectRoutes)
 
 const protocol = "https"
 const sitename = `${protocol}://prodaem-kolbasu.ru`;
@@ -159,7 +163,7 @@ module.exports = {
   ],
 
   modules: [
-
+    'nuxt-vuex-localstorage',
 
     ['@nuxtjs/google-analytics', {
       id: 'UA-153607412-1'
@@ -209,8 +213,8 @@ module.exports = {
       // twitter: '@UserName',
       themeColor: '#d50000'
     }],
-    'nuxt-vuex-localstorage',
-    '@nuxtjs/redirect-module',
+
+    ['@nuxtjs/redirect-module', redirectRoutes],
 
     // Redirect option here
 
@@ -277,61 +281,19 @@ module.exports = {
     }],
 
   ],
-  redirect: [{
-    from: '^/catalog/pashtety-zelcy-studni.*',
-    to: '/catalog/holodec-studen-zelc'
-  }, {
-    from: '^/catalog/konservy.*',
-    to: '/catalog/polufabrikaty'
-  }, {
-    from: '^/catalog/livery.*',
-    to: '/catalog/pashtety-zelcy-studni'
-  }, {
-    from: '^/catalog/narezka.*',
-    to: '/catalog/syrokopchenaya-kolbasa'
-  }, {
-    from: '^/catalog/studni.*',
-    to: '/catalog/pashtety-zelcy-studni'
-  }, {
-    from: '^/catalog/izdeliya-iz-pticy.*',
-    to: '/catalog/delikatesy-vetchina-i-kopchenosti'
-  }, {
-    from: '^/catalog/kolbasy.*',
-    to: '/catalog/kolbasa'
-  }, {
-    from: '^/catalog/proizvoditeli/vegus.*',
-    to: '/manufacturers/vegus'
-  }, {
-    from: '^/catalog/proizvoditeli/vladimirskij-standart.*',
-    to: '/manufacturers/vladimirskiy-standart'
-  }, {
-    from: '^/catalog/proizvoditeli/myasnoj-dom-borodina.*',
-    to: '/manufacturers/mdb'
-  }, {
-    from: '^/catalog/proizvoditeli/kolomenskij-myasokombinat.*',
-    to: '/manufacturers/kolomenskoe'
-  }, {
-    from: '^/catalog/proizvoditeli/klinskij-mk.*',
-    to: '/manufacturers/klinskiy'
-  }, {
-    from: '^/catalog/proizvoditeli/mikoyan.*',
-    to: '/manufacturers/mikoyan'
-  }, {
-    from: '^/catalog/proizvoditeli/ostankino.*',
-    to: '/manufacturers/ostankino'
-  }, {
-    from: '^/catalog/proizvoditeli/remit.*',
-    to: '/manufacturers/remit'
-  }, {
-    from: '^/catalog/proizvoditeli/cherkizovskij-mk.*',
-    to: '/manufacturers/cherkizovo'
-  }, {
-    from: '^/catalog/proizvoditeli/snezhana.*',
-    to: '/manufacturers/snezhana'
-  }, {
-    from: '^/catalog/proizvoditeli/rublevskij-myasokombinat.*',
-    to: '/manufacturers/rublevskiy'
-  }],
+
+  // router: {
+  //   scrollBehavior(to, from, savedPosition) {
+  //     console.log("TCL: scrollBehavior -> to", to)
+  //     console.log("TCL: scrollBehavior -> from", from)
+  //     console.log("TCL: scrollBehavior -> savedPosition", savedPosition)
+
+  //     return {
+  //       x: 0,
+  //       y: 0
+  //     }
+  //   }
+  // },
   /*
    ** Build configuration
    */
