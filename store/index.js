@@ -325,7 +325,7 @@ export const actions = {
   // },
 
   async easyFetchMoreProducts(ctx, params) {
-    console.log("TCL: easyFetchMoreProducts -> params", params)
+    // console.log("TCL: easyFetchMoreProducts -> params", params)
     await ctx.commit('loading', true)
     const {
       data: productsData
