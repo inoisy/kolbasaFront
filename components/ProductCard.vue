@@ -8,7 +8,7 @@
     itemtype="http://schema.org/Product"
     hover
     ripple
-    class="fill-height d-flex column"
+    class="fill-height"
   >
     <div class="product-card-img-wrap" style="position: relative;">
       <img
@@ -56,11 +56,9 @@
           <v-icon v-show="busket">add</v-icon>
         </v-btn>
       </div>
-      <!-- </div> -->
     </div>
     <v-card-text class="pt-0">
       <div class="display-flex justify-space-between mb-2">
-        <!-- <div class="display-flex align-center"> -->
         <div
           itemprop="offers"
           itemscope
@@ -73,7 +71,6 @@
             class="font-weight-medium black--text fs-1-5"
           >{{product.isDiscount ? product.discountPrice : product.priceNum}}</span>
           <span v-show="!product.priceNum" style="font-size: 0.88rem">Цена по запросу</span>
-          <!-- {{product.priceNum ? product.priceNum +'Р' : ''}}</v-subheader> -->
           <span
             class="pl-2 fs-1-5"
             v-if="product.isDiscount"
@@ -86,7 +83,6 @@
             content="RUB"
             class="font-weight-medium black--text fs-1-5"
           >Р</span>
-          <!-- +'Р' -->
           <v-chip
             v-if="product.isDiscount"
             color="accent"
@@ -95,8 +91,6 @@
             style="font-size: 1.1rem"
           >-{{Math.ceil(100*(product.priceNum-product.discountPrice)/product.priceNum) }}%</v-chip>
         </div>
-        <!-- </div> -->
-
         <div
           itemprop="description"
           class="align-center display-flex pa-0"
@@ -167,10 +161,8 @@ export default {
   methods: {
     cardClick(event) {
       const capture = this.$refs.productCardActions.contains(event.target);
-      // console.log("TCL: cardClick -> event", capture);
       if (capture) {
         event.preventDefault();
-        // event.stopPropagation();
       }
     },
     async addToBasket(event) {

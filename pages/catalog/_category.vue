@@ -13,16 +13,14 @@
           :to="`/catalog/${rootCategory.slug}`"
           :title="rootCategory.name"
           color="white"
-          class="ma-0"
+          class="subcategory-btn ma-0"
           text
-          style="font-size: 0.9rem !important;"
         >все {{rootCategory.name}}</v-btn>
         <template class="child" v-for="child in subcategories">
           <v-btn
             :to="`/catalog/${child.slug}`"
             color="white"
-            class="ma-0"
-            style="font-size: 0.9rem !important;"
+            class="subcategory-btn ma-0"
             text
             :key="child.id"
             :title="child.name"
@@ -35,17 +33,14 @@
       v-lazy:background-image="require('~/assets/img/bg.jpg')"
     >
       <v-container grid-list-lg id="contentWrapper" class="display-flex py-9" fluid>
-        <v-layout row wrap id="products" ref="product" v-if="!multiple">
-          <div
-            class="flex xs12 sm6 md4 lg3 xl2"
-            data-aos="fade-up"
-            v-for="(product,index) in products"
-            :key="index"
-          >
+        <v-layout row wrap id="products" ref="product" class="mt-0">
+          <!-- v-if="!multiple" -->
+          <div class="flex xs12 sm6 md4 lg3 xl2" v-for="(product,index) in products" :key="index">
             <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
           </div>
         </v-layout>
-        <v-layout v-else-if="multiple" wrap>
+
+        <!-- <v-layout v-else-if="multiple" wrap>
           <div
             class="flex xs12"
             v-for="(productsGroup,index) in category.children"
@@ -60,7 +55,6 @@
             <v-layout wrap class="mb-6">
               <div
                 class="flex xs12 sm6 md4 lg3 xl2"
-                data-aos="fade-up"
                 v-for="(product,prIndex) in productsGroup.products"
                 :key="prIndex"
               >
@@ -78,7 +72,6 @@
 
             <div
               class="flex xs12 sm6 md4 lg3 xl2"
-              data-aos="fade-up"
               v-for="(product,prIndex) in category.products"
               :key="prIndex"
             >
@@ -94,7 +87,7 @@
             indeterminate
             class="mx-auto my-5 d-flex"
           ></v-progress-circular>
-        </div>
+        </div>-->
         <div
           class="flex hidden-sm-and-down"
           style="width: 300px; min-width: 300px; max-width: 300px; margin-left: auto;"
@@ -150,28 +143,25 @@
           </sticky-menu>
         </div>
       </v-container>
+      <client-only>
+        <!-- !multiple && -->
+        <infinite-loading
+          v-if=" products && products.length >= 20"
+          @infinite="onInfinite"
+          ref="infiniteLoading"
+        >
+          <div slot="no-results"></div>
+          <div slot="no-more"></div>
+        </infinite-loading>
+      </client-only>
     </section>
-    <client-only>
-      <infinite-loading
-        v-if="!multiple && products && products.length >= 20"
-        @infinite="onInfinite"
-        ref="infiniteLoading"
-      >
-        <div slot="no-results"></div>
-        <div slot="no-more"></div>
-      </infinite-loading>
-    </client-only>
+
     <section v-if="category.content" class="content-wrapper grey lighten-3">
       <v-container v-html="$md.render(category.content)" class="py-9"></v-container>
     </section>
   </div>
 </template>
-<style lang="stylus">
-.subcategories {
-  width: 100%;
-  justify-content: center;
-}
-</style>
+
 
 <script>
 import InfiniteLoading from "vue-infinite-loading";
@@ -181,7 +171,6 @@ import ProductCard from "~/components/ProductCard";
 
 import { isArray } from "util";
 export default {
-  // scrollToTop: true,
   components: { PageHeader, StickyMenu, ProductCard, InfiniteLoading },
   computed: {
     isParentCategory() {
@@ -243,28 +232,52 @@ export default {
     }
   },
   async asyncData(ctx) {
-    await ctx.store.dispatch("fetchGeneralInfo");
-    let category = await ctx.store.dispatch("fetchCategory", {
-      slug: ctx.route.params.category
-    });
+    const generalData = await ctx.store.dispatch("fetchGeneralInfo");
+    // await ctx.store.commit("pageFilter", 1);
+    const categoryFind = generalData.categories.find(
+      item => item.slug === ctx.params.category
+    );
 
-    if (!category) {
+    if (!categoryFind) {
       return ctx.error({
         statusCode: 404,
         message: "Категория не найдена"
       });
     }
+    const manufacturerFind = generalData.manufacturers.find(
+      item => item.slug === ctx.query.manufacturer
+    );
+    console.log("TCL: Data -> manufacturerFind", manufacturerFind);
+    // console.log("TCL: Data -> categoryFind", categoryFind);
+
+    let categoriesIds = [categoryFind.id];
+    let limit = 20;
+    if (categoryFind.children.length > 0) {
+      categoriesIds.push(...categoryFind.children.map(item => item.id));
+      limit = 60;
+    }
+    let category = await ctx.store.dispatch("fetchCategory", categoryFind.id);
+    const products = await ctx.store.dispatch("easyFetchMoreProducts", {
+      category: categoriesIds,
+      limit: limit,
+      manufacturer: manufacturerFind ? manufacturerFind.id : null
+      // page: 1
+    });
     return {
-      products: category.products,
-      category: category
+      products: products,
+      category: category,
+      categoriesIds: categoriesIds
     };
   },
   methods: {
     async onInfinite($state) {
-      await this.$store.commit("pageFilterInc");
-
+      // await this.$store.commit("pageFilterInc");
+      const start = this.products.length;
+      console.log("TCL: onInfinite -> start", start);
       const newProducts = await this.$store.dispatch("easyFetchMoreProducts", {
-        slug: this.$route.params.category
+        category: this.categoriesIds,
+        start: start,
+        manufacturer: this.$route.query.manufacturer
       });
 
       if (newProducts && newProducts.length) {
@@ -347,4 +360,25 @@ export default {
   }
 };
 </script>
+<style lang="stylus" scoped>
+#contentWrapper {
+  min-height: 100vh;
+}
 
+.subcategories {
+  width: 100%;
+  justify-content: center;
+
+  .subcategory-btn {
+    font-size: 0.7rem;
+  }
+}
+
+@media (min-width: 960px) {
+  .subcategories {
+    .subcategory-btn {
+      font-size: 0.9rem;
+    }
+  }
+}
+</style>

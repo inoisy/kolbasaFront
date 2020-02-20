@@ -210,49 +210,21 @@ export const actions = {
     return manufacturerData.manufacturer
 
   },
-  async fetchCategory(ctx, params) {
-    // console.log("TCL: fetchCategory -> params", params)
-
-    // if (ctx.state.sessionStorage.category.slug !== params.slug) {
-    const categoryFind = ctx.state.sessionStorage.generalInfo.categories.find(item => item.slug === params.slug)
-    // console.log("TCL: fetchCategory -> categoryFind", categoryFind)
-
+  async fetchCategory(ctx, id) {
     let client = this.app.apolloProvider.defaultClient;
-    if (categoryFind && categoryFind.id) {
-      const {
-        data: categoryData
-      } = await client.query({
-        query: gql `
+    const {
+      data: categoryData
+    } = await client.query({
+      query: gql `
         query CategoryQuery( $id: ID! ) {
           category(id: $id) {
+            id
             description
             name
             slug
             content
             img {
               url
-            }
-            products{
-              id
-              name
-              slug
-              weight
-              priceNum
-              discountPrice
-              isDiscount
-              isHalal
-              category {
-                slug
-              }
-              img {
-                url
-              }
-              manufacturer {
-                name
-                img {
-                  url
-                }
-              }
             }
             parent {
               id
@@ -268,46 +240,17 @@ export const actions = {
               id
               name
               slug
-              products(limit:25){
-                id
-                name
-                slug
-                weight
-                priceNum
-                discountPrice
-                isDiscount
-                isHalal
-                category {
-                  slug
-                }
-                img {
-                  url
-                }
-                manufacturer {
-                  name
-                  img {
-                    url
-                  }
-                }
-              }
             }
           }
         }
       `,
-        variables: {
-          id: categoryFind.id,
+      variables: {
+        id: id,
+      }
+    });
 
-        }
-      });
-
-      await ctx.commit("category", categoryData.category);
-      return categoryData.category
-    }
-
-    // } else {
-    //   return ctx.state.sessionStorage.category
-    // }
-
+    await ctx.commit("category", categoryData.category);
+    return categoryData.category
   },
   async fetchProduct(ctx, params) {
     // await ctx.commit("product", {});
@@ -339,146 +282,181 @@ export const actions = {
 
     return productItem
   },
-  async fetchProducts(ctx, params) {
-    await ctx.commit("products", {
-      items: [],
-      count: 0
-    });
-    await ctx.commit('loading', true)
+  // async fetchProducts(ctx, params) {
+  //   let client = this.app.apolloProvider.defaultClient;
+  //   const {
+  //     data: categoryData
+  //   } = await client.query({
+  //     query: gql `
+  //       query CategoryQuery( $id: ID! ) {
+  //         category(id: $id) {
+  //           description
+  //           name
+  //           slug
+  //           content
+  //           img {
+  //             url
+  //           }
+  //           parent {
+  //             id
+  //             slug
+  //             name
+  //             children {
+  //               id
+  //               name
+  //               slug
+  //             }
+  //           }
+  //           children{
+  //             id
+  //             name
+  //             slug
+  //           }
+  //         }
+  //       }
+  //     `,
+  //     variables: {
+  //       id: id,
+  //     }
+  //   });
 
+  //   await ctx.commit("category", categoryData.category);
+  //   return categoryData.category
+  // },
 
-    const categoryFind = ctx.state.sessionStorage.generalInfo.categories.find(item => item.slug === params.slug)
-
-    let query = `category=${categoryFind.id}`
-    const page = ctx.state.sessionStorage.pageFilter
-    // const manufacturers = ctx.state.sessionStorage.manufacturerFilter
-    const sort = ctx.state.sessionStorage.sortFilter.sort
-    if (page) {
-      query = query + `&_start=${(page - 1) * 20}`
-    }
-
-    // if (manufacturers && manufacturers.length > 0) {
-    //   query = query + manufacturers.map(item => `&manufacturer=${item}`).join('')
-    // }
-
-    if (sort && sort === "price") {
-      query = query + `&_sort=priceNum:desc`
-    } else {
-      query = query + `&_sort=name:asc`
-    }
-
-    const limit = params.limit ? params.limit : 20
-    const {
-      data: productsData
-    } = await this.$axios.get(`/products?` + query + "&_limit=" + limit)
-    // const {
-    //   data: productsCount
-    // } = await this.$axios.get(`/products/count?` + query)
-
-    await ctx.commit("products", {
-      items: productsData,
-      // count: productsCount
-    });
-
-    await ctx.commit('loading', false)
-    return {
-      items: productsData,
-      // count: productsCount
-    }
-  },
-  async easyFetchProducts(ctx, params) {
-    console.log("TCL: easyFetchProducts -> params", params)
-    // await ctx.commit("easyProducts", {
-    //   items: [],
-    //   count: 0
-    // });
-    await ctx.commit('loading', true)
-
-
-    const categoryFind = ctx.state.sessionStorage.generalInfo.categories.find(item => item.slug === params.slug)
-
-    let query = `category=${categoryFind.id}`
-    const page = ctx.state.sessionStorage.pageFilter
-    // const manufacturers = ctx.state.sessionStorage.manufacturerFilter
-
-    // console.log("TCL: easyFetchProducts -> manufacturer", manufacturer)
-    const sort = ctx.state.sessionStorage.sortFilter.sort
-    if (page) {
-      query = query + `&_start=${(page - 1) * 20}`
-    }
-    const manufacturer = ctx.state.sessionStorage.manufacturerFilter
-    const manufacturerId = ctx.state.sessionStorage.generalInfo.manufacturers.find(item => item.slug === manufacturer)
-    if (manufacturerId) {
-      query = query + `&manufacturer=${manufacturerId.id}`
-    }
-    // if (manufacturers && manufacturers.length > 0) {
-    //   query = query + manufacturers.map(item => `&manufacturer=${item}`).join('')
-    // }
-    if (sort && sort === "price") {
-      query = query + `&_sort=priceNum:desc`
-    } else {
-      query = query + `&_sort=name:asc`
-    }
-
-    const limit = params.limit ? params.limit : 20
-    const {
-      data: productsData
-    } = await this.$axios.get(`/products?` + query + "&_limit=" + limit)
-    // const {
-    //   data: productsCount
-    // } = await this.$axios.get(`/products/count?` + query)
-
-    // let countcount = productsCount
-    // products = productsData
-
-    await ctx.commit("easyProducts", productsData);
-
-    await ctx.commit('loading', false)
-    return productsData
-  },
   async easyFetchMoreProducts(ctx, params) {
+    console.log("TCL: easyFetchMoreProducts -> params", params)
     await ctx.commit('loading', true)
-
-
-    const categoryFind = ctx.state.sessionStorage.generalInfo.categories.find(item => item.slug === params.slug)
-
-    let query = `category=${categoryFind.id}`
-    const page = ctx.state.sessionStorage.pageFilter
-    // const manufacturers = ctx.state.sessionStorage.manufacturerFilter
-    const manufacturer = ctx.state.sessionStorage.manufacturerFilter
-    const sort = ctx.state.sessionStorage.sortFilter.sort
-    if (page) {
-      query = query + `&_start=${(page - 1) * 20}`
-    }
-
-    // if (manufacturers && manufacturers.length > 0) {
-    //   query = query + manufacturers.map(item => `&manufacturer=${item}`).join('')
-    // }
-
-    const manufacturerId = ctx.state.sessionStorage.generalInfo.manufacturers.find(item => item.slug === manufacturer)
-    if (manufacturerId) {
-      query = query + `&manufacturer=${manufacturerId.id}`
-    }
-    if (sort && sort === "price") {
-      query = query + `&_sort=priceNum:desc`
-    } else {
-      query = query + `&_sort=name:asc`
-    }
-
-    const limit = params.limit ? params.limit : 20
     const {
       data: productsData
-    } = await this.$axios.get(`/products?` + query + "&_limit=" + limit)
-    // const {
-    //   data: productsCount
-    // } = await this.$axios.get(`/products/count?` + query)
-
-    // let countcount = productsCount
-    // products = productsData
-
-    // await ctx.commit("pushEasyProducts", productsData);
+    } = await this.$axios.get("/products", {
+      params: {
+        category: params.category,
+        _limit: params.limit ? params.limit : 20,
+        _sort: params.sort === "price" ? "priceNum:desc" : "name:asc",
+        _start: params.start ? params.start : 0,
+        manufacturer: params.manufacturer
+      }
+    })
 
     await ctx.commit('loading', false)
     return productsData
   }
 }
+// async fetchProducts(ctx, params) {
+//   // await ctx.commit("products", {
+//   //   items: [],
+//   //   count: 0
+//   // });
+//   // await ctx.commit('loading', true)
+
+
+//   const categoryFind = ctx.state.sessionStorage.generalInfo.categories.find(item => item.slug === params.slug)
+
+//   let query = `category=${categoryFind.id}`
+//   const page = ctx.state.sessionStorage.pageFilter
+//   // const manufacturers = ctx.state.sessionStorage.manufacturerFilter
+//   const sort = ctx.state.sessionStorage.sortFilter.sort
+//   if (page) {
+//     query = query + `&_start=${(page - 1) * 20}`
+//   }
+
+//   // if (manufacturers && manufacturers.length > 0) {
+//   //   query = query + manufacturers.map(item => `&manufacturer=${item}`).join('')
+//   // }
+
+//   if (sort && sort === "price") {
+//     query = query + `&_sort=priceNum:desc`
+//   } else {
+//     query = query + `&_sort=name:asc`
+//   }
+
+//   const limit = params.limit ? params.limit : 20
+//   const {
+//     data: productsData
+//   } = await this.$axios.get(`/products?` + query + "&_limit=" + limit)
+//   // const {
+//   //   data: productsCount
+//   // } = await this.$axios.get(`/products/count?` + query)
+
+//   await ctx.commit("products", {
+//     items: productsData,
+//     // count: productsCount
+//   });
+
+//   // await ctx.commit('loading', false)
+//   return {
+//     items: productsData,
+//     // count: productsCount
+//   }
+// },
+// async easyFetchProducts(ctx, params) {
+//   // console.log("TCL: easyFetchProducts -> params", params)
+//   // await ctx.commit("easyProducts", {
+//   //   items: [],
+//   //   count: 0
+//   // });
+//   await ctx.commit('loading', true)
+
+
+//   const categoryFind = ctx.state.sessionStorage.generalInfo.categories.find(item => item.slug === params.slug)
+
+//   let query = `category=${categoryFind.id}`
+//   const page = ctx.state.sessionStorage.pageFilter
+//   // const manufacturers = ctx.state.sessionStorage.manufacturerFilter
+
+//   // console.log("TCL: easyFetchProducts -> manufacturer", manufacturer)
+//   const sort = ctx.state.sessionStorage.sortFilter.sort
+//   if (page) {
+//     query = query + `&_start=${(page - 1) * 20}`
+//   }
+//   const manufacturer = ctx.state.sessionStorage.manufacturerFilter
+//   const manufacturerId = ctx.state.sessionStorage.generalInfo.manufacturers.find(item => item.slug === manufacturer)
+//   if (manufacturerId) {
+//     query = query + `&manufacturer=${manufacturerId.id}`
+//   }
+//   // if (manufacturers && manufacturers.length > 0) {
+//   //   query = query + manufacturers.map(item => `&manufacturer=${item}`).join('')
+//   // }
+//   if (sort && sort === "price") {
+//     query = query + `&_sort=priceNum:desc`
+//   } else {
+//     query = query + `&_sort=name:asc`
+//   }
+
+//   const limit = params.limit ? params.limit : 20
+//   const {
+//     data: productsData
+//   } = await this.$axios.get(`/products?` + query + "&_limit=" + limit)
+//   // const {
+//   //   data: productsCount
+//   // } = await this.$axios.get(`/products/count?` + query)
+
+//   // let countcount = productsCount
+//   // products = productsData
+
+//   await ctx.commit("easyProducts", productsData);
+
+//   await ctx.commit('loading', false)
+//   return productsData
+// },
+// const categoryFind = ctx.state.sessionStorage.generalInfo.categories.find(item => item.slug === params.slug)
+// let query = `category=${params.category}`
+// const page = ctx.state.sessionStorage.pageFilter
+// console.log("TCL: easyFetchMoreProducts -> page", page)
+
+// console.log("TCL: easyFetchMoreProducts -> sort", sort)
+// if (page) {
+//   query = query + `&_start=${(page - 1) * 20}`
+// }
+
+
+// const manufacturerId = ctx.state.sessionStorage.generalInfo.manufacturers.find(item => item.slug === manufacturer)
+// if (manufacturerId) {
+//   query = query + `&manufacturer=${manufacturerId.id}`
+// }
+// if (sort && sort === "price") {
+//   query = query + `&_sort=priceNum:desc`
+// } else {
+//   query = query + `&_sort=name:asc`
+// }

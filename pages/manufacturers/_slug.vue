@@ -29,7 +29,7 @@
         </div>
 
         <v-layout row wrap v-for="(category,index) of categories" :key="category.id" class="mb-0">
-          <h2 class="display-flex align-center wrap xs12 mb-3 flex" data-aos="fade-up">
+          <h2 class="display-flex align-center wrap xs12 mb-3 flex">
             <nuxt-link
               :to="`/catalog/${category.item.slug}?manufacturer=${manufacturer.slug}`"
               :title="manufacturer.name"
@@ -40,7 +40,6 @@
 
           <div
             class="flex xs12 sm6 md4 lg3 xl2"
-            data-aos="fade-up"
             v-for="product of category.products"
             :key="product.id"
           >

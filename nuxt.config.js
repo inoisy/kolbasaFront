@@ -8,7 +8,6 @@ const apolloFetch = require('apollo-fetch');
 
 const routes = require("./routes")
 const redirectRoutes = require("./redirectRoutes")
-// console.log("TCL: redirectRoutes", redirectRoutes)
 
 const protocol = "https"
 const sitename = `${protocol}://prodaem-kolbasu.ru`;
