@@ -230,13 +230,10 @@ export default {
       return this.$vuetify.breakpoint.smAndDown;
     },
     basket() {
-      return Object.values(this.$store.state.localStorage.basket);
-    },
-    isBasket() {
-      return (
-        this.$store.state.localStorage.basket &&
-        this.$store.state.localStorage.basket.length > 0
-      );
+      const busketSorted = Object.values(
+        this.$store.state.localStorage.basket
+      ).sort((a, b) => a.item.name.localeCompare(b.item.name));
+      return busketSorted;
     }
   }
 };

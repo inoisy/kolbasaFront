@@ -59,7 +59,7 @@
           itemprop="priceCurrency"
           content="RUB"
           class="product-price"
-        >₽</span>
+        >р</span>
         <v-chip
           v-if="product.isDiscount"
           color="accent"

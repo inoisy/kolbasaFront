@@ -115,7 +115,7 @@
         :hover="false"
         text
       >
-        <span v-if="summa > 0" class="cart-text mr-2">{{summa}}&nbsp;₽</span>
+        <span v-if="summa > 0" class="cart-text mr-2">{{summa}}&nbsp;р</span>
         <v-badge
           class="cart-badge"
           color="#95282a"

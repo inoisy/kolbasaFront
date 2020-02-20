@@ -163,7 +163,7 @@ module.exports = {
 
   modules: [
     'nuxt-vuex-localstorage',
-
+    // 'nuxt-webfontloader',
     ['@nuxtjs/google-analytics', {
       id: 'UA-153607412-1'
     }],
@@ -280,7 +280,11 @@ module.exports = {
     }],
 
   ],
-
+  // webfontloader: {
+  //   google: {
+  //     families: ['Open+Sans:400,600,700&display=swap&subset=cyrillic'] //Loads Lato font with weights 400 and 700
+  //   }
+  // },
   // router: {
   //   scrollBehavior(to, from, savedPosition) {
   //     console.log("TCL: scrollBehavior -> to", to)
