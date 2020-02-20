@@ -7,8 +7,8 @@
     itemscope
     itemtype="http://schema.org/Product"
     hover
-    ripple
-    class="fill-height"
+    :ripple="false"
+    class="fill-height product-wrapper"
   >
     <div class="product-card-img-wrap" style="position: relative;">
       <img
@@ -34,78 +34,94 @@
           v-lazy="product.manufacturer && product.manufacturer.img ? imageBaseUrl + product.manufacturer.img.url : require('~/assets/no-image.png')"
         />
       </div>
-
-      <div
-        class="product-card-actions grey lighten-2 pa-1"
-        ref="productCardActions"
-        style="position:absolute; right: 0;top: 0;"
-      >
-        <v-btn
-          icon
-          color="primary"
-          @click="removeFromBasket"
-          v-show="busket"
-          title="remove From Basket"
-        >
-          <v-icon>remove</v-icon>
-        </v-btn>
-        <span v-show="busket" class="font-weight-bold mx-1">{{busket}}</span>
-
-        <v-btn icon color="primary" @click="addToBasket" title="add To Basket">
-          <v-icon v-show="!busket">add_shopping_cart</v-icon>
-          <v-icon v-show="busket">add</v-icon>
-        </v-btn>
-      </div>
     </div>
-    <v-card-text class="pt-0">
-      <div class="display-flex justify-space-between mb-2">
-        <div
-          itemprop="offers"
-          itemscope
-          itemtype="http://schema.org/Offer"
-          class="pl-0 display-flex align-center"
-        >
-          <span
-            itemprop="price"
-            v-show="product.priceNum"
-            class="font-weight-medium black--text fs-1-5"
-          >{{product.isDiscount ? product.discountPrice : product.priceNum}}</span>
-          <span v-show="!product.priceNum" style="font-size: 0.88rem">Цена по запросу</span>
-          <span
-            class="pl-2 fs-1-5"
-            v-if="product.isDiscount"
-            style="text-decoration: line-through; font-size:1rem"
-          >{{product.priceNum}}</span>
-          &nbsp;
-          <span
-            v-show="product.priceNum"
-            itemprop="priceCurrency"
-            content="RUB"
-            class="font-weight-medium black--text fs-1-5"
-          >Р</span>
-          <v-chip
-            v-if="product.isDiscount"
-            color="accent"
-            dark
-            class="ml-2"
-            style="font-size: 1.1rem"
-          >-{{Math.ceil(100*(product.priceNum-product.discountPrice)/product.priceNum) }}%</v-chip>
-        </div>
-        <div
-          itemprop="description"
-          class="align-center display-flex pa-0"
-        >{{product.weight ? product.weight + 'кг' : ''}}</div>
+    <div class="display-flex justify-space-between mb-2">
+      <div
+        itemprop="offers"
+        itemscope
+        itemtype="http://schema.org/Offer"
+        class="pl-0 display-flex align-center"
+      >
+        <span
+          itemprop="price"
+          v-show="product.priceNum"
+          class="product-price"
+        >{{product.isDiscount ? product.discountPrice : product.priceNum}}</span>
+        <span v-show="!product.priceNum" style="font-size: 0.88rem">Цена по запросу</span>
+        <span
+          class="pl-2 product-price"
+          v-if="product.isDiscount"
+          style="text-decoration: line-through;"
+        >{{product.priceNum}}</span>
+        &nbsp;
+        <span
+          v-show="product.priceNum"
+          itemprop="priceCurrency"
+          content="RUB"
+          class="product-price"
+        >₽</span>
+        <v-chip
+          v-if="product.isDiscount"
+          color="accent"
+          dark
+          class="ml-2"
+        >-{{Math.ceil(100*(product.priceNum-product.discountPrice)/product.priceNum) }}%</v-chip>
       </div>
+      <div
+        itemprop="description"
+        style="font-size: 15px;"
+        class="align-center display-flex pa-0"
+      >{{product.weight ? product.weight + 'кг' : ''}}</div>
+    </div>
 
-      <h2
-        itemprop="name"
-        class="mb-0 mt-1 black--text font-weight-regular"
-        style="line-height: normal !important; font-size:1.03rem; font-weight: 600;"
-      >{{product.name}}</h2>
-    </v-card-text>
+    <h2 itemprop="name" class="product-name mb-0 mt-1" style>{{product.name}}</h2>
+    <div class="product-busket-wrap" ref="productCardActions">
+      <v-btn
+        v-show="!busket"
+        class="pruduct-busket-btn"
+        tile
+        color="#f2f2f2"
+        style="height: 40px;"
+        elevation="0"
+        @click="handleAdd"
+      >В корзину</v-btn>
+      <client-only>
+        <product-quantity v-if="busket" class="mx-auto" :id="product.id" :qty="busket"></product-quantity>
+      </client-only>
+    </div>
   </v-card>
 </template>
 <style lang="stylus" scoped>
+.product-wrapper {
+  padding: 10px;
+}
+
+.product-busket-wrap {
+  margin-top: 10px;
+  height: 40px;
+  background-color: #f2f2f2;
+
+  .pruduct-busket-btn {
+    width: 100%;
+    color: black !important;
+  }
+}
+
+.product-price {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.product-name {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 20px;
+  height: 40px;
+  overflow: hidden;
+  color: #333;
+}
+
 .product-card-mini-imgs {
   position: absolute;
   bottom: 0px;
@@ -147,10 +163,15 @@
 </style>
 
 <script>
+import ProductQuantity from "~/components/ProductQuantity";
+
 export default {
   data() {
     return { imageBaseUrl: process.env.imageBaseUrl };
   },
+  props: ["category", "product", "to"],
+  components: { ProductQuantity },
+
   computed: {
     busket() {
       return this.$store.state.localStorage.basket[this.product.id]
@@ -160,19 +181,16 @@ export default {
   },
   methods: {
     cardClick(event) {
+      // if (!) return;
       const capture = this.$refs.productCardActions.contains(event.target);
       if (capture) {
         event.preventDefault();
       }
     },
-    async addToBasket(event) {
+    async handleAdd(event) {
       await this.$store.commit("addToBasket", this.product);
-    },
-    async removeFromBasket(event) {
-      await this.$store.commit("removeFromBasket", this.product.id);
     }
-  },
-  props: ["category", "product", "to"]
+  }
 };
 </script>
 

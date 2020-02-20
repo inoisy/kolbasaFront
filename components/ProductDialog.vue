@@ -75,36 +75,32 @@
           </div>
           <div class="display-flex align-center wrap">
             <v-btn
-              dark
-              color="#d50000"
-              class="product-button ml-0 mr-3 mt-3"
-              large
-              @click="handleOneClickBuy"
-              title="Купить в один клик"
-            >Купить в один клик</v-btn>
-            <v-btn
               color="#d50000"
               class="ml-0 product-button mt-3"
               large
-              @click="addToBasket"
+              @click="handleAdd"
               v-show="!busket"
               style="color:white"
               title="Добавить в корзину"
             >Добавить в корзину</v-btn>
-            <v-sheet
-              v-if="busket"
-              class="product-button align-center display-flex justify-center mt-3 py-1"
-              color="grey lighten-2"
-            >
-              <product-quantity style="max-width: 150px" :product="product" :qty="busket"></product-quantity>
-              <!-- <v-btn icon color="primary" @click="removeFromBasket" title="remove">
-                <v-icon>remove</v-icon>
-              </v-btn>
-              <span class="font-weight-bold mx-2">{{busket}}</span>
-              <v-btn icon color="primary" @click="addToBasket" title="add to busket">
-                <v-icon>add</v-icon>
-              </v-btn>-->
-            </v-sheet>
+            <client-only>
+              <v-sheet
+                v-if="busket"
+                class="product-button align-center display-flex justify-center mt-3 py-1"
+                color="grey lighten-2"
+              >
+                <product-quantity :id="product.id" :qty="busket"></product-quantity>
+              </v-sheet>
+            </client-only>
+            <v-btn
+              dark
+              color="#d50000"
+              class="product-button ml-0 mr-3 mt-3"
+              large
+              outlined
+              @click="handleOneClickBuy"
+              title="Купить в один клик"
+            >Купить в один клик</v-btn>
           </div>
         </v-flex>
         <v-flex xs12 md4 lg4 order-xs1 order-md2 class="display-flex image-wrapper">
@@ -220,12 +216,12 @@ export default {
     handleOneClickBuy() {
       this.showCard = false;
     },
-    async addToBasket(event) {
+    async handleAdd() {
       await this.$store.commit("addToBasket", this.product);
-    },
-    async removeFromBasket(event) {
-      await this.$store.commit("removeFromBasket", this.product);
     }
+    // async addToBasket(event) {
+    //   await this.$store.commit("addToBasket", this.product);
+    // }
   }
 };
 </script>
@@ -259,7 +255,8 @@ export default {
 }
 
 .product-button {
-  min-width: 200px;
+  min-width: 240px;
+  width: 100%;
 }
 
 .image-wrapper {
@@ -273,6 +270,10 @@ export default {
 }
 
 @media (min-width: 960px) {
+  .product-button {
+    width: auto;
+  }
+
   .image-wrapper {
     padding-left: 1rem;
     margin-bottom: 0;

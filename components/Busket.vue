@@ -1,8 +1,11 @@
 <template>
   <div class="pb-6 basketWrapper">
     <v-app-bar class="grey lighten-3 px-2" height="100px" flat>
+      <v-btn v-show="!offer" @click="basketClose" title="Закрыть" class="mr-3" outlined icon large>
+        <v-icon>close</v-icon>
+      </v-btn>
       <v-btn
-        v-if="offer && isSummValid"
+        v-show="offer && isSummValid"
         outlined
         @click="offer=false"
         icon
@@ -13,12 +16,20 @@
         <v-icon>arrow_back</v-icon>
       </v-btn>
       <h2 class="mb-0 font-weight-bold">{{offer && isSummValid ? 'Оформление заказа' : 'Корзина'}}</h2>
-      <v-btn @click="basketClose" title="Закрыть" class="ml-auto mr-0" outlined icon large>
-        <v-icon>close</v-icon>
+      <v-btn
+        v-show="!offer"
+        @click="clearBasket"
+        outlined
+        icon
+        large
+        class="ml-auto mr-0"
+        title="Очистить корзину"
+      >
+        <v-icon>delete</v-icon>
       </v-btn>
     </v-app-bar>
     <div v-show="!offer" class="px-4 pt-4">
-      <v-simple-table class="mb-6">
+      <v-simple-table class="mb-3">
         <thead>
           <tr>
             <th colspan="2">Наименование</th>
@@ -38,7 +49,6 @@
                 />
               </v-avatar>
             </td>
-
             <td class="px-1">
               <nuxt-link
                 v-if="product.item.category && product.item.category.slug"
@@ -49,9 +59,10 @@
             </td>
             <td class="px-1">
               <product-quantity
-                style="max-width: 185px"
-                :product="product.item"
+                :id="product.item.id"
                 :qty="product.count"
+                style="max-width: 185px"
+                class="mx-auto"
               ></product-quantity>
             </td>
             <td class="px-1">
@@ -61,35 +72,38 @@
             </td>
             <td class="px-1">
               <v-btn
-                icon
                 @click="(e)=>deleteFromBasket(e,product.item.id)"
                 class="display-flex"
                 title="Удалить"
+                icon
               >
                 <v-icon>close</v-icon>
               </v-btn>
             </td>
           </tr>
+          <tr style="background: white !important;">
+            <td></td>
+            <td></td>
+            <td class="text-right">Итого:</td>
+            <td class="text-center font-weight-bold">{{summa}}</td>
+            <td></td>
+          </tr>
         </tbody>
       </v-simple-table>
       <div>
-        <!-- <v-btn @click="clearBasket" outlined class="mb-4">Очистить корзину</v-btn> -->
-        <div class="mb-6 text-xs-right pr-3">
-          Итого:
-          <span class="font-weight-bold">{{summa}}</span>
-        </div>
-        <v-alert type="error" :value="!isSummValid" class="mt-4">
+        <v-alert type="error" :value="!isSummValid">
           Сумма заказа ниже 3000.
           Наберите товаров еще на {{3000-summa}} рублей.
         </v-alert>
         <v-btn
-          color="accent"
-          class="ml-0"
-          large
           @click="handleOfferClick"
           v-show="isSummValid"
+          color="accent"
+          class="busket-btn ml-0 mt-3"
+          large
           title="Оформить заказ"
         >Оформить заказ</v-btn>
+        <v-btn @click="basketClose" class="busket-btn mt-3" large outlined>Назад к покупкам</v-btn>
       </div>
     </div>
     <div v-if="offer && isSummValid" class="px-4 pt-4">
@@ -144,10 +158,15 @@
   min-width: 50px;
 }
 
-@media (max-width: 600px) {
+.busket-btn {
+  width: 100%;
 }
 
 @media (min-width: 960px) {
+  .busket-btn {
+    width: auto;
+  }
+
   .quantity {
     width: 155px;
     min-width: 155px;
@@ -161,15 +180,12 @@ import ProductQuantity from "~/components/ProductQuantity";
 
 export default {
   components: { ContactForm, ProductQuantity },
+  props: ["summa"],
   data() {
-    //   return newObj;
     return {
       imageBaseUrl: process.env.imageBaseUrl,
       offer: false,
       cart: {}
-      //   basketCounts: newObj
-      //   quantity: {}
-      //   basket: this.$store.state.localStorage.basket
     };
   },
   watch: {
@@ -180,47 +196,32 @@ export default {
     }
   },
   methods: {
-    async basketClose() {
-      return await this.$emit("close");
+    basketClose() {
+      return this.$emit("close");
     },
-    async handleOfferClick() {
+    handleOfferClick() {
       this.offer = true;
     },
     async clearBasket() {
       await this.$store.commit("clearBasket");
     },
-    // async changeBasket(qty, id) {
-    //   const quantity = parseInt(qty);
-    //   if (quantity > 0) {
-    //     await this.$store.commit("changeBasket", { id, qty: quantity });
-    //   } else if (quantity == 0) {
-    //     await this.$store.commit("deleteFromBasket", id);
-    //   }
-    // },
-    // async addToBasket(event, item) {
-    //   await this.$store.commit("addToBasket", item);
-    // },
-    // async removeFromBasket(event, id) {
-    //   await this.$store.commit("removeFromBasket", id);
-    // },
     async deleteFromBasket(event, id) {
       await this.$store.commit("deleteFromBasket", id);
     }
   },
   computed: {
-    summa() {
-      let summ = 0;
-      const basketItems = Object.keys(this.$store.state.localStorage.basket);
-      for (let id of basketItems) {
-        const product = this.$store.state.localStorage.basket[id];
-        if (product.item.isDiscount && product.item.discountPrice) {
-          summ = summ + product.count * product.item.discountPrice;
-        } else if (product.item.priceNum && product.count) {
-          summ = summ + product.count * product.item.priceNum;
-        }
-      }
-      return summ;
-    },
+    // summa() {
+    //   let summ = 0;
+    //   for (let id of Object.keys(this.$store.state.localStorage.basket)) {
+    //     const product = this.$store.state.localStorage.basket[id];
+    //     if (product.item.isDiscount && product.item.discountPrice) {
+    //       summ = summ + product.count * product.item.discountPrice;
+    //     } else if (product.item.priceNum && product.count) {
+    //       summ = summ + product.count * product.item.priceNum;
+    //     }
+    //   }
+    //   return summ;
+    // },
     isSummValid() {
       return this.summa > 3000;
     },

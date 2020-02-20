@@ -89,17 +89,7 @@ export default {
       }
     }
   },
-  methods: {
-    // handleOneClickBuy() {
-    //   this.showCard = false;
-    // },
-    async addToBasket(event) {
-      await this.$store.commit("addToBasket", this.product);
-    },
-    async removeFromBasket(event) {
-      await this.$store.commit("removeFromBasket", this.product);
-    }
-  },
+  // methods: {},
   props: ["products"],
   data() {
     return {

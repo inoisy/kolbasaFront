@@ -29,6 +29,7 @@
         @click="submit"
         large
         :disabled="$v.$anyError"
+        style="width: 100%"
         title="Подтвердить заказ"
       >Подтвердить заказ</v-btn>
     </v-flex>

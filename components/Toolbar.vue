@@ -97,7 +97,7 @@
         exact
       >{{item.name}}</v-btn>
     </template>
-    <div class="ya-phone-icon ma-1">
+    <!-- <div class="ya-phone-icon ma-1">
       <a :href="'tel:'+phone" class="pa-2" title="phone">
         <i
           aria-hidden="true"
@@ -105,19 +105,28 @@
           style="font-size: 28px; color: rgb(149, 40, 42); caret-color: rgb(149, 40, 42);"
         >phone</i>
       </a>
-    </div>
-    <v-badge color="#95282a" :value="isBasket" overlap :content="basketLength">
+    </div>-->
+    <client-only>
       <v-btn
-        icon
-        class="ml-1"
         @click="$emit('showBasket')"
-        large
         :disabled="!isBasket"
-        title="Корзина"
+        class="ml-3 cart-wrap"
+        color="#95282a"
+        :hover="false"
+        text
       >
-        <v-icon medium color="#95282a">shopping_basket</v-icon>
+        <span v-if="summa > 0" class="cart-text mr-2">{{summa}}&nbsp;₽</span>
+        <v-badge
+          class="cart-badge"
+          color="#95282a"
+          :value="isBasket"
+          overlap
+          :content="basketLength"
+        >
+          <v-icon color="#95282a">shopping_basket</v-icon>
+        </v-badge>
       </v-btn>
-    </v-badge>
+    </client-only>
 
     <v-btn icon class="ml-1 hidden-md-and-up" @click="$emit('showDrawer')" large title="Меню">
       <v-icon medium color="#95282a">menu</v-icon>
@@ -125,6 +134,55 @@
   </v-app-bar>
 </template>
 <style lang="stylus" scoped>
+.cart-wrap {
+  height: 100% !important;
+
+  .cart-badge {
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #eeeeee;
+    transition-duration: 0.28s;
+  }
+
+  .cart-text {
+    position: relative;
+    font-size: 16px;
+    font-weight: 600;
+    color: #95282a;
+    // line-height: 40px;
+    white-space: nowrap;
+
+    &:before {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-bottom: 2px solid #95282a;
+      width: 0;
+      transition: width 0.1s ease-in;
+    }
+  }
+
+  &:hover {
+    // .v-btn {
+    // color: #eaeaea;
+    // }
+    .cart-badge {
+      background-color: #d8b7b7;
+    }
+
+    .cart-text:before {
+      width: 100%;
+    }
+  }
+}
+
 .two-columns {
   column-count: 2;
   max-width: 600px;
@@ -155,7 +213,7 @@
 
 <script>
 export default {
-  props: ["menuItems"],
+  props: ["menuItems", "summa"],
   computed: {
     basketLength() {
       // const basketObj = this.$store.state.localStorage.basket;

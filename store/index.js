@@ -38,7 +38,22 @@ export const mutations = {
   pushEasyProducts(state, items) {
     state.sessionStorage.easyProducts = [...state.sessionStorage.easyProducts, ...items]
   },
-  async addToBasket(state, product) {
+  incrementBasket(state, id) {
+    // console.log("TCL: incrementBasket -> id", id)
+    if (!state.localStorage.basket[id]) return
+    const count = +state.localStorage.basket[id].count + 1
+    const newItem = {
+      [id]: {
+        count: count,
+        item: state.localStorage.basket[id].item
+      }
+    }
+    state.localStorage.basket = {
+      ...state.localStorage.basket,
+      ...newItem
+    }
+  },
+  addToBasket(state, product) {
     if (state.localStorage.basket[product.id]) {
       const count = +state.localStorage.basket[product.id].count + 1
       const newItem = {
@@ -71,7 +86,6 @@ export const mutations = {
     state.localStorage.basket = {}
   },
   changeBasket(state, item) {
-    // console.log("TCL: changeBasket -> item", item)
     const newItem = {
       [item.id]: {
         count: item.qty,
@@ -84,17 +98,11 @@ export const mutations = {
     }
   },
   deleteFromBasket(state, id) {
-    // console.log("TCL: deleteFromBasket -> product", id)
-    const basket = state.localStorage.basket
-
-    state.localStorage.basket = _.omit(basket, id)
+    state.localStorage.basket = _.omit(state.localStorage.basket, id)
   },
   removeFromBasket(state, id) {
-    // const basket = 
     const count = state.localStorage.basket[id].count - 1
-
     if (count < 1) {
-
       state.localStorage.basket = _.omit(state.localStorage.basket, id)
     } else {
       const newItem = {
@@ -107,9 +115,7 @@ export const mutations = {
         ...state.localStorage.basket,
         ...newItem
       }
-
     }
-
   },
 
 }
@@ -282,47 +288,7 @@ export const actions = {
 
     return productItem
   },
-  // async fetchProducts(ctx, params) {
-  //   let client = this.app.apolloProvider.defaultClient;
-  //   const {
-  //     data: categoryData
-  //   } = await client.query({
-  //     query: gql `
-  //       query CategoryQuery( $id: ID! ) {
-  //         category(id: $id) {
-  //           description
-  //           name
-  //           slug
-  //           content
-  //           img {
-  //             url
-  //           }
-  //           parent {
-  //             id
-  //             slug
-  //             name
-  //             children {
-  //               id
-  //               name
-  //               slug
-  //             }
-  //           }
-  //           children{
-  //             id
-  //             name
-  //             slug
-  //           }
-  //         }
-  //       }
-  //     `,
-  //     variables: {
-  //       id: id,
-  //     }
-  //   });
 
-  //   await ctx.commit("category", categoryData.category);
-  //   return categoryData.category
-  // },
 
   async easyFetchMoreProducts(ctx, params) {
     // console.log("TCL: easyFetchMoreProducts -> params", params)
@@ -343,6 +309,47 @@ export const actions = {
     return productsData
   }
 }
+// async fetchProducts(ctx, params) {
+//   let client = this.app.apolloProvider.defaultClient;
+//   const {
+//     data: categoryData
+//   } = await client.query({
+//     query: gql `
+//       query CategoryQuery( $id: ID! ) {
+//         category(id: $id) {
+//           description
+//           name
+//           slug
+//           content
+//           img {
+//             url
+//           }
+//           parent {
+//             id
+//             slug
+//             name
+//             children {
+//               id
+//               name
+//               slug
+//             }
+//           }
+//           children{
+//             id
+//             name
+//             slug
+//           }
+//         }
+//       }
+//     `,
+//     variables: {
+//       id: id,
+//     }
+//   });
+
+//   await ctx.commit("category", categoryData.category);
+//   return categoryData.category
+// },
 // async fetchProducts(ctx, params) {
 //   // await ctx.commit("products", {
 //   //   items: [],

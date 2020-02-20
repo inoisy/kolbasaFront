@@ -1,6 +1,11 @@
 <template>
   <v-app>
-    <toolbar :menuItems="menuItems" @showDrawer="drawer = true" @showBasket="basketDrawer=true" />
+    <toolbar
+      :menuItems="menuItems"
+      :summa="summa"
+      @showDrawer="drawer = true"
+      @showBasket="basketDrawer=true"
+    />
     <navigation-mobile
       :menuItems="menuItems"
       :drawer="drawer"
@@ -10,15 +15,9 @@
       <nuxt />
     </v-content>
     <my-footer class="pos-relative" :menuItems="menuItems" />
-    <v-navigation-drawer
-      v-model="basketDrawer"
-      temporary
-      fixed
-      left
-      :width="$vuetify.breakpoint.mdAndUp ? '700px' : '500px'"
-    >
+    <v-navigation-drawer v-model="basketDrawer" temporary fixed right width="550px">
       <client-only>
-        <busket v-on:close="basketDrawer=false" />
+        <busket v-on:close="basketDrawer=false" :summa="summa" />
       </client-only>
     </v-navigation-drawer>
   </v-app>
@@ -93,6 +92,18 @@ export default {
           to: "/contacts"
         }
       ];
+    },
+    summa() {
+      let summ = 0;
+      for (let id of Object.keys(this.$store.state.localStorage.basket)) {
+        const product = this.$store.state.localStorage.basket[id];
+        if (product.item.isDiscount && product.item.discountPrice) {
+          summ = summ + product.count * product.item.discountPrice;
+        } else if (product.item.priceNum && product.count) {
+          summ = summ + product.count * product.item.priceNum;
+        }
+      }
+      return summ;
     }
   },
 
