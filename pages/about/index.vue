@@ -43,7 +43,6 @@ export default {
   },
   async asyncData(ctx) {
     await ctx.store.dispatch("fetchGeneralInfo");
-    // await ctx.store.dispatch("fetchGeneralInfo");
     let client = ctx.app.apolloProvider.defaultClient;
     const { data: pageData } = await client.query({
       query: gql`
@@ -55,7 +54,6 @@ export default {
         }
       `
     });
-    // console.log("TCL: Data -> pageData", pageData);
 
     return {
       page: pageData.pages[0]

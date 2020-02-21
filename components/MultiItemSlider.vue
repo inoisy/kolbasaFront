@@ -46,7 +46,6 @@ export default {
         loop: true,
         slidesPerView: "auto",
         preloadImages: false,
-        // Enable lazy loading
         lazy: true,
         watchSlidesVisibility: true,
         watchSlidesProgress: true,
@@ -61,7 +60,7 @@ export default {
 };
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 @import 'swiper/dist/css/swiper.css';
 
 .swiper-button-next, .swiper-button-prev {

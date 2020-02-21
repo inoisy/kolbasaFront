@@ -1,7 +1,14 @@
 <template>
   <v-sheet light class="fill-height position-relative">
     <v-app-bar height="80px" flat>
-      <v-btn v-show="!showCard" color="gray" fab @click="showCard=true" class="mr-4" title="Назад">
+      <v-btn
+        v-show="!showProductCard"
+        color="gray"
+        fab
+        @click="showProductCard=true"
+        class="mr-4"
+        title="Назад"
+      >
         <v-icon>arrow_back</v-icon>
       </v-btn>
       <v-breadcrumbs :items="breadcrumbs" class="pl-1 pr-5">
@@ -20,7 +27,7 @@
     </v-app-bar>
 
     <v-container grid-list-lg class="position-relative fill-height">
-      <v-layout row wrap v-show="showCard" itemscope itemtype="http://schema.org/Product">
+      <v-layout row wrap v-show="showProductCard" itemscope itemtype="http://schema.org/Product">
         <v-flex xs12 md8 lg8 order-xs2 order-md1 class="display-flex column position-relative pl-4">
           <h1
             itemprop="name"
@@ -130,7 +137,7 @@
           />
         </v-flex>
       </v-layout>
-      <div v-show="!showCard" class="pb-12 pt-8 mx-auto">
+      <div v-show="!showProductCard" class="pb-12 pt-8 mx-auto">
         <h2 class="fs-2 mb-5 font-weight-bold">Купить в один клик</h2>
         <contact-form></contact-form>
       </div>
@@ -203,12 +210,18 @@ export default {
         : "";
     }
   },
-
+  watch: {
+    showProductCard(val) {
+      // console.log("TCL: showProductCard -> val", val);
+      // if (!val) {
+      this.$emit("hanleOneClickBuy", val);
+      // }
+    }
+  },
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl,
-      // dialog: true,
-      showCard: true
+      showProductCard: true
     };
   },
   methods: {
@@ -216,14 +229,11 @@ export default {
       await this.$emit("closeProductDialog");
     },
     handleOneClickBuy() {
-      this.showCard = false;
+      this.showProductCard = false;
     },
     async handleAdd() {
       await this.$store.commit("addToBasket", this.product);
     }
-    // async addToBasket(event) {
-    //   await this.$store.commit("addToBasket", this.product);
-    // }
   }
 };
 </script>
@@ -234,7 +244,6 @@ export default {
   top: 0;
 
   .manufacturer-img {
-    // position: absolute;
     height: 3.5rem;
     width: 3.5rem;
     object-fit: contain;
@@ -267,7 +276,6 @@ export default {
 }
 
 .image-wrapper {
-  // margin-bottom: 1.1rem;
   position: relative;
 
   .item-img {

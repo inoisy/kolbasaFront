@@ -24,7 +24,6 @@ async function main() {
   const {
     data: products
   } = await axios.get(backendUrl + '/products?_limit=99999')
-  // console.log("TCL: main -> products", products)
 
   for (let product of products) {
     if (product.category && product.category.slug && product.slug) {
@@ -33,14 +32,8 @@ async function main() {
       console.log("no category", product.name)
     }
 
-    //   //  routes.push(`/catalog/${item.slug}`)
-    //   for (let product of category.products) {
-    //     routes.push(`/catalog/${category.slug}/${product.slug}`)
-    //   }
 
   }
-  // console.log("TCL: main -> routes", routes)
   return routes
 }
-// main()
 module.exports = main

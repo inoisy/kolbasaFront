@@ -72,14 +72,12 @@ export default {
 }
 
 a {
-  // color: #ffffff;
   text-decoration: none;
   font-weight: 500;
   font-size: 1.1rem;
 }
 
 a.nuxt-link-active {
-  // color: #19bcdb !important;
   font-weight: 700;
 }
 </style>

@@ -173,12 +173,6 @@ export default {
   components: { ProductQuantity },
 
   computed: {
-    // busketIndex() {
-
-    //   console.log("TCL: busketIndex -> index", index);
-
-    //   return index < 0 ? false : index;
-    // },
     busket() {
       const index = this.$store.state.localStorage.basket.findIndex(
         item => item.id === this.product.id

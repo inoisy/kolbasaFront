@@ -147,14 +147,10 @@
 }
 
 .quantity {
-  // width: 100px;
   min-width: 100px;
-  // display: flex;
-  // align-items: center;
 }
 
 .price {
-  // flex-basis: 50px;
   min-width: 50px;
 }
 
@@ -180,7 +176,6 @@ import ProductQuantity from "~/components/ProductQuantity";
 
 export default {
   components: { ContactForm, ProductQuantity },
-  props: ["summa"],
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl,
@@ -210,29 +205,16 @@ export default {
     }
   },
   computed: {
-    // summa() {
-    //   let summ = 0;
-    //   for (let id of Object.keys(this.$store.state.localStorage.basket)) {
-    //     const product = this.$store.state.localStorage.basket[id];
-    //     if (product.isDiscount && product.discountPrice) {
-    //       summ = summ + product.count * product.discountPrice;
-    //     } else if (product.priceNum && product.count) {
-    //       summ = summ + product.count * product.priceNum;
-    //     }
-    //   }
-    //   return summ;
-    // },
+    summa() {
+      return this.$store.getters.summa;
+    },
     isSummValid() {
       return this.summa > 3000;
     },
-
     isMobile() {
       return this.$vuetify.breakpoint.smAndDown;
     },
     basket() {
-      // const busketSorted = Object.values(
-      //   this.$store.state.localStorage.basket
-      // ).sort((a, b) => a.item.name.localeCompare(b.item.name));
       return this.$store.state.localStorage.basket;
     }
   }

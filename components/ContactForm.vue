@@ -109,7 +109,6 @@ export default {
                 return acc;
               }, "")
             : "";
-        // console.log("TCL: submit -> busketText", busketText);
 
         const busketHtml =
           busketItems && busket.length > 0
@@ -118,7 +117,6 @@ export default {
                 return acc;
               }, "")
             : "";
-        // console.log("TCL: submit -> busketHtml", busketHtml);
 
         const msg = {
           name: this.name,
@@ -144,9 +142,6 @@ export default {
     }
   },
   computed: {
-    // basket() {
-    //   return Object.values(this.$store.state.localStorage.basket);
-    // },
     nameErrors() {
       const errors = [];
       if (!this.$v.name.$dirty) return errors;

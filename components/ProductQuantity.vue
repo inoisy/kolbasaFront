@@ -36,7 +36,6 @@ export default {
       }
     },
     async hanleIncrement() {
-      // console.log("TCL: hanleIncrement -> id", this.id);
       await this.$store.commit("incrementBasket", this.id);
     },
     async handleDecrement() {

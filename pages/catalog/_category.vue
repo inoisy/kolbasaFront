@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nuxt-child />
+    <nuxt-child @close="handleClose" />
     <page-header
       :title="`${category.name} оптом`"
       :breadrumbs="breadcrumbs"
@@ -34,60 +34,28 @@
     >
       <v-container grid-list-lg id="contentWrapper" class="display-flex py-9" fluid>
         <v-layout row wrap id="products" ref="product" class="mt-0">
-          <!-- v-if="!multiple" -->
           <div class="flex xs12 sm6 md4 lg3 xl2" v-for="(product,index) in products" :key="index">
-            <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
+            <product-card
+              v-if="product"
+              :product="product"
+              :to="`/catalog/${category.slug}/${product.slug}`"
+            ></product-card>
+            <v-sheet v-else>
+              <v-skeleton-loader :boilerplate="!loading" class="mx-auto" type="card"></v-skeleton-loader>
+            </v-sheet>
           </div>
-        </v-layout>
-
-        <!-- <v-layout v-else-if="multiple" wrap>
-          <div
-            class="flex xs12"
-            v-for="(productsGroup,index) in category.children"
-            :key="'prGr'+index"
-          >
-            <nuxt-link
-              :to="`/catalog/${productsGroup.slug}`"
-              class="lumber font-weight-bold mb-6 d-inline-block primary--text underline-on-hover"
-              style="font-size: 2.3rem;"
-              :title="productsGroup.name"
-            >{{productsGroup.name}}</nuxt-link>
-            <v-layout wrap class="mb-6">
-              <div
-                class="flex xs12 sm6 md4 lg3 xl2"
-                v-for="(product,prIndex) in productsGroup.products"
-                :key="prIndex"
-              >
-                <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
-              </div>
-            </v-layout>
-          </div>
-
-          <v-layout
-            wrap
-            v-if="category.products && category.products && category.products.length > 0"
-            class="px-2"
-          >
-            <h2 class="flex xs12">Остальные {{category.name}}</h2>
-
-            <div
-              class="flex xs12 sm6 md4 lg3 xl2"
-              v-for="(product,prIndex) in category.products"
-              :key="prIndex"
+          <client-only>
+            <infinite-loading
+              v-if="products && products.length >= 20"
+              @infinite="onInfinite"
+              ref="infiniteLoading"
+              class="flex xs12"
             >
-              <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
-            </div>
-          </v-layout>
+              <div slot="no-results"></div>
+              <div slot="no-more"></div>
+            </infinite-loading>
+          </client-only>
         </v-layout>
-        <div v-else class="ma-auto">
-          <v-progress-circular
-            v-if="$store.state.loading"
-            :size="150"
-            color="#95282a"
-            indeterminate
-            class="mx-auto my-5 d-flex"
-          ></v-progress-circular>
-        </div>-->
         <div
           class="flex hidden-sm-and-down"
           style="width: 300px; min-width: 300px; max-width: 300px; margin-left: auto;"
@@ -143,17 +111,6 @@
           </sticky-menu>
         </div>
       </v-container>
-      <client-only>
-        <!-- !multiple && -->
-        <infinite-loading
-          v-if=" products && products.length >= 20"
-          @infinite="onInfinite"
-          ref="infiniteLoading"
-        >
-          <div slot="no-results"></div>
-          <div slot="no-more"></div>
-        </infinite-loading>
-      </client-only>
     </section>
 
     <section v-if="category.content" class="content-wrapper grey lighten-3">
@@ -173,6 +130,9 @@ import { isArray } from "util";
 export default {
   components: { PageHeader, StickyMenu, ProductCard, InfiniteLoading },
   computed: {
+    loading() {
+      return this.$store.state.sessionStorage.loading;
+    },
     isParentCategory() {
       return (
         this.category &&
@@ -184,7 +144,9 @@ export default {
     subcategories() {
       return this.multiple
         ? this.category.children
-        : this.isParentCategory && this.category.parent[0].children.length > 0
+        : this.isParentCategory &&
+          this.category.parent[0].children &&
+          this.category.parent[0].children.length > 0
         ? this.category.parent[0].children
         : [];
     },
@@ -233,53 +195,74 @@ export default {
   },
   async asyncData(ctx) {
     const generalData = await ctx.store.dispatch("fetchGeneralInfo");
-    // await ctx.store.commit("pageFilter", 1);
     const categoryFind = generalData.categories.find(
       item => item.slug === ctx.params.category
     );
-
     if (!categoryFind) {
       return ctx.error({
         statusCode: 404,
         message: "Категория не найдена"
       });
     }
-    const manufacturerFind = generalData.manufacturers.find(
-      item => item.slug === ctx.query.manufacturer
-    );
-    console.log("TCL: Data -> manufacturerFind", manufacturerFind);
-    // console.log("TCL: Data -> categoryFind", categoryFind);
-
-    let categoriesIds = [categoryFind.id];
-    let limit = 20;
-    if (categoryFind.children.length > 0) {
+    let products = new Array(20),
+      category = {},
+      categoriesIds = [categoryFind.id],
+      limit = 20;
+    if (categoryFind.children && categoryFind.children.length > 0) {
       categoriesIds.push(...categoryFind.children.map(item => item.id));
-      limit = 60;
+      limit = ctx.params.slug ? 60 : 20;
     }
-    let category = await ctx.store.dispatch("fetchCategory", categoryFind.id);
-    const products = await ctx.store.dispatch("easyFetchMoreProducts", {
+    if (ctx.params.slug) {
+      return {
+        products: products,
+        category: categoryFind,
+        categoriesIds: categoriesIds,
+        pageData: false
+      };
+    }
+    // const manufacturerFind = ctx.query.manufacturer
+    //   ? generalData.manufacturers.find(
+    //       item => item.slug === ctx.query.manufacturer
+    //     )
+    //   : null;
+
+    category = await ctx.store.dispatch("fetchCategory", categoryFind.id);
+    products = await ctx.store.dispatch("fetchProducts", {
       category: categoriesIds,
       limit: limit,
-      manufacturer: manufacturerFind ? manufacturerFind.id : null
-      // page: 1
+      manufacturer: ctx.store.getters.getManufacturerId(ctx.query.manufacturer)
     });
     return {
       products: products,
       category: category,
-      categoriesIds: categoriesIds
+      categoriesIds: categoriesIds,
+      pageData: true
     };
   },
   methods: {
+    async handleClose() {
+      // console.log("TCL: handleClose -> handleClose");
+      if (!this.pageData) {
+        this.category = await this.$store.dispatch(
+          "fetchCategory",
+          this.category.id
+        );
+        const products = await this.$store.dispatch("fetchProducts", {
+          category: this.categoriesIds,
+          limit: this.limit
+        });
+        this.products = products;
+        this.pageData = true;
+      }
+    },
     async onInfinite($state) {
-      // await this.$store.commit("pageFilterInc");
-      const start = this.products.length;
-      console.log("TCL: onInfinite -> start", start);
-      const newProducts = await this.$store.dispatch("easyFetchMoreProducts", {
+      const newProducts = await this.$store.dispatch("fetchProducts", {
         category: this.categoriesIds,
-        start: start,
-        manufacturer: this.$route.query.manufacturer
+        start: this.products.length,
+        manufacturer: this.$store.getters.getManufacturerId(
+          this.$route.query.manufacturer
+        )
       });
-
       if (newProducts && newProducts.length) {
         this.products = [...this.products, ...newProducts];
         $state.loaded();
@@ -287,69 +270,6 @@ export default {
         $state.complete();
       }
     }
-    // async sortChange(val) {
-    //   if (Number.isInteger(val)) {
-    //     this.$vuetify.goTo("#contentWrapper");
-    //     if (val === 1) {
-    //       const addObj = {
-    //         sort: "price"
-    //       };
-    //       await this.$store.commit("sortFilter", addObj);
-    //       this.products = [];
-    //       this.products = await this.$store.dispatch("easyFetchProducts", {
-    //         slug: this.$route.params.category
-    //       });
-    //       this.$router.push({
-    //         query: { ...this.$route.query, ...addObj }
-    //       });
-    //     } else if (val === 0) {
-    //       const addObj = {
-    //         sort: "name"
-    //       };
-    //       await this.$store.commit("sortFilter", addObj);
-    //       this.products = [];
-    //       this.products = await this.$store.dispatch("easyFetchProducts", {
-    //         slug: this.$route.params.category
-    //       });
-    //       let { sort, ...query } = this.$route.query;
-    //       this.$router.push({
-    //         path: this.$route.path,
-    //         query: query
-    //       });
-    //     }
-    //   }
-    // },
-    // async onManufacturerChange(val) {
-    //   await this.$store.commit("pageFilter", 1);
-    //   this.$vuetify.goTo("#contentWrapper");
-    //   if (!val || val === this.manufacturersSelected) {
-    //     this.manufacturersSelected = null;
-    //     await this.$store.commit("manufacturerFilter", null);
-    //     let { manufacturer, ...query } = this.$route.query;
-    //     await this.$router.push({
-    //       path: this.$route.path,
-    //       query: query
-    //     });
-    //     this.products = [];
-    //     this.products = await this.$store.dispatch("easyFetchProducts", {
-    //       slug: this.$route.params.category
-    //     });
-    //   } else {
-    //     this.manufacturersSelected = val;
-    //     const addObj = {
-    //       manufacturer: val
-    //     };
-    //     await this.$store.commit("manufacturerFilter", val);
-    //     await this.$router.push({
-    //       path: this.$route.path,
-    //       query: { ...this.$route.query, ...addObj }
-    //     });
-    //     this.products = [];
-    //     this.products = await this.$store.dispatch("easyFetchProducts", {
-    //       slug: this.$route.params.category
-    //     });
-    //   }
-    // }
   },
 
   data() {

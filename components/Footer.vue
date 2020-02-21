@@ -103,24 +103,12 @@
             </template>
           </v-list>
         </v-flex>
-        <!-- <v-flex class="mb-10" xs12 md6 lg3 hidden-xs-only>
-          <v-subheader>ПРОИЗВОДИТЕЛИ</v-subheader>
-          <v-list style="background: transparent !important;" class="footer-list">
-            <v-list-item
-              v-for="(manufacturer,index) in manufacturers"
-              :key="index"
-              :to="`/manufacturers/${manufacturer.slug}`"
-              style="line-height: normal"
-            >{{manufacturer.name}}</v-list-item>
-          </v-list>
-        </v-flex>-->
       </v-layout>
     </v-container>
   </v-footer>
 </template>
 <style lang="stylus" >
 .footer {
-  // background-image: url();
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -136,15 +124,6 @@ export default {
   computed: {
     categories() {
       return this.menuItems.find(item => item.name === "Каталог");
-      // if (
-      //   this.$store.state.sessionStorage.generalInfo &&
-      //   this.$store.state.sessionStorage.generalInfo.categories &&
-      //   this.$store.state.sessionStorage.generalInfo.categories.length > 0
-      // ) {
-      //   return this.$store.state.sessionStorage.generalInfo.categories.filter(
-      //     item => item.parent && item.parent.length === 0
-      //   );
-      // } else return [];
     },
     manufacturers() {
       return this.$store.state.sessionStorage.generalInfo.manufacturers;

@@ -56,8 +56,6 @@ export default {
         }
       `
     });
-    // console.log("TCL: Data -> manufacturerData", manufacturerData);
-
     return {
       manufacturers: manufacturerData.manufacturers
     };
@@ -75,10 +73,6 @@ export default {
         }
       ];
     }
-
-    // manufacturers() {
-    //   return this.$store.state.generalInfo.manufacturers;
-    // }
   }
 };
 </script>

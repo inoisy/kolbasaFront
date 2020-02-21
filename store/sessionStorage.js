@@ -1,5 +1,3 @@
-// import gql from "graphql-tag";
-// const baseUrl = process.env.baseUrl
 export const state = () => ({
   loading: false,
   sortFilter: {},

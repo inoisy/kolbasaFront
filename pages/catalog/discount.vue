@@ -26,7 +26,6 @@
           <h2 class="mb-10 flex xs12 d-block" data-aos="fade-up">{{category.name}}</h2>
           <div
             class="flex xs12 sm6 md4 lg3 xl2"
-            data-aos="fade-up"
             v-for="product of category.products"
             :key="product.id"
           >
@@ -126,7 +125,6 @@ export default {
     return {
       title: "Акционная продукция",
       imageBaseUrl: process.env.imageBaseUrl
-      //   breadcrumbs:
     };
   }
 };

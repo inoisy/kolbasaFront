@@ -1,6 +1,3 @@
-// const pkg = require('./package')
-// const os = require("os");
-// import fs from 'fs'
 const path = require('path')
 const fs = require('fs')
 
@@ -15,9 +12,6 @@ const backURL = `${protocol}://api.prodaem-kolbasu.ru`
 const backendUrl = process.env.BACKEND_URL || backURL
 const imageUrl = process.env.IMAGE_BASE_URL || process.env.BACKEND_URL || backURL
 
-// const imageBaseUrl = process.env.IMAGE_BASE_URL || "http://cdn.yakutov.com"
-
-// const axios = require('axios')
 
 const name = "Альянс Фуд"
 const description = "Альянс Фуд. Колбаса и другие мясные изделия оптом по ценам производителя. Самовывоз со склада в Москве. Доставка по РФ и СНГ."
@@ -28,7 +22,6 @@ module.exports = {
   hooks: {
     build: {
       async before(builder) {
-        // console.log("TCL: before -> builder", builder)
         const uri = backendUrl + '/graphql'
         const query = `
           {
@@ -76,10 +69,7 @@ module.exports = {
         const data = await fetchApollo({
           query
         })
-        // console.log("TCL: before -> data", data)
-        // console.log("TCL: done -> builder", builder)
         const extraFilePath = path.join(builder.nuxt.options.srcDir, 'assets', 'generalData.json')
-        // console.log("TCL: before -> extraFilePath", extraFilePath)
         await fs.writeFileSync(extraFilePath, JSON.stringify(data.data))
       }
     }
@@ -147,7 +137,6 @@ module.exports = {
    ** Plugins to load before mounting the App
    */
   plugins: [
-    // '@/plugins/vuetify',
     "@/plugins/lazyload.js",
     {
       src: '@/plugins/aos.js',
@@ -163,7 +152,6 @@ module.exports = {
 
   modules: [
     'nuxt-vuex-localstorage',
-    // 'nuxt-webfontloader',
     ['@nuxtjs/google-analytics', {
       id: 'UA-153607412-1'
     }],
@@ -177,7 +165,7 @@ module.exports = {
         webvisor: true
       }
     ],
-    ['vue-yandex-maps/nuxt', { // you may define your apiKey, lang and version or skip this.
+    ['vue-yandex-maps/nuxt', {
       apiKey: 'df1793f7-7dbf-4c12-abe4-47fcdf2861b5',
       lang: 'ru_RU',
       version: '2.1'
@@ -209,13 +197,11 @@ module.exports = {
       description: description,
       img: imageUrl + "/uploads/031ba5905e18488794851c8d512b1227.jpg",
       locale: 'ru_RU',
-      // twitter: '@UserName',
       themeColor: '#d50000'
     }],
 
     ['@nuxtjs/redirect-module', redirectRoutes],
 
-    // Redirect option here
 
     ['@nuxtjs/sitemap', {
       gzip: true,
@@ -229,35 +215,20 @@ module.exports = {
 
     }],
     ["nuxt-ssr-cache", {
-        // if you're serving multiple host names (with differing
-        // results) from the same server, set this option to true.
-        // (cache keys will be prefixed by your host name)
-        // if your server is behind a reverse-proxy, please use
-        // express or whatever else that uses 'X-Forwarded-Host'
-        // header field to provide req.hostname (actual host name)
-        // useHostPrefix: true,
+      store: {
+        type: 'redis',
+        host: 'localhost',
+        ttl: 4 * 60 * 60,
+        configure: [
 
-        store: {
-          type: 'redis',
-          host: 'localhost',
-          ttl: 4 * 60 * 60,
-          configure: [
-            // these values are configured
-            // on redis upon initialization
-            ['maxmemory', '200mb'],
-            ['maxmemory-policy', 'allkeys-lru'],
-          ],
-
-        },
-
-        pages: [
-          // these are prefixes of pages that need to be cached
-          // if you want to cache all pages, just include '/'
-          "/"
+          ['maxmemory', '200mb'],
+          ['maxmemory-policy', 'allkeys-lru'],
         ],
       },
-
-    ],
+      pages: [
+        "/"
+      ],
+    }, ],
     ['@nuxtjs/vuetify', {
       treeShake: true,
       defaultAssets: {
@@ -270,8 +241,6 @@ module.exports = {
       theme: {
         themes: {
           light: {
-            // secondary: '#b0bec5',
-            // error: '#b71c1c',
             primary: '#4A1F00',
             accent: "#d50000",
           },
@@ -280,36 +249,14 @@ module.exports = {
     }],
 
   ],
-  // webfontloader: {
-  //   google: {
-  //     families: ['Open+Sans:400,600,700&display=swap&subset=cyrillic'] //Loads Lato font with weights 400 and 700
-  //   }
-  // },
-  // router: {
-  //   scrollBehavior(to, from, savedPosition) {
-  //     console.log("TCL: scrollBehavior -> to", to)
-  //     console.log("TCL: scrollBehavior -> from", from)
-  //     console.log("TCL: scrollBehavior -> savedPosition", savedPosition)
 
-  //     return {
-  //       x: 0,
-  //       y: 0
-  //     }
-  //   }
-  // },
-  /*
-   ** Build configuration
-   */
   build: {
     babel: {
       sourceType: 'unambiguous',
     },
     transpile: ["@nuxtjs/vuetify", /^aos/, /^vue-awesome-swiper/, /^@nuxtjs.*/, "vue-particles", "nuxt-vuex-localstorage"],
 
-    // publicPath: '/js/',
-    /*
-     ** You can extend webpack config here
-     */
+
     extend(config, ctx) {
 
     }

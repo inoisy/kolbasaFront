@@ -35,7 +35,6 @@
     .category-img {
       filter: grayscale(50%);
       display: block;
-      // min-height: 70px;
       height: 75px;
       margin: auto;
       max-width: 100%;

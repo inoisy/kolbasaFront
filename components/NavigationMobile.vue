@@ -78,6 +78,3 @@ export default {
   props: ["menuItems", "drawer"]
 };
 </script>
-
-<style>
-</style>

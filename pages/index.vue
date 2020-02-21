@@ -149,7 +149,6 @@
           <div class="flex hidden-sm-and-down md4 offset-lg1 lg3 mb-5" data-aos="fade-up">
             <img
               class="bottom-img pr-4 d-block ma-auto"
-              style="max-width: 350px"
               v-lazy="require('~/assets/img/bottomImage1.png')"
               alt="Колбаса оптом в Москве"
               title="Колбаса оптом"
@@ -184,7 +183,6 @@
           <div class="flex hidden-sm-and-down offset-md0 md4 offset-lg1 lg3" data-aos="fade-up">
             <img
               class="bottom-img pl-4 d-block ma-auto"
-              style="max-width: 350px"
               v-lazy="require('~/assets/img/bottomImage2.png')"
               alt="Колбаса оптом с доставкой"
               title="Колбаса оптом"
@@ -275,6 +273,12 @@
 <style lang="stylus" scoped>
 @import 'swiper/dist/css/swiper.css';
 
+.bottom-img {
+  max-width: 100%;
+  max-height: 250px;
+  object-fit: contain;
+}
+
 .btn-scroll {
   position: absolute;
   bottom: 5px;
@@ -295,9 +299,6 @@
   background-color: #131313;
 }
 
-// .main-background {
-// min-height: 50rem;
-// }
 .header {
   font-size: 2.5rem;
   line-height: normal;
@@ -309,13 +310,11 @@
 }
 
 .button {
-  // font-size: 1.6rem;
   border-color: white !important;
   border-style: dashed;
   border-width: 2px;
 }
 
-// }
 .bottom-header {
   font-size: 2.3rem;
   color: #4A1F00;
@@ -325,13 +324,11 @@
   &:first-letter {
     color: #95282A;
     font-size: 4rem;
-    // font-family: 'Lumberjack Rough';
   }
 }
 
 .bottom-text {
   font-size: 1.45rem;
-  // line-height: normal;
   font-family: 'Lumberjack';
   color: #4A1F00;
 }
@@ -339,12 +336,10 @@
 @media (min-width: 600px) {
   .header {
     font-size: 3rem;
-    // line-height: normal;
   }
 
   .subheader {
     font-size: 1.5rem;
-    // line-height: 1.3;
   }
 
   .background {
@@ -397,7 +392,6 @@ export default {
         }
       ],
       meta: [
-        // hid is used as unique identifier. Do not use `vmid` for it as it will not work
         {
           hid: "description",
           name: "description",
@@ -412,9 +406,6 @@ export default {
     MainPageCard
   },
   computed: {
-    // sliders() {
-    //   return this.$store.state.sessionStorage.generalInfo.promos;
-    // },
     categories() {
       return this.$store.state.sessionStorage.generalInfo.categories
         .filter(item => item.parent.length === 0)
@@ -425,7 +416,6 @@ export default {
           if (a.children.length < b.children.length) {
             return -1;
           }
-          // a.children.length < b.children.length});
         });
     },
     manufacturers() {
@@ -439,7 +429,6 @@ export default {
         loop: false,
         slidesPerView: "auto",
         preloadImages: false,
-        // Enable lazy loading
         lazy: true,
         watchSlidesVisibility: true,
         watchSlidesProgress: true,
@@ -505,13 +494,8 @@ export default {
         }
       `
     });
-    // console.log("TCL: Data -> categoryData", categoryData);
-    // const categories=
-    // # const data = await ctx.store.dispatch("fetchMainCategories");
-    // await ctx.store.dispatch("fetchGeneralInfo");
     return {
       sliders: promosData.promos
-      // categories: categoryData.categories
     };
   }
 };

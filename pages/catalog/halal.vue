@@ -7,7 +7,7 @@
     >
       <v-container grid-list-lg class="py-12">
         <v-layout row wrap v-for="category of categories" :key="category.id" class="mb-10">
-          <h2 class="mb-5 flex xs12 d-block" data-aos="fade-up">{{category.name}} халяль оптом</h2>
+          <h2 class="mb-5 flex xs12 d-block">{{category.name}} халяль оптом</h2>
           <div
             class="flex xs12 sm6 md4 lg3 xl2"
             data-aos="fade-up"
@@ -16,14 +16,6 @@
           >
             <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
           </div>
-          <!-- <div class="flex xs12" data-aos="fade-up"> -->
-          <!-- <v-btn
-            :to="`/catalog/${category.slug}?manufacturer=${manufacturer.slug}`"
-            class="mt-4 ml-0"
-            color="accent"
-            large
-          >Показать все товары</v-btn>-->
-          <!-- </div> -->
         </v-layout>
         <v-layout row wrap v-if="page.content">
           <v-divider class="my-4"></v-divider>

@@ -3,12 +3,16 @@
     v-if="isProduct"
     v-model="dialog"
     scrollable
-    :width="showCard ? 'auto' : '500px'"
+    :width="showCard ? 'auto' : '600px'"
     attach=".v-content__wrap"
     content-class="dialog-content-wrapper"
     :persistent="false"
   >
-    <product-dialog :product="product" @closeProductDialog="dialog=false"></product-dialog>
+    <product-dialog
+      :product="product"
+      @closeProductDialog="dialog=false"
+      @hanleOneClickBuy="(val)=>showCard=val"
+    ></product-dialog>
   </v-dialog>
 </template>
 <script>
@@ -79,6 +83,7 @@ export default {
     dialog(val) {
       if (val === false) {
         this.$router.push({ params: { slug: null } });
+        this.$emit("close");
       }
     }
   },
@@ -98,10 +103,7 @@ export default {
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl,
-      // dialogm1: "",
       dialog: true,
-      // weight_selected: 0,
-      // activeTab: null,
       showCard: true
     };
   }

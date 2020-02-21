@@ -153,7 +153,6 @@
     font-size: 16px;
     font-weight: 600;
     color: #95282a;
-    // line-height: 40px;
     white-space: nowrap;
 
     &:before {
@@ -170,9 +169,6 @@
   }
 
   &:hover {
-    // .v-btn {
-    // color: #eaeaea;
-    // }
     .cart-badge {
       background-color: #d8b7b7;
     }
@@ -213,10 +209,12 @@
 
 <script>
 export default {
-  props: ["menuItems", "summa"],
+  props: ["menuItems"],
   computed: {
+    summa() {
+      return this.$store.getters.summa;
+    },
     basketLength() {
-      // const basketObj = this.$store.state.localStorage.basket;
       let length;
       if (this.$store.state.localStorage.basket) {
         length = Object.keys(this.$store.state.localStorage.basket).length;
@@ -224,7 +222,6 @@ export default {
           this.basketDrawer = false;
         }
       }
-
       return length;
     },
     isBasket() {

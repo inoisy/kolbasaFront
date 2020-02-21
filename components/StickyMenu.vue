@@ -60,7 +60,6 @@ export default {
     const elem = this.$refs.sidebarContent
       ? this.$refs.sidebarContent.parentElement
       : null;
-    // this.parentWidth = elem.clientWidth - 20;
     this.sidebar.windowScrollTop =
       window.pageYOffset || document.documentElement.scrollTop;
 
@@ -72,23 +71,15 @@ export default {
       offsetTop: 0,
       sidebar: {
         windowScrollTop: 0,
-        // innerHeight: 0,
         offsetHeight: 0,
         bottomOffset: 1000
-        // maxHeight: 1000
       }
     };
   }
 };
-// &::-webkit-scrollbar {
-//   width: 0 !important;
-// }
-
-// overflow: -moz-scrollbars-none;
-// -ms-overflow-style: none;
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 .sidebarContent {
   width: 100%;
 
@@ -96,13 +87,11 @@ export default {
     width: 20px;
   }
 
-  /* Track */
   ::-webkit-scrollbar-track {
     box-shadow: inset 0 0 5px grey;
     border-radius: 10px;
   }
 
-  /* Handle */
   ::-webkit-scrollbar-thumb {
     background: red;
     border-radius: 10px;
@@ -123,13 +112,11 @@ export default {
   top: 56px;
   height: 100%;
   overflow-y: auto;
-  // padding-bottom: 90px;
 }
 
 @media only screen and (min-width: 960px) {
   .fixed-top, .fixed-bottom {
     top: 64px;
-    // padding-bottom: 160px;
   }
 }
 </style>

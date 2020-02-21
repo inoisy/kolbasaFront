@@ -55,7 +55,6 @@ export default {
     return {
       title: "Каталог. Колбаса и другие мясные изделия оптом.",
       meta: [
-        // hid is used as unique identifier. Do not use `vmid` for it as it will not work
         {
           hid: "description",
           name: "description",
@@ -111,13 +110,6 @@ export default {
         }
       `
     });
-    // console.log("TCL: Data -> categoriesData", categoriesData);
-    // const reducedCategories = categoriesData.categories.reduce((acc, val) => {
-    //   console.log("TCL: acc", acc);
-    //   console.log("TCL: val", val);
-    //   acc.set(val.id, val);
-    //   return acc;
-    // }, new Map());
     return {
       categories: categoriesData.categories
         .filter(item => item.parent.length === 0)
@@ -128,14 +120,8 @@ export default {
           if (a.children.length < b.children.length) {
             return -1;
           }
-          // a.children.length < b.children.length});
         })
     };
-  },
-  computed: {
-    // categories() {
-    //   return this.$store.state.generalInfo.categories;
-    // }
   }
 };
 </script>

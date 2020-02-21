@@ -6,8 +6,13 @@
     class="mt-12"
     content-class="dialog-content-wrapper"
     :persistent="false"
+    :width="showCard ? 'auto' : '600px'"
   >
-    <product-dialog :product="product" @closeProductDialog="dialog=false"></product-dialog>
+    <product-dialog
+      :product="product"
+      @closeProductDialog="dialog=false"
+      @hanleOneClickBuy="(val)=>showCard=val"
+    ></product-dialog>
   </v-dialog>
 </template>
 
@@ -26,7 +31,6 @@ export default {
         ? `Мясокомбинат ${this.manufacturer.name}. Купить колбасы ${this.manufacturer.name} оптом.`
         : "",
       meta: [
-        // hid is used as unique identifier. Do not use `vmid` for it as it will not work
         {
           hid: "description",
           name: "description",
@@ -89,13 +93,12 @@ export default {
       }
     }
   },
-  // methods: {},
   props: ["products"],
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl,
-      dialog: true
-      // showCard: true
+      dialog: true,
+      showCard: true
     };
   }
 };
