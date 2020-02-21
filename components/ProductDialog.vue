@@ -95,7 +95,7 @@
             <v-btn
               dark
               color="#d50000"
-              class="product-button ml-0 mt-3"
+              class="product-button mt-3"
               large
               outlined
               @click="handleOneClickBuy"
@@ -188,10 +188,12 @@ export default {
         : {};
     },
     busket() {
-      return this.product &&
-        this.$store.state.localStorage.basket[this.product.id]
-        ? this.$store.state.localStorage.basket[this.product.id].count
-        : null;
+      const index = this.$store.state.localStorage.basket.findIndex(
+        item => item.id === this.product.id
+      );
+      return index >= 0
+        ? this.$store.state.localStorage.basket[index].count
+        : false;
     },
     price() {
       return this.product
@@ -257,9 +259,10 @@ export default {
 .product-button {
   min-width: 240px;
   width: 100%;
+  height: 48px !important;
 
-  &:first-child {
-    margin-right: 15px;
+  &:last-child {
+    margin-left: 0;
   }
 }
 
@@ -277,8 +280,8 @@ export default {
   .product-button {
     width: auto;
 
-    &:first-child {
-      margin-right: 15px;
+    &:last-child {
+      margin-left: 15px;
     }
   }
 

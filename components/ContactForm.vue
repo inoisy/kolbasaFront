@@ -92,13 +92,13 @@ export default {
     async submit() {
       this.$v.$touch();
       if (!this.$v.$anyError) {
-        const busket = Object.values(this.$store.state.localStorage.basket);
+        const busket = this.$store.state.localStorage.basket;
         const busketItems =
           busket && busket.length > 0
             ? busket.map(item => {
                 return {
                   count: item.count,
-                  name: item.item.name
+                  name: item.name
                 };
               })
             : [];
@@ -109,6 +109,8 @@ export default {
                 return acc;
               }, "")
             : "";
+        // console.log("TCL: submit -> busketText", busketText);
+
         const busketHtml =
           busketItems && busket.length > 0
             ? busketItems.reduce((acc, val) => {

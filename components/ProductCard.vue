@@ -183,14 +183,9 @@ export default {
       const index = this.$store.state.localStorage.basket.findIndex(
         item => item.id === this.product.id
       );
-      // if (this.busketIndex) {
       return index >= 0
         ? this.$store.state.localStorage.basket[index].count
         : false;
-      // }
-      // return this.$store.state.localStorage.basket[this.product.id]
-      //   ? this.$store.state.localStorage.basket[this.product.id].count
-      //   : null;
     }
   },
   methods: {
