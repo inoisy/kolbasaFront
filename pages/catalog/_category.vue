@@ -34,7 +34,7 @@
     >
       <!-- {{loading}} -->
       <v-container grid-list-lg id="contentWrapper" class="display-flex py-9" fluid>
-        <v-layout row wrap id="products" ref="product" class="mt-0" v-if="pageData">
+        <v-layout row wrap id="products" ref="product" class="mt-0" v-if="products.length>0">
           <div class="flex xs12 sm6 md4 lg3 xl2" v-for="(product,index) in products" :key="index">
             <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
           </div>
