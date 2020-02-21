@@ -95,7 +95,7 @@
             <v-btn
               dark
               color="#d50000"
-              class="product-button ml-0 mr-3 mt-3"
+              class="product-button ml-0 mt-3"
               large
               outlined
               @click="handleOneClickBuy"
@@ -257,6 +257,10 @@ export default {
 .product-button {
   min-width: 240px;
   width: 100%;
+
+  &:first-child {
+    margin-right: 15px;
+  }
 }
 
 .image-wrapper {
@@ -272,6 +276,10 @@ export default {
 @media (min-width: 960px) {
   .product-button {
     width: auto;
+
+    &:first-child {
+      margin-right: 15px;
+    }
   }
 
   .image-wrapper {

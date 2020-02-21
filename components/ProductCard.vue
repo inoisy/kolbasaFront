@@ -173,17 +173,29 @@ export default {
   components: { ProductQuantity },
 
   computed: {
+    // busketIndex() {
+
+    //   console.log("TCL: busketIndex -> index", index);
+
+    //   return index < 0 ? false : index;
+    // },
     busket() {
-      return this.$store.state.localStorage.basket[this.product.id]
-        ? this.$store.state.localStorage.basket[this.product.id].count
-        : null;
+      const index = this.$store.state.localStorage.basket.findIndex(
+        item => item.id === this.product.id
+      );
+      // if (this.busketIndex) {
+      return index >= 0
+        ? this.$store.state.localStorage.basket[index].count
+        : false;
+      // }
+      // return this.$store.state.localStorage.basket[this.product.id]
+      //   ? this.$store.state.localStorage.basket[this.product.id].count
+      //   : null;
     }
   },
   methods: {
     cardClick(event) {
-      // if (!) return;
-      const capture = this.$refs.productCardActions.contains(event.target);
-      if (capture) {
+      if (this.$refs.productCardActions.contains(event.target)) {
         event.preventDefault();
       }
     },

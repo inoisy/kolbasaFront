@@ -94,16 +94,43 @@ export default {
       ];
     },
     summa() {
-      let summ = 0;
-      for (let id of Object.keys(this.$store.state.localStorage.basket)) {
-        const product = this.$store.state.localStorage.basket[id];
-        if (product.item.isDiscount && product.item.discountPrice) {
-          summ = summ + product.count * product.item.discountPrice;
-        } else if (product.item.priceNum && product.count) {
-          summ = summ + product.count * product.item.priceNum;
-        }
+      // let summ = 0;
+      if (!this.$store.state.localStorage.basket) return;
+      console.log(
+        "TCL: summa -> this.$store.state.localStorage.basket",
+        this.$store.state.localStorage.basket
+      );
+      if (this.$store.state.localStorage.basket.length === 0) {
+        return 0;
       }
-      return summ;
+      return Array.from(this.$store.state.localStorage.basket).reduce(
+        (acc, product) => {
+          acc =
+            product.isDiscount && product.discountPrice
+              ? acc + product.discountPrice * product.count
+              : acc + product.count * product.priceNum;
+          return acc;
+        },
+        0
+      );
+      // for (let product in this.$store.state.localStorage.basket) {
+      //   if (product.isDiscount && product.discountPrice) {
+      //     summ = summ + product.count * product.discountPrice;
+      //   } else if (product.priceNum && product.count) {
+      //     summ = summ + product.count * product.priceNum;
+      //   }
+      // }
+      // console.log("TCL: summa -> summ", summ);
+
+      // for (let id of Object.keys(this.$store.state.localStorage.basket)) {
+      //   const product = this.$store.state.localStorage.basket[id];
+      //   if (product.item.isDiscount && product.item.discountPrice) {
+      //     summ = summ + product.count * product.item.discountPrice;
+      //   } else if (product.item.priceNum && product.count) {
+      //     summ = summ + product.count * product.item.priceNum;
+      //   }
+      // }
+      // return summ;
     }
   },
 

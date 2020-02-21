@@ -44,22 +44,22 @@
               <v-avatar>
                 <img
                   style="object-fit: cover;"
-                  v-lazy="product.item.img ? imageBaseUrl+product.item.img.url : require('~/assets/no-image.png')"
-                  :alt="product.item.name"
+                  v-lazy="product.img ? imageBaseUrl+product.img.url : require('~/assets/no-image.png')"
+                  :alt="product.name"
                 />
               </v-avatar>
             </td>
             <td class="px-1">
               <nuxt-link
-                v-if="product.item.category && product.item.category.slug"
-                :to="`/catalog/${product.item.category.slug}/${product.item.slug}`"
+                v-if="product.category && product.category.slug"
+                :to="`/catalog/${product.category.slug}/${product.slug}`"
                 class="d-block underline-on-hover"
-                :title="product.item.name"
-              >{{product.item.name}}</nuxt-link>
+                :title="product.name"
+              >{{product.name}}</nuxt-link>
             </td>
             <td class="px-1">
               <product-quantity
-                :id="product.item.id"
+                :id="product.id"
                 :qty="product.count"
                 style="max-width: 185px"
                 class="mx-auto"
@@ -68,11 +68,11 @@
             <td class="px-1">
               <div
                 class="price ml-1 display-flex align-center justify-center font-weight-medium"
-              >{{product.item.isDiscount ? product.item.discountPrice*product.count : product.item.priceNum*product.count }}</div>
+              >{{product.isDiscount ? product.discountPrice*product.count : product.priceNum*product.count }}</div>
             </td>
             <td class="px-1">
               <v-btn
-                @click="(e)=>deleteFromBasket(e,product.item.id)"
+                @click="(e)=>deleteFromBasket(e,product.id)"
                 class="display-flex"
                 title="Удалить"
                 icon
@@ -120,9 +120,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in basket" :key="item.item.name">
-            <td class="text-left pl-0">{{ item.item.name }}</td>
-            <td class="text-center">{{ item.item.priceNum }}</td>
+          <tr v-for="item in basket" :key="item.name">
+            <td class="text-left pl-0">{{ item.name }}</td>
+            <td class="text-center">{{ item.priceNum }}</td>
             <td class="text-center">{{ item.count}}</td>
           </tr>
           <tr>
@@ -214,10 +214,10 @@ export default {
     //   let summ = 0;
     //   for (let id of Object.keys(this.$store.state.localStorage.basket)) {
     //     const product = this.$store.state.localStorage.basket[id];
-    //     if (product.item.isDiscount && product.item.discountPrice) {
-    //       summ = summ + product.count * product.item.discountPrice;
-    //     } else if (product.item.priceNum && product.count) {
-    //       summ = summ + product.count * product.item.priceNum;
+    //     if (product.isDiscount && product.discountPrice) {
+    //       summ = summ + product.count * product.discountPrice;
+    //     } else if (product.priceNum && product.count) {
+    //       summ = summ + product.count * product.priceNum;
     //     }
     //   }
     //   return summ;
@@ -230,10 +230,10 @@ export default {
       return this.$vuetify.breakpoint.smAndDown;
     },
     basket() {
-      const busketSorted = Object.values(
-        this.$store.state.localStorage.basket
-      ).sort((a, b) => a.item.name.localeCompare(b.item.name));
-      return busketSorted;
+      // const busketSorted = Object.values(
+      //   this.$store.state.localStorage.basket
+      // ).sort((a, b) => a.item.name.localeCompare(b.item.name));
+      return this.$store.state.localStorage.basket;
     }
   }
 };

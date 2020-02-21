@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 const _ = require('lodash');
-const baseUrl = process.env.baseUrl
+// const baseUrl = process.env.baseUrl
 export const mutations = {
   loading(state, item) {
     state.loading = item
@@ -39,83 +39,115 @@ export const mutations = {
     state.sessionStorage.easyProducts = [...state.sessionStorage.easyProducts, ...items]
   },
   incrementBasket(state, id) {
+    let product = state.localStorage.basket.find((product) => product.id === id);
+    product.count++
     // console.log("TCL: incrementBasket -> id", id)
-    if (!state.localStorage.basket[id]) return
-    const count = +state.localStorage.basket[id].count + 1
-    const newItem = {
-      [id]: {
-        count: count,
-        item: state.localStorage.basket[id].item
-      }
-    }
-    state.localStorage.basket = {
-      ...state.localStorage.basket,
-      ...newItem
-    }
+    // if (!state.localStorage.basket[id]) return
+    // const count = +state.localStorage.basket[id].count + 1
+    // const newItem = {
+    //   [id]: {
+    //     count: count,
+    //     item: state.localStorage.basket[id].item
+    //   }
+    // }
+    // state.localStorage.basket = {
+    //   ...state.localStorage.basket,
+    //   ...newItem
+    // }
   },
   addToBasket(state, product) {
-    if (state.localStorage.basket[product.id]) {
-      const count = +state.localStorage.basket[product.id].count + 1
-      const newItem = {
-        [product.id]: {
-          count: count,
-          item: product
-        }
-      }
-      state.localStorage.basket = {
-        ...state.localStorage.basket,
-        ...newItem
-      }
+    let cartProduct = state.localStorage.basket.find((item) => item.id === product.id);
+
+    if (cartProduct) {
+      cartProduct.count++;
     } else {
-      const newItem = {
-        [product.id]: {
-          count: 1,
-          item: product
-        }
-      }
-      state.localStorage.basket = {
-        ...state.localStorage.basket,
-        ...newItem
-      }
+      state.localStorage.basket.push({
+        ...product,
+        count: 1
+      })
     }
+    // if (state.localStorage.basket[product.id]) {
+
+    // const count = +state.localStorage.basket[product.id].count + 1
+    // const newItem = {
+    //   [product.id]: {
+    //     count: count,
+    //     item: product
+    //   }
+    // }
+    // state.localStorage.basket = {
+    //   ...state.localStorage.basket,
+    //   ...newItem
+    // }
+    // } else {
+    //   const newItem = {
+    //     [product.id]: {
+    //       count: 1,
+    //       item: product
+    //     }
+    //   }
+    //   state.localStorage.basket = {
+    //     ...state.localStorage.basket,
+    //     ...newItem
+    //   }
+    // }
 
 
 
   },
   clearBasket(state) {
-    state.localStorage.basket = {}
+    state.localStorage.basket = []
   },
-  changeBasket(state, item) {
-    const newItem = {
-      [item.id]: {
-        count: item.qty,
-        item: state.localStorage.basket[item.id].item
-      }
-    }
-    state.localStorage.basket = {
-      ...state.localStorage.basket,
-      ...newItem
-    }
+  changeBasket(state, params) {
+    const {
+      qty,
+      id
+    } = params
+    let cartProduct = state.localStorage.basket.find((item) => item.id === id);
+    cartProduct.count = qty
+    // const newItem = {
+    //   [item.id]: {
+    //     count: item.qty,
+    //     item: state.localStorage.basket[item.id].item
+    //   }
+    // }
+    // state.localStorage.basket = {
+    //   ...state.localStorage.basket,
+    //   ...newItem
+    // }
   },
   deleteFromBasket(state, id) {
-    state.localStorage.basket = _.omit(state.localStorage.basket, id)
+    let cartProductIndex = state.localStorage.basket.findIndex((item) => item.id === id);
+    state.localStorage.basket.splice(cartProductIndex, 1);
   },
   removeFromBasket(state, id) {
-    const count = state.localStorage.basket[id].count - 1
-    if (count < 1) {
-      state.localStorage.basket = _.omit(state.localStorage.basket, id)
-    } else {
-      const newItem = {
-        [id]: {
-          count: count,
-          item: state.localStorage.basket[id].item
-        }
-      }
-      state.localStorage.basket = {
-        ...state.localStorage.basket,
-        ...newItem
-      }
+    let cartProduct = state.localStorage.basket.find((item) => item.id === id);
+    cartProduct.count--;
+    if (cartProduct.count <= 0) {
+      let cartProductIndex = state.localStorage.basket.findIndex((item) => item.id === id);
+      state.localStorage.basket.splice(cartProductIndex, 1);
     }
+    // } else {
+    //   state.localStorage.basket.push({
+    //     ...product,
+    //     count: 1
+    //   })
+    // }
+    // const count = state.localStorage.basket[id].count - 1
+    // if (count < 1) {
+    //   state.localStorage.basket = _.omit(state.localStorage.basket, id)
+    // } else {
+    //   const newItem = {
+    //     [id]: {
+    //       count: count,
+    //       item: state.localStorage.basket[id].item
+    //     }
+    //   }
+    //   state.localStorage.basket = {
+    //     ...state.localStorage.basket,
+    //     ...newItem
+    //   }
+    // }
   },
 
 }

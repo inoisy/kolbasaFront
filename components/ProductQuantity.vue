@@ -31,7 +31,7 @@ export default {
           id: this.id,
           qty: quantity
         });
-      } else if (quantity == 0) {
+      } else if (quantity <= 0) {
         await this.$store.commit("deleteFromBasket", this.id);
       }
     },
