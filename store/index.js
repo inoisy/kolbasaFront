@@ -189,7 +189,7 @@ export const actions = {
     return productItem
   },
   async fetchProducts(ctx, params) {
-    console.log("TCL: fetchProducts -> params", params)
+    // console.log("TCL: fetchProducts -> params", params)
     await ctx.commit('loading', true)
     const {
       data: productsData

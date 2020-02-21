@@ -32,17 +32,11 @@
       class="background background-repeat"
       v-lazy:background-image="require('~/assets/img/bg.jpg')"
     >
+      <!-- {{loading}} -->
       <v-container grid-list-lg id="contentWrapper" class="display-flex py-9" fluid>
-        <v-layout row wrap id="products" ref="product" class="mt-0">
+        <v-layout row wrap id="products" ref="product" class="mt-0" v-if="pageData">
           <div class="flex xs12 sm6 md4 lg3 xl2" v-for="(product,index) in products" :key="index">
-            <product-card
-              v-if="product"
-              :product="product"
-              :to="`/catalog/${category.slug}/${product.slug}`"
-            ></product-card>
-            <v-sheet v-else>
-              <v-skeleton-loader :boilerplate="!loading" class="mx-auto" type="card"></v-skeleton-loader>
-            </v-sheet>
+            <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
           </div>
           <client-only>
             <infinite-loading
@@ -55,6 +49,13 @@
               <div slot="no-more"></div>
             </infinite-loading>
           </client-only>
+        </v-layout>
+        <v-layout v-else row wrap id="products" ref="product">
+          <v-flex xs12 sm6 md4 lg3 xl2 v-for="(product,index) in new Array(20)" :key="index">
+            <v-sheet>
+              <v-skeleton-loader :boilerplate="!loading" class="mx-auto" type="card"></v-skeleton-loader>
+            </v-sheet>
+          </v-flex>
         </v-layout>
         <div
           class="flex hidden-sm-and-down"
@@ -204,7 +205,7 @@ export default {
         message: "Категория не найдена"
       });
     }
-    let products = new Array(20),
+    let products = [],
       category = {},
       categoriesIds = [categoryFind.id],
       limit = 20;
