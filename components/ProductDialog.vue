@@ -112,14 +112,21 @@
         </v-flex>
         <v-flex xs12 md4 lg4 order-xs1 order-md2 class="display-flex image-wrapper">
           <div class="mini-imgs-wrapper pa-1">
-            <img
-              itemprop="image"
-              class="manufacturer-img"
-              v-if="manufacturer.img"
-              :src="imageBaseUrl+manufacturer.img.url"
-              :alt="manufacturer.name"
-              :title="manufacturer.name"
-            />
+            <v-tooltip left style="position: relative" nudge-left max-width="400px">
+              <template v-slot:activator="{ on }">
+                <img
+                  itemprop="image"
+                  class="manufacturer-img"
+                  v-if="manufacturer.img"
+                  :src="imageBaseUrl+manufacturer.img.url"
+                  :alt="manufacturer.name"
+                  :title="manufacturer.name"
+                  v-on="on"
+                />
+              </template>
+              <span>{{manufacturer.description}}</span>
+            </v-tooltip>
+
             <img
               class="halal-img"
               v-if="product && product.isHalal"
