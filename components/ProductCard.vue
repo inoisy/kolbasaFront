@@ -74,7 +74,11 @@
       >{{product.weight ? product.weight + 'кг' : ''}}</div>
     </div>
 
-    <h2 itemprop="name" class="product-name mb-0 mt-1" style>{{product.name}}</h2>
+    <h2
+      itemprop="name"
+      class="product-name mb-0 mt-1"
+      style
+    >{{product.name}}{{halal ? "&nbsp; халяль" : ''}}</h2>
     <div class="product-busket-wrap" ref="productCardActions">
       <v-btn
         v-show="!busket"
@@ -169,7 +173,18 @@ export default {
   data() {
     return { imageBaseUrl: process.env.imageBaseUrl };
   },
-  props: ["category", "product", "to"],
+  props: {
+    to: {
+      type: String
+    },
+    product: {
+      type: Object
+    },
+    halal: {
+      type: Boolean,
+      default: false
+    }
+  },
   components: { ProductQuantity },
 
   computed: {

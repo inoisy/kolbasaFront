@@ -10,11 +10,14 @@
           <h2 class="mb-5 flex xs12 d-block">{{category.name}} халяль оптом</h2>
           <div
             class="flex xs12 sm6 md4 lg3 xl2"
-            data-aos="fade-up"
             v-for="product of category.products"
             :key="product.id"
           >
-            <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
+            <product-card
+              :product="product"
+              :to="`/catalog/${category.slug}/${product.slug}`"
+              :halal="true"
+            ></product-card>
           </div>
         </v-layout>
         <v-layout row wrap v-if="page.content">
