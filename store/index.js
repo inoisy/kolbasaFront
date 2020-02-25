@@ -76,14 +76,20 @@ export const mutations = {
 export const strict = false
 export const getters = {
   summa(state) {
-    return state.localStorage.basket.reduce(
-      (acc, product) => {
-        acc =
-          product.isDiscount && product.discountPrice ?
-          acc + product.discountPrice * product.count :
-          acc + product.count * product.priceNum;
-        return acc;
-      }, 0)
+    if (Array.isArray(state.localStorage.basket)) {
+      return state.localStorage.basket.reduce(
+        (acc, product) => {
+          acc =
+            product.isDiscount && product.discountPrice ?
+            acc + product.discountPrice * product.count :
+            acc + product.count * product.priceNum;
+          return acc;
+        }, 0)
+    } else {
+      state.localStorage.basket = []
+      return 0
+    }
+
   },
   getManufacturerId: state => slug => {
     if (!slug) return null
