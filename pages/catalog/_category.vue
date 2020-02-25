@@ -2,7 +2,7 @@
   <div>
     <nuxt-child @close="handleClose" />
     <page-header
-      :title="`${category.name} оптом`"
+      :title="name"
       :breadrumbs="breadcrumbs"
       :fluid="true"
       :isPadding="subcategories && subcategories.length > 0"
@@ -131,6 +131,11 @@ import { isArray } from "util";
 export default {
   components: { PageHeader, StickyMenu, ProductCard, InfiniteLoading },
   computed: {
+    name() {
+      return this.manufacturer && this.manufacturer.name
+        ? `${this.category.name} ${this.manufacturer.name} оптом`
+        : `${this.category.name} оптом`;
+    },
     loading() {
       return this.$store.state.sessionStorage.loading;
     },
@@ -206,43 +211,36 @@ export default {
       });
     }
     let products = [],
-      category = {},
+      category = categoryFind,
+      manufacturer = {},
       categoriesIds = [categoryFind.id],
-      limit = 20;
+      limit = 40,
+      pageData = ctx.params.slug ? false : true;
     if (categoryFind.children && categoryFind.children.length > 0) {
       categoriesIds.push(...categoryFind.children.map(item => item.id));
-      limit = ctx.params.slug ? 60 : 20;
+      limit = 80;
     }
-    if (ctx.params.slug) {
-      return {
-        products: products,
-        category: categoryFind,
-        categoriesIds: categoriesIds,
-        pageData: false
-      };
+    if (pageData) {
+      manufacturer = ctx.store.getters.getManufacturer(ctx.query.manufacturer);
+      category = await ctx.store.dispatch("fetchCategory", categoryFind.id);
+      products = await ctx.store.dispatch("fetchProducts", {
+        category: categoriesIds,
+        limit: limit,
+        manufacturer: manufacturer ? manufacturer.id : null
+      });
     }
-    // const manufacturerFind = ctx.query.manufacturer
-    //   ? generalData.manufacturers.find(
-    //       item => item.slug === ctx.query.manufacturer
-    //     )
-    //   : null;
 
-    category = await ctx.store.dispatch("fetchCategory", categoryFind.id);
-    products = await ctx.store.dispatch("fetchProducts", {
-      category: categoriesIds,
-      limit: limit,
-      manufacturer: ctx.store.getters.getManufacturerId(ctx.query.manufacturer)
-    });
     return {
       products: products,
       category: category,
       categoriesIds: categoriesIds,
-      pageData: true
+      pageData: pageData,
+      manufacturer: manufacturer
     };
   },
   methods: {
     async handleClose() {
-      // console.log("TCL: handleClose -> handleClose");
+      console.log("TCL: handleClose -> handleClose", this.pageData);
       if (!this.pageData) {
         this.category = await this.$store.dispatch(
           "fetchCategory",
@@ -260,9 +258,7 @@ export default {
       const newProducts = await this.$store.dispatch("fetchProducts", {
         category: this.categoriesIds,
         start: this.products.length,
-        manufacturer: this.$store.getters.getManufacturerId(
-          this.$route.query.manufacturer
-        )
+        manufacturer: this.manufacturer ? this.manufacturer.id : null
       });
       if (newProducts && newProducts.length) {
         this.products = [...this.products, ...newProducts];

@@ -90,9 +90,14 @@ export const getters = {
     const manufacturerFind = state.sessionStorage.generalInfo.manufacturers.find(
       item => item.slug === slug
     )
-    // if (manufacturerFind) {
     return manufacturerFind ? manufacturerFind.id : null
-    // }
+  },
+  getManufacturer: state => slug => {
+    if (!slug) return null
+    const manufacturerFind = state.sessionStorage.generalInfo.manufacturers.find(
+      item => item.slug === slug
+    )
+    return manufacturerFind ? manufacturerFind : null
   }
 }
 export const actions = {

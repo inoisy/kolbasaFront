@@ -33,7 +33,7 @@
             itemprop="name"
             class="font-weight-bold mb-5"
             style="line-height: normal;"
-            v-text="product && product.name ? product.name : ''"
+            v-text="product.name"
           ></h1>
           <div class="manufacturer mb-5" v-if="manufacturer">
             Производитель:
@@ -45,16 +45,25 @@
           </div>
           <div
             itemprop="description"
-            v-if="product && product.description"
+            v-if="product.description"
             v-html="product.description"
             class="mb-5"
-            style="line-height: 1,5"
           ></div>
           <div
-            v-if="product && product.content"
-            class="mb-5 content-wrapper"
-            v-html="$md.render(product.content)"
-          ></div>
+            v-else
+            class="mb-5"
+          >{{product.name}}, представленная на нашем сайте продается по максимально выгодным ценам при условии оптовой покупки. Мы заботимся о вашем здоровье, предлагая качественные продукты отечественного производства.</div>
+
+          <div v-if="product.content" class="content-wrapper" v-html="$md.render(product.content)"></div>
+          <div class="my-3">
+            <p>{{product.name}} c быстрой доставкой по Москве и МО. Доставка заказов также осуществляется во все регионы России и в страны СНГ.</p>
+            <p>
+              Для оформления заказа воспользуйтесь формой на сайте или звоните по телефону
+              <a
+                :href="`tel:${phone}`"
+              >{{phone}}</a>
+            </p>
+          </div>
           <div
             itemprop="offers"
             itemscope
@@ -112,7 +121,7 @@
         </v-flex>
         <v-flex xs12 md4 lg4 order-xs1 order-md2 class="display-flex image-wrapper">
           <div class="mini-imgs-wrapper pa-1">
-            <v-tooltip left style="position: relative" nudge-left max-width="400px">
+            <v-tooltip left max-width="400px" style="display: block">
               <template v-slot:activator="{ on }">
                 <img
                   itemprop="image"
@@ -129,7 +138,7 @@
 
             <img
               class="halal-img"
-              v-if="product && product.isHalal"
+              v-if="product.isHalal"
               :src="require('~/assets/halal1.png')"
               alt="Халяльная продукция"
               title="Халяльная продукция"
@@ -138,9 +147,9 @@
 
           <img
             class="item-img d-block mx-auto mb-auto"
-            :src="product && product.img ? imageBaseUrl+product.img.url : require('~/assets/no-image.png')"
-            :alt="product && product.name ? product.name:''"
-            :title="product && product.name ? product.name:''"
+            :src="product.img ? imageBaseUrl+product.img.url : require('~/assets/no-image.png')"
+            :alt="product.name"
+            :title="product.name"
           />
         </v-flex>
       </v-layout>
@@ -158,11 +167,17 @@ import ProductQuantity from "~/components/ProductQuantity";
 
 export default {
   components: { ContactForm, ProductQuantity },
-
-  props: ["product"],
+  props: {
+    product: {
+      type: Object
+    }
+  },
   computed: {
+    phone() {
+      return this.$store.state.sessionStorage.generalInfo.contacts.phone;
+    },
     discountPriceProcent() {
-      return this.product && this.isDiscount
+      return this.isDiscount
         ? Math.ceil(
             (100 * (this.product.priceNum - this.product.discountPrice)) /
               this.product.priceNum
@@ -170,9 +185,7 @@ export default {
         : "";
     },
     isDiscount() {
-      return this.product
-        ? this.product.isDiscount && this.product.discountPrice
-        : false;
+      return this.product.isDiscount && this.product.discountPrice;
     },
     breadcrumbs() {
       return [
@@ -185,21 +198,15 @@ export default {
           text: "Каталог"
         },
         {
-          to:
-            this.product && this.product.category
-              ? `/catalog/${this.product.category.slug}`
-              : "",
-          text:
-            this.product && this.product.category
-              ? this.product.category.name
-              : ""
+          to: this.product.category
+            ? `/catalog/${this.product.category.slug}`
+            : "",
+          text: this.product.category ? this.product.category.name : ""
         }
       ];
     },
     manufacturer() {
-      return this.product && this.product.manufacturer
-        ? this.product.manufacturer
-        : {};
+      return this.product.manufacturer ? this.product.manufacturer : {};
     },
     busket() {
       const index = this.$store.state.localStorage.basket.findIndex(
@@ -210,19 +217,14 @@ export default {
         : false;
     },
     price() {
-      return this.product
-        ? this.isDiscount
-          ? this.product.discountPrice
-          : this.product.priceNum
-        : "";
+      return this.isDiscount
+        ? this.product.discountPrice
+        : this.product.priceNum;
     }
   },
   watch: {
     showProductCard(val) {
-      // console.log("TCL: showProductCard -> val", val);
-      // if (!val) {
       this.$emit("hanleOneClickBuy", val);
-      // }
     }
   },
   data() {

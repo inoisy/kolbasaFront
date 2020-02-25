@@ -1,1 +1,0 @@
-{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"mongoBack1.users-permissions_role"},{"v":2,"unique":true,"key":{"type":1},"name":"type_1","ns":"mongoBack1.users-permissions_role","background":true}],"uuid":"e8443ec31eb74430b8b53b9a29fc2bf0"}

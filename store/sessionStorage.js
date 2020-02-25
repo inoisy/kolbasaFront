@@ -6,7 +6,9 @@ export const state = () => ({
   easyProducts: [],
   category: {},
   manufacturer: {},
-  generalInfo: {},
+  generalInfo: {
+
+  },
   products: {
     items: [],
     count: 0
