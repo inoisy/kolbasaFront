@@ -127,7 +127,7 @@ import PageHeader from "~/components/PageHeader";
 import StickyMenu from "~/components/StickyMenu";
 import ProductCard from "~/components/ProductCard";
 
-import { isArray } from "util";
+// import { isArray } from "util";
 export default {
   components: { PageHeader, StickyMenu, ProductCard, InfiniteLoading },
   computed: {
@@ -141,7 +141,6 @@ export default {
     },
     isParentCategory() {
       return (
-        this.category &&
         this.category.parent &&
         this.category.parent.length > 0 &&
         this.category.parent[0]
@@ -157,26 +156,16 @@ export default {
         : [];
     },
     rootCategory() {
-      return this.isParentCategory
-        ? this.category.parent[0]
-        : this.category
-        ? this.category
-        : {};
+      return this.isParentCategory ? this.category.parent[0] : this.category;
     },
     multiple() {
-      return (
-        this.category &&
-        this.category.children &&
-        this.category.children.length > 0
-      );
+      return this.category.children && this.category.children.length > 0;
     },
     categories() {
-      return this.$store.state.sessionStorage.generalInfo.categories.filter(
-        item => item.parent.length === 0
-      );
+      return this.$store.getters.getParentCategories;
     },
     breadcrumbs() {
-      let base = [
+      let items = [
         {
           to: "/",
           text: "Главная"
@@ -186,32 +175,33 @@ export default {
           text: "Каталог"
         }
       ];
-      if (this.isParentCategory) {
-        base.push({
+      if (this.isParentCategory && this.category.parent[0].name) {
+        items.push({
           to: `/catalog/${this.category.parent[0].slug}`,
           text: this.category.parent[0].name
         });
       }
-      base.push({
+      items.push({
         to: this.$route.path,
         text: this.category.name
       });
-      return base;
+      this.$store.commit("breadcrumbs", items);
+      return items;
     }
   },
   async asyncData(ctx) {
-    const generalData = await ctx.store.dispatch("fetchGeneralInfo");
-    const categoryFind = generalData.categories.find(
-      item => item.slug === ctx.params.category
+    const categoryFind = await ctx.store.getters.getCategory(
+      ctx.params.category
     );
     if (!categoryFind) {
       return ctx.error({
         statusCode: 404,
-        message: "Категория не найдена"
+        message: "Категория не найдена",
+        type: "catalog"
       });
     }
     let products = [],
-      category = categoryFind,
+      category = await ctx.store.dispatch("fetchCategory", categoryFind.id),
       manufacturer = {},
       categoriesIds = [categoryFind.id],
       limit = 40,
@@ -222,7 +212,7 @@ export default {
     }
     if (pageData) {
       manufacturer = ctx.store.getters.getManufacturer(ctx.query.manufacturer);
-      category = await ctx.store.dispatch("fetchCategory", categoryFind.id);
+      // category = await ctx.store.dispatch("fetchCategory", categoryFind.id);
       products = await ctx.store.dispatch("fetchProducts", {
         category: categoriesIds,
         limit: limit,
@@ -240,7 +230,7 @@ export default {
   },
   methods: {
     async handleClose() {
-      console.log("TCL: handleClose -> handleClose", this.pageData);
+      // console.log("TCL: handleClose -> handleClose", this.pageData);
       if (!this.pageData) {
         this.category = await this.$store.dispatch(
           "fetchCategory",

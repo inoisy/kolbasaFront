@@ -407,16 +407,7 @@ export default {
   },
   computed: {
     categories() {
-      return this.$store.state.sessionStorage.generalInfo.categories
-        .filter(item => item.parent.length === 0)
-        .sort((a, b) => {
-          if (a.children.length > b.children.length) {
-            return 1;
-          }
-          if (a.children.length < b.children.length) {
-            return -1;
-          }
-        });
+      return this.$store.getters.getParentCategories;
     },
     manufacturers() {
       return this.$store.state.sessionStorage.generalInfo.manufacturers;
@@ -476,7 +467,7 @@ export default {
     };
   },
   async asyncData(ctx) {
-    await ctx.store.dispatch("fetchGeneralInfo");
+    // await ctx.store.dispatch("fetchGeneralInfo");
 
     let client = ctx.app.apolloProvider.defaultClient;
     const { data: promosData } = await client.query({

@@ -63,15 +63,11 @@ export default {
         {
           name: "Каталог",
           to: "/catalog",
-          items: this.$store.state.sessionStorage.generalInfo.categories
-            ? [
-                ...this.$store.state.sessionStorage.generalInfo.categories.filter(
-                  item => item.parent.length === 0
-                ),
-                { name: "Акционная продукция", slug: "discount" },
-                { name: "Халяльная продукция", slug: "halal" }
-              ]
-            : []
+          items: [
+            ...this.$store.getters.getParentCategories,
+            { name: "Акционная продукция", slug: "discount" },
+            { name: "Халяльная продукция", slug: "halal" }
+          ]
         },
         {
           name: "Производители",
@@ -88,6 +84,34 @@ export default {
         }
       ];
     }
+  },
+  mounted() {
+    // var ZCallbackWidgetLinkId = "a873333942ec7bcaefc0020ad11672fd";
+    // var ZCallbackWidgetDomain = "my.zadarma.com";
+    // // (function() {
+    // //  src=
+    // var jq = document.createElement("script");
+    // jq.type = "text/javascript";
+    // jq.charset = "utf-8";
+    // jq.defer = true;
+    // jq.async = false;
+    // jq.src = "https://code.jquery.com/jquery-1.12.4.min.js";
+    // var sc = document.getElementsByTagName("script")[0];
+    // // console.log("TCL: mounted -> sc", document.getElementsByTagName("script"));
+    // if (sc) sc.parentNode.insertBefore(jq, sc);
+    // else document.documentElement.firstChild.appendChild(jq);
+    // var lt = document.createElement("script");
+    // lt.type = "text/javascript";
+    // lt.charset = "utf-8";
+    // lt.async = false;
+    // lt.defer = true;
+    // lt.src =
+    //   "https://" + ZCallbackWidgetDomain + "/callbackWidget/js/main.min.js";
+    // var sc = document.getElementsByTagName("script")[0];
+    // if (jq) jq.parentNode.appendChild(lt, sc);
+    // else document.documentElement.firstChild.appendChild(lt);
+    // console.log("TCL: mounted -> sc", document.getElementsByTagName("script"));
+    // })();
   },
 
   data() {

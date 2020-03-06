@@ -1,38 +1,38 @@
 <template>
   <v-sheet light class="fill-height position-relative">
-    <v-app-bar height="80px" flat>
+    <div class="grey lighten-2 d-flex align-center py-3">
       <v-btn
         v-show="!showProductCard"
         color="gray"
         fab
         @click="showProductCard=true"
-        class="mr-4"
+        class="ml-4"
         title="Назад"
       >
         <v-icon>arrow_back</v-icon>
       </v-btn>
-      <v-breadcrumbs :items="breadcrumbs" class="pl-1 pr-5">
+      <v-breadcrumbs :items="breadcrumbs">
         <template slot="item" slot-scope="props">
           <nuxt-link
             class="text-decoration-none"
             :title="props.item.text"
             :to="props.item.to"
+            style="font-size: 0.8rem"
             exact
           >{{ props.item.text }}</nuxt-link>
         </template>
       </v-breadcrumbs>
-      <v-btn class="ml-auto" fab @click="closeDialog">
+      <v-btn class="ml-auto mr-3" fab @click="closeDialog">
         <v-icon>close</v-icon>
       </v-btn>
-    </v-app-bar>
-
+    </div>
     <v-container grid-list-lg class="position-relative fill-height">
       <v-layout row wrap v-show="showProductCard" itemscope itemtype="http://schema.org/Product">
         <v-flex xs12 md8 lg8 order-xs2 order-md1 class="display-flex column position-relative pl-4">
           <h1
             itemprop="name"
             class="font-weight-bold mb-5"
-            style="line-height: normal;"
+            style="line-height: normal; font-size: 1.5rem"
             v-text="product.name"
           ></h1>
           <div class="manufacturer mb-5" v-if="manufacturer">
@@ -53,7 +53,6 @@
             v-else
             class="mb-5"
           >{{product.name}}, представленная на нашем сайте продается по максимально выгодным ценам при условии оптовой покупки. Мы заботимся о вашем здоровье, предлагая качественные продукты отечественного производства.</div>
-
           <div v-if="product.content" class="content-wrapper" v-html="$md.render(product.content)"></div>
           <div class="my-3">
             <p>{{product.name}} c быстрой доставкой по Москве и МО. Доставка заказов также осуществляется во все регионы России и в страны СНГ.</p>
@@ -189,21 +188,25 @@ export default {
     },
     breadcrumbs() {
       return [
-        {
-          to: "/",
-          text: "Главная"
-        },
-        {
-          to: "/catalog",
-          text: "Каталог"
-        },
-        {
-          to: this.product.category
-            ? `/catalog/${this.product.category.slug}`
-            : "",
-          text: this.product.category ? this.product.category.name : ""
-        }
+        ...this.$store.state.sessionStorage.breadcrumbs,
+        { to: this.$route.path, text: this.product.name }
       ];
+      // return [
+      //   {
+      //     to: "/",
+      //     text: "Главная"
+      //   },
+      //   {
+      //     to: "/catalog",
+      //     text: "Каталог"
+      //   },
+      //   {
+      //     to: this.product.category
+      //       ? `/catalog/${this.product.category.slug}`
+      //       : "",
+      //     text: this.product.category ? this.product.category.name : ""
+      //   }
+      // ];
     },
     manufacturer() {
       return this.product.manufacturer ? this.product.manufacturer : {};

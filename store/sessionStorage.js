@@ -1,16 +1,7 @@
 export const state = () => ({
-  loading: false,
-  sortFilter: {},
-  manufacturerFilter: null,
-  pageFilter: 1,
-  easyProducts: [],
+  // loading: false,
   category: {},
   manufacturer: {},
-  generalInfo: {
-
-  },
-  products: {
-    items: [],
-    count: 0
-  }
+  generalInfo: {},
+  breadcrumbs: []
 })

@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 export const mutations = {
-  loading(state, item) {
-    state.loading = item
+  breadcrumbs(state, item) {
+    state.sessionStorage.breadcrumbs = item
   },
   manufacturerFilter(state, item) {
     state.sessionStorage.manufacturerFilter = item
@@ -91,6 +91,17 @@ export const getters = {
     }
 
   },
+  getParentCategories(state) {
+    if (state.sessionStorage.generalInfo && state.sessionStorage.generalInfo.categories) {
+      return state.sessionStorage.generalInfo.categories.filter(
+        item => item.parent.length === 0
+      )
+    } else {
+      return []
+    }
+
+
+  },
   getManufacturerId: state => slug => {
     if (!slug) return null
     const manufacturerFind = state.sessionStorage.generalInfo.manufacturers.find(
@@ -98,15 +109,32 @@ export const getters = {
     )
     return manufacturerFind ? manufacturerFind.id : null
   },
-  getManufacturer: state => slug => {
+  getCategory: state => slug => {
     if (!slug) return null
-    const manufacturerFind = state.sessionStorage.generalInfo.manufacturers.find(
+    const category = state.sessionStorage.generalInfo.categories.find(
       item => item.slug === slug
     )
-    return manufacturerFind ? manufacturerFind : null
+    if (!category) return null
+    return category
+  },
+  getManufacturer: state => slug => {
+    if (!slug) return null
+    const manufacturer = state.sessionStorage.generalInfo.manufacturers.find(
+      item => item.slug === slug
+    )
+    if (!manufacturer) return null
+    return manufacturer
   }
 }
 export const actions = {
+  async nuxtServerInit(state, ctx) {
+    const data = require("~/assets/generalData.json")
+    const result = {
+      ...data,
+      contacts: data.contacts[0]
+    }
+    await state.commit("generalInfo", result)
+  },
   async fetchGeneralInfo(ctx) {
     const data = require("~/assets/generalData.json")
     const result = {
@@ -147,7 +175,6 @@ export const actions = {
     return manufacturerData.manufacturer
   },
   async fetchCategory(ctx, id) {
-    await ctx.commit('loading', true)
     let client = this.app.apolloProvider.defaultClient;
     const {
       data: categoryData
@@ -186,7 +213,6 @@ export const actions = {
       }
     });
     await ctx.commit("category", categoryData.category);
-    await ctx.commit('loading', false)
     return categoryData.category
   },
   async fetchProduct(ctx, params) {
@@ -200,8 +226,6 @@ export const actions = {
     return productItem
   },
   async fetchProducts(ctx, params) {
-    // console.log("TCL: fetchProducts -> params", params)
-    await ctx.commit('loading', true)
     const {
       data: productsData
     } = await this.$axios.get("/products", {
@@ -213,8 +237,6 @@ export const actions = {
         manufacturer: params.manufacturer
       }
     })
-
-    await ctx.commit('loading', false)
     return productsData
   }
 }

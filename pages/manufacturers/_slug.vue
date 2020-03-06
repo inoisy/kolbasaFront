@@ -81,23 +81,27 @@ export default {
     };
   },
   async asyncData(ctx) {
-    const generalInfo = await ctx.store.dispatch("fetchGeneralInfo");
-    const manufacturerFind = generalInfo.manufacturers.find(
-      item => item.slug === ctx.params.slug
+    // const generalInfo = await ctx.store.dispatch("fetchGeneralInfo");
+    // const manufacturerFind = generalInfo.manufacturers.find(
+    //   item => item.slug === ctx.params.slug
+    // );
+    const manufacturer = await ctx.store.getters.getManufacturer(
+      ctx.params.slug
     );
-    if (!manufacturerFind) {
+    if (!manufacturer) {
       return ctx.error({
         statusCode: 404,
-        message: "Производитель не найден"
+        message: "Производитель не найден",
+        type: "manufacturer"
       });
     }
     let manufacturerData = await ctx.store.dispatch(
       "fetchManufacturer",
-      manufacturerFind.id
+      manufacturer.id
     );
 
     const { data: categoriesData } = await ctx.$axios.get(
-      `/categories/categoriesByManufacturer/` + manufacturerFind.id
+      `/categories/categoriesByManufacturer/` + manufacturer.id
     );
     return {
       manufacturer: manufacturerData,
@@ -111,7 +115,7 @@ export default {
       return this.manufacturer.content && this.manufacturer.content.length > 0;
     },
     breadrumbs() {
-      return [
+      const items = [
         {
           to: "/",
           text: "Главная"
@@ -125,6 +129,8 @@ export default {
           text: this.manufacturer.name
         }
       ];
+      this.$store.commit("breadcrumbs", items);
+      return items;
     }
   }
 };

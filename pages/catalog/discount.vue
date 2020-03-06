@@ -69,7 +69,7 @@ export default {
 
   components: { ProductCard, PageHeader },
   async asyncData(ctx) {
-    await ctx.store.dispatch("fetchGeneralInfo");
+    // await ctx.store.dispatch("fetchGeneralInfo");
     let client = ctx.app.apolloProvider.defaultClient;
     const { data: categoryData } = await client.query({
       query: gql`

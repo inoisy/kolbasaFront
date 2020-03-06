@@ -69,7 +69,6 @@ export default {
       // console.log("head -> head", head);
       return head;
     }
-    
   },
   components: {
     ProductDialog
