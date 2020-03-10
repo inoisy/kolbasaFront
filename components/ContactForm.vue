@@ -1,5 +1,5 @@
 <template>
-  <v-form v-model="valid" class="layout wrap" style="max-width:500px">
+  <v-form class="layout wrap" style="max-width:500px">
     <v-text-field
       class="xs12 py-0 flex"
       solo
@@ -10,7 +10,6 @@
       required
       @blur="$v.name.$touch()"
     ></v-text-field>
-
     <v-text-field
       class="xs12 py-0 flex"
       solo
@@ -28,7 +27,7 @@
         color="accent"
         @click="submit"
         large
-        :disabled="$v.$anyError"
+        :disabled="submitDisabled"
         style="width: 100%"
         title="Подтвердить заказ"
       >Подтвердить заказ</v-btn>
@@ -75,12 +74,10 @@ export default {
     phone: { required, minLength: minLength(10), maxLength: maxLength(19) }
   },
   data: () => ({
-    formMessage: "",
     formSuccess: false,
     formError: false,
     name: "",
     phone: "",
-    valid: "",
     mask: "+7 (###) ### - ####"
   }),
   methods: {
@@ -89,59 +86,49 @@ export default {
       this.phone = "";
       this.name = "";
     },
+    nameChange() {},
     async submit() {
+      // console.log(
+      //   window.yaCounter54918895.reachGoal(54918895, "reachGoal", "order")
+      // );
       this.$v.$touch();
-      if (!this.$v.$anyError) {
-        const busket = this.$store.state.localStorage.basket;
-        const busketItems =
-          busket && busket.length > 0
-            ? busket.map(item => {
-                return {
-                  count: item.count,
-                  name: item.name
-                };
-              })
-            : [];
-        const busketText =
-          busketItems && busket.length > 0
-            ? busketItems.reduce((acc, val) => {
-                acc = acc + `${val.name} * ${val.count} \n`;
-                return acc;
-              }, "")
-            : "";
-
-        const busketHtml =
-          busketItems && busket.length > 0
-            ? busketItems.reduce((acc, val) => {
-                acc = acc + `<p>${val.name} * ${val.count} </p>`;
-                return acc;
-              }, "")
-            : "";
-
-        const msg = {
-          name: this.name,
-          phone: this.phone
-        };
-        const req = await this.$axios
-          .post(process.env.baseUrl + "/email", {
-            to: "zakaz@prodaem-kolbasu.ru",
-            from: "noreply@prodaem-kolbasu.ru",
-            subject: `Обращение с сайта`,
-            text: `Обращение с сайта от ${msg.name}. Телефон: ${msg.phone}. ${busketText}`,
-            html: `Обращение с сайта от ${msg.name}.<br/> Телефон: ${msg.phone}.<br/> ${busketHtml}`
-          })
-          .then(response => {
-            this.formSuccess = true;
-            this.clear();
-          })
-          .catch(error => {
-            this.formError = true;
-            this.clear();
-          });
+      if (this.$v.$anyError) return;
+      const busket = this.$store.state.localStorage.basket;
+      let busketText = "",
+        busketHtml = "";
+      if (busket && busket.length > 0) {
+        for (let item of busket) {
+          busketText += `${item.name} * ${item.count} \n`;
+          busketHtml += `<p>${item.name} * ${item.count} </p>`;
+        }
       }
+
+      const req = await this.$axios
+        .post(process.env.baseUrl + "/email", {
+          to: "zakaz@prodaem-kolbasu.ru",
+          from: "noreply@prodaem-kolbasu.ru",
+          subject: `Обращение с сайта`,
+          text: `Обращение с сайта от ${this.name}. Телефон: ${this.phone}. ${busketText}`,
+          html: `<p>Обращение с сайта от ${this.name}.<p/><p>Телефон: ${this.phone}.<p/> ${busketHtml}`
+        })
+        .then(response => {
+          this.formSuccess = true;
+          this.clear();
+          if (window.yaCounter54918895) {
+            window.yaCounter54918895.reachGoal(54918895, "reachGoal", "order");
+          }
+        })
+        .catch(error => {
+          this.formError = true;
+          this.clear();
+        });
+      // }
     }
   },
   computed: {
+    submitDisabled() {
+      return !this.name || !this.phone || this.$v.$anyError;
+    },
     nameErrors() {
       const errors = [];
       if (!this.$v.name.$dirty) return errors;

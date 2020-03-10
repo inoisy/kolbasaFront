@@ -135,16 +135,16 @@ export const actions = {
     }
     await state.commit("generalInfo", result)
   },
-  async fetchGeneralInfo(ctx) {
-    const data = require("~/assets/generalData.json")
-    const result = {
-      categories: data.categories,
-      manufacturers: data.manufacturers,
-      contacts: data.contacts[0]
-    }
-    await ctx.commit("generalInfo", result)
-    return result
-  },
+  // async fetchGeneralInfo(ctx) {
+  //   const data = require("~/assets/generalData.json")
+  //   const result = {
+  //     categories: data.categories,
+  //     manufacturers: data.manufacturers,
+  //     contacts: data.contacts[0]
+  //   }
+  //   await ctx.commit("generalInfo", result)
+  //   return result
+  // },
   async fetchManufacturer(ctx, id) {
     let client = this.app.apolloProvider.defaultClient;
     const {

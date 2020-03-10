@@ -32,7 +32,6 @@
       class="background background-repeat"
       v-lazy:background-image="require('~/assets/img/bg.jpg')"
     >
-      <!-- {{loading}} -->
       <v-container grid-list-lg id="contentWrapper" class="display-flex py-9" fluid>
         <v-layout row wrap id="products" ref="product" class="mt-0" v-if="products.length>0">
           <div class="flex xs12 sm6 md4 lg3 xl2" v-for="(product,index) in products" :key="index">
@@ -113,7 +112,6 @@
         </div>
       </v-container>
     </section>
-
     <section v-if="category.content" class="content-wrapper grey lighten-3">
       <v-container v-html="$md.render(category.content)" class="py-9"></v-container>
     </section>
@@ -127,7 +125,6 @@ import PageHeader from "~/components/PageHeader";
 import StickyMenu from "~/components/StickyMenu";
 import ProductCard from "~/components/ProductCard";
 
-// import { isArray } from "util";
 export default {
   components: { PageHeader, StickyMenu, ProductCard, InfiniteLoading },
   computed: {
@@ -137,7 +134,11 @@ export default {
         : `${this.category.name} оптом`;
     },
     loading() {
-      return this.$store.state.sessionStorage.loading;
+      if (process.browser) {
+        return window.$nuxt.$root.$loading.show;
+      } else {
+        return false;
+      }
     },
     isParentCategory() {
       return (
@@ -258,7 +259,6 @@ export default {
       }
     }
   },
-
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl,
