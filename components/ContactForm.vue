@@ -115,10 +115,16 @@ export default {
           this.formSuccess = true;
           this.clear();
           if (window.yaCounter54918895) {
-            window.yaCounter54918895.reachGoal(54918895, "reachGoal", "order");
+            window.yaCounter54918895.reachGoal(
+              // 54918895,
+              // "reachGoal",
+              "order"
+            );
+            // console.log("submit -> reachGoal", reachGoal);
           }
         })
         .catch(error => {
+          console.log("submit -> error", error);
           this.formError = true;
           this.clear();
         });
