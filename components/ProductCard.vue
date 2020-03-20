@@ -47,7 +47,7 @@
           v-show="product.priceNum"
           class="product-price"
         >{{product.isDiscount ? product.discountPrice : product.priceNum}}</span>
-        <span v-show="!product.priceNum" style="font-size: 0.88rem">Цена по запросу</span>
+        <span v-show="!product.priceNum" style="font-size: 0.88rem">Нет в наличии</span>
         <span
           class="pl-2 product-price"
           v-if="product.isDiscount"
@@ -86,6 +86,7 @@
         tile
         color="#f2f2f2"
         style="height: 40px;"
+        :disabled="!product.priceNum"
         elevation="0"
         @click="handleAdd"
       >В корзину</v-btn>

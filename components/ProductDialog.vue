@@ -71,8 +71,9 @@
           >
             <span
               itemprop="price"
-              :class="price ? 'fs-2 font-weight-bold black--text' : ''"
-            >{{ price ? price : "Цена по запросу"}}</span>
+              class="font-weight-bold black--text"
+              :class="price ? 'fs-2' : 'fs-1-5'"
+            >{{ price ? price : "Нет в наличии"}}</span>
             <span itemprop="priceCurrency" class="fs-1-5" v-show="price">RUB</span>
             <span
               class="pl-2"
@@ -86,9 +87,9 @@
               class="ml-2"
               style="font-size: 1.1rem"
             >-{{discountPriceProcent}}%</v-chip>
-            <span class="mb-5" v-if="product && product.weight">/ {{product.weight}} кг.</span>
+            <span class="mb-5" v-if="price && product.weight">/ {{product.weight}} кг.</span>
           </div>
-          <div class="display-flex align-center wrap">
+          <div class="display-flex align-center wrap" v-if="price">
             <v-btn
               color="#d50000"
               class="ml-0 product-button mt-3"
@@ -191,22 +192,6 @@ export default {
         ...this.$store.state.sessionStorage.breadcrumbs,
         { to: this.$route.path, text: this.product.name }
       ];
-      // return [
-      //   {
-      //     to: "/",
-      //     text: "Главная"
-      //   },
-      //   {
-      //     to: "/catalog",
-      //     text: "Каталог"
-      //   },
-      //   {
-      //     to: this.product.category
-      //       ? `/catalog/${this.product.category.slug}`
-      //       : "",
-      //     text: this.product.category ? this.product.category.name : ""
-      //   }
-      // ];
     },
     manufacturer() {
       return this.product.manufacturer ? this.product.manufacturer : {};

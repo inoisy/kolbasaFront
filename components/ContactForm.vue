@@ -115,11 +115,7 @@ export default {
           this.formSuccess = true;
           this.clear();
           if (window.yaCounter54918895) {
-            window.yaCounter54918895.reachGoal(
-              // 54918895,
-              // "reachGoal",
-              "order"
-            );
+            window.yaCounter54918895.reachGoal("order");
             // console.log("submit -> reachGoal", reachGoal);
           }
         })
