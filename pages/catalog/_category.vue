@@ -61,7 +61,7 @@
                 <v-btn
                   v-on="on"
                   style="width: 100%"
-                >{{manufacturer === "all" || !manufacturer ? "Все производители" : manufacturer.name }}</v-btn>
+                >{{manufacturer === "all" || !manufacturer || !manufacturer.name ? "Все производители" : manufacturer.name }}</v-btn>
               </template>
               <v-list>
                 <v-list-item
