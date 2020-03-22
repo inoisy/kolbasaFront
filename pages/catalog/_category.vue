@@ -16,16 +16,17 @@
           class="subcategory-btn ma-0"
           text
         >все {{rootCategory.name}}</v-btn>
-        <template class="child" v-for="child in subcategories">
-          <v-btn
-            :to="`/catalog/${child.slug}`"
-            color="white"
-            class="subcategory-btn ma-0"
-            text
-            :key="child.id"
-            :title="child.name"
-          >{{child.name}}</v-btn>
-        </template>
+        <!-- <template class="child" v-for="child in subcategories"> -->
+        <v-btn
+          v-for="child in subcategories"
+          :to="`/catalog/${child.slug}`"
+          color="white"
+          class="subcategory-btn ma-0"
+          text
+          :key="child.id"
+          :title="child.name"
+        >{{child.name}}</v-btn>
+        <!-- </template> -->
       </div>
     </page-header>
     <section
@@ -33,7 +34,55 @@
       v-lazy:background-image="require('~/assets/img/bg.jpg')"
     >
       <v-container grid-list-lg id="contentWrapper" class="display-flex py-9" fluid>
+        <!-- <v-layout row wrap class="hidden-md-and-up" style="width:100%"> -->
+
+        <!-- </v-layout> -->
         <v-layout row wrap id="products" ref="product" class="mt-0" v-if="products.length>0">
+          <v-flex xs12 class="hidden-md-and-up">
+            <v-menu open-on-hover offset-y class="mb-4">
+              <template v-slot:activator="{ on }">
+                <v-btn v-on="on" style="width: 100%">{{sort.title}}</v-btn>
+              </template>
+              <v-list>
+                <v-list-item
+                  v-for="(item, index) in sortItems"
+                  :key="`sort-${index}`"
+                  @click="sortChange(item)"
+                >
+                  <v-list-item-title>{{ item.title }}</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </v-flex>
+          <v-flex xs12 class="hidden-md-and-up mb-3">
+            <!-- {{manufacturer}} -->
+            <v-menu open-on-hover offset-y>
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  v-on="on"
+                  style="width: 100%"
+                >{{manufacturer === "all" || !manufacturer ? "Все производители" : manufacturer.name }}</v-btn>
+              </template>
+              <v-list>
+                <v-list-item
+                  @click="manufacturerChange('all')"
+                  :title="`Все ${category.name}`"
+                  :to="`/catalog/${category.slug}`"
+                  style="line-height: normal; font-size: 14px; min-height: 28px"
+                  exact
+                >Все</v-list-item>
+                <v-list-item
+                  v-for="manufacturer in category.manufacturers"
+                  :key="manufacturer.id"
+                  @click="manufacturerChange(manufacturer)"
+                  :to="`/catalog/${category.slug}?manufacturer=${manufacturer.slug}`"
+                  :title="`${category.name} ${manufacturer.name}`"
+                  style="line-height: normal; font-size: 14px; min-height: 28px"
+                  exact
+                >{{ manufacturer.name }}</v-list-item>
+              </v-list>
+            </v-menu>
+          </v-flex>
           <div class="flex xs12 sm6 md4 lg3 xl2" v-for="(product,index) in products" :key="index">
             <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
           </div>
@@ -50,7 +99,7 @@
           </client-only>
         </v-layout>
         <v-layout v-else row wrap id="products" ref="product">
-          <v-flex xs12 sm6 md4 lg3 xl2 v-for="(product,index) in new Array(20)" :key="index">
+          <v-flex xs12 sm6 md4 lg3 xl2 v-for="(product,index) in new Array(10)" :key="index">
             <v-sheet>
               <v-skeleton-loader :boilerplate="!loading" class="mx-auto" type="card"></v-skeleton-loader>
             </v-sheet>
@@ -76,7 +125,7 @@
                 </v-list-item>
               </v-list>
             </v-menu>
-            <v-subheader class="pl-0 hidden-sm-and-down">БРЕНДЫ</v-subheader>
+            <v-subheader class="pl-0">ПРОИЗВОДИТЕЛИ</v-subheader>
             <v-sheet>
               <v-list class="py-0">
                 <v-list-item
@@ -149,7 +198,7 @@
                 </template>
               </v-list>
             </v-sheet>-->
-            <v-sheet></v-sheet>
+            <!-- <v-sheet></v-sheet> -->
           </sticky-menu>
         </div>
       </v-container>
@@ -278,7 +327,7 @@ export default {
   // },
   methods: {
     async sortChange(item) {
-      console.log("sortChange -> item", item);
+      // console.log("sortChange -> item", item);
       if (this.sort.value !== item.value) {
         this.products = [];
         this.sort = item;
@@ -300,6 +349,7 @@ export default {
           manufacturer: null,
           sort: this.sort.value
         });
+        this.$vuetify.goTo("#contentWrapper");
       } else if (
         !this.manufacturer ||
         manufacturer.id !== this.manufacturer.id
@@ -317,7 +367,7 @@ export default {
           manufacturer: manufacturer.id,
           sort: this.sort.value
         });
-        this.$vuetify.goTo("#products");
+        this.$vuetify.goTo("#contentWrapper");
       }
 
       // products;
