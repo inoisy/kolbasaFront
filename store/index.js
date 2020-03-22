@@ -117,6 +117,15 @@ export const getters = {
     if (!category) return null
     return category
   },
+
+  getManufacturerById: state => id => {
+    if (!id) return null
+    const manufacturer = state.sessionStorage.generalInfo.manufacturers.find(
+      item => item.id === id
+    )
+    if (!manufacturer) return null
+    return manufacturer
+  },
   getManufacturer: state => slug => {
     if (!slug) return null
     const manufacturer = state.sessionStorage.generalInfo.manufacturers.find(
@@ -131,7 +140,7 @@ export const actions = {
     const data = require("~/assets/generalData.json")
     const result = {
       ...data,
-      contacts: data.contacts[0]
+      contacts: data.contact
     }
     await state.commit("generalInfo", result)
   },
@@ -190,6 +199,11 @@ export const actions = {
             img {
               url
             }
+            manufacturers{
+              id
+              name
+              slug
+            }
             parent {
               id
               slug
@@ -215,24 +229,85 @@ export const actions = {
     await ctx.commit("category", categoryData.category);
     return categoryData.category
   },
-  async fetchProduct(ctx, params) {
+  async fetchProduct(ctx, slug) {
+    let client = this.app.apolloProvider.defaultClient;
     const {
-      data: product
-    } = await this.$axios.get(
-      `/products?slug=` + params.slug
-    );
-    const productItem = product[0];
-    await ctx.commit("product", productItem);
-    return productItem
+      data: productData
+    } = await client.query({
+      query: gql `
+        fragment relatedProduct on Product {
+          name
+          slug
+          weight
+          isDiscount
+          isHalal
+          priceNum
+          discountPrice
+          manufacturer {
+            slug
+            name
+            img {
+              url
+            }
+          }
+          category {
+            slug
+          }
+          img {
+            url
+          }
+        }
+        query ProductQuery( $slug: String! ) {
+          products( where: { slug: $slug } ) {
+            id
+            description
+            name
+            slug
+            content
+            weight
+            isDiscount
+            isHalal
+            priceNum
+            discountPrice
+            img {
+              url
+            }
+            manufacturer {
+              id
+              name
+              slug
+              description
+              img {
+                url
+              }
+            }
+            relatedProducts {
+              ...relatedProduct
+            },
+            productsRelated {
+              ...relatedProduct
+            }
+
+          }
+        }
+      `,
+      variables: {
+        slug: slug,
+      }
+    });
+    if (!productData.products.length) return null
+
+    return productData.products[0]
   },
   async fetchProducts(ctx, params) {
+    // console.log("fetchProducts -> params", params)
     const {
       data: productsData
     } = await this.$axios.get("/products", {
       params: {
         category: params.category,
         _limit: params.limit ? params.limit : 20,
-        _sort: params.sort === "price" ? "priceNum:desc" : "name:asc",
+        _sort: params.sort, //=== "price" ? "priceNum:desc" : "name:asc",
         _start: params.start ? params.start : 0,
         manufacturer: params.manufacturer
       }

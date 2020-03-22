@@ -25,7 +25,7 @@ module.exports = {
         const uri = backendUrl + '/graphql'
         const query = `
           {
-            contacts {
+            contact {
               phone
               email
               addressText

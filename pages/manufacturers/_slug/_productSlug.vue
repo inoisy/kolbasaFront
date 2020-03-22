@@ -65,9 +65,7 @@ export default {
   async asyncData(ctx) {
     let product = {};
     if (!ctx.params || !ctx.params.productSlug) return { product };
-    product = await ctx.store.dispatch("fetchProduct", {
-      slug: ctx.params.productSlug
-    });
+    product = await ctx.store.dispatch("fetchProduct", ctx.params.productSlug);
 
     if (!product) {
       return ctx.error({

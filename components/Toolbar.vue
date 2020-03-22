@@ -58,16 +58,23 @@
               class="list-item"
               v-if="category && category.children && category.children.length > 0"
             >
-              <v-list-item :to="`/catalog/${category.slug}`" :title="category.name">
-                <span style="line-height: 100%">{{ category.name}}</span>
+              <v-list-item
+                :to="`/catalog/${category.slug}`"
+                :title="category.name"
+                style="min-height: 40px !important"
+                height="40px"
+              >
+                <span style="line-height: normal; font-size: 15px;">{{ category.name}}</span>
               </v-list-item>
               <v-list-item
                 v-for="child in category.children"
                 :key="child.id"
                 :to="`/catalog/${child.slug}`"
                 :title="child.name"
+                style="min-height: 36px !important"
+                height="36px"
               >
-                <span class="pl-4">{{child.name}}</span>
+                <span class="pl-4" style="line-height: normal; font-size: 14px;">{{child.name}}</span>
               </v-list-item>
             </div>
             <v-list-item
@@ -78,6 +85,7 @@
               nuxt
               :to="`${item.to}/${category.slug}`"
               :title="category.name"
+              style="line-height: normal; font-size: 15px;"
             >{{ category.name }}</v-list-item>
           </template>
         </v-list>

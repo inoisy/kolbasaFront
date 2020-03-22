@@ -76,19 +76,30 @@ export default {
   async asyncData(ctx) {
     let product = {};
     if (ctx.params && !ctx.params.slug) return { product };
-
-    // if (ctx.params && ctx.params.slug) {
-    // await ctx.store.dispatch("fetchGeneralInfo");
-    product = await ctx.store.dispatch("fetchProduct", {
-      slug: ctx.params.slug,
-      type: "catalog"
-    });
+    product = await ctx.store.dispatch("fetchProduct", ctx.params.slug);
+    // console.log("if -> product", product);
     if (!product) {
       return ctx.error({
         statusCode: 404,
         message: "Продукт не найден"
       });
     }
+    // if (product.relatedProducts.length || product.productsRelated.length) {
+    //   product.related = [
+    //     ...product.relatedProducts,
+    //     ...product.productsRelated
+    //   ].map(item => {
+    //     // console.log("related -> product", item);
+    //     item.category = ctx.store.getters.getCategory(item.category);
+    //     item.manufacturer = ctx.store.getters.getManufacturer(
+    //       item.manufacturer
+    //     );
+    //     return item;
+    //   });
+    //   delete product.relatedProducts;
+    //   delete product.productsRelated;
+    // }
+    // console.log("related -> product", product);
     // }
     return {
       product

@@ -60,9 +60,46 @@
           class="flex hidden-sm-and-down"
           style="width: 300px; min-width: 300px; max-width: 300px; margin-left: auto;"
         >
-          <sticky-menu class="px-3 pb-1">
-            <v-subheader class="pl-0 hidden-sm-and-down">КАТЕГОРИИ</v-subheader>
-            <v-card>
+          <sticky-menu class="px-3 pb-1 pt-2">
+            <v-menu open-on-hover offset-y>
+              <template v-slot:activator="{ on }">
+                <v-btn v-on="on" style="width: 100%">{{sort.title}}</v-btn>
+              </template>
+
+              <v-list>
+                <v-list-item
+                  v-for="(item, index) in sortItems"
+                  :key="`sort-${index}`"
+                  @click="sortChange(item)"
+                >
+                  <v-list-item-title>{{ item.title }}</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+            <v-subheader class="pl-0 hidden-sm-and-down">БРЕНДЫ</v-subheader>
+            <v-sheet>
+              <v-list class="py-0">
+                <v-list-item
+                  exact
+                  @click="manufacturerChange('all')"
+                  :to="`/catalog/${category.slug}`"
+                  :title="`Все ${category.name}`"
+                  style="line-height: normal; font-size: 14px; min-height: 28px"
+                >Все</v-list-item>
+
+                <v-list-item
+                  v-for="manufacturer in category.manufacturers"
+                  :key="manufacturer.id"
+                  @click="manufacturerChange(manufacturer)"
+                  :to="`/catalog/${category.slug}?manufacturer=${manufacturer.slug}`"
+                  :title="`${category.name} ${manufacturer.name}`"
+                  style="line-height: normal; font-size: 14px; min-height: 28px"
+                  exact
+                >{{manufacturer.name}}</v-list-item>
+              </v-list>
+            </v-sheet>
+            <!-- <v-subheader class="pl-0 hidden-sm-and-down">КАТЕГОРИИ</v-subheader>
+            <v-sheet>
               <v-list
                 class="navigation pa-0 hidden-sm-and-down"
                 style="background-color:transparent !important"
@@ -80,18 +117,22 @@
                         :title="category.name"
                         height="36px"
                       >
-                        <v-list-item-content>{{ category.name}}</v-list-item-content>
+                        <v-list-item-content
+                          class="py-1"
+                          style="line-height: normal; font-size: 14px;"
+                        >{{ category.name}}</v-list-item-content>
                       </v-list-item>
                       <v-list-item
                         height="36px"
+                        style="min-height: 36px !important"
                         v-for="child in category.children"
                         :key="child.id"
                         :to="`/catalog/${child.slug}`"
                         :title="child.name"
                       >
                         <v-list-item-content
-                          class="pl-9"
-                          style="line-height: 100% !important"
+                          class="pl-5 py-1"
+                          style="line-height: normal; font-size: 14px;"
                         >{{child.name}}</v-list-item-content>
                       </v-list-item>
                     </v-list-group>
@@ -107,7 +148,8 @@
                   </v-list-item>
                 </template>
               </v-list>
-            </v-card>
+            </v-sheet>-->
+            <v-sheet></v-sheet>
           </sticky-menu>
         </div>
       </v-container>
@@ -229,9 +271,68 @@ export default {
       manufacturer: manufacturer
     };
   },
+  // watch:{
+  //   manufacturer(){
+
+  //   }
+  // },
   methods: {
+    async sortChange(item) {
+      console.log("sortChange -> item", item);
+      if (this.sort.value !== item.value) {
+        this.products = [];
+        this.sort = item;
+        this.products = await this.$store.dispatch("fetchProducts", {
+          category: this.categoriesIds,
+          limit: this.limit,
+          manufacturer: this.manufacturer ? this.manufacturer.id : null,
+          sort: item.value
+        });
+      }
+    },
+    async manufacturerChange(manufacturer) {
+      if (manufacturer === "all" && this.manufacturer !== "all") {
+        this.products = [];
+        this.manufacturer = "all";
+        this.products = await this.$store.dispatch("fetchProducts", {
+          category: this.categoriesIds,
+          limit: this.limit,
+          manufacturer: null,
+          sort: this.sort.value
+        });
+      } else if (
+        !this.manufacturer ||
+        manufacturer.id !== this.manufacturer.id
+      ) {
+        this.products = [];
+        // console.log("manufacturerChange -> manufacturer", manufacturer);
+        this.manufacturer = manufacturer; //await this.$store.getters.getManufacturerById(id);
+        // console.log(
+        //   "manufacturerChange -> this.manufacturer",
+        //   this.manufacturer
+        // );
+        this.products = await this.$store.dispatch("fetchProducts", {
+          category: this.categoriesIds,
+          limit: this.limit,
+          manufacturer: manufacturer.id,
+          sort: this.sort.value
+        });
+        this.$vuetify.goTo("#products");
+      }
+
+      // products;
+    },
     async handleClose() {
-      // console.log("TCL: handleClose -> handleClose", this.pageData);
+      // console.log("TCL: handleClose -> handleClose");
+      if (this.manufacturer) {
+        this.$router.push({
+          path: `/catalog/${this.category.slug}`,
+          query: {
+            manufacturer: this.manufacturer.slug
+          }
+        });
+      }
+
       if (!this.pageData) {
         this.category = await this.$store.dispatch(
           "fetchCategory",
@@ -239,7 +340,8 @@ export default {
         );
         const products = await this.$store.dispatch("fetchProducts", {
           category: this.categoriesIds,
-          limit: this.limit
+          limit: this.limit,
+          sort: this.sort.value
         });
         this.products = products;
         this.pageData = true;
@@ -249,7 +351,8 @@ export default {
       const newProducts = await this.$store.dispatch("fetchProducts", {
         category: this.categoriesIds,
         start: this.products.length,
-        manufacturer: this.manufacturer ? this.manufacturer.id : null
+        manufacturer: this.manufacturer ? this.manufacturer.id : null,
+        sort: this.sort.value
       });
       if (newProducts && newProducts.length) {
         this.products = [...this.products, ...newProducts];
@@ -260,9 +363,16 @@ export default {
     }
   },
   data() {
+    const sortItems = [
+      { title: "По алфавиту", value: "name:asc" },
+      { title: "Cначала дорогие", value: "priceNum:desc" },
+      { title: "Cначала дешевые", value: "priceNum:asc" }
+    ];
     return {
       imageBaseUrl: process.env.imageBaseUrl,
-      modal: false
+      modal: false,
+      sortItems: sortItems,
+      sort: sortItems[0]
     };
   }
 };

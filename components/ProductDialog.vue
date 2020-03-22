@@ -26,9 +26,9 @@
         <v-icon>close</v-icon>
       </v-btn>
     </div>
-    <v-container grid-list-lg class="position-relative fill-height">
+    <v-container grid-list-lg class="position-relative fill-height px-5">
       <v-layout row wrap v-show="showProductCard" itemscope itemtype="http://schema.org/Product">
-        <v-flex xs12 md8 lg8 order-xs2 order-md1 class="display-flex column position-relative pl-4">
+        <v-flex xs12 md8 lg8 order-xs2 order-md1 class="display-flex column position-relative">
           <h1
             itemprop="name"
             class="font-weight-bold mb-5"
@@ -158,15 +158,31 @@
         <contact-form></contact-form>
       </div>
     </v-container>
+    <div class="grey lighten-3" v-if="related.length" v-show="showProductCard">
+      <v-container grid-list-lg class="py-5 px-5">
+        <v-layout row wrap>
+          <v-flex xs12>
+            <h2 class="mb-2">Похожие товары</h2>
+          </v-flex>
+          <v-flex v-for="product in related" :key="product.id" xs12 sm6 md4 lg3>
+            <product-card
+              :product="product"
+              :to="`/catalog/${product.category.slug}/${product.slug}`"
+            ></product-card>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </div>
   </v-sheet>
 </template>
 
 <script>
 import ContactForm from "~/components/ContactForm";
 import ProductQuantity from "~/components/ProductQuantity";
+import ProductCard from "~/components/ProductCard";
 
 export default {
-  components: { ContactForm, ProductQuantity },
+  components: { ContactForm, ProductQuantity, ProductCard },
   props: {
     product: {
       type: Object
@@ -208,6 +224,13 @@ export default {
       return this.isDiscount
         ? this.product.discountPrice
         : this.product.priceNum;
+    },
+    related() {
+      const relatedProducts = this.product.relatedProducts || [];
+      const productsRelated = this.product.productsRelated || [];
+      return [...relatedProducts, ...productsRelated].filter(
+        item => item.priceNum
+      );
     }
   },
   watch: {
