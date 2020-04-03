@@ -1,17 +1,17 @@
 <template>
   <v-sheet light class="fill-height position-relative">
-    <div class="grey lighten-2 d-flex align-center py-3">
+    <div class="grey lighten-2 d-flex align-center py-3 px-4">
       <v-btn
         v-show="!showProductCard"
         color="gray"
         fab
         @click="showProductCard=true"
-        class="ml-4"
         title="Назад"
+        :small="$vuetify.breakpoint.smAndDown"
       >
         <v-icon>arrow_back</v-icon>
       </v-btn>
-      <v-breadcrumbs :items="breadcrumbs">
+      <v-breadcrumbs :items="breadcrumbs" class="py-0 px-3">
         <template slot="item" slot-scope="props">
           <nuxt-link
             class="text-decoration-none"
@@ -22,7 +22,7 @@
           >{{ props.item.text }}</nuxt-link>
         </template>
       </v-breadcrumbs>
-      <v-btn class="ml-auto mr-3" fab @click="closeDialog">
+      <v-btn class="ml-auto" fab @click="closeDialog" :small="$vuetify.breakpoint.smAndDown">
         <v-icon>close</v-icon>
       </v-btn>
     </div>
@@ -153,9 +153,9 @@
           />
         </v-flex>
       </v-layout>
-      <div v-show="!showProductCard" class="pb-12 pt-8 mx-auto">
-        <h2 class="fs-2 mb-5 font-weight-bold">Купить в один клик</h2>
-        <contact-form></contact-form>
+      <div v-show="!showProductCard" class="pb-6 pt-6 mx-auto">
+        <h2 class="fs-1-5 mb-5 font-weight-bold mb-3">Купить "{{product.name}}" в один клик</h2>
+        <contact-form :oneClickBuy="true" :productName="product.name"></contact-form>
       </div>
     </v-container>
     <div class="grey lighten-3" v-if="related.length" v-show="showProductCard">
