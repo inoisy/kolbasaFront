@@ -2,7 +2,7 @@
   <v-app-bar
     app
     fixed
-    class="py-0"
+    class="pa-0 main-header"
     style="z-index: 300"
     :prominent="!hideExtra"
     short
