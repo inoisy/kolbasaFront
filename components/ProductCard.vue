@@ -140,9 +140,6 @@
   }
 }
 
-.product-card-img-wrap {
-}
-
 .product-img, .product-card-img-wrap {
   height: 140px;
   max-height: 140px;

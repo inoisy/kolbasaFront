@@ -34,7 +34,6 @@
           </v-hover>
         </div>
       </v-expand-transition>
-
       <div class="w-100 d-flex px-3 align-center" style="height: 64px; ">
         <nuxt-link to="/" class="py-1 fill-height d-flex align-center" title="Логотип Альянс Фуд">
           <v-img
@@ -56,7 +55,6 @@
           ></v-img>
         </nuxt-link>
         <v-spacer></v-spacer>
-
         <template v-for="(item,index) in menuItems">
           <v-menu
             :key="index"
@@ -316,7 +314,6 @@ export default {
   },
   methods: {
     onScroll() {
-      // console.log(document.documentElement.scrollTop);
       if (document.documentElement.scrollTop > 150) {
         this.hideExtra = true;
       } else {
