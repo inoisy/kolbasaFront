@@ -7,7 +7,7 @@
     :prominent="!hideExtra"
     short
     v-scroll="onScroll"
-    :height="hideExtra ? '64px' : '112px'"
+    :height="hideExtra ? '64px' : '106px'"
   >
     <div class="d-flex w-100 fill-height" style="flex-direction: column;">
       <v-expand-transition>
@@ -27,9 +27,9 @@
           >
             <div>
               <div>
-                <v-img :src="item.img" width="40" height="40"></v-img>
+                <v-img :src="item.img" width="36" height="36"></v-img>
               </div>
-              <v-subheader dark v-show="!isMobile || hover">{{item.text}}</v-subheader>
+              <v-subheader class="extra-text pr-0" dark v-show="!isMobile || hover">{{item.text}}</v-subheader>
             </div>
           </v-hover>
         </div>
@@ -170,9 +170,15 @@
   </v-app-bar>
 </template>
 <style lang="stylus" scoped>
+.extra-text {
+  height: 42px !important;
+  font-size: 0.8rem !important;
+  line-height: 1.1 !important;
+}
+
 #header-top {
   background-color: #282828;
-  height: 48px;
+  height: 42px;
   justify-content: space-around;
 }
 

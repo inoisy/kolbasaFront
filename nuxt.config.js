@@ -142,9 +142,6 @@ module.exports = {
       src: '@/plugins/aos.js',
       ssr: false
     }, {
-      src: "@/plugins/swiper.js",
-      ssr: false
-    }, {
       src: '@/plugins/infiniteLoading.js',
       ssr: false
     }
@@ -206,7 +203,6 @@ module.exports = {
     ['@nuxtjs/sitemap', {
       gzip: true,
       routes
-
     }],
     ['@nuxtjs/robots', {
       UserAgent: '*',
@@ -261,7 +257,7 @@ module.exports = {
         }],
       ]
     },
-    transpile: ["@nuxtjs/vuetify", /^aos/, /^vue-awesome-swiper/, /^@nuxtjs.*/, "vue-particles", "nuxt-vuex-localstorage"],
+    transpile: ["@nuxtjs/vuetify", /^aos/, /^@nuxtjs.*/, "nuxt-vuex-localstorage"],
 
 
     extend(config, ctx) {
