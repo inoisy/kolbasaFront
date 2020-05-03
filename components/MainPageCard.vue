@@ -58,6 +58,26 @@
     }
   }
 }
+
+@media (min-width: 600px) {
+  .category-wrapper {
+    .category-img-wrapper {
+      .category-img {
+        height: 100px;
+      }
+    }
+  }
+}
+
+@media (min-width: 960px) {
+  .category-wrapper {
+    .category-img-wrapper {
+      .category-img {
+        height: 130px;
+      }
+    }
+  }
+}
 </style>
 <script>
 export default {

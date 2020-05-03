@@ -1,27 +1,22 @@
 <template>
   <div v-swiper:mySwiper="swiperOption">
     <div class="swiper-wrapper layout">
-      <div
+      <nuxt-link
         data-aos="zoom-in"
-        class="swiper-slide flex xs6 sm4 md3 lg2 xl2 d-flex align-center justify-center"
+        class="manuf-wrap pa-0 swiper-slide flex xs6 sm4 md3 lg2 xl2 d-flex align-center justify-center"
         v-for="(item,index) in items"
         :key="index"
+        :to="`/manufacturers/${item.slug}`"
+        :title="item.name"
       >
-        <nuxt-link
-          :to="`/manufacturers/${item.slug}`"
-          class="align-center justify-center pa-3"
+        <img
+          :data-src="item.img ? imageBaseUrl+ item.img.url  : require('~/assets/no-image.png')"
+          class="manuf-img swiper-lazy ma-auto d-block"
+          :alt="item.name"
           :title="item.name"
-        >
-          <img
-            :data-src="item.img ? imageBaseUrl+ item.img.url  : require('~/assets/no-image.png')"
-            class="swiper-lazy ma-auto d-block manuf-img"
-            style="max-width: 90%"
-            :alt="item.name"
-            :title="item.name"
-          />
-          <div class="swiper-lazy-preloader"></div>
-        </nuxt-link>
-      </div>
+        />
+        <div class="swiper-lazy-preloader"></div>
+      </nuxt-link>
     </div>
     <div class="swiper-button-prev" slot="button-prev">
       <v-btn icon large title="navigate_before">
@@ -75,6 +70,8 @@ export default {
   filter: saturate(0.5);
   height: 80px;
   object-fit: contain;
+  max-height: 80%;
+  max-width: 80%;
 
   &:hover {
     transform: scale(1.1);

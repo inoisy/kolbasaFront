@@ -253,6 +253,13 @@ module.exports = {
   build: {
     babel: {
       sourceType: 'unambiguous',
+      presets: [
+        ["@nuxt/babel-preset-app", {
+          corejs: {
+            version: 2
+          }
+        }],
+      ]
     },
     transpile: ["@nuxtjs/vuetify", /^aos/, /^vue-awesome-swiper/, /^@nuxtjs.*/, "vue-particles", "nuxt-vuex-localstorage"],
 

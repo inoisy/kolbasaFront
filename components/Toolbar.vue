@@ -1,147 +1,181 @@
 <template>
-  <v-app-bar app fixed class="py-0" height="64px" style="z-index: 300">
-    <nuxt-link to="/" class="py-1 fill-height d-flex align-center" title="Логотип Альянс Фуд">
-      <v-img
-        :src="require('~/assets/img/logo1.png')"
-        alt="Логотип Альянс Фуд"
-        title="Логотип Альянс Фуд"
-        max-height="100%"
-        width="75px"
-        contain
-      ></v-img>
-      <v-img
-        class="hidden-xs-only mt-1 mx-1"
-        :src="require('~/assets/img/logo2.png')"
-        alt="Логотип Альянс Фуд"
-        title="Логотип Альянс Фуд"
-        max-height="80%"
-        max-width="180px"
-        contain
-      ></v-img>
-    </nuxt-link>
-    <v-spacer></v-spacer>
+  <v-app-bar
+    app
+    fixed
+    class="py-0"
+    style="z-index: 300"
+    :prominent="!hideExtra"
+    short
+    v-scroll="onScroll"
+    :height="hideExtra ? '64px' : '112px'"
+  >
+    <div class="d-flex w-100 fill-height" style="flex-direction: column;">
+      <v-expand-transition>
+        <div
+          id="header-top"
+          class="d-flex w-100 px-4"
+          v-if="!hideExtra"
+          transition="slide-y-transition"
+        >
+          <v-hover
+            v-slot:default="{ hover }"
+            class="fill-height d-flex align-center"
+            style
+            v-for="(item,i) in extraInfo"
+            :key="`extra-${i}`"
+            :disabled="!isMobile"
+          >
+            <div>
+              <div>
+                <v-img :src="item.img" width="40" height="40"></v-img>
+              </div>
+              <v-subheader dark v-show="!isMobile || hover">{{item.text}}</v-subheader>
+            </div>
+          </v-hover>
+        </div>
+      </v-expand-transition>
 
-    <template v-for="(item,index) in menuItems">
-      <v-menu
-        :key="index"
-        v-if="item.items && item.items.length>0"
-        class="fill-height hidden-sm-and-down d-flex"
-        style="height: 100%"
-        allow-overflow
-        open-on-hover
-        offset-y
-        left
-        z-index="3000"
-        transition="slide-y-transition"
-      >
-        <template v-slot:activator="{ on }">
+      <div class="w-100 d-flex px-3 align-center" style="height: 64px; ">
+        <nuxt-link to="/" class="py-1 fill-height d-flex align-center" title="Логотип Альянс Фуд">
+          <v-img
+            :src="require('~/assets/img/logo1.png')"
+            alt="Логотип Альянс Фуд"
+            title="Логотип Альянс Фуд"
+            max-height="100%"
+            width="75px"
+            contain
+          ></v-img>
+          <v-img
+            class="hidden-xs-only mt-1 mx-1"
+            :src="require('~/assets/img/logo2.png')"
+            alt="Логотип Альянс Фуд"
+            title="Логотип Альянс Фуд"
+            max-height="80%"
+            max-width="180px"
+            contain
+          ></v-img>
+        </nuxt-link>
+        <v-spacer></v-spacer>
+
+        <template v-for="(item,index) in menuItems">
+          <v-menu
+            :key="index"
+            v-if="item.items && item.items.length>0"
+            class="fill-height hidden-sm-and-down d-flex"
+            style="height: 100%"
+            allow-overflow
+            open-on-hover
+            offset-y
+            left
+            z-index="3000"
+            transition="slide-y-transition"
+          >
+            <template v-slot:activator="{ on }">
+              <v-btn
+                v-on="on"
+                class="fill-height ma-0 header-link hidden-sm-and-down"
+                slot="activator"
+                style="height: 100%;"
+                text
+                tile
+                nuxt
+                :to="item.to"
+                color="#95282a"
+                :title="item.name"
+              >
+                {{item.name}}
+                <v-icon>arrow_drop_down</v-icon>
+              </v-btn>
+            </template>
+            <v-list class="two-columns pa-0" color="white">
+              <template v-for="(category, index) in item.items">
+                <div
+                  :key="'list-group'+index"
+                  class="list-item"
+                  v-if="category && category.children && category.children.length > 0"
+                >
+                  <v-list-item
+                    :to="`/catalog/${category.slug}`"
+                    :title="category.name"
+                    style="min-height: 40px !important"
+                    height="40px"
+                  >
+                    <span style="line-height: normal; font-size: 15px;">{{ category.name}}</span>
+                  </v-list-item>
+                  <v-list-item
+                    v-for="child in category.children"
+                    :key="child.id"
+                    :to="`/catalog/${child.slug}`"
+                    :title="child.name"
+                    style="min-height: 36px !important"
+                    height="36px"
+                  >
+                    <span class="pl-4" style="line-height: normal; font-size: 14px;">{{child.name}}</span>
+                  </v-list-item>
+                </div>
+                <v-list-item
+                  v-else
+                  class="list-item"
+                  active-class="text--accent"
+                  :key="index"
+                  nuxt
+                  :to="`${item.to}/${category.slug}`"
+                  :title="category.name"
+                  style="line-height: normal; font-size: 15px;"
+                >{{ category.name }}</v-list-item>
+              </template>
+            </v-list>
+          </v-menu>
+
           <v-btn
-            v-on="on"
-            class="fill-height ma-0 header-link hidden-sm-and-down"
-            slot="activator"
-            style="height: 100%;"
+            v-else
+            :to="item.to"
+            :key="index"
+            :title="item.name"
+            class="ma-0 fill-height header-link hidden-sm-and-down"
+            style="height: 100%"
+            color="#95282a"
             text
             tile
             nuxt
-            :to="item.to"
-            color="#95282a"
-            :title="item.name"
-          >
-            {{item.name}}
-            <v-icon>arrow_drop_down</v-icon>
-          </v-btn>
+            exact
+          >{{item.name}}</v-btn>
         </template>
-        <v-list class="two-columns pa-0" color="white">
-          <template v-for="(category, index) in item.items">
-            <div
-              :key="'list-group'+index"
-              class="list-item"
-              v-if="category && category.children && category.children.length > 0"
+        <client-only>
+          <v-btn
+            @click="$emit('showBasket')"
+            :disabled="!isBasket"
+            class="ml-3 cart-wrap"
+            color="#95282a"
+            :hover="false"
+            text
+          >
+            <span v-if="summa > 0" class="cart-text mr-2">{{summa}}&nbsp;р</span>
+            <v-badge
+              class="cart-badge"
+              color="#95282a"
+              :value="isBasket"
+              overlap
+              :content="basketLength"
             >
-              <v-list-item
-                :to="`/catalog/${category.slug}`"
-                :title="category.name"
-                style="min-height: 40px !important"
-                height="40px"
-              >
-                <span style="line-height: normal; font-size: 15px;">{{ category.name}}</span>
-              </v-list-item>
-              <v-list-item
-                v-for="child in category.children"
-                :key="child.id"
-                :to="`/catalog/${child.slug}`"
-                :title="child.name"
-                style="min-height: 36px !important"
-                height="36px"
-              >
-                <span class="pl-4" style="line-height: normal; font-size: 14px;">{{child.name}}</span>
-              </v-list-item>
-            </div>
-            <v-list-item
-              v-else
-              class="list-item"
-              active-class="text--accent"
-              :key="index"
-              nuxt
-              :to="`${item.to}/${category.slug}`"
-              :title="category.name"
-              style="line-height: normal; font-size: 15px;"
-            >{{ category.name }}</v-list-item>
-          </template>
-        </v-list>
-      </v-menu>
-
-      <v-btn
-        v-else
-        :to="item.to"
-        :key="index"
-        :title="item.name"
-        class="ma-0 fill-height header-link hidden-sm-and-down"
-        style="height: 100%"
-        color="#95282a"
-        text
-        tile
-        nuxt
-        exact
-      >{{item.name}}</v-btn>
-    </template>
-    <!-- <div class="ya-phone-icon ma-1">
-      <a :href="'tel:'+phone" class="pa-2" title="phone">
-        <i
-          aria-hidden="true"
-          class="v-icon material-icons theme--light"
-          style="font-size: 28px; color: rgb(149, 40, 42); caret-color: rgb(149, 40, 42);"
-        >phone</i>
-      </a>
-    </div>-->
-    <client-only>
-      <v-btn
-        @click="$emit('showBasket')"
-        :disabled="!isBasket"
-        class="ml-3 cart-wrap"
-        color="#95282a"
-        :hover="false"
-        text
-      >
-        <span v-if="summa > 0" class="cart-text mr-2">{{summa}}&nbsp;р</span>
-        <v-badge
-          class="cart-badge"
-          color="#95282a"
-          :value="isBasket"
-          overlap
-          :content="basketLength"
-        >
-          <v-icon color="#95282a">shopping_basket</v-icon>
-        </v-badge>
-      </v-btn>
-    </client-only>
-
-    <v-btn icon class="ml-1 hidden-md-and-up" @click="$emit('showDrawer')" large title="Меню">
-      <v-icon medium color="#95282a">menu</v-icon>
-    </v-btn>
+              <v-icon color="#95282a">shopping_basket</v-icon>
+            </v-badge>
+          </v-btn>
+        </client-only>
+        <v-btn icon class="ml-1 hidden-md-and-up" @click="$emit('showDrawer')" large title="Меню">
+          <v-icon medium color="#95282a">menu</v-icon>
+        </v-btn>
+      </div>
+    </div>
   </v-app-bar>
 </template>
 <style lang="stylus" scoped>
+#header-top {
+  background-color: #282828;
+  height: 48px;
+  justify-content: space-around;
+}
+
 .cart-wrap {
   height: 100% !important;
 
@@ -207,6 +241,12 @@
   }
 }
 
+@media (min-width: 960px) {
+  #header-top {
+    justify-content: space-between;
+  }
+}
+
 @media (min-width: 1199px) {
   .header-link {
     font-size: 0.875rem !important;
@@ -218,7 +258,33 @@
 <script>
 export default {
   props: ["menuItems"],
+  data() {
+    return {
+      hideExtra: false,
+      extraInfo: [
+        {
+          text: "РАБОТАЕМ ДЛЯ ВАС",
+          img: require("~/assets/icons/interface.svg")
+        },
+        {
+          text: "ДОСТАВИМ БЕСПЛАТНО",
+          img: require("~/assets/icons/commerce-and-shopping.svg")
+        },
+        {
+          text: "ЗА ОДИН ДЕНЬ",
+          img: require("~/assets/icons/fast-delivery.svg")
+        },
+        {
+          text: "С СОБЛЮДЕНИЕМ ВСЕХ САНИТАРНЫХ НОРМ",
+          img: require("~/assets/icons/guard.svg")
+        }
+      ]
+    };
+  },
   computed: {
+    isMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
+    },
     summa() {
       return this.$store.getters.summa;
     },
@@ -240,6 +306,16 @@ export default {
         this.$store.state.sessionStorage.generalInfo.contacts
         ? this.$store.state.sessionStorage.generalInfo.contacts.phone
         : "";
+    }
+  },
+  methods: {
+    onScroll() {
+      // console.log(document.documentElement.scrollTop);
+      if (document.documentElement.scrollTop > 150) {
+        this.hideExtra = true;
+      } else {
+        this.hideExtra = false;
+      }
     }
   }
 };

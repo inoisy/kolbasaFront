@@ -34,9 +34,6 @@
       v-lazy:background-image="require('~/assets/img/bg.jpg')"
     >
       <v-container grid-list-lg id="contentWrapper" class="display-flex py-9" fluid>
-        <!-- <v-layout row wrap class="hidden-md-and-up" style="width:100%"> -->
-
-        <!-- </v-layout> -->
         <v-layout row wrap id="products" ref="product" class="mt-0" v-if="products.length>0">
           <v-flex xs12 class="hidden-md-and-up">
             <v-menu open-on-hover offset-y class="mb-4">
@@ -55,7 +52,6 @@
             </v-menu>
           </v-flex>
           <v-flex xs12 class="hidden-md-and-up mb-3">
-            <!-- {{manufacturer}} -->
             <v-menu open-on-hover offset-y>
               <template v-slot:activator="{ on }">
                 <v-btn
@@ -99,7 +95,7 @@
           </client-only>
         </v-layout>
         <v-layout v-else row wrap id="products" ref="product">
-          <v-flex xs12 sm6 md4 lg3 xl2 v-for="(product,index) in new Array(10)" :key="index">
+          <v-flex xs12 sm6 md4 lg3 xl2 v-for="(product,index) in new Array(20)" :key="index">
             <v-sheet>
               <v-skeleton-loader :boilerplate="!loading" class="mx-auto" type="card"></v-skeleton-loader>
             </v-sheet>
@@ -217,6 +213,7 @@ import StickyMenu from "~/components/StickyMenu";
 import ProductCard from "~/components/ProductCard";
 
 export default {
+  name: "category-main",
   components: { PageHeader, StickyMenu, ProductCard, InfiniteLoading },
   computed: {
     name() {

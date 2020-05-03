@@ -4,7 +4,7 @@
       <v-layout
         column
         style="min-height: 40vh;"
-        :class="isPadding ? 'justify-space-between' : 'justify-space-around'"
+        :class="isPadding ? 'justify-space-between' : 'justify-space-around pb-12'"
       >
         <v-breadcrumbs :items="breadrumbs" dark class="px-4 py-3">
           <template slot="item" slot-scope="props">
@@ -16,7 +16,7 @@
             >{{ props.item.text }}</nuxt-link>
           </template>
         </v-breadcrumbs>
-        <h1 class="lumber header-text white--text text-center px-4 my-5">{{title}}</h1>
+        <h1 class="lumber header-text white--text text-center px-4 my-10">{{title}}</h1>
         <div class="slot-wrapper" ref="slot">
           <slot></slot>
         </div>

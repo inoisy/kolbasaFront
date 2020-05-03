@@ -176,6 +176,13 @@ img[lazy=loading] {
     background-position: center;
 }
 
+.w-100{
+  width: 100%;
+}
+
+.v-toolbar__content{
+  padding: 0 !important;
+}
 
 @media (min-width:576px) {
 	html {
@@ -187,4 +194,10 @@ img[lazy=loading] {
     html {
         font-size:18px !important;
 	}
+}
+
+@media (min-width: 1904px) {
+  .container:not(.container--fluid) {
+    max-width: 1570px !important;
+  }
 }

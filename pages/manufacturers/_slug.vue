@@ -1,13 +1,17 @@
 <template>
   <div>
     <nuxt-child />
-    <page-header :title="`Мясокомбинат ${manufacturer.name} оптом`" :breadrumbs="breadrumbs">
+    <page-header
+      :title="`Мясокомбинат ${manufacturer.name} оптом`"
+      :breadrumbs="breadrumbs"
+      :isPadding="true"
+    >
       <slot>
         <div v-if="manufacturer.catalog.length>0" class="display-flex justify-center">
           <v-btn
             v-for="(catalog,index) in manufacturer.catalog"
             :key="'catalog'+index"
-            class="mb-4"
+            class="mb-12"
             large
             color="accent"
             :href="imageBaseUrl+catalog.url"
