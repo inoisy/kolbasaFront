@@ -84,29 +84,17 @@ export default {
         message: "Продукт не найден"
       });
     }
-    // if (product.relatedProducts.length || product.productsRelated.length) {
-    //   product.related = [
-    //     ...product.relatedProducts,
-    //     ...product.productsRelated
-    //   ].map(item => {
-    //     // console.log("related -> product", item);
-    //     item.category = ctx.store.getters.getCategory(item.category);
-    //     item.manufacturer = ctx.store.getters.getManufacturer(
-    //       item.manufacturer
-    //     );
-    //     return item;
-    //   });
-    //   delete product.relatedProducts;
-    //   delete product.productsRelated;
-    // }
-    // console.log("related -> product", product);
-    // }
     return {
       product
     };
   },
+
   watch: {
+    // "this.$route.name": function(val) {
+    //   console.log("val", val);
+    // },
     dialog(val) {
+      console.log("dialog -> val", this.$route);
       if (val === false) {
         this.$router.push({ params: { slug: null } });
         this.$emit("close");

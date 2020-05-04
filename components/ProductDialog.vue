@@ -28,14 +28,112 @@
     </div>
     <v-container grid-list-lg class="position-relative fill-height px-5">
       <v-layout row wrap v-show="showProductCard" itemscope itemtype="http://schema.org/Product">
-        <v-flex xs12 md8 lg8 order-xs2 order-md1 class="display-flex column position-relative">
+        <v-flex class>
+          <!-- class="display-flex column position-relative" -->
           <h1
             itemprop="name"
-            class="font-weight-bold mb-5"
+            class="font-weight-bold mb-5 hidden-md-and-up"
             style="line-height: normal; font-size: 1.5rem"
             v-text="product.name"
           ></h1>
-          <div class="manufacturer mb-5" v-if="manufacturer">
+          <div class="float-none float-md-right pos-relative content-right">
+            <v-card class="mb-3 pa-3">
+              <!-- class="display-flex image-wrapper" -->
+              <div class="mini-imgs-wrapper pa-1">
+                <v-tooltip left max-width="400px" style="display: block">
+                  <template v-slot:activator="{ on }">
+                    <img
+                      itemprop="image"
+                      class="manufacturer-img"
+                      v-if="manufacturer.img"
+                      :src="imageBaseUrl+manufacturer.img.url"
+                      :alt="manufacturer.name"
+                      :title="manufacturer.name"
+                      v-on="on"
+                    />
+                  </template>
+                  <span>{{manufacturer.description}}</span>
+                </v-tooltip>
+
+                <img
+                  class="halal-img"
+                  v-if="product.isHalal"
+                  :src="require('~/assets/halal1.png')"
+                  alt="Халяльная продукция"
+                  title="Халяльная продукция"
+                />
+              </div>
+
+              <img
+                class="item-img d-block mx-auto mb-auto"
+                :src="imgUrl"
+                :alt="product.name"
+                :title="product.name"
+              />
+            </v-card>
+            <div
+              itemprop="offers"
+              itemscope
+              itemtype="http://schema.org/Offer"
+              class="font-weight-medium"
+            >
+              <span
+                itemprop="price"
+                class="font-weight-bold black--text"
+                :class="price ? 'fs-2' : 'fs-1-5'"
+              >{{ price ? price : "Нет в наличии"}}</span>
+              <span itemprop="priceCurrency" class="fs-1-5" v-show="price">RUB</span>
+              <span
+                class="pl-2"
+                v-if="isDiscount"
+                style="text-decoration: line-through; font-size:1rem"
+              >{{price+'Р'}}</span>
+              <v-chip
+                v-if="isDiscount"
+                color="accent"
+                dark
+                class="ml-2"
+                style="font-size: 1.1rem"
+              >-{{discountPriceProcent}}%</v-chip>
+              <span v-if="price && product.weight">/ {{product.weight}} кг.</span>
+            </div>
+            <div class="display-flex align-center wrap" v-if="price">
+              <v-btn
+                color="#d50000"
+                class="ml-0 product-button mt-3"
+                @click="handleAdd"
+                v-show="!busket"
+                style="color:white"
+                title="Добавить в корзину"
+              >Добавить в корзину</v-btn>
+              <client-only>
+                <v-sheet
+                  v-if="busket"
+                  class="product-button align-center display-flex justify-center mt-3 py-1"
+                  color="grey lighten-2"
+                >
+                  <product-quantity :id="product.id" :qty="busket"></product-quantity>
+                </v-sheet>
+              </client-only>
+              <v-btn
+                dark
+                color="#d50000"
+                class="product-button mt-3"
+                large
+                outlined
+                @click="handleOneClickBuy"
+                title="Купить в один клик"
+              >Купить в один клик</v-btn>
+            </div>
+          </div>
+
+          <h1
+            itemprop="name"
+            class="font-weight-bold mb-5 hidden-sm-and-down"
+            style="line-height: normal; font-size: 1.5rem"
+            v-text="product.name"
+          ></h1>
+          <div class="manufacturer my-3" v-if="manufacturer">
             Производитель:
             <nuxt-link
               :to="`/manufacturers/${manufacturer.slug}`"
@@ -49,108 +147,19 @@
             v-html="product.description"
             class="mb-5"
           ></div>
-          <div
-            v-else
-            class="mb-5"
-          >{{product.name}}, представленная на нашем сайте продается по максимально выгодным ценам при условии оптовой покупки. Мы заботимся о вашем здоровье, предлагая качественные продукты отечественного производства.</div>
+          <div v-else class="mb-5">
+            {{product.name}}, представленная на нашем сайте продается по максимально выгодным ценам при условии оптовой покупки. Мы заботимся о вашем здоровье, предлагая качественные продукты отечественного производства.
+            <div class="my-3">
+              <p>{{product.name}} c быстрой доставкой по Москве и МО. Доставка заказов также осуществляется во все регионы России и в страны СНГ.</p>
+              <p>
+                Для оформления заказа воспользуйтесь формой на сайте или звоните по телефону
+                <a
+                  :href="`tel:${phone}`"
+                >{{phone}}</a>
+              </p>
+            </div>
+          </div>
           <div v-if="product.content" class="content-wrapper" v-html="$md.render(product.content)"></div>
-          <div class="my-3">
-            <p>{{product.name}} c быстрой доставкой по Москве и МО. Доставка заказов также осуществляется во все регионы России и в страны СНГ.</p>
-            <p>
-              Для оформления заказа воспользуйтесь формой на сайте или звоните по телефону
-              <a
-                :href="`tel:${phone}`"
-              >{{phone}}</a>
-            </p>
-          </div>
-          <div
-            itemprop="offers"
-            itemscope
-            itemtype="http://schema.org/Offer"
-            class="font-weight-medium mb-2"
-          >
-            <span
-              itemprop="price"
-              class="font-weight-bold black--text"
-              :class="price ? 'fs-2' : 'fs-1-5'"
-            >{{ price ? price : "Нет в наличии"}}</span>
-            <span itemprop="priceCurrency" class="fs-1-5" v-show="price">RUB</span>
-            <span
-              class="pl-2"
-              v-if="isDiscount"
-              style="text-decoration: line-through; font-size:1rem"
-            >{{price+'Р'}}</span>
-            <v-chip
-              v-if="isDiscount"
-              color="accent"
-              dark
-              class="ml-2"
-              style="font-size: 1.1rem"
-            >-{{discountPriceProcent}}%</v-chip>
-            <span class="mb-5" v-if="price && product.weight">/ {{product.weight}} кг.</span>
-          </div>
-          <div class="display-flex align-center wrap" v-if="price">
-            <v-btn
-              color="#d50000"
-              class="ml-0 product-button mt-3"
-              large
-              @click="handleAdd"
-              v-show="!busket"
-              style="color:white"
-              title="Добавить в корзину"
-            >Добавить в корзину</v-btn>
-            <client-only>
-              <v-sheet
-                v-if="busket"
-                class="product-button align-center display-flex justify-center mt-3 py-1"
-                color="grey lighten-2"
-              >
-                <product-quantity :id="product.id" :qty="busket"></product-quantity>
-              </v-sheet>
-            </client-only>
-            <v-btn
-              dark
-              color="#d50000"
-              class="product-button mt-3"
-              large
-              outlined
-              @click="handleOneClickBuy"
-              title="Купить в один клик"
-            >Купить в один клик</v-btn>
-          </div>
-        </v-flex>
-        <v-flex xs12 md4 lg4 order-xs1 order-md2 class="display-flex image-wrapper">
-          <div class="mini-imgs-wrapper pa-1">
-            <v-tooltip left max-width="400px" style="display: block">
-              <template v-slot:activator="{ on }">
-                <img
-                  itemprop="image"
-                  class="manufacturer-img"
-                  v-if="manufacturer.img"
-                  :src="imageBaseUrl+manufacturer.img.url"
-                  :alt="manufacturer.name"
-                  :title="manufacturer.name"
-                  v-on="on"
-                />
-              </template>
-              <span>{{manufacturer.description}}</span>
-            </v-tooltip>
-
-            <img
-              class="halal-img"
-              v-if="product.isHalal"
-              :src="require('~/assets/halal1.png')"
-              alt="Халяльная продукция"
-              title="Халяльная продукция"
-            />
-          </div>
-
-          <img
-            class="item-img d-block mx-auto mb-auto"
-            :src="product.img ? imageBaseUrl+product.img.url : require('~/assets/no-image.png')"
-            :alt="product.name"
-            :title="product.name"
-          />
         </v-flex>
       </v-layout>
       <div v-show="!showProductCard" class="pb-6 pt-6 mx-auto">
@@ -188,7 +197,29 @@ export default {
       type: Object
     }
   },
+  beforeDestroy() {
+    // console.log("beforeDestroy -> beforeDestroy");
+    this.closeDialog();
+  },
+
+  // destroyed() {
+  //   console.log("destroyed -> destroyed");
+  // },
   computed: {
+    imgUrl() {
+      // console.log("imgUrl -> this.product.img.formats", this.product.img);
+      if (!this.product.img) {
+        return require("~/assets/no-image.png");
+      }
+      if (!this.product.img.formats) {
+        return this.imageBaseUrl + this.product.img.url;
+      }
+      if (this.product.img.formats.small) {
+        return this.imageBaseUrl + this.product.img.formats.small.url;
+      }
+
+      return this.imageBaseUrl + this.product.img.formats.thumbnail.url;
+    },
     phone() {
       return this.$store.state.sessionStorage.generalInfo.contacts.phone;
     },
@@ -286,13 +317,9 @@ export default {
 }
 
 .product-button {
-  min-width: 240px;
+  // min-width: 240px;
   width: 100%;
   height: 48px !important;
-
-  &:last-child {
-    margin-left: 0;
-  }
 }
 
 .image-wrapper {
@@ -305,21 +332,30 @@ export default {
 }
 
 @media (min-width: 960px) {
-  .product-button {
-    width: auto;
-
-    &:last-child {
-      margin-left: 15px;
-    }
+  .content-right {
+    width: 230px;
+    margin-left: 30px;
+    margin-bottom: 15px;
   }
 
-  .image-wrapper {
-    padding-left: 1rem;
-    margin-bottom: 0;
+  .product-button {
+    // min-width: 240px;
+    // width: 100%;
+    height: 40px !important;
+  }
+}
 
-    .item-img {
-      max-height: 300px;
-    }
+@media (min-width: 1199px) {
+  .product-button {
+    // min-width: 240px;
+    // width: 100%;
+    height: 48px !important;
+  }
+
+  .content-right {
+    width: 310px;
+    margin-left: 45px;
+    margin-bottom: 20px;
   }
 }
 </style>

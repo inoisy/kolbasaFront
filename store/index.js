@@ -38,6 +38,7 @@ export const mutations = {
     product.count++
   },
   addToBasket(state, product) {
+    console.log("addToBasket -> product", product)
     let cartProduct = state.localStorage.basket.find((item) => item.id === product.id);
 
     if (cartProduct) {
@@ -255,6 +256,7 @@ export const actions = {
           }
           img {
             url
+            formats
           }
         }
         query ProductQuery( $slug: String! ) {
@@ -269,8 +271,13 @@ export const actions = {
             isHalal
             priceNum
             discountPrice
+            category{
+              name
+              slug
+            }
             img {
               url
+              formats
             }
             manufacturer {
               id
@@ -301,6 +308,53 @@ export const actions = {
   },
   async fetchProducts(ctx, params) {
     // console.log("fetchProducts -> params", params)
+
+    // let client = this.app.apolloProvider.defaultClient;
+    // const {
+    //   data: productsData
+    // } = await client.query({
+    //   query: gql `query productsQuery(
+    //     $manufacturer: ID!
+    //     $category: ID!
+    //     $sort: String
+    //     $limit: Int
+    //     $start: Int
+    //   ) {
+    //     products(
+    //       limit: $limit
+    //       start: $start
+    //       sort: $sort
+    //       where: { manufacturer: $manufacturer, category: $category }
+    //     ) {
+    //       id
+    //       name
+    //       slug
+    //       priceNum
+    //       manufacturer {
+    //         name
+    //       }
+    //       category {
+    //         id
+    //         name
+    //       }
+    //       img {
+    //         url
+    //         name
+    //       }
+    //     }
+    //   }
+    // `,
+    //   variables: {
+    //     // id: id,
+    //     manufacturer: params.manufacturer,
+    //     category: params.category,
+    //     sort: params.sort,
+    //     limit: params.limit ? params.limit : 20,
+    //     start: params.start ? params.start : 0
+    //   }
+    // });
+    // console.log("fetchProducts -> productsData", productsData)
+
     const {
       data: productsData
     } = await this.$axios.get("/products", {
@@ -312,6 +366,7 @@ export const actions = {
         manufacturer: params.manufacturer
       }
     })
+
     return productsData
   }
 }

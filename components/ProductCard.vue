@@ -16,7 +16,7 @@
         class="d-block ma-auto product-img pa-3"
         :title="product.name"
         :alt="product.name"
-        v-lazy="product.img ? imageBaseUrl + product.img.url : require('~/assets/no-image.png')"
+        v-lazy="imgUrl"
       />
       <div class="product-card-mini-imgs">
         <img
@@ -186,6 +186,12 @@ export default {
   components: { ProductQuantity },
 
   computed: {
+    imgUrl() {
+      if (!this.product.img) return require("~/assets/no-image.png");
+      if (!this.product.img.formats)
+        return this.imageBaseUrl + this.product.img.url;
+      return this.imageBaseUrl + this.product.img.formats.thumbnail.url;
+    },
     busket() {
       const index = this.$store.state.localStorage.basket.findIndex(
         item => item.id === this.product.id

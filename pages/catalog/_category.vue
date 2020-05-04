@@ -271,7 +271,7 @@ export default {
         });
       }
       items.push({
-        to: this.$route.path,
+        to: `/catalog/${this.category.slug}`,
         text: this.category.name
       });
       this.$store.commit("breadcrumbs", items);

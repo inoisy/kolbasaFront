@@ -29,6 +29,7 @@
       </v-btn>
     </v-app-bar>
     <div v-show="!offer" class="px-4 pt-4">
+      <!-- {{basket}} -->
       <v-simple-table class="mb-3">
         <thead>
           <tr>
@@ -40,11 +41,12 @@
         </thead>
         <tbody>
           <tr v-for="(product,index) in basket" :key="'product-item-wrapper'+index">
+            <!-- {{product}} -->
             <td class="px-1">
               <v-avatar>
                 <img
                   style="object-fit: cover;"
-                  v-lazy="product.img ? imageBaseUrl+product.img.url : require('~/assets/no-image.png')"
+                  v-lazy="product.img ? product.img.formats  && product.img.formats.thumbnail ? imageBaseUrl + product.img.formats.thumbnail.url : imageBaseUrl+product.img.url : require('~/assets/no-image.png')"
                   :alt="product.name"
                 />
               </v-avatar>
@@ -120,7 +122,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in basket" :key="item.name">
+          <tr v-for="(item,index) in basket" :key="`busket-item-${index}`">
             <td class="text-left pl-0">{{ item.name }}</td>
             <td class="text-center">{{ item.priceNum }}</td>
             <td class="text-center">{{ item.count}}</td>

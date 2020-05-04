@@ -148,6 +148,7 @@ module.exports = {
   ],
 
   modules: [
+    // '@nuxtjs/sentry',
     'nuxt-vuex-localstorage',
     ['@nuxtjs/google-analytics', {
       id: 'UA-153607412-1'
