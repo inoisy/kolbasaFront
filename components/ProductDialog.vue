@@ -36,9 +36,8 @@
             style="line-height: normal; font-size: 1.5rem"
             v-text="product.name"
           ></h1>
-          <div class="float-none float-md-right pos-relative content-right">
-            <v-card class="mb-3 pa-3">
-              <!-- class="display-flex image-wrapper" -->
+          <div class="float-none float-md-right content-right">
+            <v-card class="mb-3 pa-3 image-wrapper d-flex">
               <div class="mini-imgs-wrapper pa-1">
                 <v-tooltip left max-width="400px" style="display: block">
                   <template v-slot:activator="{ on }">
@@ -65,8 +64,8 @@
               </div>
 
               <img
-                class="item-img d-block mx-auto mb-auto"
-                :src="imgUrl"
+                class="item-img d-block ma-auto"
+                v-lazy="imgUrl"
                 :alt="product.name"
                 :title="product.name"
               />
@@ -198,16 +197,10 @@ export default {
     }
   },
   beforeDestroy() {
-    // console.log("beforeDestroy -> beforeDestroy");
     this.closeDialog();
   },
-
-  // destroyed() {
-  //   console.log("destroyed -> destroyed");
-  // },
   computed: {
     imgUrl() {
-      // console.log("imgUrl -> this.product.img.formats", this.product.img);
       if (!this.product.img) {
         return require("~/assets/no-image.png");
       }
@@ -324,6 +317,7 @@ export default {
 
 .image-wrapper {
   position: relative;
+  min-height: 165px;
 
   .item-img {
     max-height: 165px;

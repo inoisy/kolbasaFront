@@ -1,11 +1,18 @@
 <template>
   <div>
-    <v-carousel cycle height="calc(100vh - 106px)" hide-delimiter-background show-arrows-on-hover>
+    <v-carousel
+      class="main-carousel"
+      cycle
+      height="calc(100vh - 106px)"
+      hide-delimiter-background
+      show-arrows-on-hover
+    >
       <v-carousel-item
         v-for="(item, i) in sliders"
         :key="`main-slide-${i}`"
         :src="imageBaseUrl+item.img.url"
         interval="8000"
+        style
       >
         <v-container fill-height class="main-content py-12 ma-auto">
           <v-layout align-center>

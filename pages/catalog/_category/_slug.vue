@@ -94,7 +94,7 @@ export default {
     //   console.log("val", val);
     // },
     dialog(val) {
-      console.log("dialog -> val", this.$route);
+      // console.log("dialog -> val", this.$route);
       if (val === false) {
         this.$router.push({ params: { slug: null } });
         this.$emit("close");
