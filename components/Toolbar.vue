@@ -25,32 +25,32 @@
             :key="`extra-${i}`"
             :disabled="!isMobile"
           >
-            <div>
+            <nuxt-link to="/delivery">
               <div>
                 <v-img :src="item.img" width="36" height="36"></v-img>
               </div>
               <v-subheader class="extra-text pr-0" dark v-show="!isMobile || hover">{{item.text}}</v-subheader>
-            </div>
+            </nuxt-link>
           </v-hover>
         </div>
       </v-expand-transition>
       <div class="w-100 d-flex px-3 align-center" style="height: 64px; ">
         <nuxt-link to="/" class="py-1 fill-height d-flex align-center" title="Логотип Альянс Фуд">
           <v-img
+            id="logo-img"
             :src="require('~/assets/img/logo1.png')"
             alt="Логотип Альянс Фуд"
             title="Логотип Альянс Фуд"
             max-height="100%"
-            width="75px"
             contain
           ></v-img>
           <v-img
-            class="hidden-xs-only mt-1 mx-1"
+            id="logo-text"
+            class="mt-1 mx-1"
             :src="require('~/assets/img/logo2.png')"
             alt="Логотип Альянс Фуд"
             title="Логотип Альянс Фуд"
             max-height="80%"
-            max-width="180px"
             contain
           ></v-img>
         </nuxt-link>
@@ -143,7 +143,7 @@
           <v-btn
             @click="$emit('showBasket')"
             :disabled="!isBasket"
-            class="ml-3 cart-wrap"
+            class="cart-wrap header-link"
             color="#95282a"
             :hover="false"
             text
@@ -238,23 +238,60 @@
   }
 }
 
+#logo-img {
+  width: 50px;
+}
+
+#logo-text {
+  width: 110px;
+}
+
+.header-link {
+  font-size: 0.8rem !important;
+  padding: 0 8px !important;
+}
+
 @media (min-width: 576px) {
-  .header-link {
-    font-size: 0.79rem !important;
-    padding: 0 6px !important;
+  #logo-img {
+    width: 65px;
+  }
+
+  #logo-text {
+    width: 140px;
   }
 }
 
 @media (min-width: 960px) {
+  #logo-img {
+    width: 50px;
+  }
+
+  #logo-text {
+    width: 120px;
+  }
+
   #header-top {
     justify-content: space-between;
+  }
+
+  .header-link {
+    font-size: 0.8rem !important;
+    padding: 0 6px !important;
   }
 }
 
 @media (min-width: 1199px) {
+  #logo-img {
+    width: 65px;
+  }
+
+  #logo-text {
+    width: 130px;
+  }
+
   .header-link {
-    font-size: 0.875rem !important;
-    padding: 0 16px !important;
+    font-size: 0.85rem !important;
+    padding: 0 12px !important;
   }
 }
 </style>

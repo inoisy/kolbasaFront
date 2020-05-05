@@ -79,6 +79,10 @@ export default {
           to: "/about"
         },
         {
+          name: "Доставка",
+          to: "/delivery"
+        },
+        {
           name: "Контакты",
           to: "/contacts"
         }
