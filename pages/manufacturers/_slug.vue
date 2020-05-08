@@ -7,19 +7,17 @@
       :isPadding="true"
     >
       <slot>
-        <div v-if="manufacturer.catalog.length>0" class="display-flex justify-center">
+        <template v-if="manufacturer.catalog">
           <v-btn
-            v-for="(catalog,index) in manufacturer.catalog"
-            :key="'catalog'+index"
-            class="mb-12"
+            class="mb-12 mx-auto"
             large
             color="accent"
-            :href="imageBaseUrl+catalog.url"
+            :href="imageBaseUrl+manufacturer.catalog.url"
             :title="`Каталог ${manufacturer.name}`"
           >
             <v-icon left dark>save_alt</v-icon>Загрузить прайс
           </v-btn>
-        </div>
+        </template>
       </slot>
     </page-header>
     <div

@@ -17,7 +17,7 @@
           </template>
         </v-breadcrumbs>
         <h1 class="lumber header-text white--text text-center px-4 my-10">{{title}}</h1>
-        <div class="slot-wrapper" ref="slot">
+        <div class="slot-wrapper d-flex" ref="slot">
           <slot></slot>
         </div>
       </v-layout>

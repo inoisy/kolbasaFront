@@ -25,15 +25,19 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .dialog-content-wrapper {
   margin-top: 120px !important;
-  max-height: calc(90% - 50px) !important;
+  max-height: calc(90% - 100px) !important;
+}
+.dialog-image-wrapper {
+    margin-top: 120px !important;
+    max-height: calc(90vh - 100px) !important;
 }
 @media (min-width: 960px) {
-  .dialog-content-wrapper {
+  .dialog-content-wrapper,.dialog-image-wrapper  {
     max-width: 900px !important;
   }
 }
 @media (min-width: 1264px) {
-  .dialog-content-wrapper {
+  .dialog-content-wrapper,.dialog-image-wrapper  {
     max-width: 1185px !important;
   }
 }
@@ -219,11 +223,11 @@ img[lazy=loading] {
 	}
 }
     
-@media (min-width:1199px) {
-    html {
-        font-size:18px !important;
-	}
-}
+// @media (min-width:1199px) {
+//     html {
+//         font-size:18px !important;
+// 	}
+// }
 
 @media (min-width: 1904px) {
   .container:not(.container--fluid) {

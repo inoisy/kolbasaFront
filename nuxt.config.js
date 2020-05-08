@@ -1,14 +1,13 @@
+require('dotenv').config()
 const path = require('path')
 const fs = require('fs')
-
 const apolloFetch = require('apollo-fetch');
 
 const routes = require("./routes")
 const redirectRoutes = require("./redirectRoutes")
 
-const protocol = "https"
-const sitename = `${protocol}://prodaem-kolbasu.ru`;
-const backURL = `${protocol}://api.prodaem-kolbasu.ru`
+const sitename = `https://prodaem-kolbasu.ru`;
+const backURL = `https://api.prodaem-kolbasu.ru`
 const backendUrl = process.env.BACKEND_URL || backURL
 const imageUrl = process.env.IMAGE_BASE_URL || process.env.BACKEND_URL || backURL
 
@@ -133,6 +132,9 @@ module.exports = {
     '~/assets/style/app.styl'
   ],
 
+  buildModules: [
+    '@nuxtjs/dotenv',
+  ],
   /*
    ** Plugins to load before mounting the App
    */
@@ -151,12 +153,12 @@ module.exports = {
     // '@nuxtjs/sentry',
     'nuxt-vuex-localstorage',
     ['@nuxtjs/google-analytics', {
-      id: 'UA-153607412-1'
+      id: process.env.GOOGLE_ID
     }],
     [
       '@nuxtjs/yandex-metrika',
       {
-        id: '54918895',
+        id: process.env.YANDEX_ID,
         clickmap: true,
         trackLinks: true,
         accurateTrackBounce: true,
@@ -164,7 +166,7 @@ module.exports = {
       }
     ],
     ['vue-yandex-maps/nuxt', {
-      apiKey: 'df1793f7-7dbf-4c12-abe4-47fcdf2861b5',
+      apiKey: process.env.MAP_KEY,
       lang: 'ru_RU',
       version: '2.1'
     }],
@@ -209,7 +211,6 @@ module.exports = {
       UserAgent: '*',
       Allow: '/',
       Sitemap: sitename + "/sitemap.xml"
-
     }],
     ["nuxt-ssr-cache", {
       store: {
@@ -259,10 +260,6 @@ module.exports = {
       ]
     },
     transpile: ["@nuxtjs/vuetify", /^aos/, /^@nuxtjs.*/, "nuxt-vuex-localstorage"],
-
-
-    extend(config, ctx) {
-
-    }
+    extend(config, ctx) {}
   }
 }

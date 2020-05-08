@@ -73,7 +73,7 @@
             <div
               v-else
               :key="item.id"
-              class="layout row wrap justify-center mt-4 pt-3 pb-1"
+              class="layout row wrap justify-center mt-4 pt-3 pb-1 w-100"
               style="border: 1px solid #8b8b8b; border-radius: 10px;"
             >
               <div class="flex xs12 text-center">

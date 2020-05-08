@@ -278,6 +278,8 @@ export const actions = {
             img {
               url
               formats
+              width
+              height
             }
             manufacturer {
               id

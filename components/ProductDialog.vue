@@ -37,7 +37,20 @@
             v-text="product.name"
           ></h1>
           <div class="float-none float-md-right content-right">
-            <v-card class="mb-3 pa-3 image-wrapper d-flex">
+            <v-card
+              class="mb-3 image-wrapper d-flex"
+              :class="showImageDialog && 'pa-3'"
+              :hover="showImageDialog"
+              :ripple="showImageDialog"
+              :flat="!showImageDialog"
+              :tile="!showImageDialog"
+              v-on="showImageDialog ? { click: ()=> handleImageDialog() } : {}"
+              v-if="product.img"
+            >
+              <!-- @click="handleImageDialog" 
+              v-on="{ click: showImageDialog ? handleImageDialog : void null}"
+
+              -->
               <div class="mini-imgs-wrapper pa-1">
                 <v-tooltip left max-width="400px" style="display: block">
                   <template v-slot:activator="{ on }">
@@ -69,6 +82,12 @@
                 :alt="product.name"
                 :title="product.name"
               />
+              <image-dialog
+                v-if="showImageDialog"
+                :item="product.img"
+                :value="dialogImg"
+                @input="(val)=>dialogImg=val"
+              ></image-dialog>
             </v-card>
             <div
               itemprop="offers"
@@ -188,9 +207,10 @@
 import ContactForm from "~/components/ContactForm";
 import ProductQuantity from "~/components/ProductQuantity";
 import ProductCard from "~/components/ProductCard";
+import ImageDialog from "~/components/ImageDialog";
 
 export default {
-  components: { ContactForm, ProductQuantity, ProductCard },
+  components: { ContactForm, ProductQuantity, ProductCard, ImageDialog },
   props: {
     product: {
       type: Object
@@ -200,6 +220,9 @@ export default {
     this.closeDialog();
   },
   computed: {
+    showImageDialog() {
+      return !!this.product.img.formats.small;
+    },
     imgUrl() {
       if (!this.product.img) {
         return require("~/assets/no-image.png");
@@ -265,10 +288,14 @@ export default {
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl,
-      showProductCard: true
+      showProductCard: true,
+      dialogImg: false
     };
   },
   methods: {
+    handleImageDialog() {
+      this.dialogImg = true;
+    },
     async closeDialog() {
       await this.$emit("closeProductDialog");
     },
