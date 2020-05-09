@@ -240,10 +240,12 @@
 
 #logo-img {
   width: 50px;
+  max-width: 50px;
 }
 
 #logo-text {
   width: 110px;
+  max-width: 110px;
 }
 
 .header-link {
@@ -254,20 +256,24 @@
 @media (min-width: 576px) {
   #logo-img {
     width: 65px;
+    max-width: 65px;
   }
 
   #logo-text {
     width: 140px;
+    max-width: 140px;
   }
 }
 
 @media (min-width: 960px) {
   #logo-img {
     width: 50px;
+    max-width: 50px;
   }
 
   #logo-text {
     width: 120px;
+    max-width: 120px;
   }
 
   #header-top {
@@ -283,10 +289,12 @@
 @media (min-width: 1199px) {
   #logo-img {
     width: 65px;
+    max-width: 65px;
   }
 
   #logo-text {
     width: 130px;
+    max-width: 130px;
   }
 
   .header-link {

@@ -1,4 +1,6 @@
-require('dotenv').config()
+require('dotenv').config({
+  path: "../.env"
+})
 const path = require('path')
 const fs = require('fs')
 const apolloFetch = require('apollo-fetch');
