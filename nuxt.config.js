@@ -15,6 +15,8 @@ const imageUrl = process.env.IMAGE_BASE_URL || process.env.BACKEND_URL || backUR
 const name = "Альянс Фуд"
 const description = "Альянс Фуд. Колбаса и другие мясные изделия оптом по ценам производителя. Самовывоз со склада в Москве. Доставка по РФ и СНГ."
 
+console.log("process.env.YANDEX_ID", process.env.YANDEX_ID)
+
 
 module.exports = {
   mode: 'universal',
