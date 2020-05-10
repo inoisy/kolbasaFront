@@ -221,7 +221,11 @@ export default {
   },
   computed: {
     showImageDialog() {
-      return !!this.product.img.formats.small;
+      return !!(
+        this.product.img &&
+        this.product.img.formats &&
+        this.product.img.formats.small
+      );
     },
     imgUrl() {
       if (!this.product.img) {
