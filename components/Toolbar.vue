@@ -276,10 +276,9 @@
     max-width: 120px;
   }
 
-  #header-top {
-    justify-content: space-between;
-  }
-
+  // #header-top {
+  // justify-content: space-between;
+  // }
   .header-link {
     font-size: 0.8rem !important;
     padding: 0 6px !important;
