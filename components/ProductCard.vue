@@ -22,7 +22,7 @@
         <img
           class="product-card-halal-img"
           v-if="product.isHalal"
-          src="@/assets/halal1.png"
+          src="~/assets/halal1.png"
           title="Халяльная продукция"
           alt="Халяльная продукция"
         />

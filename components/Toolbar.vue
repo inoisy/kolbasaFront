@@ -26,9 +26,7 @@
             :disabled="!isMobile"
           >
             <nuxt-link to="/delivery">
-              <div>
-                <v-img :src="item.img" width="36" height="36"></v-img>
-              </div>
+              <img :src="item.img" style="width:35px; height:35px; object-fit: contain;" />
               <v-subheader class="extra-text pr-0" dark v-show="!isMobile || hover">{{item.text}}</v-subheader>
             </nuxt-link>
           </v-hover>
@@ -358,7 +356,7 @@ export default {
   },
   methods: {
     onScroll() {
-      if (document.documentElement.scrollTop > 150) {
+      if (window.scrollY > 150) {
         this.hideExtra = true;
       } else {
         this.hideExtra = false;

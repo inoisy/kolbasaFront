@@ -16,7 +16,6 @@
           class="subcategory-btn ma-0"
           text
         >все {{rootCategory.name}}</v-btn>
-        <!-- <template class="child" v-for="child in subcategories"> -->
         <v-btn
           v-for="child in subcategories"
           :to="`/catalog/${child.slug}`"
@@ -26,15 +25,14 @@
           :key="child.id"
           :title="child.name"
         >{{child.name}}</v-btn>
-        <!-- </template> -->
       </div>
     </page-header>
-    <section
+    <main
       class="background background-repeat"
       v-lazy:background-image="require('~/assets/img/bg.jpg')"
     >
-      <v-container grid-list-lg id="contentWrapper" class="display-flex py-9" fluid>
-        <v-layout row wrap id="products" ref="product" class="mt-0" v-if="products.length>0">
+      <v-container grid-list-lg id="contentWrapper" class="display-flex" fluid>
+        <v-layout row wrap id="products" ref="product" class="mt-0">
           <v-flex xs12 class="hidden-md-and-up">
             <v-menu open-on-hover offset-y class="mb-4">
               <template v-slot:activator="{ on }">
@@ -68,7 +66,7 @@
                   exact
                 >Все</v-list-item>
                 <v-list-item
-                  v-for="manufacturer in category.manufacturers"
+                  v-for="manufacturer in manufacturers"
                   :key="manufacturer.id"
                   @click="manufacturerChange(manufacturer)"
                   :to="`/catalog/${category.slug}?manufacturer=${manufacturer.slug}`"
@@ -79,9 +77,26 @@
               </v-list>
             </v-menu>
           </v-flex>
-          <div class="flex xs12 sm6 md4 lg3 xl2" v-for="(product,index) in products" :key="index">
-            <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
-          </div>
+          <template v-if="products.length>0">
+            <div class="flex xs12 sm6 md4 lg3 xl2" v-for="(product,index) in products" :key="index">
+              <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
+            </div>
+          </template>
+          <template v-else>
+            <v-flex
+              xs12
+              sm6
+              md4
+              lg3
+              xl2
+              v-for="(product,index) in new Array(productsCount)"
+              :key="index"
+            >
+              <v-sheet>
+                <v-skeleton-loader :boilerplate="!loading" class="mx-auto" type="card"></v-skeleton-loader>
+              </v-sheet>
+            </v-flex>
+          </template>
           <client-only>
             <infinite-loading
               v-if="products && products.length >= 20"
@@ -94,23 +109,12 @@
             </infinite-loading>
           </client-only>
         </v-layout>
-        <v-layout v-else row wrap id="products" ref="product">
-          <v-flex xs12 sm6 md4 lg3 xl2 v-for="(product,index) in new Array(20)" :key="index">
-            <v-sheet>
-              <v-skeleton-loader :boilerplate="!loading" class="mx-auto" type="card"></v-skeleton-loader>
-            </v-sheet>
-          </v-flex>
-        </v-layout>
-        <div
-          class="flex hidden-sm-and-down"
-          style="width: 300px; min-width: 300px; max-width: 300px; margin-left: auto;"
-        >
-          <sticky-menu class="px-3 pb-1 pt-2">
+        <div class="hidden-sm-and-down py-2 pl-4" style="width: 300px; min-width: 300px;">
+          <div id="sidebarContent">
             <v-menu open-on-hover offset-y>
               <template v-slot:activator="{ on }">
                 <v-btn v-on="on" style="width: 100%">{{sort.title}}</v-btn>
               </template>
-
               <v-list>
                 <v-list-item
                   v-for="(item, index) in sortItems"
@@ -131,9 +135,8 @@
                   :title="`Все ${category.name}`"
                   style="line-height: normal; font-size: 14px; min-height: 28px"
                 >Все</v-list-item>
-
                 <v-list-item
-                  v-for="manufacturer in category.manufacturers"
+                  v-for="manufacturer in manufacturers"
                   :key="manufacturer.id"
                   @click="manufacturerChange(manufacturer)"
                   :to="`/catalog/${category.slug}?manufacturer=${manufacturer.slug}`"
@@ -143,62 +146,10 @@
                 >{{manufacturer.name}}</v-list-item>
               </v-list>
             </v-sheet>
-            <!-- <v-subheader class="pl-0 hidden-sm-and-down">КАТЕГОРИИ</v-subheader>
-            <v-sheet>
-              <v-list
-                class="navigation pa-0 hidden-sm-and-down"
-                style="background-color:transparent !important"
-                color="transparent"
-              >
-                <template v-for="(category,index) in categories">
-                  <div
-                    :key="'list-group'+index"
-                    v-if="category && category.children && category.children.length > 0"
-                  >
-                    <v-list-group :key="category.slug" class="aside-nav">
-                      <v-list-item
-                        slot="activator"
-                        :to="`/catalog/${category.slug}`"
-                        :title="category.name"
-                        height="36px"
-                      >
-                        <v-list-item-content
-                          class="py-1"
-                          style="line-height: normal; font-size: 14px;"
-                        >{{ category.name}}</v-list-item-content>
-                      </v-list-item>
-                      <v-list-item
-                        height="36px"
-                        style="min-height: 36px !important"
-                        v-for="child in category.children"
-                        :key="child.id"
-                        :to="`/catalog/${child.slug}`"
-                        :title="child.name"
-                      >
-                        <v-list-item-content
-                          class="pl-5 py-1"
-                          style="line-height: normal; font-size: 14px;"
-                        >{{child.name}}</v-list-item-content>
-                      </v-list-item>
-                    </v-list-group>
-                  </div>
-                  <v-list-item
-                    :title="category.name"
-                    :key="index"
-                    v-else
-                    :to="`/catalog/${category.slug}`"
-                    height="36px"
-                  >
-                    <span style="line-height: 100% !important">{{category.name}}</span>
-                  </v-list-item>
-                </template>
-              </v-list>
-            </v-sheet>-->
-            <!-- <v-sheet></v-sheet> -->
-          </sticky-menu>
+          </div>
         </div>
       </v-container>
-    </section>
+    </main>
     <section v-if="category.content" class="content-wrapper grey lighten-3">
       <v-container v-html="$md.render(category.content)" class="py-9"></v-container>
     </section>
@@ -209,12 +160,12 @@
 <script>
 import InfiniteLoading from "vue-infinite-loading";
 import PageHeader from "~/components/PageHeader";
-import StickyMenu from "~/components/StickyMenu";
+// import StickyMenu from "~/components/StickyMenu";
 import ProductCard from "~/components/ProductCard";
 
 export default {
   name: "category-main",
-  components: { PageHeader, StickyMenu, ProductCard, InfiniteLoading },
+  components: { PageHeader, ProductCard, InfiniteLoading },
   computed: {
     name() {
       return this.manufacturer && this.manufacturer.name
@@ -289,19 +240,21 @@ export default {
         type: "catalog"
       });
     }
+
     let products = [],
       category = await ctx.store.dispatch("fetchCategory", categoryFind.id),
       manufacturer = {},
       categoriesIds = [categoryFind.id],
       limit = 40,
-      pageData = ctx.params.slug ? false : true;
+      pageData = !!ctx.params.slug ? false : true;
+
     if (categoryFind.children && categoryFind.children.length > 0) {
       categoriesIds.push(...categoryFind.children.map(item => item.id));
       limit = 80;
     }
+
     if (pageData) {
       manufacturer = ctx.store.getters.getManufacturer(ctx.query.manufacturer);
-      // category = await ctx.store.dispatch("fetchCategory", categoryFind.id);
       products = await ctx.store.dispatch("fetchProducts", {
         category: categoriesIds,
         limit: limit,
@@ -311,20 +264,18 @@ export default {
 
     return {
       products: products,
+      productsCount: products.length,
       category: category,
       categoriesIds: categoriesIds,
       pageData: pageData,
-      manufacturer: manufacturer
+      manufacturer: manufacturer,
+      manufacturers: category.manufacturers.sort((a, b) =>
+        a.name > b.name ? 1 : -1
+      )
     };
   },
-  // watch:{
-  //   manufacturer(){
-
-  //   }
-  // },
   methods: {
     async sortChange(item) {
-      // console.log("sortChange -> item", item);
       if (this.sort.value !== item.value) {
         this.products = [];
         this.sort = item;
@@ -334,6 +285,7 @@ export default {
           manufacturer: this.manufacturer ? this.manufacturer.id : null,
           sort: item.value
         });
+        this.productsCount = this.products.length;
       }
     },
     async manufacturerChange(manufacturer) {
@@ -346,31 +298,25 @@ export default {
           manufacturer: null,
           sort: this.sort.value
         });
+        this.productsCount = this.products.length;
         this.$vuetify.goTo("#contentWrapper");
       } else if (
         !this.manufacturer ||
         manufacturer.id !== this.manufacturer.id
       ) {
         this.products = [];
-        // console.log("manufacturerChange -> manufacturer", manufacturer);
-        this.manufacturer = manufacturer; //await this.$store.getters.getManufacturerById(id);
-        // console.log(
-        //   "manufacturerChange -> this.manufacturer",
-        //   this.manufacturer
-        // );
+        this.manufacturer = manufacturer;
         this.products = await this.$store.dispatch("fetchProducts", {
           category: this.categoriesIds,
           limit: this.limit,
           manufacturer: manufacturer.id,
           sort: this.sort.value
         });
+        this.productsCount = this.products.length;
         this.$vuetify.goTo("#contentWrapper");
       }
-
-      // products;
     },
     async handleClose() {
-      // console.log("TCL: handleClose -> handleClose");
       if (this.manufacturer) {
         this.$router.push({
           path: `/catalog/${this.category.slug}`,
@@ -391,6 +337,7 @@ export default {
           sort: this.sort.value
         });
         this.products = products;
+        this.productsCount = this.products.length;
         this.pageData = true;
       }
     },
@@ -403,6 +350,7 @@ export default {
       });
       if (newProducts && newProducts.length) {
         this.products = [...this.products, ...newProducts];
+        this.productsCount = this.products.length;
         $state.loaded();
       } else {
         $state.complete();
@@ -425,6 +373,11 @@ export default {
 };
 </script>
 <style lang="stylus" scoped>
+#sidebarContent {
+  position: sticky;
+  top: 80px;
+}
+
 #contentWrapper {
   min-height: 100vh;
 }

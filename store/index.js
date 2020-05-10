@@ -299,7 +299,7 @@ export const actions = {
     return productData.products[0]
   },
   async fetchProducts(ctx, params) {
-    console.log("fetchProducts -> params", params)
+    // console.log("fetchProducts -> params", params)
 
     const {
       data: productsData
