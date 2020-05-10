@@ -145,16 +145,6 @@ export const actions = {
     }
     await state.commit("generalInfo", result)
   },
-  // async fetchGeneralInfo(ctx) {
-  //   const data = require("~/assets/generalData.json")
-  //   const result = {
-  //     categories: data.categories,
-  //     manufacturers: data.manufacturers,
-  //     contacts: data.contacts[0]
-  //   }
-  //   await ctx.commit("generalInfo", result)
-  //   return result
-  // },
   async fetchManufacturer(ctx, id) {
     let client = this.app.apolloProvider.defaultClient;
     const {
@@ -309,62 +299,16 @@ export const actions = {
     return productData.products[0]
   },
   async fetchProducts(ctx, params) {
-    // console.log("fetchProducts -> params", params)
-
-    // let client = this.app.apolloProvider.defaultClient;
-    // const {
-    //   data: productsData
-    // } = await client.query({
-    //   query: gql `query productsQuery(
-    //     $manufacturer: ID!
-    //     $category: ID!
-    //     $sort: String
-    //     $limit: Int
-    //     $start: Int
-    //   ) {
-    //     products(
-    //       limit: $limit
-    //       start: $start
-    //       sort: $sort
-    //       where: { manufacturer: $manufacturer, category: $category }
-    //     ) {
-    //       id
-    //       name
-    //       slug
-    //       priceNum
-    //       manufacturer {
-    //         name
-    //       }
-    //       category {
-    //         id
-    //         name
-    //       }
-    //       img {
-    //         url
-    //         name
-    //       }
-    //     }
-    //   }
-    // `,
-    //   variables: {
-    //     // id: id,
-    //     manufacturer: params.manufacturer,
-    //     category: params.category,
-    //     sort: params.sort,
-    //     limit: params.limit ? params.limit : 20,
-    //     start: params.start ? params.start : 0
-    //   }
-    // });
-    // console.log("fetchProducts -> productsData", productsData)
+    console.log("fetchProducts -> params", params)
 
     const {
       data: productsData
     } = await this.$axios.get("/products", {
       params: {
         category: params.category,
-        _limit: params.limit ? params.limit : 20,
-        _sort: params.sort, //=== "price" ? "priceNum:desc" : "name:asc",
-        _start: params.start ? params.start : 0,
+        _limit: params.limit || 20,
+        _sort: params.sort || "name:asc",
+        _start: params.start || 0,
         manufacturer: params.manufacturer
       }
     })
@@ -372,3 +316,48 @@ export const actions = {
     return productsData
   }
 }
+// let client = this.app.apolloProvider.defaultClient;
+// const {
+//   data: productsData
+// } = await client.query({
+//   query: gql `query productsQuery(
+//     $manufacturer: ID!
+//     $category: ID!
+//     $sort: String
+//     $limit: Int
+//     $start: Int
+//   ) {
+//     products(
+//       limit: $limit
+//       start: $start
+//       sort: $sort
+//       where: { manufacturer: $manufacturer, category: $category }
+//     ) {
+//       id
+//       name
+//       slug
+//       priceNum
+//       manufacturer {
+//         name
+//       }
+//       category {
+//         id
+//         name
+//       }
+//       img {
+//         url
+//         name
+//       }
+//     }
+//   }
+// `,
+//   variables: {
+//     // id: id,
+//     manufacturer: params.manufacturer,
+//     category: params.category,
+//     sort: params.sort,
+//     limit: params.limit ? params.limit : 20,
+//     start: params.start ? params.start : 0
+//   }
+// });
+// console.log("fetchProducts -> productsData", productsData)
