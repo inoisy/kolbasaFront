@@ -38,7 +38,7 @@ export const mutations = {
     product.count++
   },
   addToBasket(state, product) {
-    console.log("addToBasket -> product", product)
+    // console.log("addToBasket -> product", product)
     let cartProduct = state.localStorage.basket.find((item) => item.id === product.id);
 
     if (cartProduct) {
@@ -82,8 +82,8 @@ export const getters = {
         (acc, product) => {
           acc =
             product.isDiscount && product.discountPrice ?
-            acc + product.discountPrice * product.count :
-            acc + product.count * product.priceNum;
+              acc + product.discountPrice * product.count :
+              acc + product.count * product.priceNum;
           return acc;
         }, 0)
     } else {
@@ -153,7 +153,7 @@ export const actions = {
       variables: {
         id: id
       },
-      query: gql `
+      query: gql`
           query ManufacturerQuery($id: ID!) {
             manufacturer(id: $id) {
               id
@@ -179,7 +179,7 @@ export const actions = {
     const {
       data: categoryData
     } = await client.query({
-      query: gql `
+      query: gql`
         query CategoryQuery( $id: ID! ) {
           category(id: $id) {
             id
@@ -225,7 +225,7 @@ export const actions = {
     const {
       data: productData
     } = await client.query({
-      query: gql `
+      query: gql`
         fragment relatedProduct on Product {
           name
           slug

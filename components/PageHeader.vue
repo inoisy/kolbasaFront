@@ -6,14 +6,15 @@
         style="min-height: 40vh;"
         :class="isPadding ? 'justify-space-between' : 'justify-space-around pb-12'"
       >
-        <v-breadcrumbs :items="breadrumbs" dark class="px-4 py-3">
-          <template slot="item" slot-scope="props">
-            <nuxt-link
-              class="text-decoration-none white--text"
-              :to="props.item.to"
-              :title="props.item.text"
+        <v-breadcrumbs :items="breadrumbs" dark class="breadcrumbs-wrap px-4 py-3" large>
+          <template v-slot:item="{ item }">
+            <v-breadcrumbs-item
+              :to="item.to"
+              nuxt
               exact
-            >{{ props.item.text }}</nuxt-link>
+              :title="item.text"
+              class="breadcrumbs-item text-center text-md-left"
+            >{{ item.text }}</v-breadcrumbs-item>
           </template>
         </v-breadcrumbs>
         <h1 class="lumber header-text white--text text-center px-4 my-10">{{title}}</h1>
@@ -46,6 +47,16 @@ export default {
 };
 </script>
 <style lang="stylus" scoped>
+.breadcrumbs-wrap {
+  justify-content: center;
+}
+
+@media (min-width: 960px) {
+  .breadcrumbs-wrap {
+    justify-content: flex-start;
+  }
+}
+
 .header {
   background-color: #131313;
   background-position: center;

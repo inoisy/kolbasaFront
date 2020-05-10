@@ -15,6 +15,8 @@ const imageUrl = process.env.IMAGE_BASE_URL || process.env.BACKEND_URL || backUR
 const name = "Альянс Фуд"
 const description = "Альянс Фуд. Колбаса и другие мясные изделия оптом по ценам производителя. Самовывоз со склада в Москве. Доставка по РФ и СНГ."
 
+console.log("MAP_KEY", process.env.MAP_KEY)
+
 module.exports = {
   mode: 'universal',
   hooks: {
@@ -93,27 +95,27 @@ module.exports = {
     title: name,
     titleTemplate: `%s - ${name}`,
     meta: [{
-        charset: 'utf-8'
-      },
-      {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1'
-      },
-      {
-        hid: 'description',
-        name: 'description',
-        content: description
-      }
+      charset: 'utf-8'
+    },
+    {
+      name: 'viewport',
+      content: 'width=device-width, initial-scale=1'
+    },
+    {
+      hid: 'description',
+      name: 'description',
+      content: description
+    }
     ],
     link: [{
-        rel: 'icon',
-        type: 'image/x-icon',
-        href: '/favicon.ico'
-      },
-      {
-        rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css?family=Material+Icons'
-      }
+      rel: 'icon',
+      type: 'image/x-icon',
+      href: '/favicon.ico'
+    },
+    {
+      rel: 'stylesheet',
+      href: 'https://fonts.googleapis.com/css?family=Material+Icons'
+    }
     ]
   },
 
@@ -225,7 +227,7 @@ module.exports = {
       pages: [
         "/"
       ],
-    }, ],
+    },],
     ['@nuxtjs/vuetify', {
       treeShake: true,
       defaultAssets: {
@@ -259,6 +261,6 @@ module.exports = {
       ]
     },
     transpile: ["@nuxtjs/vuetify", /^aos/, /^@nuxtjs.*/, "nuxt-vuex-localstorage"],
-    extend(config, ctx) {}
+    extend(config, ctx) { }
   }
 }

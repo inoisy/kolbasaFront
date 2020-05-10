@@ -2,15 +2,19 @@
   <div>
     <page-header :title="title" :breadrumbs="breadrumbs" />
 
-    <section
+    <main
       class="background"
       v-lazy:background-image="require('~/assets/img/bg.jpg')"
       style="background-color: #f0f0f0; background-repeat: repeat; background-size: 100%;"
     >
-      <v-container class="py-12">
-        <div class="layout row wrap" style="font-size:1.1rem" v-html="page.content"></div>
+      <v-container class="py-12" grid-list-lg>
+        <v-row>
+          <v-col cols="12">
+            <div v-html="$md.render(page.content)"></div>
+          </v-col>
+        </v-row>
       </v-container>
-    </section>
+    </main>
   </div>
 </template>
     
