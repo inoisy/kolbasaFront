@@ -112,7 +112,7 @@ export default {
           text: "Производители"
         },
         {
-          to: this.$route.path,
+          to: `/manufacturers/${this.manufacturer.slug}`,
           text: this.manufacturer.name
         }
       ];

@@ -17,7 +17,6 @@
 </template>
 
 <script>
-// import gql from "graphql-tag";
 import ProductDialog from "~/components/ProductDialog";
 import ContactForm from "~/components/ContactForm";
 export default {
