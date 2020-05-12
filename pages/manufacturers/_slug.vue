@@ -82,32 +82,20 @@ export default {
       imageBaseUrl: process.env.imageBaseUrl
     };
   },
-  async asyncData(ctx) {
-    // const generalInfo = await ctx.store.dispatch("fetchGeneralInfo");
-    // const manufacturerFind = generalInfo.manufacturers.find(
-    //   item => item.slug === ctx.params.slug
-    // );
-    const manufacturer = await ctx.store.getters.getManufacturer(
-      ctx.params.slug
-    );
+  async asyncData({ store, params, error, $axios }) {
+    const manufacturer = await store.getters.getManufacturer(params.slug);
     if (!manufacturer) {
-      return ctx.error({
+      return error({
         statusCode: 404,
         message: "Производитель не найден",
         type: "manufacturer"
       });
     }
-    let manufacturerData = await ctx.store.dispatch(
-      "fetchManufacturer",
-      manufacturer.id
-    );
-
-    const { data: categoriesData } = await ctx.$axios.get(
-      `/categories/categoriesByManufacturer/` + manufacturer.id
-    );
     return {
-      manufacturer: manufacturerData,
-      categories: categoriesData
+      manufacturer: await store.dispatch("fetchManufacturer", manufacturer.id),
+      categories: (
+        await $axios.get(`/products/byManufacturer/` + manufacturer.id)
+      ).data
     };
   },
   components: { PageHeader, ProductCard },
