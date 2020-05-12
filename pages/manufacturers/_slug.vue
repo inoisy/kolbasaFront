@@ -59,8 +59,6 @@
   </div>
 </template>
 <script>
-import gql from "graphql-tag";
-
 import PageHeader from "~/components/PageHeader";
 import ProductCard from "~/components/ProductCard";
 
@@ -99,7 +97,6 @@ export default {
     };
   },
   components: { PageHeader, ProductCard },
-
   computed: {
     isContent() {
       return this.manufacturer.content && this.manufacturer.content.length > 0;
