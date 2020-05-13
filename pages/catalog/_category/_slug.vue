@@ -73,13 +73,12 @@ export default {
   components: {
     ProductDialog
   },
-  async asyncData(ctx) {
+  async asyncData({ params, error, store }) {
     let product = {};
-    if (ctx.params && !ctx.params.slug) return { product };
-    product = await ctx.store.dispatch("fetchProduct", ctx.params.slug);
-    // console.log("if -> product", product);
+    if (params && !params.slug) return { product };
+    product = await store.dispatch("fetchProduct", params.slug);
     if (!product) {
-      return ctx.error({
+      return error({
         statusCode: 404,
         message: "Продукт не найден"
       });
@@ -90,11 +89,7 @@ export default {
   },
 
   watch: {
-    // "this.$route.name": function(val) {
-    //   console.log("val", val);
-    // },
     dialog(val) {
-      // console.log("dialog -> val", this.$route);
       if (val === false) {
         this.$router.push({ params: { slug: null } });
         this.$emit("close");

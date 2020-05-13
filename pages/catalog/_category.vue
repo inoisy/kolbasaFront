@@ -77,11 +77,13 @@
               </v-list>
             </v-menu>
           </v-flex>
+
           <template v-if="products.length>0">
             <div class="flex xs12 sm6 md4 lg3 xl2" v-for="(product,index) in products" :key="index">
               <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
             </div>
           </template>
+
           <template v-else>
             <v-flex
               xs12
@@ -160,7 +162,6 @@
 <script>
 import InfiniteLoading from "vue-infinite-loading";
 import PageHeader from "~/components/PageHeader";
-// import StickyMenu from "~/components/StickyMenu";
 import ProductCard from "~/components/ProductCard";
 
 export default {
@@ -173,11 +174,7 @@ export default {
         : `${this.category.name} оптом`;
     },
     loading() {
-      if (process.browser) {
-        return window.$nuxt.$root.$loading.show;
-      } else {
-        return false;
-      }
+      return !this.$route.params.slug && !this.products.length;
     },
     isParentCategory() {
       return (
@@ -264,7 +261,7 @@ export default {
 
     return {
       products: products,
-      productsCount: products.length,
+      productsCount: products.length ? products.length : 20,
       category: category,
       categoriesIds: categoriesIds,
       pageData: pageData,
