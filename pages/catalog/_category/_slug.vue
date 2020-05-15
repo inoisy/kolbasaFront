@@ -22,6 +22,7 @@ export default {
     let head;
     if (this.isProduct) {
       if (!this.product || !this.product.name) return;
+
       head = {
         title: `${this.product.name} оптом`,
         link: [
@@ -48,8 +49,15 @@ export default {
       return head;
     } else {
       if (!this.category || !this.category.name) return;
+      let name = `${this.category.name} оптом`;
+      if (this.$route.query.manufacturer) {
+        const manufacturer = this.$store.getters.getManufacturer(
+          this.$route.query.manufacturer
+        );
+        name = `${this.category.name} ${manufacturer.name} оптом`;
+      }
       head = {
-        title: `${this.category.name} оптом`,
+        title: name,
         link: [
           {
             rel: "canonical",
