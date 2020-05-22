@@ -74,6 +74,7 @@ export default {
               }
               img {
                 url
+                formats
               }
               manufacturer {
                 name

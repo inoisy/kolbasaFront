@@ -73,7 +73,7 @@ export default {
     let client = ctx.app.apolloProvider.defaultClient;
     const { data: categoryData } = await client.query({
       query: gql`
-        query HalalQuery {
+        query DiscountQuery {
           pages(where: { name: "discount" }) {
             name
             content
@@ -101,6 +101,7 @@ export default {
               }
               img {
                 url
+                formats
               }
               manufacturer {
                 name
