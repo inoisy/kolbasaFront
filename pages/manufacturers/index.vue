@@ -45,7 +45,7 @@ export default {
     const { data: manufacturerData } = await client.query({
       query: gql`
         {
-          manufacturers {
+          manufacturers(sort: "name:asc", limit: 999) {
             name
             slug
             description
