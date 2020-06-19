@@ -50,6 +50,7 @@
           @click="submit"
           large
           :disabled="submitDisabled"
+          :loading="loading"
           style="width: 100%"
           title="Подтвердить заказ"
         >Подтвердить заказ</v-btn>
@@ -114,7 +115,8 @@ export default {
       address: user.address,
       email: user.email,
       message: "",
-      mask: "+7 (###) ### - ####"
+      mask: "+7 (###) ### - ####",
+      loading: false
     };
   },
   methods: {
@@ -138,6 +140,7 @@ export default {
       });
       // console.log("submit -> busket", busketObj);
       try {
+        this.loading = true;
         const req = await this.$axios.post(process.env.baseUrl + "/orders", {
           oneClickbuy: this.oneClickBuy,
           productName: this.oneClickBuy ? this.productName : null,
@@ -148,6 +151,7 @@ export default {
           address: this.address,
           email: this.email
         });
+        this.loading = false;
         if (req.status === 200) {
           this.$store.commit("saveBasket");
 
@@ -171,6 +175,7 @@ export default {
           this.formError = true;
         }
       } catch (error) {
+        this.loading = false;
         console.log("submit -> error", error);
         this.formError = true;
         this.clear();
