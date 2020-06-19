@@ -173,6 +173,7 @@ export default {
           }
         } else {
           this.formError = true;
+          this.loading = false;
         }
       } catch (error) {
         this.loading = false;
