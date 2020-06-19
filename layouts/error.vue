@@ -36,15 +36,15 @@
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  // position: absolute;
+  // top: 0;
+  // left: 0;
+  // right: 0;
+  // bottom: 0;
 }
 
 .__nuxt-error-page .error {
-  max-width: 450px;
+  // max-width: 450px;
   padding: 1rem 2rem;
 }
 

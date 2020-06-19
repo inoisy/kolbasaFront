@@ -49,13 +49,38 @@
               </v-list>
             </v-menu>
           </v-flex>
+          <v-flex xs12 class="hidden-md-and-up">
+            <v-menu open-on-hover offset-y>
+              <template v-slot:activator="{ on }">
+                <v-btn v-on="on" style="width: 100%">{{ !prodType ? "Все типы" : productType.name }}</v-btn>
+              </template>
+              <v-list>
+                <v-list-item
+                  @click="productTypeChange('all')"
+                  :to="{ query: {}}"
+                  :title="`Все типы`"
+                  style="line-height: normal; font-size: 14px; min-height: 28px"
+                  exact
+                >Все</v-list-item>
+                <v-list-item
+                  @click="productTypeChange(productType)"
+                  v-for="productType in category.product_types"
+                  :key="productType.id"
+                  :to="{ query: { type: productType.slug }}"
+                  :title="productType.name"
+                  style="line-height: normal; font-size: 14px; min-height: 28px"
+                  exact
+                >{{ productType.name }}</v-list-item>
+              </v-list>
+            </v-menu>
+          </v-flex>
           <v-flex xs12 class="hidden-md-and-up mb-3">
             <v-menu open-on-hover offset-y>
               <template v-slot:activator="{ on }">
                 <v-btn
                   v-on="on"
                   style="width: 100%"
-                >{{manufacturer === "all" || !manufacturer || !manufacturer.name ? "Все производители" : manufacturer.name }}</v-btn>
+                >{{ !manuf ? "Все производители" : manufacturer.name }}</v-btn>
               </template>
               <v-list>
                 <v-list-item
@@ -67,7 +92,7 @@
                 >Все</v-list-item>
                 <v-list-item
                   v-for="manufacturer in manufacturers"
-                  :key="manufacturer.id"
+                  :key="manufacturer._id"
                   @click="manufacturerChange(manufacturer)"
                   :to="`/catalog/${category.slug}?manufacturer=${manufacturer.slug}`"
                   :title="`${category.name} ${manufacturer.name}`"
@@ -111,43 +136,70 @@
             </infinite-loading>
           </client-only>
         </v-layout>
-        <div class="hidden-sm-and-down py-2 pl-4" style="width: 300px; min-width: 300px;">
-          <div id="sidebarContent">
-            <v-menu open-on-hover offset-y>
-              <template v-slot:activator="{ on }">
-                <v-btn v-on="on" style="width: 100%">{{sort.title}}</v-btn>
+        <div class="hidden-sm-and-down py-2 pl-4" style="display:flex">
+          <div class style="width: 300px; min-width: 300px;">
+            <sticky-menu>
+              <v-menu open-on-hover offset-y>
+                <template v-slot:activator="{ on }">
+                  <v-btn v-on="on" style="width: 100%">{{sort.title}}</v-btn>
+                </template>
+                <v-list>
+                  <v-list-item
+                    v-for="(item, index) in sortItems"
+                    :key="`sort-${index}`"
+                    @click="sortChange(item)"
+                  >
+                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+
+              <template v-if="category.product_types.length">
+                <v-subheader class="pl-0">ВИДЫ</v-subheader>
+                <v-sheet>
+                  <v-list class="py-0">
+                    <v-list-item
+                      @click="productTypeChange('all')"
+                      :to="{ query: {}}"
+                      title="Все виды"
+                      style="line-height: normal; font-size: 14px; min-height: 28px"
+                      exact
+                    >Все виды</v-list-item>
+                    <v-list-item
+                      v-for="productType in category.product_types"
+                      :key="productType._id"
+                      @click="productTypeChange(productType)"
+                      :to="{ query: { type: productType.slug }}"
+                      :title="productType.name"
+                      style="line-height: normal; font-size: 14px; min-height: 28px"
+                      exact
+                    >{{productType.name}}</v-list-item>
+                  </v-list>
+                </v-sheet>
               </template>
-              <v-list>
-                <v-list-item
-                  v-for="(item, index) in sortItems"
-                  :key="`sort-${index}`"
-                  @click="sortChange(item)"
-                >
-                  <v-list-item-title>{{ item.title }}</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-            <v-subheader class="pl-0">ПРОИЗВОДИТЕЛИ</v-subheader>
-            <v-sheet>
-              <v-list class="py-0">
-                <v-list-item
-                  exact
-                  @click="manufacturerChange('all')"
-                  :to="`/catalog/${category.slug}`"
-                  :title="`Все ${category.name}`"
-                  style="line-height: normal; font-size: 14px; min-height: 28px"
-                >Все</v-list-item>
-                <v-list-item
-                  v-for="manufacturer in manufacturers"
-                  :key="manufacturer.id"
-                  @click="manufacturerChange(manufacturer)"
-                  :to="`/catalog/${category.slug}?manufacturer=${manufacturer.slug}`"
-                  :title="`${category.name} ${manufacturer.name}`"
-                  style="line-height: normal; font-size: 14px; min-height: 28px"
-                  exact
-                >{{manufacturer.name}}</v-list-item>
-              </v-list>
-            </v-sheet>
+              <v-subheader class="pl-0">ПРОИЗВОДИТЕЛИ</v-subheader>
+              <v-sheet>
+                <v-list class="py-0">
+                  <v-list-item
+                    exact
+                    @click="manufacturerChange('all')"
+                    :to="{ query: {}}"
+                    :title="`Все ${category.name}`"
+                    style="line-height: normal; font-size: 14px; min-height: 28px"
+                  >Все</v-list-item>
+                  <v-list-item
+                    v-for="manufacturer in manufacturers"
+                    @click="manufacturerChange(manufacturer)"
+                    :key="manufacturer._id"
+                    :to="{ query: { manufacturer: manufacturer.slug }}"
+                    :title="`${category.name} ${manufacturer.name}`"
+                    style="line-height: normal; font-size: 14px; min-height: 28px"
+                    exact
+                  >{{manufacturer.name}}</v-list-item>
+                  <!-- @click="manufacturerChange(manufacturer)" -->
+                </v-list>
+              </v-sheet>
+            </sticky-menu>
           </div>
         </div>
       </v-container>
@@ -163,10 +215,11 @@
 import InfiniteLoading from "vue-infinite-loading";
 import PageHeader from "~/components/PageHeader";
 import ProductCard from "~/components/ProductCard";
+import StickyMenu from "~/components/StickyMenu";
 
 export default {
   name: "category-main",
-  components: { PageHeader, ProductCard, InfiniteLoading },
+  components: { PageHeader, ProductCard, InfiniteLoading, StickyMenu },
   computed: {
     name() {
       return this.manufacturer && this.manufacturer.name
@@ -224,6 +277,20 @@ export default {
       });
       this.$store.commit("breadcrumbs", items);
       return items;
+    },
+    manuf() {
+      return this.manufacturer !== "all" &&
+        this.manufacturer &&
+        this.manufacturer._id
+        ? this.manufacturer._id
+        : null;
+    },
+    prodType() {
+      return this.productType !== "all" &&
+        this.productType &&
+        this.productType._id
+        ? this.productType._id
+        : null;
     }
   },
   async asyncData(ctx) {
@@ -242,7 +309,7 @@ export default {
       category = await ctx.store.dispatch("fetchCategory", categoryFind.id),
       manufacturer = {},
       categoriesIds = [categoryFind.id],
-      limit = 40,
+      limit = 60,
       pageData = !!ctx.params.slug ? false : true;
 
     if (categoryFind.children && categoryFind.children.length > 0) {
@@ -250,12 +317,18 @@ export default {
       limit = 80;
     }
 
+    const productType =
+      (ctx.query.type &&
+        category.product_types.find(item => item.slug === ctx.query.type)) ||
+      "all";
     if (pageData) {
       manufacturer = ctx.store.getters.getManufacturer(ctx.query.manufacturer);
+
       products = await ctx.store.dispatch("fetchProducts", {
         category: categoriesIds,
         limit: limit,
-        manufacturer: manufacturer ? manufacturer.id : null
+        manufacturer: manufacturer ? manufacturer._id : null,
+        product_type: productType ? productType._id : null
       });
     }
 
@@ -265,10 +338,12 @@ export default {
       category: category,
       categoriesIds: categoriesIds,
       pageData: pageData,
-      manufacturer: manufacturer,
+      manufacturer: manufacturer || "all",
       manufacturers: category.manufacturers.sort((a, b) =>
         a.name > b.name ? 1 : -1
-      )
+      ),
+      productType: productType,
+      limit: limit
     };
   },
   methods: {
@@ -279,13 +354,44 @@ export default {
         this.products = await this.$store.dispatch("fetchProducts", {
           category: this.categoriesIds,
           limit: this.limit,
-          manufacturer: this.manufacturer ? this.manufacturer.id : null,
-          sort: item.value
+          manufacturer: this.manuf,
+          sort: item.value,
+          product_type: this.prodType
         });
         this.productsCount = this.products.length;
       }
     },
+    async productTypeChange(item) {
+      console.log("productTypeChange -> item", item);
+      console.log("productTypeChange -> this.productType", this.productType);
+      this.manufacturer = "all";
+      if (item === "all" && this.productType !== "all") {
+        this.productType = "all";
+        this.products = [];
+        this.products = await this.$store.dispatch("fetchProducts", {
+          category: this.categoriesIds,
+          limit: this.limit,
+          sort: this.sort.value
+        });
+        this.productsCount = this.products.length;
+        this.$vuetify.goTo("#contentWrapper");
+      } else if (!this.productType || this.productType._id !== item._id) {
+        this.productType = item;
+        this.products = [];
+        this.products = await this.$store.dispatch("fetchProducts", {
+          category: this.categoriesIds,
+          limit: this.limit,
+          sort: this.sort.value,
+          product_type: item._id
+        });
+        this.productsCount = this.products.length;
+        this.$vuetify.goTo("#contentWrapper");
+      } else {
+        console.log("productTypeChange -> item", item);
+      }
+    },
     async manufacturerChange(manufacturer) {
+      this.productType = "all";
       if (manufacturer === "all" && this.manufacturer !== "all") {
         this.products = [];
         this.manufacturer = "all";
@@ -299,14 +405,14 @@ export default {
         this.$vuetify.goTo("#contentWrapper");
       } else if (
         !this.manufacturer ||
-        manufacturer.id !== this.manufacturer.id
+        manufacturer._id !== this.manufacturer._id
       ) {
         this.products = [];
         this.manufacturer = manufacturer;
         this.products = await this.$store.dispatch("fetchProducts", {
           category: this.categoriesIds,
           limit: this.limit,
-          manufacturer: manufacturer.id,
+          manufacturer: manufacturer._id,
           sort: this.sort.value
         });
         this.productsCount = this.products.length;
@@ -339,10 +445,18 @@ export default {
       }
     },
     async onInfinite($state) {
+      // console.log(
+      //   "onInfinite -> this.manufacturer",
+      //   this.productType !== "all" && this.productType._id
+      //     ? this.productType._id
+      //     : null
+      // );
+
       const newProducts = await this.$store.dispatch("fetchProducts", {
         category: this.categoriesIds,
         start: this.products.length,
-        manufacturer: this.manufacturer ? this.manufacturer.id : null,
+        manufacturer: this.manuf,
+        product_type: this.prodType,
         sort: this.sort.value
       });
       if (newProducts && newProducts.length) {
@@ -357,6 +471,7 @@ export default {
   data() {
     const sortItems = [
       { title: "По алфавиту", value: "name:asc" },
+      { title: "По популярности", value: "rating:desc" },
       { title: "Cначала дорогие", value: "priceNum:desc" },
       { title: "Cначала дешевые", value: "priceNum:asc" }
     ];
@@ -370,13 +485,12 @@ export default {
 };
 </script>
 <style lang="stylus" scoped>
-#sidebarContent {
-  position: sticky;
-  top: 80px;
-}
-
+// #sidebarContent {
+// position: sticky;
+// top: 80px;
+// }
 #contentWrapper {
-  min-height: 100vh;
+  min-height: 900px;
 }
 
 .subcategories {

@@ -18,8 +18,18 @@ async function main() {
   const {
     data: categories
   } = await axios.get(backendUrl + '/categories?_limit=99999')
-  for (let item of categories) {
-    routes.push(`/catalog/${item.slug}`)
+  for (let category of categories) {
+    routes.push(`/catalog/${category.slug}`)
+    if (category.manufacturers.length) {
+      for (manufacturer of category.manufacturers) {
+        routes.push(`/catalog/${category.slug}?manufacturer=${manufacturer.slug}`)
+      }
+    }
+    if (category.product_types.length) {
+      for (type of category.product_types) {
+        routes.push(`/catalog/${category.slug}?type=${type.slug}`)
+      }
+    }
   }
   const {
     data: products

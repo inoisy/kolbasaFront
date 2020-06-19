@@ -1,3 +1,10 @@
 export const state = () => ({
-  basket: []
+  basket: [],
+  basketStory: [],
+  user: {
+    name: "",
+    phone: "",
+    address: "",
+    email: ""
+  }
 })

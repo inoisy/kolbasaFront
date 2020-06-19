@@ -12,7 +12,7 @@
     <my-footer class="pos-relative" :menuItems="menuItems" />
     <client-only>
       <v-navigation-drawer v-model="basketDrawer" temporary fixed right width="550px">
-        <busket v-on:close="basketDrawer=false" />
+        <busket @close="basketDrawer=false" />
       </v-navigation-drawer>
     </client-only>
   </v-app>
@@ -53,6 +53,7 @@ import Busket from "~/components/Busket";
 
 export default {
   components: { Toolbar, NavigationMobile, MyFooter, Busket },
+  name: "default",
   computed: {
     menuItems() {
       return [

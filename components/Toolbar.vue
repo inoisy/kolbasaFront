@@ -117,7 +117,8 @@
                   nuxt
                   :to="`${item.to}/${category.slug}`"
                   :title="category.name"
-                  style="line-height: normal; font-size: 15px;"
+                  style="line-height: normal; font-size: 15px;min-height: 36px !important"
+                  height="36px"
                 >{{ category.name }}</v-list-item>
               </template>
             </v-list>

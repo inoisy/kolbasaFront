@@ -3,15 +3,6 @@ export const mutations = {
   breadcrumbs(state, item) {
     state.sessionStorage.breadcrumbs = item
   },
-  manufacturerFilter(state, item) {
-    state.sessionStorage.manufacturerFilter = item
-  },
-  sortFilter(state, item) {
-    state.sessionStorage.sortFilter = item
-  },
-  pageFilter(state, item) {
-    state.sessionStorage.pageFilter = item
-  },
   generalInfo(state, item) {
     state.sessionStorage.generalInfo = item
   },
@@ -21,26 +12,12 @@ export const mutations = {
   manufacturer(state, item) {
     state.sessionStorage.manufacturer = item
   },
-  product(state, item) {
-    state.sessionStorage.product = item
-  },
-  products(state, item) {
-    state.sessionStorage.products = item
-  },
-  easyProducts(state, item) {
-    state.sessionStorage.easyProducts = item
-  },
-  pushEasyProducts(state, items) {
-    state.sessionStorage.easyProducts = [...state.sessionStorage.easyProducts, ...items]
-  },
   incrementBasket(state, id) {
     let product = state.localStorage.basket.find((product) => product.id === id);
     product.count++
   },
   addToBasket(state, product) {
-    // console.log("addToBasket -> product", product)
     let cartProduct = state.localStorage.basket.find((item) => item.id === product.id);
-
     if (cartProduct) {
       cartProduct.count++;
     } else {
@@ -72,6 +49,12 @@ export const mutations = {
       let cartProductIndex = state.localStorage.basket.findIndex((item) => item.id === id);
       state.localStorage.basket.splice(cartProductIndex, 1);
     }
+  },
+  saveBasket(state) {
+    state.localStorage.basketStory.unshift(state.localStorage.basket)
+  },
+  setUserData(state, data) {
+    state.localStorage.user = data
   }
 }
 export const strict = false
@@ -82,15 +65,14 @@ export const getters = {
         (acc, product) => {
           acc =
             product.isDiscount && product.discountPrice ?
-              acc + product.discountPrice * product.count :
-              acc + product.count * product.priceNum;
+            acc + product.discountPrice * product.count :
+            acc + product.count * product.priceNum;
           return acc;
         }, 0)
     } else {
       state.localStorage.basket = []
       return 0
     }
-
   },
   getParentCategories(state) {
     if (state.sessionStorage.generalInfo && state.sessionStorage.generalInfo.categories) {
@@ -100,8 +82,6 @@ export const getters = {
     } else {
       return []
     }
-
-
   },
   getManufacturerId: state => slug => {
     if (!slug) return null
@@ -118,7 +98,6 @@ export const getters = {
     if (!category) return null
     return category
   },
-
   getManufacturerById: state => id => {
     if (!id) return null
     const manufacturer = state.sessionStorage.generalInfo.manufacturers.find(
@@ -139,11 +118,10 @@ export const getters = {
 export const actions = {
   async nuxtServerInit(state, ctx) {
     const data = require("~/assets/generalData.json")
-    const result = {
+    await state.commit("generalInfo", {
       ...data,
       contacts: data.contact
-    }
-    await state.commit("generalInfo", result)
+    })
   },
   async fetchManufacturer(ctx, id) {
     let client = this.app.apolloProvider.defaultClient;
@@ -153,7 +131,7 @@ export const actions = {
       variables: {
         id: id
       },
-      query: gql`
+      query: gql `
           query ManufacturerQuery($id: ID!) {
             manufacturer(id: $id) {
               id
@@ -179,7 +157,7 @@ export const actions = {
     const {
       data: categoryData
     } = await client.query({
-      query: gql`
+      query: gql `
         query CategoryQuery( $id: ID! ) {
           category(id: $id) {
             id
@@ -191,12 +169,11 @@ export const actions = {
               url
             }
             manufacturers{
-              id
+              _id
               name
               slug
             }
             parent {
-              id
               slug
               name
               children {
@@ -207,6 +184,11 @@ export const actions = {
             }
             children{
               id
+              name
+              slug
+            }
+            product_types {
+              _id
               name
               slug
             }
@@ -225,7 +207,7 @@ export const actions = {
     const {
       data: productData
     } = await client.query({
-      query: gql`
+      query: gql `
         fragment relatedProduct on Product {
           name
           slug
@@ -250,7 +232,7 @@ export const actions = {
           }
         }
         query ProductQuery( $slug: String! ) {
-          products( where: { slug: $slug } ) {
+          productFull:products( where: { slug: $slug } ) {
             id
             description
             name
@@ -272,7 +254,6 @@ export const actions = {
               height
             }
             manufacturer {
-              id
               name
               slug
               description
@@ -294,70 +275,88 @@ export const actions = {
         slug: slug,
       }
     });
-    if (!productData.products.length) return null
+    // console.log("productData.products", productData)
+    if (!productData.productFull.length) return null
 
-    return productData.products[0]
+
+    return productData.productFull[0]
   },
   async fetchProducts(ctx, params) {
     // console.log("fetchProducts -> params", params)
-
+    let client = this.app.apolloProvider.defaultClient;
+    const vars = {
+      ...params.manufacturer && {
+        manufacturer: params.manufacturer
+      },
+      ...params.product_type && {
+        product_type: params.product_type
+      },
+      category: params.category,
+      sort: params.sort || "name:asc",
+      limit: params.limit ? params.limit : 20,
+      start: params.start ? params.start : 0
+    }
+    // console.log("fetchProducts -> vars", vars)
     const {
       data: productsData
-    } = await this.$axios.get("/products", {
-      params: {
-        category: params.category,
-        _limit: params.limit || 20,
-        _sort: params.sort || "name:asc",
-        _start: params.start || 0,
-        manufacturer: params.manufacturer
+    } = await client.query({
+      query: gql `
+      query productsQuery(
+        $manufacturer: ID $category: [ID!] $product_type: ID $sort: String $limit: Int $start: Int
+      ) {
+        products(
+          limit: $limit 
+          start: $start 
+          sort: $sort 
+          where: {
+            manufacturer: $manufacturer
+            category: $category
+            product_type: $product_type
+          }
+        ) {
+          id
+          name
+          slug
+          weight
+          isDiscount
+          isHalal
+          priceNum
+          discountPrice
+          rating
+          manufacturer {
+            name
+            slug
+            img {
+              url
+            }
+          }
+          category{
+            name
+            slug
+          }
+          img {
+            url
+            name
+            formats
+          }
+        }
       }
-    })
-
-    return productsData
+    `,
+      variables: vars
+    });
+    return productsData.products
   }
 }
-// let client = this.app.apolloProvider.defaultClient;
+// console.log("fetchProducts -> productsData", productsData)
+
 // const {
 //   data: productsData
-// } = await client.query({
-//   query: gql `query productsQuery(
-//     $manufacturer: ID!
-//     $category: ID!
-//     $sort: String
-//     $limit: Int
-//     $start: Int
-//   ) {
-//     products(
-//       limit: $limit
-//       start: $start
-//       sort: $sort
-//       where: { manufacturer: $manufacturer, category: $category }
-//     ) {
-//       id
-//       name
-//       slug
-//       priceNum
-//       manufacturer {
-//         name
-//       }
-//       category {
-//         id
-//         name
-//       }
-//       img {
-//         url
-//         name
-//       }
-//     }
-//   }
-// `,
-//   variables: {
-//     // id: id,
-//     manufacturer: params.manufacturer,
+// } = await this.$axios.get("/products", {
+//   params: {
 //     category: params.category,
-//     sort: params.sort,
-//     limit: params.limit ? params.limit : 20,
-//     start: params.start ? params.start : 0
+//     _limit: params.limit || 20,
+//     _sort: params.sort || "name:asc",
+//     _start: params.start || 0,
+//     manufacturer: params.manufacturer
 //   }
-// });
-// console.log("fetchProducts -> productsData", productsData)
+// })
