@@ -4,7 +4,7 @@
       <v-icon>remove</v-icon>
     </v-btn>
     <v-text-field
-      :value="qty"
+      :value="qty % 1 > 0 ? qty.toFixed(1) : qty"
       @change="handleChange"
       style="max-width: 100px; min-width: 80px;"
       class="quantity"

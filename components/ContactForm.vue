@@ -177,7 +177,7 @@ export default {
         }
       } catch (error) {
         this.loading = false;
-        console.log("submit -> error", error);
+        // console.log("submit -> error", error);
         this.formError = true;
         this.clear();
       }

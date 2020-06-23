@@ -30,6 +30,8 @@
       <v-layout row wrap v-show="showProductCard" itemscope itemtype="http://schema.org/Product">
         <v-flex class>
           <!-- class="display-flex column position-relative" -->
+          <!-- {{isMultiple}}
+          {{product.minimumOrder}}-->
           <h1
             itemprop="name"
             class="font-weight-bold mb-5 hidden-md-and-up"
@@ -47,10 +49,6 @@
               v-on="showImageDialog ? { click: ()=> handleImageDialog() } : {}"
               v-if="product.img"
             >
-              <!-- @click="handleImageDialog" 
-              v-on="{ click: showImageDialog ? handleImageDialog : void null}"
-
-              -->
               <div class="mini-imgs-wrapper pa-1">
                 <v-tooltip left max-width="400px" style="display: block">
                   <template v-slot:activator="{ on }">
@@ -94,18 +92,22 @@
               itemscope
               itemtype="http://schema.org/Offer"
               class="font-weight-medium"
+              style="display: flex; align-items: center; flex-wrap: wrap;"
             >
-              <span
-                itemprop="price"
-                class="font-weight-bold black--text"
-                :class="price ? 'fs-2' : 'fs-1-5'"
-              >{{ price ? price : "Нет в наличии"}}</span>
-              <span itemprop="priceCurrency" class="fs-1-5" v-show="price">RUB</span>
-              <span
-                class="pl-2"
-                v-if="isDiscount"
-                style="text-decoration: line-through; font-size:1rem"
-              >{{price+'Р'}}</span>
+              <div>
+                <span
+                  itemprop="price"
+                  class="font-weight-bold black--text"
+                  :class="price ? 'fs-2' : 'fs-1-5'"
+                >{{ price || "Нет в наличии"}}</span>
+                <span itemprop="priceCurrency" class="fs-1-5" v-show="price">RUB</span>
+                <span
+                  class="pl-2"
+                  v-if="isDiscount"
+                  style="text-decoration: line-through; font-size:1rem"
+                >{{product.priceNum+'Р'}}</span>
+              </div>
+
               <v-chip
                 v-if="isDiscount"
                 color="accent"
@@ -113,8 +115,12 @@
                 class="ml-2"
                 style="font-size: 1.1rem"
               >-{{discountPriceProcent}}%</v-chip>
-              <span v-if="price && product.weight">/ {{product.weight}} кг.</span>
+              <div v-if="price && product.weight" class="pl-2">/ {{product.weight}} кг.</div>
             </div>
+            <v-sheet v-if="isMultiple" class="grey lighten-3 mt-3 pa-2">
+              <span class="font-weight-bold">{{Math.round(price*product.minimumOrder)}} RUB</span>
+              / {{product.minimumOrder}} {{product.piece ? "шт." : "кг."}}
+            </v-sheet>
             <div class="display-flex align-center wrap" v-if="price">
               <v-btn
                 color="#d50000"
@@ -220,6 +226,9 @@ export default {
     this.closeDialog();
   },
   computed: {
+    isMultiple() {
+      return this.product.minimumOrder > 1;
+    },
     showImageDialog() {
       return !!(
         this.product.img &&
@@ -245,7 +254,7 @@ export default {
     },
     discountPriceProcent() {
       return this.isDiscount
-        ? Math.ceil(
+        ? Math.round(
             (100 * (this.product.priceNum - this.product.discountPrice)) /
               this.product.priceNum
           )
@@ -307,7 +316,16 @@ export default {
       this.showProductCard = false;
     },
     async handleAdd() {
-      await this.$store.commit("addToBasket", this.product);
+      console.log(
+        "handleAdd -> this.product.minimumOrder",
+        this.product.minimumOrder
+      );
+
+      await this.$store.commit(
+        "addToBasket",
+        this.product,
+        this.product.minimumOrder
+      );
     }
   }
 };

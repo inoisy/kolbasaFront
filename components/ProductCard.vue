@@ -35,18 +35,14 @@
         />
       </div>
     </div>
-    <div class="display-flex justify-space-between mb-2">
+    <div class="display-flex mb-2">
       <div
         itemprop="offers"
         itemscope
         itemtype="http://schema.org/Offer"
         class="pl-0 display-flex align-center"
       >
-        <span
-          itemprop="price"
-          v-show="product.priceNum"
-          class="product-price"
-        >{{product.isDiscount ? product.discountPrice : product.priceNum}}</span>
+        <span itemprop="price" v-show="product.priceNum" class="product-price">{{price}}</span>
         <span v-show="!product.priceNum" style="font-size: 0.88rem">Нет в наличии</span>
         <span
           class="pl-2 product-price"
@@ -61,17 +57,21 @@
           class="product-price"
         >р</span>
         <v-chip
-          v-if="product.isDiscount"
+          v-if="isDiscount"
           color="accent"
           dark
           class="ml-2"
-        >-{{Math.ceil(100*(product.priceNum-product.discountPrice)/product.priceNum) }}%</v-chip>
+        >-{{Math.round(100*(product.priceNum-product.discountPrice)/product.priceNum) }}%</v-chip>
       </div>
       <div
         itemprop="description"
         style="font-size: 15px;"
-        class="align-center display-flex pa-0"
-      >{{product.weight ? product.weight + 'кг' : ''}}</div>
+        class="align-center display-flex pa-0 ml-2"
+      >{{product.weight ? ` / ${product.weight} кг.` : ''}}</div>
+      <div v-if="isMultiple" class="ml-auto">
+        <span class="product-price">{{Math.round(price*product.minimumOrder)}} р</span>
+        <span style="font-size: 15px;">/ {{product.minimumOrder}} {{product.piece ? "шт." : "кг."}}</span>
+      </div>
     </div>
 
     <h2
@@ -186,6 +186,17 @@ export default {
   components: { ProductQuantity },
 
   computed: {
+    isDiscount() {
+      return this.product.isDiscount && this.product.discountPrice;
+    },
+    price() {
+      return this.isDiscount
+        ? this.product.discountPrice
+        : this.product.priceNum;
+    },
+    isMultiple() {
+      return this.product.minimumOrder > 1;
+    },
     imgUrl() {
       if (!this.product.img) return require("~/assets/no-image.png");
       if (!this.product.img.formats)

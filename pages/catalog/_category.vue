@@ -485,10 +485,6 @@ export default {
 };
 </script>
 <style lang="stylus" scoped>
-// #sidebarContent {
-// position: sticky;
-// top: 80px;
-// }
 #contentWrapper {
   min-height: 900px;
 }

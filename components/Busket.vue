@@ -28,8 +28,6 @@
         <v-icon>delete</v-icon>
       </v-btn>
     </v-app-bar>
-    <!-- {{basket}} -->
-    <!-- {{offer}} -->
     <div v-show="!offer" class="px-4 pt-4">
       <v-row>
         <v-col cols="12">
@@ -72,7 +70,7 @@
                 <td class="px-1">
                   <div
                     class="price ml-1 display-flex align-center justify-center font-weight-medium"
-                  >{{product.isDiscount ? product.discountPrice*product.count : product.priceNum*product.count }}</div>
+                  >{{product.isDiscount ? Math.round(product.discountPrice*product.count) : Math.round(product.priceNum*product.count) }}</div>
                 </td>
                 <td class="px-1">
                   <v-btn
@@ -89,7 +87,7 @@
                 <td></td>
                 <td></td>
                 <td class="text-right">Итого:</td>
-                <td class="text-center font-weight-bold">{{summa}}</td>
+                <td class="text-center font-weight-bold">{{Math.round(summa)}}</td>
                 <td></td>
               </tr>
             </tbody>
@@ -98,7 +96,7 @@
         <v-col v-if="!isSummValid" cols="12">
           <v-alert type="error" :value="!isSummValid" class="mb-0">
             Сумма заказа ниже 3000.
-            Наберите товаров еще на {{3000-summa}} рублей.
+            Наберите товаров еще на {{Math.round(3000-summa)}} рублей.
           </v-alert>
         </v-col>
         <v-col v-show="isSummValid">
@@ -116,7 +114,6 @@
         </v-col>
       </v-row>
     </div>
-    <!-- </div> -->
     <div v-if="offer && isSummValid" class="px-4 pt-4">
       <v-subheader class="mb-4 pl-0">ВВЕДИТЕ ВАШИ ДАННЫЕ</v-subheader>
       <contact-form @offerClose="offer=false" />
@@ -126,15 +123,15 @@
         <thead>
           <tr>
             <th class="text-left pl-0">Наименование</th>
-            <th class="text-center">Цена</th>
             <th class="text-center">Количество</th>
+            <th class="text-center">Цена</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item,index) in basket" :key="`busket-item-${index}`">
             <td class="text-left pl-0">{{ item.name }}</td>
+            <td class="text-center">{{ Math.round(item.count)}}</td>
             <td class="text-center">{{ item.priceNum }}</td>
-            <td class="text-center">{{ item.count}}</td>
           </tr>
           <tr>
             <td class></td>

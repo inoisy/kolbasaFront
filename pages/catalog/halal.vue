@@ -69,6 +69,8 @@ export default {
               discountPrice
               isDiscount
               isHalal
+              minimumOrder
+              piece
               category {
                 slug
               }

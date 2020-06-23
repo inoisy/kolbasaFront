@@ -83,14 +83,13 @@
                 <v-icon>arrow_drop_down</v-icon>
               </v-btn>
             </template>
-            <v-list class="two-columns pa-0" color="white">
+            <v-list class="two-columns" color="white">
               <template v-for="(category, index) in item.items">
-                <div
-                  :key="'list-group'+index"
-                  class="list-item"
-                  v-if="category && category.children && category.children.length > 0"
-                >
+                <template v-if="category && category.children && category.children.length > 0">
+                  <!-- :key="'list-group'+index"
+                  class="list-item"-->
                   <v-list-item
+                    :key="'list-group'+index"
                     :to="`/catalog/${category.slug}`"
                     :title="category.name"
                     style="min-height: 40px !important"
@@ -108,7 +107,7 @@
                   >
                     <span class="pl-4" style="line-height: normal; font-size: 14px;">{{child.name}}</span>
                   </v-list-item>
-                </div>
+                </template>
                 <v-list-item
                   v-else
                   class="list-item"

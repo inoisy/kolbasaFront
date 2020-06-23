@@ -14,16 +14,17 @@ export const mutations = {
   },
   incrementBasket(state, id) {
     let product = state.localStorage.basket.find((product) => product.id === id);
-    product.count++
+    product.count += product.minimumOrder
   },
-  addToBasket(state, product) {
+  addToBasket(state, product, qty) {
+    console.log("addToBasket -> qty", qty)
     let cartProduct = state.localStorage.basket.find((item) => item.id === product.id);
     if (cartProduct) {
-      cartProduct.count++;
+      cartProduct.count += cartProduct.minimumOrder;
     } else {
       state.localStorage.basket.push({
         ...product,
-        count: 1
+        count: product.minimumOrder
       })
     }
   },
@@ -35,8 +36,17 @@ export const mutations = {
       qty,
       id
     } = params
-    let cartProduct = state.localStorage.basket.find((item) => item.id === id);
-    cartProduct.count = qty
+    let product = state.localStorage.basket.find((item) => item.id === id);
+    if (product.minimumOrder > 1) {
+      const ostatok = qty % product.minimumOrder
+      if (ostatok !== 0) {
+        product.count = qty + (product.minimumOrder - ostatok)
+      } else {
+        product.count = qty
+      }
+    } else {
+      product.count = qty
+    }
   },
   deleteFromBasket(state, id) {
     let cartProductIndex = state.localStorage.basket.findIndex((item) => item.id === id);
@@ -44,7 +54,7 @@ export const mutations = {
   },
   removeFromBasket(state, id) {
     let cartProduct = state.localStorage.basket.find((item) => item.id === id);
-    cartProduct.count--;
+    cartProduct.count -= cartProduct.minimumOrder;
     if (cartProduct.count <= 0) {
       let cartProductIndex = state.localStorage.basket.findIndex((item) => item.id === id);
       state.localStorage.basket.splice(cartProductIndex, 1);
@@ -61,7 +71,7 @@ export const strict = false
 export const getters = {
   summa(state) {
     if (Array.isArray(state.localStorage.basket)) {
-      return state.localStorage.basket.reduce(
+      const summ = state.localStorage.basket.reduce(
         (acc, product) => {
           acc =
             product.isDiscount && product.discountPrice ?
@@ -69,6 +79,8 @@ export const getters = {
             acc + product.count * product.priceNum;
           return acc;
         }, 0)
+
+      return summ % 1 > 0 ? summ.toFixed(1) : summ
     } else {
       state.localStorage.basket = []
       return 0
@@ -117,11 +129,25 @@ export const getters = {
 }
 export const actions = {
   async nuxtServerInit(state, ctx) {
-    const data = require("~/assets/generalData.json")
-    await state.commit("generalInfo", {
-      ...data,
-      contacts: data.contact
-    })
+    if (ctx.isDev) {
+      const query = require("~/generalInfo.gql")
+      let client = this.app.apolloProvider.defaultClient;
+      const {
+        data
+      } = await client.query({
+        query
+      })
+      await state.commit("generalInfo", {
+        ...data,
+        contacts: data.contact
+      })
+    } else {
+      const data = require("~/assets/generalData.json")
+      await state.commit("generalInfo", {
+        ...data,
+        contacts: data.contact
+      })
+    }
   },
   async fetchManufacturer(ctx, id) {
     let client = this.app.apolloProvider.defaultClient;
@@ -216,6 +242,8 @@ export const actions = {
           isHalal
           priceNum
           discountPrice
+          minimumOrder
+          piece
           manufacturer {
             slug
             name
@@ -243,6 +271,8 @@ export const actions = {
             isHalal
             priceNum
             discountPrice
+            minimumOrder
+            piece
             category{
               name
               slug
@@ -293,8 +323,8 @@ export const actions = {
       },
       category: params.category,
       sort: params.sort || "name:asc",
-      limit: params.limit ? params.limit : 20,
-      start: params.start ? params.start : 0
+      limit: params.limit || 20,
+      start: params.start || 0
     }
     // console.log("fetchProducts -> vars", vars)
     const {
@@ -323,6 +353,8 @@ export const actions = {
           priceNum
           discountPrice
           rating
+          minimumOrder
+          piece
           manufacturer {
             name
             slug
