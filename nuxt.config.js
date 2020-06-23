@@ -15,14 +15,12 @@ const imageUrl = process.env.IMAGE_BASE_URL || process.env.BACKEND_URL || backUR
 const name = "Альянс Фуд"
 const description = "Альянс Фуд. Колбаса и другие мясные изделия оптом по ценам производителя. Самовывоз со склада в Москве. Доставка по РФ и СНГ."
 
-console.log("MAP_KEY", process.env.MAP_KEY)
 
 module.exports = {
   mode: 'universal',
   hooks: {
     build: {
       async before(builder) {
-        const uri = backendUrl + '/graphql'
         const query = `
           {
             contact {
@@ -63,7 +61,7 @@ module.exports = {
           }
         `
         const fetchApollo = apolloFetch.createApolloFetch({
-          uri
+          uri: backendUrl + '/graphql'
         });
 
         const data = await fetchApollo({
