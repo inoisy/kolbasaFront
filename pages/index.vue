@@ -431,6 +431,10 @@ export default {
       ]
     };
   },
+  // mounted() {
+  //   console.log(this.$getCachedData());
+  // },
+
   async asyncData(ctx) {
     let client = ctx.app.apolloProvider.defaultClient;
     const { data: promosData } = await client.query({

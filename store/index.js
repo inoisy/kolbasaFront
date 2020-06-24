@@ -129,25 +129,26 @@ export const getters = {
 }
 export const actions = {
   async nuxtServerInit(state, ctx) {
-    if (ctx.isDev) {
-      const query = require("~/generalInfo.gql")
-      let client = this.app.apolloProvider.defaultClient;
-      const {
-        data
-      } = await client.query({
-        query
-      })
-      await state.commit("generalInfo", {
-        ...data,
-        contacts: data.contact
-      })
-    } else {
-      const data = require("~/assets/generalData.json")
-      await state.commit("generalInfo", {
-        ...data,
-        contacts: data.contact
-      })
-    }
+
+    // if (ctx.isDev) {
+    //   const query = require("~/generalInfo.gql")
+    //   let client = this.app.apolloProvider.defaultClient;
+    //   const {
+    //     data
+    //   } = await client.query({
+    //     query
+    //   })
+    //   await state.commit("generalInfo", {
+    //     ...data,
+    //     contacts: data.contact
+    //   })
+    // } else {
+    const data = await this._vm.$getCachedData()
+    await state.commit("generalInfo", {
+      ...data,
+      contacts: data.contact
+    })
+    // }
   },
   async fetchManufacturer(ctx, id) {
     let client = this.app.apolloProvider.defaultClient;

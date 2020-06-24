@@ -18,60 +18,60 @@ const description = "Альянс Фуд. Колбаса и другие мяс�
 
 module.exports = {
   mode: 'universal',
-  hooks: {
-    build: {
-      async before(builder) {
-        const query = `
-          {
-            contact {
-              phone
-              email
-              addressText
-              addressCoords
-              accessTime
-            }
-            categories(sort: "name:asc", limit: 999) {
-              id
-              name
-              slug
-              parent {
-                id
-              }
-              children {
-                id
-                name
-                slug
-                img {
-                  url
-                }
-              }
-              img {
-                url
-              }
-            }
-            manufacturers(sort: "name:asc", limit:999) {
-              id
-              name
-              slug
+  // hooks: {
+  //   build: {
+  //     async before(builder) {
+  //       const query = `
+  //         {
+  //           contact {
+  //             phone
+  //             email
+  //             addressText
+  //             addressCoords
+  //             accessTime
+  //           }
+  //           categories(sort: "name:asc", limit: 999) {
+  //             id
+  //             name
+  //             slug
+  //             parent {
+  //               id
+  //             }
+  //             children {
+  //               id
+  //               name
+  //               slug
+  //               img {
+  //                 url
+  //               }
+  //             }
+  //             img {
+  //               url
+  //             }
+  //           }
+  //           manufacturers(sort: "name:asc", limit:999) {
+  //             id
+  //             name
+  //             slug
 
-              img {
-                url
-              }
-            }
-          }
-        `
-        const fetchApollo = apolloFetch.createApolloFetch({
-          uri: backendUrl + '/graphql'
-        });
+  //             img {
+  //               url
+  //             }
+  //           }
+  //         }
+  //       `
+  //       const fetchApollo = apolloFetch.createApolloFetch({
+  //         uri: backendUrl + '/graphql'
+  //       });
 
-        const data = await fetchApollo({
-          query
-        })
-        const extraFilePath = path.join(builder.nuxt.options.srcDir, 'assets', 'generalData.json')
-        await fs.writeFileSync(extraFilePath, JSON.stringify(data.data))
-      }
-    }
-  },
+  //       const data = await fetchApollo({
+  //         query
+  //       })
+  //       const extraFilePath = path.join(builder.nuxt.options.srcDir, 'assets', 'generalData.json')
+  //       await fs.writeFileSync(extraFilePath, JSON.stringify(data.data))
+  //     }
+  //   }
+  // },
   env: {
     name: name,
     description: description,
@@ -138,6 +138,7 @@ module.exports = {
    ** Plugins to load before mounting the App
    */
   plugins: [
+    '@/plugins/cachedApi.js',
     "@/plugins/lazyload.js",
     {
       src: '@/plugins/aos.js',
