@@ -91,10 +91,10 @@ const MyPlugin = {
       //   console.log("getCachedData -> getCachedData", Vue.prototype.$myAddedProperty)
       // return async function () {
       if (Vue.prototype.$myAddedProperty) { // get data from cache if exists
-        console.log("data Cached")
+        // console.log("data Cached")
         return Vue.prototype.$myAddedProperty
       } else { // else get data from API
-        console.log("else get data from API")
+        // console.log("else get data from API")
 
         const query = `
           {
