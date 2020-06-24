@@ -165,11 +165,11 @@ const MyPlugin = {
         //   .catch(reject)
       }
     }
-    Vue.mixin({
-      mounted() {
-        console.log('Mounted!');
-      }
-    });
+    // Vue.mixin({
+    //   mounted() {
+    //     console.log('Mounted!');
+    //   }
+    // });
 
   }
 };
