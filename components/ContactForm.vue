@@ -162,15 +162,13 @@ export default {
             email: this.email
           });
           this.formSuccess = true;
-
+          if (window.yaCounter54918895) {
+            window.yaCounter54918895.reachGoal("order");
+          }
           setTimeout(() => {
             this.$emit("offerClose");
             !this.oneClickBuy && this.$store.commit("clearBasket");
           }, 4000);
-
-          if (window.yaCounter54918895) {
-            window.yaCounter54918895.reachGoal("order");
-          }
         } else {
           this.formError = true;
           this.loading = false;
