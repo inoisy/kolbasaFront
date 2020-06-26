@@ -23,7 +23,7 @@
           <v-divider class="my-4"></v-divider>
         </v-layout>
         <v-layout row wrap v-for="category of categories" :key="category.id" class="mb-10">
-          <h2 class="mb-10 flex xs12 d-block" data-aos="fade-up">{{category.name}}</h2>
+          <h2 class="mb-10 flex xs12 d-block">{{category.name}}</h2>
           <div
             class="flex xs12 sm6 md4 lg3 xl2"
             v-for="product of category.products"
