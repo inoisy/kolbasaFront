@@ -314,6 +314,7 @@ export const actions = {
   },
   async fetchProducts(ctx, params) {
     // console.log("fetchProducts -> params", params)
+    // console.log("fetchProducts -> params", params)
     let client = this.app.apolloProvider.defaultClient;
     const vars = {
       ...params.manufacturer && {

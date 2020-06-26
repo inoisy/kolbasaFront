@@ -64,13 +64,13 @@
                 >Все</v-list-item>
                 <v-list-item
                   @click="productTypeChange(productType)"
-                  v-for="productType in category.product_types"
-                  :key="productType.id"
-                  :to="{ query: { type: productType.slug }}"
-                  :title="productType.name"
+                  v-for="type in category.product_types"
+                  :key="type.id"
+                  :to="{ query: { type: type.slug }}"
                   style="line-height: normal; font-size: 14px; min-height: 28px"
                   exact
-                >{{ productType.name }}</v-list-item>
+                  :title="type.name"
+                >{{ type.name }}</v-list-item>
               </v-list>
             </v-menu>
           </v-flex>
@@ -160,20 +160,23 @@
                   <v-list class="py-0">
                     <v-list-item
                       @click="productTypeChange('all')"
-                      :to="{ query: {}}"
+                      :to="`/catalog/${category.slug}`"
                       title="Все виды"
                       style="line-height: normal; font-size: 14px; min-height: 28px"
                       exact
+                      nuxt
                     >Все виды</v-list-item>
                     <v-list-item
-                      v-for="productType in category.product_types"
-                      :key="productType._id"
-                      @click="productTypeChange(productType)"
-                      :to="{ query: { type: productType.slug }}"
-                      :title="productType.name"
+                      v-for="type in category.product_types"
+                      :key="type._id"
+                      @click="productTypeChange(type)"
+                      :to="`/catalog/${category.slug}?type=${type.slug}`"
+                      :title="type.name"
                       style="line-height: normal; font-size: 14px; min-height: 28px"
                       exact
-                    >{{productType.name}}</v-list-item>
+                      nuxt
+                    >{{type.name}}</v-list-item>
+                    <!-- :to="{ query: { type: type.slug }}":input-value="false" -->
                   </v-list>
                 </v-sheet>
               </template>
@@ -183,20 +186,21 @@
                   <v-list-item
                     exact
                     @click="manufacturerChange('all')"
-                    :to="{ query: {}}"
+                    :to="`/catalog/${category.slug}`"
                     :title="`Все ${category.name}`"
                     style="line-height: normal; font-size: 14px; min-height: 28px"
                   >Все</v-list-item>
+                  <!-- :to="{ query: {}}" -->
                   <v-list-item
                     v-for="manufacturer in manufacturers"
                     @click="manufacturerChange(manufacturer)"
                     :key="manufacturer._id"
-                    :to="{ query: { manufacturer: manufacturer.slug }}"
+                    :to="`/catalog/${category.slug}?manufacturer=${manufacturer.slug}`"
                     :title="`${category.name} ${manufacturer.name}`"
                     style="line-height: normal; font-size: 14px; min-height: 28px"
                     exact
                   >{{manufacturer.name}}</v-list-item>
-                  <!-- @click="manufacturerChange(manufacturer)" -->
+                  <!-- :to="{ query: { manufacturer: manufacturer.slug }}" -->
                 </v-list>
               </v-sheet>
             </sticky-menu>
@@ -318,9 +322,8 @@ export default {
     }
 
     const productType =
-      (ctx.query.type &&
-        category.product_types.find(item => item.slug === ctx.query.type)) ||
-      "all";
+      ctx.query.type &&
+      category.product_types.find(item => item.slug === ctx.query.type);
     if (pageData) {
       manufacturer = ctx.store.getters.getManufacturer(ctx.query.manufacturer);
 
@@ -342,7 +345,7 @@ export default {
       manufacturers: category.manufacturers.sort((a, b) =>
         a.name > b.name ? 1 : -1
       ),
-      productType: productType,
+      productType: productType || "all",
       limit: limit
     };
   },
@@ -362,8 +365,8 @@ export default {
       }
     },
     async productTypeChange(item) {
-      console.log("productTypeChange -> item", item);
-      console.log("productTypeChange -> this.productType", this.productType);
+      // console.log("productTypeChange -> item", item);
+      // console.log("productTypeChange -> this.productType", this.productType);
       this.manufacturer = "all";
       if (item === "all" && this.productType !== "all") {
         this.productType = "all";
@@ -386,9 +389,10 @@ export default {
         });
         this.productsCount = this.products.length;
         this.$vuetify.goTo("#contentWrapper");
-      } else {
-        console.log("productTypeChange -> item", item);
       }
+      // else {
+      //   console.log("productTypeChange -> item", item);
+      // }
     },
     async manufacturerChange(manufacturer) {
       this.productType = "all";
@@ -420,14 +424,15 @@ export default {
       }
     },
     async handleClose() {
-      if (this.manufacturer) {
-        this.$router.push({
-          path: `/catalog/${this.category.slug}`,
-          query: {
-            manufacturer: this.manufacturer.slug
-          }
-        });
-      }
+      // console.log("handleClose -> handleClose");
+      // if (this.manufacturer) {
+      //   this.$router.push({
+      //     path: `/catalog/${this.category.slug}`,
+      //     query: {
+      //       manufacturer: this.manufacturer.slug
+      //     }
+      //   });
+      // }
 
       if (!this.pageData) {
         this.category = await this.$store.dispatch(
