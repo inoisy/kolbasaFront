@@ -6,9 +6,9 @@
       :drawer="drawer"
       @changeDrawer="(val) => drawer = val"
     />
-    <v-content class="dash">
+    <v-main class="dash">
       <nuxt />
-    </v-content>
+    </v-main>
     <my-footer class="pos-relative" :menuItems="menuItems" />
     <client-only>
       <v-navigation-drawer v-model="basketDrawer" temporary fixed right width="550px">

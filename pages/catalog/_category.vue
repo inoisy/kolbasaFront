@@ -103,7 +103,7 @@
             </v-menu>
           </v-flex>
 
-          <template v-if="products.length>0">
+          <template v-if="products && products.length>0">
             <div class="flex xs12 sm6 md4 lg3 xl2" v-for="(product,index) in products" :key="index">
               <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
             </div>
@@ -116,7 +116,7 @@
               md4
               lg3
               xl2
-              v-for="(product,index) in new Array(productsCount)"
+              v-for="(product,index) in new Array(productsCount || 20)"
               :key="index"
             >
               <v-sheet>
@@ -216,6 +216,7 @@
 
 
 <script>
+import gql from "graphql-tag";
 import InfiniteLoading from "vue-infinite-loading";
 import PageHeader from "~/components/PageHeader";
 import ProductCard from "~/components/ProductCard";
@@ -337,7 +338,7 @@ export default {
 
     return {
       products: products,
-      productsCount: products.length ? products.length : 20,
+      productsCount: products && products.length ? products.length : 20,
       category: category,
       categoriesIds: categoriesIds,
       pageData: pageData,
@@ -350,6 +351,98 @@ export default {
     };
   },
   methods: {
+    // async getProducts(params) {
+    //   let client = this.$apollo.getClient();
+    //   const vars = {
+    //     ...(params.manufacturer && {
+    //       manufacturer: params.manufacturer
+    //     }),
+    //     ...(params.product_type && {
+    //       product_type: params.product_type
+    //     }),
+    //     category: params.category,
+    //     sort: params.sort || "name:asc",
+    //     limit: params.limit || 20,
+    //     start: params.start || 0
+    //   };
+    //   const { data: productsData } = await client.query({
+    //     query: gql`
+    //       query productsQuery(
+    //         $manufacturer: ID
+    //         $category: [ID!]
+    //         $product_type: ID
+    //         $sort: String
+    //         $limit: Int
+    //         $start: Int
+    //       ) {
+    //         products(
+    //           limit: $limit
+    //           start: $start
+    //           sort: $sort
+    //           where: {
+    //             manufacturer: $manufacturer
+    //             category: $category
+    //             product_type: $product_type
+    //           }
+    //         ) {
+    //           id
+    //           name
+    //           slug
+    //           weight
+    //           isDiscount
+    //           isHalal
+    //           priceNum
+    //           discountPrice
+    //           rating
+    //           minimumOrder
+    //           piece
+    //           manufacturer {
+    //             name
+    //             slug
+    //             img {
+    //               url
+    //             }
+    //           }
+    //           category {
+    //             name
+    //             slug
+    //           }
+    //           img {
+    //             url
+    //             name
+    //             formats
+    //           }
+    //         }
+    //       }
+    //     `,
+    //     variables: vars
+    //   });
+    //   return productsData.products;
+    // },
+    // async fetchProductsWithRetry(params, n = 3) {
+    //   // const getProducts = async () => {
+
+    //   //   // }
+    //   // };
+    //   try {
+    //     const products = await this.getProducts(params);
+    //     // if (products && products.length) {
+    //     //   console.log("products.length", products.length);
+    //     return products;
+    //     // }
+    //   } catch (error) {
+    //     console.log("fetchProducts -> error", error);
+    //     n -= 1;
+    //     console.log("fetchProducts -> n", n);
+    //     // this.app.$sentry.captureException(error)
+    //     // console.log("fetchProducts -> error", error)
+    //     // return []
+
+    //     if (n === 0) return null;
+    //     return await this.getProducts(params);
+    //   }
+    // },
+
     async sortChange(item) {
       if (this.sort.value !== item.value) {
         this.products = [];
@@ -433,19 +526,24 @@ export default {
       //     }
       //   });
       // }
+      // console.log("handleClose -> this.pageData", this.pageData);
+      // console.log("handleClose -> this.category", this.category);
 
       if (!this.pageData) {
-        this.category = await this.$store.dispatch(
-          "fetchCategory",
-          this.category.id
-        );
+        // this.category = await this.$store.dispatch(
+        //   "fetchCategory",
+        //   this.category.id
+        // );
         const products = await this.$store.dispatch("fetchProducts", {
           category: this.categoriesIds,
           limit: this.limit,
           sort: this.sort.value
         });
+        // console.log("handleClose -> products", products.length);
         this.products = products;
-        this.productsCount = this.products.length;
+
+        this.productsCount =
+          this.products && this.products.length ? this.products.length : 0;
         this.pageData = true;
       }
     },

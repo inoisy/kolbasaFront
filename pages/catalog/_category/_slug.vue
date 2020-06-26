@@ -4,10 +4,10 @@
     v-model="dialog"
     scrollable
     :width="showCard ? 'auto' : '600px'"
-    attach=".v-content__wrap"
     content-class="dialog-content-wrapper"
     :persistent="false"
   >
+    <!-- attach=".v-content__wrap" -->
     <product-dialog
       :product="product"
       @closeProductDialog="dialog=false"

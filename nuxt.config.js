@@ -150,7 +150,7 @@ module.exports = {
   ],
 
   modules: [
-    // '@nuxtjs/sentry',
+    '@nuxtjs/sentry',
     'nuxt-vuex-localstorage',
     ['@nuxtjs/google-analytics', {
       id: process.env.GOOGLE_ID
@@ -247,7 +247,10 @@ module.exports = {
     }],
 
   ],
-
+  sentry: {
+    dsn: 'https://e3280a17ba94410780a38ca12ccc2e6e@o413020.ingest.sentry.io/5295312', // Enter your project's DSN here
+    config: {}, // Additional config
+  },
   build: {
     babel: {
       sourceType: 'unambiguous',

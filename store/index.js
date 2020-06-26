@@ -17,7 +17,7 @@ export const mutations = {
     product.count += product.minimumOrder
   },
   addToBasket(state, product, qty) {
-    console.log("addToBasket -> qty", qty)
+    // console.log("addToBasket -> qty", qty)
     let cartProduct = state.localStorage.basket.find((item) => item.id === product.id);
     if (cartProduct) {
       cartProduct.count += cartProduct.minimumOrder;
@@ -262,7 +262,7 @@ export const actions = {
         }
         query ProductQuery( $slug: String! ) {
           productFull:products( where: { slug: $slug } ) {
-            id
+            _id
             description
             name
             slug
@@ -313,72 +313,86 @@ export const actions = {
     return productData.productFull[0]
   },
   async fetchProducts(ctx, params) {
-    // console.log("fetchProducts -> params", params)
-    // console.log("fetchProducts -> params", params)
-    let client = this.app.apolloProvider.defaultClient;
-    const vars = {
-      ...params.manufacturer && {
-        manufacturer: params.manufacturer
-      },
-      ...params.product_type && {
-        product_type: params.product_type
-      },
-      category: params.category,
-      sort: params.sort || "name:asc",
-      limit: params.limit || 20,
-      start: params.start || 0
-    }
-    // console.log("fetchProducts -> vars", vars)
-    const {
-      data: productsData
-    } = await client.query({
-      query: gql `
-      query productsQuery(
-        $manufacturer: ID $category: [ID!] $product_type: ID $sort: String $limit: Int $start: Int
-      ) {
-        products(
-          limit: $limit 
-          start: $start 
-          sort: $sort 
-          where: {
-            manufacturer: $manufacturer
-            category: $category
-            product_type: $product_type
-          }
-        ) {
-          id
-          name
-          slug
-          weight
-          isDiscount
-          isHalal
-          priceNum
-          discountPrice
-          rating
-          minimumOrder
-          piece
-          manufacturer {
+    let n = 3
+    const getProducts = async () => {
+      let client = this.app.apolloProvider.defaultClient;
+      const vars = {
+        ...params.manufacturer && {
+          manufacturer: params.manufacturer
+        },
+        ...params.product_type && {
+          product_type: params.product_type
+        },
+        category: params.category,
+        sort: params.sort || "name:asc",
+        limit: params.limit || 20,
+        start: params.start || 0
+      }
+      const {
+        data: productsData
+      } = await client.query({
+        query: gql `
+        query productsQuery(
+            $manufacturer: ID $category: [ID!] $product_type: ID $sort: String $limit: Int $start: Int
+          ) {
+            products(
+              limit: $limit 
+              start: $start 
+              sort: $sort 
+              where: {
+                manufacturer: $manufacturer
+                category: $category
+                product_type: $product_type
+              }
+          ) {
+            id
             name
             slug
+            weight
+            isDiscount
+            isHalal
+            priceNum
+            discountPrice
+            rating
+            minimumOrder
+            piece
+            manufacturer {
+              name
+              slug
+              img {
+                url
+              }
+            }
+            category{
+              name
+              slug
+            }
             img {
               url
+              name
+              formats
             }
           }
-          category{
-            name
-            slug
-          }
-          img {
-            url
-            name
-            formats
-          }
         }
-      }
-    `,
-      variables: vars
-    });
-    return productsData.products
+      `,
+        variables: vars
+      });
+      return productsData.products
+    }
+    try {
+      return await getProducts()
+    } catch (error) {
+      console.log("fetchProducts -> error", error)
+      n -= 1
+      console.log("fetchProducts -> n", n)
+      // this.app.$sentry.captureException(error)
+      // console.log("fetchProducts -> error", error)
+      // return []
+
+      if (n === 0) return []
+      return await getProducts()
+    }
+
   }
 }
 // console.log("fetchProducts -> productsData", productsData)

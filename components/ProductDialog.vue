@@ -316,10 +316,10 @@ export default {
       this.showProductCard = false;
     },
     async handleAdd() {
-      console.log(
-        "handleAdd -> this.product.minimumOrder",
-        this.product.minimumOrder
-      );
+      // console.log(
+      //   "handleAdd -> this.product.minimumOrder",
+      //   this.product.minimumOrder
+      // );
 
       await this.$store.commit(
         "addToBasket",
