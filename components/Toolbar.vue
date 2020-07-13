@@ -92,8 +92,7 @@
                     :key="'list-group'+index"
                     :to="`/catalog/${category.slug}`"
                     :title="category.name"
-                    style="min-height: 40px !important"
-                    height="40px"
+                    class="list-item"
                   >
                     <span style="line-height: normal; font-size: 15px;">{{ category.name}}</span>
                   </v-list-item>
@@ -102,10 +101,9 @@
                     :key="child.id"
                     :to="`/catalog/${child.slug}`"
                     :title="child.name"
-                    style="min-height: 36px !important"
-                    height="36px"
+                    class="list-item"
                   >
-                    <span class="pl-4" style="line-height: normal; font-size: 14px;">{{child.name}}</span>
+                    <span class="pl-4">{{child.name}}</span>
                   </v-list-item>
                 </template>
                 <v-list-item
@@ -116,8 +114,6 @@
                   nuxt
                   :to="`${item.to}/${category.slug}`"
                   :title="category.name"
-                  style="line-height: normal; font-size: 15px;min-height: 36px !important"
-                  height="36px"
                 >{{ category.name }}</v-list-item>
               </template>
             </v-list>
@@ -231,8 +227,12 @@
   .list-item {
     float: left;
     line-height: 1;
-    break-inside: avoid-column;
+    break-inside: avoid;
     width: 100%;
+    min-height: 36px !important;
+    height: 36px !important;
+    line-height: normal;
+    font-size: 14px;
   }
 }
 

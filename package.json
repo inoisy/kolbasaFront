@@ -5,6 +5,7 @@
   "author": "inoisy",
   "private": true,
   "scripts": {
+    "devLocal": "BACKEND_URL=http://localhost:1337 nuxt",
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
