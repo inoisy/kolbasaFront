@@ -327,11 +327,12 @@ export default {
       category.product_types.find(item => item.slug === ctx.query.type);
     if (pageData) {
       manufacturer = ctx.store.getters.getManufacturer(ctx.query.manufacturer);
+      // console.log("Data -> manufacturer", manufacturer);
 
       products = await ctx.store.dispatch("fetchProducts", {
         category: categoriesIds,
         limit: limit,
-        manufacturer: manufacturer ? manufacturer._id : null,
+        manufacturer: manufacturer ? manufacturer.id : null,
         product_type: productType ? productType._id : null
       });
     }
