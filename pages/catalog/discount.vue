@@ -1,5 +1,6 @@
 <template>
   <div>
+    <nuxt-child @close="handleClose" />
     <page-header :title="title" :breadrumbs="breadcrumbs" />
     <section
       class="background background-repeat"
@@ -8,7 +9,7 @@
       <v-container grid-list-lg class="py-12">
         <v-layout row wrap v-if="page && page.content">
           <div>
-            <div class="content" v-if="page.content" v-html="$md.render(page.content)"></div>
+            <v-flex class="content" v-if="page.content" v-html="$md.render(page.content)"></v-flex>
             <v-btn
               v-if="page.file"
               class="ml-0"
@@ -29,7 +30,7 @@
             v-for="product of category.products"
             :key="product.id"
           >
-            <product-card :product="product" :to="`/catalog/${category.slug}/${product.slug}`"></product-card>
+            <product-card :product="product" :to="`/catalog/discount/${product.slug}`"></product-card>
           </div>
         </v-layout>
       </v-container>
@@ -123,6 +124,17 @@ export default {
       ),
       page: categoryData.pages[0]
     };
+  },
+  methods: {
+    async handleClose() {
+      // const products = await this.$store.dispatch("fetchProducts", {
+      //   category: this.categoriesIds,
+      //   limit: this.limit,
+      //   sort: this.sort.value
+      // });
+      // // console.log("handleClose -> products", products.length);
+      // this.products = products;
+    }
   },
   data() {
     return {

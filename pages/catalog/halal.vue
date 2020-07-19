@@ -1,5 +1,6 @@
 <template>
   <div>
+    <nuxt-child @close="handleClose" />
     <page-header title="Халяльная продукция оптом" :breadrumbs="breadcrumbs" />
     <section
       class="background background-repeat"
@@ -13,11 +14,8 @@
             v-for="product of category.products"
             :key="product.id"
           >
-            <product-card
-              :product="product"
-              :to="`/catalog/${category.slug}/${product.slug}`"
-              :halal="true"
-            ></product-card>
+            <product-card :product="product" :to="`/catalog/halal/${product.slug}`" :halal="true"></product-card>
+            <!-- :to="`/catalog/${category.slug}/${product.slug}`" -->
           </div>
         </v-layout>
         <v-layout row wrap v-if="page.content">
@@ -60,7 +58,7 @@ export default {
             id
             name
             slug
-            products(where: { isHalal: true }) {
+            products(where: { isHalal: true }, limit: 60) {
               id
               name
               slug
@@ -96,6 +94,17 @@ export default {
       ),
       page: categoryData.pages[0]
     };
+  },
+  methods: {
+    async handleClose() {
+      // const products = await this.$store.dispatch("fetchProducts", {
+      //   category: this.categoriesIds,
+      //   limit: this.limit,
+      //   sort: this.sort.value
+      // });
+      // // console.log("handleClose -> products", products.length);
+      // this.products = products;
+    }
   },
   data() {
     return {

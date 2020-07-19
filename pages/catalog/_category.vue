@@ -518,23 +518,7 @@ export default {
       }
     },
     async handleClose() {
-      // console.log("handleClose -> handleClose");
-      // if (this.manufacturer) {
-      //   this.$router.push({
-      //     path: `/catalog/${this.category.slug}`,
-      //     query: {
-      //       manufacturer: this.manufacturer.slug
-      //     }
-      //   });
-      // }
-      // console.log("handleClose -> this.pageData", this.pageData);
-      // console.log("handleClose -> this.category", this.category);
-
       if (!this.pageData) {
-        // this.category = await this.$store.dispatch(
-        //   "fetchCategory",
-        //   this.category.id
-        // );
         const products = await this.$store.dispatch("fetchProducts", {
           category: this.categoriesIds,
           limit: this.limit,
