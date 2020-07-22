@@ -208,8 +208,17 @@
         </div>
       </v-container>
     </main>
-    <section v-if="category.content" class="content-wrapper grey lighten-3">
-      <v-container v-html="$md.render(category.content)" class="py-9"></v-container>
+    <section class="content-wrapper grey lighten-3">
+      <v-container class="py-9">
+        <v-row>
+          <v-col
+            cols="12"
+            v-if="this.productType && this.productType.content"
+            v-html="$md.render(this.productType.content)"
+          ></v-col>
+          <v-col cols="12" v-if="category.content" v-html="$md.render(category.content)"></v-col>
+        </v-row>
+      </v-container>
     </section>
   </div>
 </template>
@@ -227,9 +236,16 @@ export default {
   components: { PageHeader, ProductCard, InfiniteLoading, StickyMenu },
   computed: {
     name() {
-      return this.manufacturer && this.manufacturer.name
-        ? `${this.category.name} ${this.manufacturer.name} оптом`
-        : `${this.category.name} оптом`;
+      if (this.manufacturer && this.manufacturer.name) {
+        return `${this.category.name} ${this.manufacturer.name} оптом`;
+      } else if (this.productType && this.productType.name) {
+        return `${this.productType.name} оптом`;
+      } else {
+        return `${this.category.name} оптом`;
+      }
+      // return this.manufacturer && this.manufacturer.name
+      //   ? `${this.category.name} ${this.manufacturer.name} оптом`
+      //   : `${this.category.name} оптом`;
     },
     loading() {
       return !this.$route.params.slug && !this.products.length;
@@ -473,7 +489,15 @@ export default {
         this.productsCount = this.products.length;
         this.$vuetify.goTo("#contentWrapper");
       } else if (!this.productType || this.productType._id !== item._id) {
-        this.productType = item;
+        this.productType = await this.$store.dispatch(
+          "fetchProductType",
+          item._id
+        );
+        // console.log("productTypeChange -> productType", this.productType);
+        // console.log(
+        //   "productTypeChange -> item",
+
+        // );
         this.products = [];
         this.products = await this.$store.dispatch("fetchProducts", {
           category: this.categoriesIds,

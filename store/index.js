@@ -130,25 +130,86 @@ export const getters = {
 export const actions = {
   async nuxtServerInit(state, ctx) {
 
-    // if (ctx.isDev) {
-    //   const query = require("~/generalInfo.gql")
-    //   let client = this.app.apolloProvider.defaultClient;
-    //   const {
-    //     data
-    //   } = await client.query({
-    //     query
-    //   })
-    //   await state.commit("generalInfo", {
-    //     ...data,
-    //     contacts: data.contact
-    //   })
-    // } else {
-    const data = await this._vm.$getCachedData()
-    await state.commit("generalInfo", {
-      ...data,
-      contacts: data.contact
-    })
-    // }
+    if (ctx.isDev) {
+      const query = gql `
+          {
+            contact {
+              phone
+              email
+              addressText
+              addressCoords
+              accessTime
+            }
+            categories(sort: "name:asc", limit: 999) {
+              id
+              name
+              slug
+              parent {
+                id
+              }
+              children {
+                id
+                name
+                slug
+                img {
+                  url
+                }
+              }
+              img {
+                url
+              }
+            }
+            manufacturers(sort: "name:asc", limit:999) {
+              id
+              name
+              slug
+
+              img {
+                url
+              }
+            }
+          }
+        `
+      let client = this.app.apolloProvider.defaultClient;
+      const {
+        data
+      } = await client.query({
+        query
+      })
+      await state.commit("generalInfo", {
+        ...data,
+        contacts: data.contact
+      })
+    } else {
+      const data = await this._vm.$getCachedData()
+      await state.commit("generalInfo", {
+        ...data,
+        contacts: data.contact
+      })
+    }
+  },
+  async fetchProductType(state, id) {
+    let client = this.app.apolloProvider.defaultClient;
+    const {
+      data: productTypeData
+    } = await client.query({
+      variables: {
+        id: id
+      },
+      query: gql `
+          query ProductTypeQuery($id: ID!) {
+            productType(id: $id) {
+              _id
+              id
+              name
+              slug
+              content
+            }
+          }
+        `
+    });
+    // await ctx.commit("manufacturer", manufacturerData.manufacturer);
+    return productTypeData.productType //.manufacturer
   },
   async fetchManufacturer(ctx, id) {
     let client = this.app.apolloProvider.defaultClient;
