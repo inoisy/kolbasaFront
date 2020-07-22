@@ -300,10 +300,9 @@ export default {
       return items;
     },
     manuf() {
-      return this.manufacturer !== "all" &&
-        this.manufacturer &&
-        this.manufacturer._id
-        ? this.manufacturer._id
+      // console.log("manuf -> this.manufacturer", this.manufacturer);
+      return this.manufacturer !== "all" && this.manufacturer
+        ? this.manufacturer.id || this.manufacturer._id
         : null;
     },
     prodType() {
@@ -340,7 +339,10 @@ export default {
 
     const productType =
       ctx.query.type &&
-      category.product_types.find(item => item.slug === ctx.query.type);
+      (await ctx.store.dispatch(
+        "fetchProductType",
+        category.product_types.find(item => item.slug === ctx.query.type)._id
+      ));
     if (pageData) {
       manufacturer = ctx.store.getters.getManufacturer(ctx.query.manufacturer);
       // console.log("Data -> manufacturer", manufacturer);
@@ -368,98 +370,6 @@ export default {
     };
   },
   methods: {
-    // async getProducts(params) {
-    //   let client = this.$apollo.getClient();
-    //   const vars = {
-    //     ...(params.manufacturer && {
-    //       manufacturer: params.manufacturer
-    //     }),
-    //     ...(params.product_type && {
-    //       product_type: params.product_type
-    //     }),
-    //     category: params.category,
-    //     sort: params.sort || "name:asc",
-    //     limit: params.limit || 20,
-    //     start: params.start || 0
-    //   };
-    //   const { data: productsData } = await client.query({
-    //     query: gql`
-    //       query productsQuery(
-    //         $manufacturer: ID
-    //         $category: [ID!]
-    //         $product_type: ID
-    //         $sort: String
-    //         $limit: Int
-    //         $start: Int
-    //       ) {
-    //         products(
-    //           limit: $limit
-    //           start: $start
-    //           sort: $sort
-    //           where: {
-    //             manufacturer: $manufacturer
-    //             category: $category
-    //             product_type: $product_type
-    //           }
-    //         ) {
-    //           id
-    //           name
-    //           slug
-    //           weight
-    //           isDiscount
-    //           isHalal
-    //           priceNum
-    //           discountPrice
-    //           rating
-    //           minimumOrder
-    //           piece
-    //           manufacturer {
-    //             name
-    //             slug
-    //             img {
-    //               url
-    //             }
-    //           }
-    //           category {
-    //             name
-    //             slug
-    //           }
-    //           img {
-    //             url
-    //             name
-    //             formats
-    //           }
-    //         }
-    //       }
-    //     `,
-    //     variables: vars
-    //   });
-    //   return productsData.products;
-    // },
-    // async fetchProductsWithRetry(params, n = 3) {
-    //   // const getProducts = async () => {
-
-    //   //   // }
-    //   // };
-    //   try {
-    //     const products = await this.getProducts(params);
-    //     // if (products && products.length) {
-    //     //   console.log("products.length", products.length);
-    //     return products;
-    //     // }
-    //   } catch (error) {
-    //     console.log("fetchProducts -> error", error);
-    //     n -= 1;
-    //     console.log("fetchProducts -> n", n);
-    //     // this.app.$sentry.captureException(error)
-    //     // console.log("fetchProducts -> error", error)
-    //     // return []
-
-    //     if (n === 0) return null;
-    //     return await this.getProducts(params);
-    //   }
-    // },
-
     async sortChange(item) {
       if (this.sort.value !== item.value) {
         this.products = [];
@@ -557,12 +467,8 @@ export default {
       }
     },
     async onInfinite($state) {
-      // console.log(
-      //   "onInfinite -> this.manufacturer",
-      //   this.productType !== "all" && this.productType._id
-      //     ? this.productType._id
-      //     : null
-      // );
+      console.log("onInfinite -> this.manuf", this.manuf);
+      console.log("onInfinite -> onInfinite", this.prodType);
 
       const newProducts = await this.$store.dispatch("fetchProducts", {
         category: this.categoriesIds,
@@ -595,6 +501,97 @@ export default {
     };
   }
 };
+// async getProducts(params) {
+//   let client = this.$apollo.getClient();
+//   const vars = {
+//     ...(params.manufacturer && {
+//       manufacturer: params.manufacturer
+//     }),
+//     ...(params.product_type && {
+//       product_type: params.product_type
+//     }),
+//     category: params.category,
+//     sort: params.sort || "name:asc",
+//     limit: params.limit || 20,
+//     start: params.start || 0
+//   };
+//   const { data: productsData } = await client.query({
+//     query: gql`
+//       query productsQuery(
+//         $manufacturer: ID
+//         $category: [ID!]
+//         $product_type: ID
+//         $sort: String
+//         $limit: Int
+//         $start: Int
+//       ) {
+//         products(
+//           limit: $limit
+//           start: $start
+//           sort: $sort
+//           where: {
+//             manufacturer: $manufacturer
+//             category: $category
+//             product_type: $product_type
+//           }
+//         ) {
+//           id
+//           name
+//           slug
+//           weight
+//           isDiscount
+//           isHalal
+//           priceNum
+//           discountPrice
+//           rating
+//           minimumOrder
+//           piece
+//           manufacturer {
+//             name
+//             slug
+//             img {
+//               url
+//             }
+//           }
+//           category {
+//             name
+//             slug
+//           }
+//           img {
+//             url
+//             name
+//             formats
+//           }
+//         }
+//       }
+//     `,
+//     variables: vars
+//   });
+//   return productsData.products;
+// },
+// async fetchProductsWithRetry(params, n = 3) {
+//   // const getProducts = async () => {
+
+//   //   // }
+//   // };
+//   try {
+//     const products = await this.getProducts(params);
+//     // if (products && products.length) {
+//     //   console.log("products.length", products.length);
+//     return products;
+//     // }
+//   } catch (error) {
+//     console.log("fetchProducts -> error", error);
+//     n -= 1;
+//     console.log("fetchProducts -> n", n);
+//     // this.app.$sentry.captureException(error)
+//     // console.log("fetchProducts -> error", error)
+//     // return []
+
+//     if (n === 0) return null;
+//     return await this.getProducts(params);
+//   }
+// },
 </script>
 <style lang="stylus" scoped>
 #contentWrapper {
