@@ -7,7 +7,6 @@
     content-class="dialog-content-wrapper"
     :persistent="false"
   >
-    <!-- attach=".v-content__wrap" -->
     <product-dialog
       :product="product"
       @closeProductDialog="dialog=false"
@@ -116,7 +115,7 @@ export default {
       return this.$route.params && this.$route.params.slug;
     }
   },
-  props: ["products"],
+  props: ["name"],
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl,
