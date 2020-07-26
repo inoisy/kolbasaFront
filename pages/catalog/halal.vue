@@ -20,7 +20,7 @@
         </v-layout>
         <v-layout row wrap v-if="page.content">
           <v-divider class="my-4"></v-divider>
-          <div class="content-wrapper" v-if="page.content" v-html="$md.render(page.content)"></div>
+          <div class="content-wrapper" v-if="page.content" v-html="page.content"></div>
         </v-layout>
       </v-container>
     </section>

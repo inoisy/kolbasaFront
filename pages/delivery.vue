@@ -8,11 +8,7 @@
     >
       <v-container grid-list-lg>
         <v-layout row wrap class="py-12">
-          <v-flex
-            xs12
-            class="content-wrapper"
-            v-html="pageData.content && $md.render(pageData.content)"
-          ></v-flex>
+          <v-flex xs12 class="content-wrapper" v-html="pageData.content && pageData.content"></v-flex>
         </v-layout>
       </v-container>
     </section>
@@ -34,9 +30,9 @@ export default {
           name: "description",
           content:
             (this.pageData && this.pageData.description) ||
-            this.title + " " + process.env.description
-        }
-      ]
+            this.title + " " + process.env.description,
+        },
+      ],
     };
   },
   computed: {
@@ -47,14 +43,14 @@ export default {
       return [
         {
           to: "/",
-          text: "Главная"
+          text: "Главная",
         },
         {
           to: "/delivery",
-          text: this.title
-        }
+          text: this.title,
+        },
       ];
-    }
+    },
   },
   async asyncData({ app }) {
     let client = app.apolloProvider.defaultClient;
@@ -67,12 +63,12 @@ export default {
             content
           }
         }
-      `
+      `,
     });
     return {
-      pageData: pageData.delivery
+      pageData: pageData.delivery,
     };
   },
-  components: { PageHeader }
+  components: { PageHeader },
 };
 </script>

@@ -256,7 +256,7 @@ export const actions = {
             img {
               url
             }
-            manufacturers{
+            manufacturers(sort: "name:asc") {
               _id
               name
               slug
@@ -275,7 +275,7 @@ export const actions = {
               name
               slug
             }
-            product_types {
+            product_types(sort: "name:asc") {
               _id
               name
               slug

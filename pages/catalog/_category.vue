@@ -209,14 +209,14 @@
       </v-container>
     </main>
     <section class="content-wrapper grey lighten-3">
-      <v-container class="py-9">
+      <v-container class="pt-10 pb-7">
         <v-row>
           <v-col
             cols="12"
             v-if="this.productType && this.productType.content"
-            v-html="$md.render(this.productType.content)"
+            v-html="this.productType.content"
           ></v-col>
-          <v-col cols="12" v-if="category.content" v-html="$md.render(category.content)"></v-col>
+          <v-col cols="12" v-if="category.content" v-html="category.content"></v-col>
         </v-row>
       </v-container>
     </section>
@@ -279,22 +279,22 @@ export default {
       let items = [
         {
           to: "/",
-          text: "Главная"
+          text: "Главная",
         },
         {
           to: "/catalog",
-          text: "Каталог"
-        }
+          text: "Каталог",
+        },
       ];
       if (this.isParentCategory && this.category.parent[0].name) {
         items.push({
           to: `/catalog/${this.category.parent[0].slug}`,
-          text: this.category.parent[0].name
+          text: this.category.parent[0].name,
         });
       }
       items.push({
         to: `/catalog/${this.category.slug}`,
-        text: this.category.name
+        text: this.category.name,
       });
       this.$store.commit("breadcrumbs", items);
       return items;
@@ -311,7 +311,7 @@ export default {
         this.productType._id
         ? this.productType._id
         : null;
-    }
+    },
   },
   async asyncData(ctx) {
     const categoryFind = await ctx.store.getters.getCategory(
@@ -321,7 +321,7 @@ export default {
       return ctx.error({
         statusCode: 404,
         message: "Категория не найдена",
-        type: "catalog"
+        type: "catalog",
       });
     }
 
@@ -333,7 +333,7 @@ export default {
       pageData = !!ctx.params.slug ? false : true;
 
     if (categoryFind.children && categoryFind.children.length > 0) {
-      categoriesIds.push(...categoryFind.children.map(item => item.id));
+      categoriesIds.push(...categoryFind.children.map((item) => item.id));
       limit = 80;
     }
 
@@ -341,7 +341,7 @@ export default {
       ctx.query.type &&
       (await ctx.store.dispatch(
         "fetchProductType",
-        category.product_types.find(item => item.slug === ctx.query.type)._id
+        category.product_types.find((item) => item.slug === ctx.query.type)._id
       ));
     if (pageData) {
       manufacturer = ctx.store.getters.getManufacturer(ctx.query.manufacturer);
@@ -351,7 +351,7 @@ export default {
         category: categoriesIds,
         limit: limit,
         manufacturer: manufacturer ? manufacturer.id : null,
-        product_type: productType ? productType._id : null
+        product_type: productType ? productType._id : null,
       });
     }
 
@@ -362,11 +362,9 @@ export default {
       categoriesIds: categoriesIds,
       pageData: pageData,
       manufacturer: manufacturer || "all",
-      manufacturers: category.manufacturers.sort((a, b) =>
-        a.name > b.name ? 1 : -1
-      ),
+      manufacturers: category.manufacturers,
       productType: productType || "all",
-      limit: limit
+      limit: limit,
     };
   },
   methods: {
@@ -379,7 +377,7 @@ export default {
           limit: this.limit,
           manufacturer: this.manuf,
           sort: item.value,
-          product_type: this.prodType
+          product_type: this.prodType,
         });
         this.productsCount = this.products.length;
       }
@@ -394,7 +392,7 @@ export default {
         this.products = await this.$store.dispatch("fetchProducts", {
           category: this.categoriesIds,
           limit: this.limit,
-          sort: this.sort.value
+          sort: this.sort.value,
         });
         this.productsCount = this.products.length;
         this.$vuetify.goTo("#contentWrapper");
@@ -413,7 +411,7 @@ export default {
           category: this.categoriesIds,
           limit: this.limit,
           sort: this.sort.value,
-          product_type: item._id
+          product_type: item._id,
         });
         this.productsCount = this.products.length;
         this.$vuetify.goTo("#contentWrapper");
@@ -431,7 +429,7 @@ export default {
           category: this.categoriesIds,
           limit: this.limit,
           manufacturer: null,
-          sort: this.sort.value
+          sort: this.sort.value,
         });
         this.productsCount = this.products.length;
         this.$vuetify.goTo("#contentWrapper");
@@ -445,7 +443,7 @@ export default {
           category: this.categoriesIds,
           limit: this.limit,
           manufacturer: manufacturer._id,
-          sort: this.sort.value
+          sort: this.sort.value,
         });
         this.productsCount = this.products.length;
         this.$vuetify.goTo("#contentWrapper");
@@ -456,7 +454,7 @@ export default {
         const products = await this.$store.dispatch("fetchProducts", {
           category: this.categoriesIds,
           limit: this.limit,
-          sort: this.sort.value
+          sort: this.sort.value,
         });
         // console.log("handleClose -> products", products.length);
         this.products = products;
@@ -475,7 +473,7 @@ export default {
         start: this.products.length,
         manufacturer: this.manuf,
         product_type: this.prodType,
-        sort: this.sort.value
+        sort: this.sort.value,
       });
       if (newProducts && newProducts.length) {
         this.products = [...this.products, ...newProducts];
@@ -484,22 +482,22 @@ export default {
       } else {
         $state.complete();
       }
-    }
+    },
   },
   data() {
     const sortItems = [
       { title: "По алфавиту", value: "name:asc" },
       { title: "По популярности", value: "rating:desc" },
       { title: "Cначала дорогие", value: "priceNum:desc" },
-      { title: "Cначала дешевые", value: "priceNum:asc" }
+      { title: "Cначала дешевые", value: "priceNum:asc" },
     ];
     return {
       imageBaseUrl: process.env.imageBaseUrl,
       modal: false,
       sortItems: sortItems,
-      sort: sortItems[0]
+      sort: sortItems[0],
     };
-  }
+  },
 };
 // async getProducts(params) {
 //   let client = this.$apollo.getClient();

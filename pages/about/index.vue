@@ -10,7 +10,7 @@
       <v-container class="py-12" grid-list-lg>
         <v-row>
           <v-col cols="12">
-            <div v-html="$md.render(page.content)"></div>
+            <div v-html="page.content"></div>
           </v-col>
         </v-row>
       </v-container>
@@ -26,7 +26,7 @@ import gql from "graphql-tag";
 export default {
   head() {
     return {
-      title: "О компании"
+      title: "О компании",
     };
   },
   components: { PageHeader },
@@ -36,13 +36,13 @@ export default {
       breadrumbs: [
         {
           to: "/",
-          text: "Главная"
+          text: "Главная",
         },
         {
           to: "/contacts",
-          text: "Контакты"
-        }
-      ]
+          text: "Контакты",
+        },
+      ],
     };
   },
   async asyncData(ctx) {
@@ -56,13 +56,13 @@ export default {
             content
           }
         }
-      `
+      `,
     });
 
     return {
-      page: pageData.pages[0]
+      page: pageData.pages[0],
     };
-  }
+  },
 };
 </script>
 

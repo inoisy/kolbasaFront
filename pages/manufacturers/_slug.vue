@@ -24,13 +24,8 @@
       class="background background-repeat"
       v-lazy:background-image="require('~/assets/img/bg.jpg')"
     >
-      <v-container grid-list-lg class="py-12">
-        <div v-if="isContent" class="mb-6 content-wrapper">
-          <div class="flex xs12" v-html="isContent ? $md.render(manufacturer.content) : ''"></div>
-          <v-divider class="mt-3" v-show="categories.length>0"></v-divider>
-        </div>
-
-        <v-layout row wrap v-for="(category,index) of categories" :key="category.id" class="mb-0">
+      <v-container grid-list-lg class="pt-10 pb-7">
+        <v-layout row wrap v-for="(category,index) of categories" :key="category.id" class="mb-5">
           <h2 class="display-flex align-center wrap xs12 mb-3 flex">
             <nuxt-link
               :to="`/catalog/${category.item.slug}?manufacturer=${manufacturer.slug}`"
@@ -50,11 +45,19 @@
               :to="`/manufacturers/${manufacturer.slug}/${product.slug}`"
             ></product-card>
           </div>
-          <v-flex xs12>
+          <!-- <v-flex xs12 v-if="index !== categories.length-1">
             <v-divider class="mt-3 mb-1"></v-divider>
-          </v-flex>
+          </v-flex>-->
         </v-layout>
       </v-container>
+      <section class="content-wrapper grey lighten-4">
+        <v-container grid-list-lg class="py-10">
+          <div v-if="isContent" class="content-wrapper">
+            <div class="flex xs12" v-html="isContent ? manufacturer.content : ''"></div>
+            <!-- <v-divider class="mt-3" v-show="categories.length>0"></v-divider> -->
+          </div>
+        </v-container>
+      </section>
     </div>
   </div>
 </template>
@@ -70,14 +73,14 @@ export default {
         {
           hid: "description",
           name: "description",
-          content: this.manufacturer.description
-        }
-      ]
+          content: this.manufacturer.description,
+        },
+      ],
     };
   },
   data() {
     return {
-      imageBaseUrl: process.env.imageBaseUrl
+      imageBaseUrl: process.env.imageBaseUrl,
     };
   },
   async asyncData({ store, params, error, $axios }) {
@@ -86,14 +89,14 @@ export default {
       return error({
         statusCode: 404,
         message: "Производитель не найден",
-        type: "manufacturer"
+        type: "manufacturer",
       });
     }
     return {
       manufacturer: await store.dispatch("fetchManufacturer", manufacturer.id),
       categories: (
         await $axios.get(`/products/byManufacturer/` + manufacturer.id)
-      ).data
+      ).data,
     };
   },
   components: { PageHeader, ProductCard },
@@ -105,21 +108,21 @@ export default {
       const items = [
         {
           to: "/",
-          text: "Главная"
+          text: "Главная",
         },
         {
           to: "/manufacturers",
-          text: "Производители"
+          text: "Производители",
         },
         {
           to: `/manufacturers/${this.manufacturer.slug}`,
-          text: this.manufacturer.name
-        }
+          text: this.manufacturer.name,
+        },
       ];
       this.$store.commit("breadcrumbs", items);
       return items;
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -183,7 +183,7 @@
               </p>
             </div>
           </div>
-          <div v-if="product.content" class="content-wrapper" v-html="$md.render(product.content)"></div>
+          <div v-if="product.content" class="content-wrapper" v-html="product.content"></div>
         </v-flex>
       </v-layout>
       <div v-show="!showProductCard" class="pb-6 pt-6 mx-auto">
@@ -219,8 +219,8 @@ export default {
   components: { ContactForm, ProductQuantity, ProductCard, ImageDialog },
   props: {
     product: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   beforeDestroy() {
     this.closeDialog();
@@ -266,7 +266,7 @@ export default {
     breadcrumbs() {
       return [
         ...this.$store.state.sessionStorage.breadcrumbs,
-        { to: this.$route.path, text: this.product.name }
+        { to: this.$route.path, text: this.product.name },
       ];
     },
     manufacturer() {
@@ -274,7 +274,7 @@ export default {
     },
     busket() {
       const index = this.$store.state.localStorage.basket.findIndex(
-        item => item.id === this.product.id
+        (item) => item.id === this.product.id
       );
       return index >= 0
         ? this.$store.state.localStorage.basket[index].count
@@ -289,20 +289,20 @@ export default {
       const relatedProducts = this.product.relatedProducts || [];
       const productsRelated = this.product.productsRelated || [];
       return [...relatedProducts, ...productsRelated].filter(
-        item => item.priceNum
+        (item) => item.priceNum
       );
-    }
+    },
   },
   watch: {
     showProductCard(val) {
       this.$emit("hanleOneClickBuy", val);
-    }
+    },
   },
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl,
       showProductCard: true,
-      dialogImg: false
+      dialogImg: false,
     };
   },
   methods: {
@@ -326,8 +326,8 @@ export default {
         this.product,
         this.product.minimumOrder
       );
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="stylus" scoped >

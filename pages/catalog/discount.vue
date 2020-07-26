@@ -9,7 +9,7 @@
       <v-container grid-list-lg class="py-12">
         <v-layout row wrap v-if="page && page.content">
           <div>
-            <v-flex class="content" v-if="page.content" v-html="$md.render(page.content)"></v-flex>
+            <v-flex class="content" v-if="page.content" v-html="page.content"></v-flex>
             <v-btn
               v-if="page.file"
               class="ml-0"
@@ -46,7 +46,7 @@ import ProductCard from "~/components/ProductCard";
 export default {
   head() {
     return {
-      title: this.title
+      title: this.title,
     };
   },
   computed: {
@@ -54,18 +54,18 @@ export default {
       return [
         {
           to: "/",
-          text: "Главная"
+          text: "Главная",
         },
         {
           to: "/catalog",
-          text: "Каталог"
+          text: "Каталог",
         },
         {
           to: this.$route.path,
-          text: this.title
-        }
+          text: this.title,
+        },
       ];
-    }
+    },
   },
 
   components: { ProductCard, PageHeader },
@@ -116,13 +116,13 @@ export default {
             }
           }
         }
-      `
+      `,
     });
     return {
       categories: categoryData.categories.filter(
-        item => item.products && item.products.length > 0
+        (item) => item.products && item.products.length > 0
       ),
-      page: categoryData.pages[0]
+      page: categoryData.pages[0],
     };
   },
   methods: {
@@ -134,14 +134,14 @@ export default {
       // });
       // // console.log("handleClose -> products", products.length);
       // this.products = products;
-    }
+    },
   },
   data() {
     return {
       title: "Акционная продукция",
-      imageBaseUrl: process.env.imageBaseUrl
+      imageBaseUrl: process.env.imageBaseUrl,
     };
-  }
+  },
 };
 </script>
 
