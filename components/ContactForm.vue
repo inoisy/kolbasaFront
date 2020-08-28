@@ -173,7 +173,7 @@ export default {
           user: this.userID,
           summa: this.$store.getters.summa,
           // REMOVE
-          isTest: true,
+          // isTest: true,
         });
         this.loading = false;
         if (req.status === 200) {
