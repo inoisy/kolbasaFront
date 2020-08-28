@@ -150,6 +150,7 @@ module.exports = {
   ],
 
   modules: [
+    'cookie-universal-nuxt',
     '@nuxtjs/sentry',
     'nuxt-vuex-localstorage',
     ['@nuxtjs/google-analytics', {

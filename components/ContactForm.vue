@@ -83,30 +83,42 @@ import {
   maxLength,
   minLength,
   email,
-  alpha
+  alpha,
 } from "vuelidate/lib/validators";
 export default {
   props: {
     productName: {
       type: String,
-      default: ""
+      default: "",
     },
     oneClickBuy: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   mixins: [validationMixin],
   directives: {
-    mask
+    mask,
   },
   validations: {
     name: { required, maxLength: maxLength(35), minLength: minLength(3) },
     phone: { required, minLength: minLength(10), maxLength: maxLength(19) },
-    email: { email }
+    email: { email },
   },
-  data: function() {
-    const user = this.$store.state.localStorage.user;
+  data: function () {
+    let user; // = this.$store.state.localStorage.user;
+    if (this.$store.getters["auth/isLogined"]) {
+      const getUser = this.$store.getters["auth/getUser"];
+      user = {
+        name: getUser.firstname,
+        phone: getUser.phone,
+        email: getUser.email,
+        address: "",
+        id: getUser.id,
+      };
+    } else {
+      user = this.$store.state.localStorage.user;
+    }
     return {
       formSuccess: false,
       formError: false,
@@ -114,9 +126,10 @@ export default {
       phone: user.phone,
       address: user.address,
       email: user.email,
+      userID: user.id,
       message: "",
       mask: "+7 (###) ### - ####",
-      loading: false
+      loading: false,
     };
   },
   methods: {
@@ -131,11 +144,18 @@ export default {
     async submit() {
       this.$v.$touch();
       if (this.$v.$anyError) return;
-
-      const busketObj = this.$store.state.localStorage.basket.map(item => {
+      // console.log("submit -> busket", this.$store.state.localStorage.basket);
+      const busketObj = this.$store.state.localStorage.basket.map((item) => {
         return {
           name: item.name,
-          count: item.count
+          qty: item.count,
+          id: item.id,
+          price: item.isDiscount
+            ? Math.round(item.discountPrice)
+            : Math.round(item.priceNum),
+          priceAll: item.isDiscount
+            ? Math.round(item.discountPrice * item.count)
+            : Math.round(item.priceNum * item.count),
         };
       });
       // console.log("submit -> busket", busketObj);
@@ -149,18 +169,24 @@ export default {
           phone: this.phone,
           message: this.message,
           address: this.address,
-          email: this.email
+          email: this.email,
+          user: this.userID,
+          summa: this.$store.getters.summa,
+          // REMOVE
+          isTest: true,
         });
         this.loading = false;
         if (req.status === 200) {
-          this.$store.commit("saveBasket");
+          // this.$store.commit("saveBasket");
+          if (!this.$store.getters["auth/isLogined"]) {
+            this.$store.commit("setUserData", {
+              name: this.name,
+              phone: this.phone,
+              address: this.address,
+              email: this.email,
+            });
+          }
 
-          this.$store.commit("setUserData", {
-            name: this.name,
-            phone: this.phone,
-            address: this.address,
-            email: this.email
-          });
           this.formSuccess = true;
           if (window.yaCounter54918895) {
             window.yaCounter54918895.reachGoal("order");
@@ -179,9 +205,18 @@ export default {
         this.formError = true;
         this.clear();
       }
-    }
+    },
   },
   computed: {
+    //  isLogined() {
+    //   return this.$store.getters["auth/isLogined"];
+    // },
+    // userData() {
+    //   return (
+    //     this.$store.getters["auth/isLogined"] &&
+    //     this.$store.getters["auth/getUser"]
+    //   );
+    // },
     submitDisabled() {
       return !this.name || !this.phone || this.$v.$anyError;
     },
@@ -206,7 +241,7 @@ export default {
       if (!this.$v.email.$dirty) return errors;
       !this.$v.email.email && errors.push("Введите корректный email");
       return errors;
-    }
-  }
+    },
+  },
 };
 </script>

@@ -1,6 +1,11 @@
 <template>
   <v-app>
-    <toolbar :menuItems="menuItems" @showDrawer="drawer = true" @showBasket="basketDrawer=true" />
+    <toolbar
+      :menuItems="menuItems"
+      @show-user="userDrawer=true"
+      @show-drawer="drawer = true"
+      @show-basket="basketDrawer=true"
+    />
     <navigation-mobile
       :menuItems="menuItems"
       :drawer="drawer"
@@ -10,6 +15,9 @@
       <nuxt />
     </v-main>
     <my-footer class="pos-relative" :menuItems="menuItems" />
+    <v-navigation-drawer v-model="userDrawer" temporary fixed right width="550px">
+      <user @close="userDrawer=false" />
+    </v-navigation-drawer>
     <client-only>
       <v-navigation-drawer v-model="basketDrawer" temporary fixed right width="550px">
         <busket @close="basketDrawer=false" />
@@ -50,16 +58,17 @@ import Toolbar from "~/components/Toolbar";
 import NavigationMobile from "~/components/NavigationMobile";
 import MyFooter from "~/components/Footer";
 import Busket from "~/components/Busket";
+import User from "~/components/User";
 
 export default {
-  components: { Toolbar, NavigationMobile, MyFooter, Busket },
+  components: { Toolbar, NavigationMobile, MyFooter, Busket, User },
   name: "default",
   computed: {
     menuItems() {
       return [
         {
           name: "Главная",
-          to: "/"
+          to: "/",
         },
         {
           name: "Каталог",
@@ -67,34 +76,35 @@ export default {
           items: [
             ...this.$store.getters.getParentCategories,
             { name: "Акционная продукция", slug: "discount" },
-            { name: "Халяльная продукция", slug: "halal" }
-          ]
+            { name: "Халяльная продукция", slug: "halal" },
+          ],
         },
         {
           name: "Производители",
           to: "/manufacturers",
-          items: this.$store.state.sessionStorage.generalInfo.manufacturers
+          items: this.$store.state.sessionStorage.generalInfo.manufacturers,
         },
         {
           name: "О компании",
-          to: "/about"
+          to: "/about",
         },
         {
           name: "Доставка",
-          to: "/delivery"
+          to: "/delivery",
         },
         {
           name: "Контакты",
-          to: "/contacts"
-        }
+          to: "/contacts",
+        },
       ];
-    }
+    },
   },
   data() {
     return {
       drawer: false,
-      basketDrawer: false
+      basketDrawer: false,
+      userDrawer: false,
     };
-  }
+  },
 };
 </script>

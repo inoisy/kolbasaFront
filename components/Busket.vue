@@ -131,7 +131,9 @@
           <tr v-for="(item,index) in basket" :key="`busket-item-${index}`">
             <td class="text-left pl-0">{{ item.name }}</td>
             <td class="text-center">{{ Math.round(item.count)}}</td>
-            <td class="text-center">{{ item.priceNum }}</td>
+            <td
+              class="text-center"
+            >{{ item.isDiscount ? Math.round(item.discountPrice*item.count) : Math.round(item.priceNum*item.count) }}</td>
           </tr>
           <tr>
             <td class></td>
@@ -204,7 +206,7 @@ export default {
     return {
       imageBaseUrl: process.env.imageBaseUrl,
       offer: false,
-      cart: {}
+      cart: {},
     };
   },
   watch: {
@@ -212,7 +214,7 @@ export default {
       if (this.basket.length === 0) {
         this.basketClose();
       }
-    }
+    },
   },
   methods: {
     basketClose() {
@@ -226,7 +228,7 @@ export default {
     },
     async deleteFromBasket(event, id) {
       await this.$store.commit("deleteFromBasket", id);
-    }
+    },
   },
   computed: {
     summa() {
@@ -240,8 +242,8 @@ export default {
     },
     basket() {
       return this.$store.state.localStorage.basket;
-    }
-  }
+    },
+  },
 };
 </script>
 

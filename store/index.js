@@ -16,15 +16,16 @@ export const mutations = {
     let product = state.localStorage.basket.find((product) => product.id === id);
     product.count += product.minimumOrder
   },
-  addToBasket(state, product, qty) {
-    // console.log("addToBasket -> qty", qty)
-    let cartProduct = state.localStorage.basket.find((item) => item.id === product.id);
+  addToBasket(state, product) {
+    // console.log("addToBasket -> qty", product.qty)
+    const qty = product.qty || 1
+    let cartProduct = state.localStorage.basket.find((item) => item.id === (product.id || product._id));
     if (cartProduct) {
-      cartProduct.count += cartProduct.minimumOrder;
+      cartProduct.count += cartProduct.minimumOrder * qty;
     } else {
       state.localStorage.basket.push({
         ...product,
-        count: product.minimumOrder
+        count: product.minimumOrder * qty
       })
     }
   },
@@ -60,9 +61,9 @@ export const mutations = {
       state.localStorage.basket.splice(cartProductIndex, 1);
     }
   },
-  saveBasket(state) {
-    state.localStorage.basketStory.unshift(state.localStorage.basket)
-  },
+  // saveBasket(state) {
+  //   state.localStorage.basketStory.unshift(state.localStorage.basket)
+  // },
   setUserData(state, data) {
     state.localStorage.user = data
   }
@@ -129,6 +130,19 @@ export const getters = {
 }
 export const actions = {
   async nuxtServerInit(state, ctx) {
+    const user = ctx.$cookies.get('user')
+    // console.log("nuxtServerInit -> user", user)
+    if (user) {
+      // console.log("nuxtServerInit -> user", user)
+      await state.commit("auth/setUserData", user)
+    }
+    const jwt = ctx.$cookies.get('jwt')
+    // console.log("nuxtServerInit -> jwt", jwt)
+    if (jwt) {
+      // console.log("nuxtServerInit -> user", user)
+      await state.commit("auth/setJWT", jwt)
+    }
+
 
     if (ctx.isDev) {
       const query = gql `

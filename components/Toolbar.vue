@@ -135,7 +135,7 @@
         </template>
         <client-only>
           <v-btn
-            @click="$emit('showBasket')"
+            @click="$emit('show-basket')"
             :disabled="!isBasket"
             class="cart-wrap header-link"
             color="#95282a"
@@ -154,7 +154,10 @@
             </v-badge>
           </v-btn>
         </client-only>
-        <v-btn icon class="ml-1 hidden-md-and-up" @click="$emit('showDrawer')" large title="Меню">
+        <v-btn @click="$emit('show-user')" icon class="ml-1" large title="Меню пользователя">
+          <v-icon medium color="#95282a">person</v-icon>
+        </v-btn>
+        <v-btn @click="$emit('show-drawer')" icon class="ml-1 hidden-md-and-up" large title="Меню">
           <v-icon medium color="#95282a">menu</v-icon>
         </v-btn>
       </div>
@@ -310,21 +313,21 @@ export default {
       extraInfo: [
         {
           text: "РАБОТАЕМ ДЛЯ ВАС",
-          img: require("~/assets/icons/interface.svg")
+          img: require("~/assets/icons/interface.svg"),
         },
         {
           text: "ДОСТАВИМ БЕСПЛАТНО",
-          img: require("~/assets/icons/commerce-and-shopping.svg")
+          img: require("~/assets/icons/commerce-and-shopping.svg"),
         },
         {
           text: "ЗА ОДИН ДЕНЬ",
-          img: require("~/assets/icons/fast-delivery.svg")
+          img: require("~/assets/icons/fast-delivery.svg"),
         },
         {
           text: "С СОБЛЮДЕНИЕМ ВСЕХ САНИТАРНЫХ НОРМ",
-          img: require("~/assets/icons/guard.svg")
-        }
-      ]
+          img: require("~/assets/icons/guard.svg"),
+        },
+      ],
     };
   },
   computed: {
@@ -352,7 +355,7 @@ export default {
         this.$store.state.sessionStorage.generalInfo.contacts
         ? this.$store.state.sessionStorage.generalInfo.contacts.phone
         : "";
-    }
+    },
   },
   methods: {
     onScroll() {
@@ -361,7 +364,7 @@ export default {
       } else {
         this.hideExtra = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>
