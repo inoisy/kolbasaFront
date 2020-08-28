@@ -33,16 +33,22 @@
       style="width: 100%"
       title="Войти"
     >Войти</v-btn>
-    <!-- <v-btn
-      class="mt-3"
+    <v-btn
+      class="my-3"
       @click="forgotPassword"
       large
       outlined
       :disabled="!!emailErrors.length"
-      :loading="loading"
+      :loading="forgotLoading"
       style="width: 100%"
       title="Войти"
-    >забыли пароль?</v-btn>-->
+    >забыли пароль?</v-btn>
+    <v-alert type="error" v-if="forgotError" dismissible>{{errorMessage}}</v-alert>
+    <v-alert
+      type="success"
+      v-if="forgotSuccess"
+      dismissible
+    >Ссылка для восстановления пароля отправлена!</v-alert>
   </v-form>
 </template>
 <script>
@@ -79,6 +85,10 @@ export default {
       password: "",
       showPass: false,
       valid: false,
+      forgotLoading: false,
+      forgotError: false,
+      forgotSuccess: false,
+      errorMessage: "",
     };
   },
   computed: {
@@ -118,13 +128,29 @@ export default {
       console.log("login -> this.$v", this.$v.email.$error);
       if (this.$v.email.$error) return;
       console.log("forgotPassword -> this.email", this.email);
-
-      const response = await this.$axios.post(
-        process.env.baseUrl + "/auth/forgot-password",
-        {
+      this.forgotLoading = true;
+      const response = await this.$axios
+        .post(process.env.baseUrl + "/auth/forgot-password", {
           email: this.email,
-        }
-      );
+        })
+        .then((response) => {
+          // console.log("Your user's password has been reset.");
+          // this.$store.dispatch("auth/setUser", response.data);
+          this.forgotLoading = false;
+          this.forgotSuccess = true;
+        })
+        .catch((error) => {
+          console.log("An error occurred:", error.response);
+          try {
+            this.errorMessage =
+              error.response.data.message[0].messages[0].message;
+          } catch (error) {
+            console.log("send -> error", error);
+          }
+          this.forgotError = true;
+          // console.log("register -> message", message);
+          this.forgotLoading = false;
+        });
 
       console.log("forgotPassword -> response", response);
     },
@@ -142,14 +168,6 @@ export default {
         );
         if (response.status === 200) {
           this.$store.dispatch("auth/setUser", response.data);
-
-          // console.log("login -> response.data", response.data);
-          // await this.$cookies.set("userData", response.data, {
-          //   path: "/",
-          //   maxAge: 60 * 60 * 24 * 365,
-          // });
-          // const user = await this.app.$cookies.get("userData");
-          // console.log("login -> user", user);
         }
       } catch (err) {
         console.log("login -> err", err);

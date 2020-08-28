@@ -67,7 +67,9 @@
       :loading="loading"
       style="width: 100%"
       title="Подтвердить"
+      class="mb-3"
     >Зарегистрироваться</v-btn>
+    <v-alert type="error" v-if="error" dismissible>{{errorMessage}}</v-alert>
   </v-form>
 </template>
 <script>
@@ -115,6 +117,8 @@ export default {
       errMail: "",
       errName: "",
       valid: false,
+      errorMessage: null,
+      error: false,
     };
   },
   computed: {
@@ -182,49 +186,58 @@ export default {
       this.$v.$touch();
       if (this.$v.$anyError) return;
       this.loading = true;
-      try {
-        const response = await this.$axios.post(
-          process.env.baseUrl + "/auth/local/register",
-          {
-            username: this.email,
-            phone: this.phone,
-            email: this.email,
-            password: this.password,
-            firstname: this.name,
-          }
-        );
-        console.log("register -> response", response.data);
-
-        // this.setUser(response.user)
-        if (response.status === 200) {
-          this.$store.commit("auth/setUser", response.data);
+      const response = await this.$axios
+        .post(process.env.baseUrl + "/auth/local/register", {
+          username: this.email,
+          phone: this.phone,
+          email: this.email,
+          password: this.password,
+          firstname: this.name,
+        })
+        .then((response) => {
+          this.$store.dispatch("auth/setUser", response.data);
           this.errMail = false;
           this.errName = false;
           this.formSuccess = true;
-        }
-        // console.log("register -> response", response);
-      } catch (error) {
-        console.log("register -> error", error);
-        try {
-          if (error.response) {
-            const message = error.response.data.message[0].messages[0].message;
-            console.log("register -> message", message);
-            if (message === "Email is already taken.") {
-              this.errMail = true;
-            } else if (message === "Username already taken") {
-              this.errName = true;
-            }
+          this.loading = false;
+        })
+        .catch((error) => {
+          this.error = true;
+          this.errorMessage =
+            error.response.data.message[0].messages[0].message;
+          // console.log("register -> message", this.errorMessage);
+          if (this.errorMessage === "Email is already taken.") {
+            this.errMail = true;
+          } else if (this.errorMessage === "Username already taken") {
+            this.errName = true;
           }
+          this.loading = false;
+        });
+      // try {
 
-          this.loading = false;
-          // "Email is already taken."
-        } catch (error) {
-          console.log("register -> error", error);
-          this.loading = false;
-        }
-        this.loading = false;
-      }
-      this.loading = false;
+      //   // console.log("register -> response", response.data);
+
+      //   // this.setUser(response.user)
+      //   if (response.status === 200) {
+
+      //   }
+      //   // console.log("register -> response", response);
+      // } catch (error) {
+      //   console.log("register -> error", error);
+      //   try {
+      //     if (error.response) {
+
+      //     }
+
+      //     this.loading = false;
+      //     // "Email is already taken."
+      //   } catch (error) {
+      //     console.log("register -> error", error);
+      //     this.loading = false;
+      //   }
+      //   this.loading = false;
+      // }
+      // this.loading = false;
     },
   },
 };
