@@ -1,6 +1,5 @@
 <template>
   <v-form v-model="valid">
-    <!-- {{valid}} -->
     <v-text-field
       class="xs12 py-0 flex"
       v-model="email"
@@ -22,7 +21,6 @@
       @click:append="showPass = !showPass"
       :type="showPass ? 'text' : 'password'"
     ></v-text-field>
-
     <v-btn
       class
       color="accent"
@@ -43,7 +41,11 @@
       style="width: 100%"
       title="Войти"
     >забыли пароль?</v-btn>
-    <v-alert type="error" v-if="forgotError" dismissible>{{errorMessage}}</v-alert>
+    <v-alert
+      type="error"
+      v-if="(loginError || forgotError) && errorMessage"
+      dismissible
+    >{{errorMessage}}</v-alert>
     <v-alert
       type="success"
       v-if="forgotSuccess"
@@ -75,7 +77,6 @@ export default {
     },
   },
   data: function () {
-    // const user = this.$store.state.localStorage.user;
     return {
       formSuccess: false,
       formError: false,
@@ -89,6 +90,7 @@ export default {
       forgotError: false,
       forgotSuccess: false,
       errorMessage: "",
+      loginError: false,
     };
   },
   computed: {
@@ -99,7 +101,6 @@ export default {
       return this.isLogined && this.$store.getters["auth/getUser"];
     },
     submitDisabled() {
-      console.log("submitDisabled -> this.$v.$anyError", this.$v.$anyError);
       return this.$v.$anyError;
     },
 
@@ -115,7 +116,6 @@ export default {
     passwordErrors() {
       const errors = [];
       if (!this.$v.password.$dirty) return errors;
-      //   console.log(this.$v.password);
       !this.$v.password.required && errors.push("Введите пароль");
       !this.$v.password.minLength &&
         errors.push("Минимальная длина пароля - 6 символов");
@@ -125,22 +125,19 @@ export default {
   methods: {
     async forgotPassword() {
       this.$v.email.$touch();
-      console.log("login -> this.$v", this.$v.email.$error);
       if (this.$v.email.$error) return;
-      console.log("forgotPassword -> this.email", this.email);
       this.forgotLoading = true;
       const response = await this.$axios
         .post(process.env.baseUrl + "/auth/forgot-password", {
           email: this.email,
         })
         .then((response) => {
-          // console.log("Your user's password has been reset.");
-          // this.$store.dispatch("auth/setUser", response.data);
           this.forgotLoading = false;
           this.forgotSuccess = true;
+          this.forgotError = false;
+          this.errorMessage = null;
         })
         .catch((error) => {
-          console.log("An error occurred:", error.response);
           try {
             this.errorMessage =
               error.response.data.message[0].messages[0].message;
@@ -148,32 +145,36 @@ export default {
             console.log("send -> error", error);
           }
           this.forgotError = true;
-          // console.log("register -> message", message);
           this.forgotLoading = false;
         });
-
-      console.log("forgotPassword -> response", response);
     },
     async login() {
       this.$v.$touch();
       if (this.$v.$anyError) return;
       this.loading = true;
-      try {
-        const response = await this.$axios.post(
-          process.env.baseUrl + "/auth/local",
-          {
-            identifier: this.email,
-            password: this.password,
+      await this.$axios
+        .post(process.env.baseUrl + "/auth/local", {
+          identifier: this.email,
+          password: this.password,
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$store.dispatch("auth/setUser", response.data);
+            this.loginError = false;
+            this.errorMessage = null;
           }
-        );
-        if (response.status === 200) {
-          this.$store.dispatch("auth/setUser", response.data);
-        }
-      } catch (err) {
-        console.log("login -> err", err);
-        this.loading = false;
-      }
-      this.loading = false;
+        })
+        .catch((error) => {
+          this.loginError = true;
+          this.loading = false;
+
+          try {
+            this.errorMessage =
+              error.response.data.message[0].messages[0].message;
+          } catch (error) {
+            console.log("send -> error", error);
+          }
+        });
     },
   },
 };

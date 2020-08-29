@@ -1,9 +1,5 @@
 <template>
   <v-form v-model="valid">
-    <!-- {{valid}} -->
-    <!-- <div>
-      <v-btn class="accent" @click="$store.commit('auth/logout')">Выйти</v-btn>
-    </div>-->
     <v-text-field
       class="xs12 py-0 flex"
       v-model="name"
@@ -162,7 +158,6 @@ export default {
     passwordErrors() {
       const errors = [];
       if (!this.$v.password.$dirty) return errors;
-      //   console.log(this.$v.password);
       !this.$v.password.required && errors.push("Введите пароль");
       !this.$v.password.minLength &&
         errors.push("Минимальная длина пароля - 6 символов");
@@ -171,7 +166,6 @@ export default {
     repeatPasswordErrors() {
       const errors = [];
       if (!this.$v.repeatPassword.$dirty) return errors;
-      //   console.log("repeatPassword", this.$v.repeatPassword);
       !this.$v.repeatPassword.required && errors.push("Повторите пароль");
       !this.$v.repeatPassword.sameAsPassword &&
         errors.push("Пароли не совпадают");
@@ -200,12 +194,13 @@ export default {
           this.errName = false;
           this.formSuccess = true;
           this.loading = false;
+          this.errorMessage = null;
+          this.error = false;
         })
         .catch((error) => {
           this.error = true;
           this.errorMessage =
             error.response.data.message[0].messages[0].message;
-          // console.log("register -> message", this.errorMessage);
           if (this.errorMessage === "Email is already taken.") {
             this.errMail = true;
           } else if (this.errorMessage === "Username already taken") {
@@ -213,31 +208,6 @@ export default {
           }
           this.loading = false;
         });
-      // try {
-
-      //   // console.log("register -> response", response.data);
-
-      //   // this.setUser(response.user)
-      //   if (response.status === 200) {
-
-      //   }
-      //   // console.log("register -> response", response);
-      // } catch (error) {
-      //   console.log("register -> error", error);
-      //   try {
-      //     if (error.response) {
-
-      //     }
-
-      //     this.loading = false;
-      //     // "Email is already taken."
-      //   } catch (error) {
-      //     console.log("register -> error", error);
-      //     this.loading = false;
-      //   }
-      //   this.loading = false;
-      // }
-      // this.loading = false;
     },
   },
 };
