@@ -6,13 +6,12 @@
       height="calc(100vh - 106px)"
       hide-delimiter-background
       show-arrows-on-hover
+      interval="10000"
     >
       <v-carousel-item
         v-for="(item, i) in sliders"
         :key="`main-slide-${i}`"
-        :src="imageBaseUrl+item.img.url"
-        interval="8000"
-        style
+        :src="imageBaseUrl + item.img.url"
       >
         <v-container fill-height class="main-content py-12 ma-auto">
           <v-layout align-center>
@@ -25,7 +24,11 @@
               xl6
               class="text-xs-left justify-center column white--text"
             >
-              <h2 style class="header lumber font-weight-medium mb-8" v-text="item.header" />
+              <h2
+                style
+                class="header lumber font-weight-medium mb-8"
+                v-text="item.header"
+              />
               <div class="subheader mb-8 lumber" v-html="item.content" />
               <v-btn
                 v-if="item.buttontext"
@@ -36,7 +39,8 @@
                 color="accent"
                 dark
                 :title="item.buttontext"
-              >{{item.buttontext}}</v-btn>
+                >{{ item.buttontext }}</v-btn
+              >
             </v-flex>
           </v-layout>
         </v-container>
@@ -46,9 +50,18 @@
     <div
       class="background"
       v-lazy:background-image="require('~/assets/img/bg.jpg')"
-      style="background-color: #f0f0f0; background-repeat: repeat; background-size: 100%;"
+      style="
+        background-color: #f0f0f0;
+        background-repeat: repeat;
+        background-size: 100%;
+      "
     >
-      <v-container grid-list-lg class="py-10" style="min-height: 100vh" id="content-wrapper">
+      <v-container
+        grid-list-lg
+        class="py-10"
+        style="min-height: 100vh"
+        id="content-wrapper"
+      >
         <div class="mb-5 pb-4 align-center d-flex column">
           <v-btn
             color="accent"
@@ -61,10 +74,10 @@
           >
             <h2 class="primary--text lumber fs-2">Каталог</h2>
           </v-btn>
-          <template v-for="(item,i) in categories">
+          <template v-for="(item, i) in categories">
             <div
               data-aos="zoom-in"
-              v-if="item.children.length===0"
+              v-if="item.children.length === 0"
               class="flex xs6 sm6 md4 lg3"
               :key="item.id"
             >
@@ -74,7 +87,7 @@
               v-else
               :key="item.id"
               class="layout row wrap justify-center mt-4 pt-3 pb-1 w-100"
-              style="border: 1px solid #8b8b8b; border-radius: 10px;"
+              style="border: 1px solid #8b8b8b; border-radius: 10px"
             >
               <div class="flex xs12 text-center">
                 <v-btn
@@ -86,7 +99,9 @@
                   class="lumber font-weight-medium mb-0"
                   :title="item.name"
                 >
-                  <h3 class="primary--text lumber" style="font-size: 1.4rem">{{item.name}}</h3>
+                  <h3 class="primary--text lumber" style="font-size: 1.4rem">
+                    {{ item.name }}
+                  </h3>
                 </v-btn>
               </div>
               <div
@@ -145,28 +160,30 @@
           </div>
           <v-flex xs10 md8 lg9 class="d-flex mb-5">
             <div class="my-auto">
-              <h1
-                class="bottom-header d-block mb-6"
-                data-aos="fade-up"
-              >Колбаса оптом по самым выгодным для наших парнеров ценам.</h1>
-              <div
-                class="bottom-text"
-                data-aos="fade-up"
-              >Одним из ключевых направлений маркетинговой политики компании Альянс Фуд является создание, поддержание и развитие взаимовыгодных партнерских отношений. Почти четверть века мы находимся на ведущих ролях в сфере торговли готовой мясной продукцией.</div>
+              <h1 class="bottom-header d-block mb-6" data-aos="fade-up">
+                Колбаса оптом по самым выгодным для наших парнеров ценам.
+              </h1>
+              <div class="bottom-text" data-aos="fade-up">
+                Одним из ключевых направлений маркетинговой политики компании
+                Альянс Фуд является создание, поддержание и развитие
+                взаимовыгодных партнерских отношений. Почти четверть века мы
+                находимся на ведущих ролях в сфере торговли готовой мясной
+                продукцией.
+              </div>
             </div>
           </v-flex>
         </div>
         <div class="layout row wrap align-center justify-center pb-4">
           <div class="xs10 md8 lg9 flex d-flex">
             <div class="my-auto">
-              <h2
-                class="bottom-header d-block mb-6"
-                data-aos="fade-up"
-              >Доверяя нам – вы выбираете качество</h2>
-              <div
-                class="bottom-text mb-6"
-                data-aos="fade-up"
-              >Для нас не имеет значения статус наших партнеров на рынке или величина их годового товарооборота: со всеми компаньонами мы строим ровные, доверительные отношения.</div>
+              <h2 class="bottom-header d-block mb-6" data-aos="fade-up">
+                Доверяя нам – вы выбираете качество
+              </h2>
+              <div class="bottom-text mb-6" data-aos="fade-up">
+                Для нас не имеет значения статус наших партнеров на рынке или
+                величина их годового товарооборота: со всеми компаньонами мы
+                строим ровные, доверительные отношения.
+              </div>
             </div>
           </div>
           <div class="flex hidden-sm-and-down md4 lg3" data-aos="fade-up">
@@ -189,15 +206,20 @@
         <section class="flex ma-auto">
           <div class="benefits bottom-text layout row wrap" data-aos="fade-up">
             <div class="flex offset-xs1 xs10 md12">
-              <h2 class="bottom-header text-center primary--text mb-6">Наши преимущества</h2>
-              <p
-                class="text-center primary--text lumber mb-6 fs-1-3"
-              >После первого шага, сделанного навстречу будущему сотрудничеству, вы убедитесь, насколько выгодны и комфортны для развития вашего бизнеса условия, предоставленные нашей организацией.</p>
+              <h2 class="bottom-header text-center primary--text mb-6">
+                Наши преимущества
+              </h2>
+              <p class="text-center primary--text lumber mb-6 fs-1-3">
+                После первого шага, сделанного навстречу будущему
+                сотрудничеству, вы убедитесь, насколько выгодны и комфортны для
+                развития вашего бизнеса условия, предоставленные нашей
+                организацией.
+              </p>
             </div>
             <div
               class="flex offset-xs1 xs10 offset-md0 md6 lg4 display-flex"
-              v-for="(item,index) in benefits"
-              :key="'benefit'+index"
+              v-for="(item, index) in benefits"
+              :key="'benefit' + index"
             >
               <div class="img-wrapper">
                 <img
@@ -205,12 +227,14 @@
                   class="d-block pt-1"
                   :alt="`Купить колбасу оптом ${item.header}`"
                   :title="item.header"
-                  style="width: 3.5rem;min-width: 3.5rem"
+                  style="width: 3.5rem; min-width: 3.5rem"
                 />
               </div>
               <div class="pl-3">
-                <h4 class="lumber font-weight-bold mb-2">{{item.header}}</h4>
-                <div class="lumber" style="font-size: 1rem">{{item.text}}</div>
+                <h4 class="lumber font-weight-bold mb-2">{{ item.header }}</h4>
+                <div class="lumber" style="font-size: 1rem">
+                  {{ item.text }}
+                </div>
               </div>
             </div>
           </div>
@@ -225,11 +249,27 @@
         <div class="layout row wrap align-center justify-center pt-5">
           <v-flex xs10 md8 class="d-flex mb-5">
             <div class="my-auto">
-              <h2 class="bottom-header mb-6 d-block" data-aos="fade-up">Халяльная продукция оптом.</h2>
+              <h2 class="bottom-header mb-6 d-block" data-aos="fade-up">
+                Халяльная продукция оптом.
+              </h2>
               <div class="lumber" data-aos="fade-up">
-                <p>Халяль&nbsp;&ndash; это экологически чистый продукт из мяса, отличающийся своими превосходными вкусовыми свойствами.</p>
-                <p>Продукция&nbsp;халяль&nbsp;отличается чистотой в физическом плане и в духовном. Ее готовят по соответствующим канонам, принятым в исламе. Мясные продукты, изготовленные в соответствии с&nbsp;халяль&nbsp;не имеют вредных добавок и консервантов, способных искусственно увеличивать их долговечность.</p>
-                <p>Халяль&nbsp;&ndash; это вкусно и безопасно! Убедитесь в этом лично, попробовав продукцию, представленную в нашей товарной линейке, которую можно купить оптом по самым доступным ценам.</p>
+                <p>
+                  Халяль&nbsp;&ndash; это экологически чистый продукт из мяса,
+                  отличающийся своими превосходными вкусовыми свойствами.
+                </p>
+                <p>
+                  Продукция&nbsp;халяль&nbsp;отличается чистотой в физическом
+                  плане и в духовном. Ее готовят по соответствующим канонам,
+                  принятым в исламе. Мясные продукты, изготовленные в
+                  соответствии с&nbsp;халяль&nbsp;не имеют вредных добавок и
+                  консервантов, способных искусственно увеличивать их
+                  долговечность.
+                </p>
+                <p>
+                  Халяль&nbsp;&ndash; это вкусно и безопасно! Убедитесь в этом
+                  лично, попробовав продукцию, представленную в нашей товарной
+                  линейке, которую можно купить оптом по самым доступным ценам.
+                </p>
                 <v-btn
                   to="/catalog/halal"
                   class="button ml-0 flex lumber mt-5"
@@ -237,7 +277,8 @@
                   color="accent"
                   dark
                   title="Халяльная продукция"
-                >Смотреть халаяльную продукцию</v-btn>
+                  >Смотреть халаяльную продукцию</v-btn
+                >
               </div>
             </div>
           </v-flex>
@@ -365,22 +406,22 @@ export default {
       link: [
         {
           rel: "canonical",
-          href: "https://prodaem-kolbasu.ru"
-        }
+          href: "https://prodaem-kolbasu.ru",
+        },
       ],
       meta: [
         {
           hid: "description",
           name: "description",
           content:
-            "Альянс Фуд - колбаса и другие мясные изделия оптом по самым выгодным ценам от компании Альянс Фуд. Самовывоз со склада в Москве. Доставка по РФ"
-        }
-      ]
+            "Альянс Фуд - колбаса и другие мясные изделия оптом по самым выгодным ценам от компании Альянс Фуд. Самовывоз со склада в Москве. Доставка по РФ",
+        },
+      ],
     };
   },
   components: {
     MultiItemSlider,
-    MainPageCard
+    MainPageCard,
   },
   computed: {
     categories() {
@@ -388,7 +429,7 @@ export default {
     },
     manufacturers() {
       return this.$store.state.sessionStorage.generalInfo.manufacturers;
-    }
+    },
   },
   data() {
     return {
@@ -397,38 +438,38 @@ export default {
         {
           header: "Доставка",
           text: "Быстрая доставка по РФ и странам ЕАЭС",
-          img: require("@/assets/benefits/shipped.svg")
+          img: require("@/assets/benefits/shipped.svg"),
         },
         {
           header: "Цены",
           text: "Лучшие цены напрямую от производителей",
-          img: require("@/assets/benefits/currency.svg")
+          img: require("@/assets/benefits/currency.svg"),
         },
         {
           header: "Акции",
           text:
             "Разнообразные бонусы в виде скидок и акций нашим постоянным клиентам",
-          img: require("@/assets/benefits/1179545.svg")
+          img: require("@/assets/benefits/1179545.svg"),
         },
         {
           header: "Выбор",
           text:
             "Много видов колбас и мясных изделий и этот перечень постоянно увеличивается",
-          img: require("@/assets/benefits/product.svg")
+          img: require("@/assets/benefits/product.svg"),
         },
         {
           header: "Гарантии",
           text:
             "Многоуровневый контроль качества исключает поставки некачественной продукции",
-          img: require("@/assets/benefits/shield.svg")
+          img: require("@/assets/benefits/shield.svg"),
         },
         {
           header: "Сертификаты",
           text:
             "Вся продукция имеет документы, подтверждающие качество и состав изделий",
-          img: require("@/assets/benefits/certificate.svg")
-        }
-      ]
+          img: require("@/assets/benefits/certificate.svg"),
+        },
+      ],
     };
   },
   // mounted() {
@@ -450,11 +491,11 @@ export default {
             }
           }
         }
-      `
+      `,
     });
     return {
-      sliders: promosData.promos
+      sliders: promosData.promos,
     };
-  }
+  },
 };
 </script>

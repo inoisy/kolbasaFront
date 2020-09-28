@@ -20,7 +20,7 @@ export const getters = {
 export const mutations = {
 
   setUserData(state, data) {
-    console.log("setUserData -> state", state)
+    // console.log("setUserData -> state", state)
     this.app.$cookies.set('user', data, {
       path: '/',
       maxAge: 60 * 60 * 24 * 365
