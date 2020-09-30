@@ -9,8 +9,8 @@
   >
     <product-dialog
       :product="product"
-      @closeProductDialog="dialog=false"
-      @hanleOneClickBuy="(val)=>showCard=val"
+      @closeProductDialog="dialog = false"
+      @hanleOneClickBuy="(val) => (showCard = val)"
     ></product-dialog>
   </v-dialog>
 </template>
@@ -30,8 +30,8 @@ export default {
             href:
               this.category && this.category.slug
                 ? `https://prodaem-kolbasu.ru/catalog/${this.category.slug}/${this.product.slug}`
-                : ""
-          }
+                : "",
+          },
         ],
         meta: [
           // hid is used as unique identifier. Do not use `vmid` for it as it will not work
@@ -40,9 +40,9 @@ export default {
             name: "description",
             content: this.product.description
               ? this.product.description.slice(0, 310)
-              : `${this.product.name} оптом. ${this.product.name} от компании Альянс Фуд с доставкой по всей РФ и СНГ по самым выгодным оптовым ценам от производителя.`
-          }
-        ]
+              : `${this.product.name} оптом. ${this.product.name} от компании Альянс Фуд с доставкой по всей РФ и СНГ по самым выгодным оптовым ценам от производителя.`,
+          },
+        ],
       };
       // console.log("head -> head", head);
       return head;
@@ -60,25 +60,25 @@ export default {
         link: [
           {
             rel: "canonical",
-            href: `https://prodaem-kolbasu.ru/catalog/${this.category.slug}`
-          }
+            href: `https://prodaem-kolbasu.ru/catalog/${this.category.slug}`,
+          },
         ],
         meta: [
           {
             hid: "description",
             name: "description",
-            content: this.category.description
-              ? this.category.description.slice(0, 310)
-              : `${this.category.name} оптом. ${this.category.name} от компании Альянс Фуд с доставкой по всей РФ и СНГ по самым выгодным оптовым ценам от производителя.`
-          }
-        ]
+            content:
+              this.category.metaDescription ||
+              `${this.category.name} оптом. ${this.category.name} от компании Альянс Фуд с доставкой по всей РФ и СНГ по самым выгодным оптовым ценам от производителя.`,
+          },
+        ],
       };
       // console.log("head -> head", head);
       return head;
     }
   },
   components: {
-    ProductDialog
+    ProductDialog,
   },
   async asyncData({ params, error, store }) {
     let product = {};
@@ -87,11 +87,11 @@ export default {
     if (!product) {
       return error({
         statusCode: 404,
-        message: "Продукт не найден"
+        message: "Продукт не найден",
       });
     }
     return {
-      product
+      product,
     };
   },
 
@@ -101,7 +101,7 @@ export default {
         this.$router.push({ params: { slug: null } });
         this.$emit("close");
       }
-    }
+    },
   },
   computed: {
     category() {
@@ -113,16 +113,16 @@ export default {
     },
     isProduct() {
       return this.$route.params && this.$route.params.slug;
-    }
+    },
   },
   props: ["name"],
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl,
       dialog: true,
-      showCard: true
+      showCard: true,
     };
-  }
+  },
 };
 </script>
 

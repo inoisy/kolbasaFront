@@ -10,8 +10,8 @@
   >
     <product-dialog
       :product="product"
-      @closeProductDialog="dialog=false"
-      @hanleOneClickBuy="(val)=>showCard=val"
+      @closeProductDialog="dialog = false"
+      @hanleOneClickBuy="(val) => (showCard = val)"
     ></product-dialog>
   </v-dialog>
 </template>
@@ -31,8 +31,8 @@ export default {
             name: "description",
             content: this.product.description
               ? this.product.description.slice(0, 310)
-              : `${this.product.name} оптом. ${this.product.name} от компании Альянс Фуд с доставкой по всей РФ и СНГ по самым выгодным оптовым ценам от производителя.`
-          }
+              : `${this.product.name} оптом. ${this.product.name} от компании Альянс Фуд с доставкой по всей РФ и СНГ по самым выгодным оптовым ценам от производителя.`,
+          },
         ],
         link: [
           {
@@ -40,9 +40,9 @@ export default {
             href:
               this.product.category && this.product.category.slug
                 ? `https://prodaem-kolbasu.ru/catalog/${this.product.category.slug}/${this.product.slug}`
-                : ""
-          }
-        ]
+                : "",
+          },
+        ],
       };
     } else {
       if (!this.manufacturer || !this.manufacturer.name) return;
@@ -52,11 +52,11 @@ export default {
           {
             hid: "description",
             name: "description",
-            content: this.manufacturer.description
-              ? this.manufacturer.description.slice(0, 310)
-              : `${this.manufacturer.name} оптом. ${this.manufacturer.name} от компании Альянс Фуд с доставкой по всей РФ и СНГ по самым выгодным оптовым ценам от производителя.`
-          }
-        ]
+            content:
+              this.manufacturer.metaDescription ||
+              `${this.manufacturer.name} оптом. ${this.manufacturer.name} от компании Альянс Фуд с доставкой по всей РФ и СНГ по самым выгодным оптовым ценам от производителя.`,
+          },
+        ],
       };
     }
   },
@@ -70,7 +70,7 @@ export default {
       return ctx.error({
         statusCode: 404,
         message: "Продукт не найден",
-        type: "manufacturer"
+        type: "manufacturer",
       });
     }
     return { product };
@@ -85,23 +85,23 @@ export default {
           ? this.product.manufacturer
           : {}
         : this.$store.state.sessionStorage.manufacturer;
-    }
+    },
   },
   watch: {
     dialog(val) {
       if (val === false) {
         this.$router.push({ params: { productSlug: null } });
       }
-    }
+    },
   },
   props: ["products"],
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl,
       dialog: true,
-      showCard: true
+      showCard: true,
     };
-  }
+  },
 };
 </script>
 

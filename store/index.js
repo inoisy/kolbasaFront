@@ -240,6 +240,7 @@ export const actions = {
               name
               slug
               description
+              metaDescription
               content
               img {
                 url
@@ -264,6 +265,7 @@ export const actions = {
           category(id: $id) {
             id
             description
+            metaDescription
             name
             slug
             content
