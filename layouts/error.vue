@@ -17,15 +17,17 @@
       <!-- {{error}} -->
       <!-- <p v-if="statusCode === 404" class="description"></p> -->
       <!-- <p class="description">{{message.client_error_details}}</p> -->
-      <v-btn :to="redirect.route" color="white" small>{{redirect.text}}</v-btn>
+      <v-btn :to="redirect.route" color="white" small>{{
+        redirect.text
+      }}</v-btn>
     </div>
   </div>
 </template>
-<style lang="stylus" scoped>
+<style lang="scss" scoped>
 .__nuxt-error-page {
   padding: 1rem;
-  background: #F7F8FB;
-  color: #47494E;
+  background: #f7f8fb;
+  color: #47494e;
   text-align: center;
   display: flex;
   justify-content: center;
@@ -51,18 +53,18 @@
 .__nuxt-error-page .title {
   font-size: 1.5rem;
   margin-top: 15px;
-  color: #47494E;
+  color: #47494e;
   margin-bottom: 8px;
 }
 
 .__nuxt-error-page .description {
-  color: #7F828B;
+  color: #7f828b;
   line-height: 21px;
   margin-bottom: 10px;
 }
 
 .__nuxt-error-page a {
-  color: #7F828B !important;
+  color: #7f828b !important;
   text-decoration: none;
 }
 
@@ -79,8 +81,8 @@ export default {
   props: {
     error: {
       type: Object,
-      default: null
-    }
+      default: null,
+    },
   },
   computed: {
     statusCode() {
@@ -92,21 +94,21 @@ export default {
     redirect() {
       const main = {
           route: "/",
-          text: "Вернуться на главную"
+          text: "Вернуться на главную",
         },
         manufacturer = {
           route: "/manufacturers",
-          text: "Вернутся к производителям"
+          text: "Вернутся к производителям",
         },
         catalog = {
           route: "/catalog",
-          text: "Вернуться в каталог"
+          text: "Вернуться в каталог",
         };
       if (!this.error.type) return main;
       if (this.error.type === "catalog") return catalog;
       if (this.error.type === "manufacturer") return manufacturer;
       return main;
-    }
+    },
     // description() {
     //   return (
     //     (this.message && this.message.client_error_details) ||
@@ -124,10 +126,10 @@ export default {
         {
           name: "viewport",
           content:
-            "width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"
-        }
-      ]
+            "width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no",
+        },
+      ],
     };
-  }
+  },
 };
 </script>

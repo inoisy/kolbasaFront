@@ -1,15 +1,17 @@
 <template>
   <div>
-    <page-header :title="title" :breadrumbs="breadrumbs" />
-    <section
-      class="background background-repeat"
-      v-lazy:background-image="require('~/assets/img/bg.jpg')"
-      style="min-height: 40vh;"
-    >
-      <v-container grid-list-lg>
-        <v-layout row wrap class="py-12">
-          <v-flex xs12 class="content-wrapper" v-html="pageData.content && pageData.content"></v-flex>
-        </v-layout>
+    <LazyHydrate when-idle>
+      <page-header :title="title" :breadrumbs="breadrumbs" />
+    </LazyHydrate>
+    <section class="background-with-transparent">
+      <v-container grid-list-lg class="pt-16 pb-15">
+        <v-row>
+          <v-col cols="12">
+            <LazyHydrate never>
+              <content-wrapper v-html="pageData.content" />
+            </LazyHydrate>
+          </v-col>
+        </v-row>
       </v-container>
     </section>
   </div>
@@ -17,8 +19,9 @@
 
 <script>
 import gql from "graphql-tag";
+import LazyHydrate from "vue-lazy-hydration";
 
-import PageHeader from "~/components/PageHeader";
+// import PageHeader from "~/components/PageHeader";
 const pageName = "Доставка";
 export default {
   head() {
@@ -69,6 +72,6 @@ export default {
       pageData: pageData.delivery,
     };
   },
-  components: { PageHeader },
+  components: { LazyHydrate },
 };
 </script>

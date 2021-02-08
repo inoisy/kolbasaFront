@@ -1,11 +1,21 @@
 <template>
-  <v-dialog v-model="inputVal" eager content-class="dialog-image-wrapper" class="position-relative">
-    <div class="fullscreen-img d-flex" style="height: inherit; max-height: inherit;">
+  <v-dialog
+    v-model="inputVal"
+    eager
+    content-class="dialog-image-wrapper"
+    class="position-relative"
+  >
+    <div
+      class="fullscreen-img d-flex"
+      style="height: inherit; max-height: inherit"
+    >
       <!-- <pre>{{item.width}}</pre> -->
 
-      <div style="display: flex; height: inherit; max-height: inherit; width: 100%">
+      <div
+        style="display: flex; height: inherit; max-height: inherit; width: 100%"
+      >
         <v-img
-          :src="imageBaseUrl+ item.formats.thumbnail.url"
+          :src="imageBaseUrl + item.formats.thumbnail.url"
           :srcset="srcSet"
           :alt="item.name"
           :title="item.name"
@@ -22,9 +32,9 @@
         class="close-btn"
         fab
         @click="inputVal = false"
-        style="position:absolute; top:16px; right: 16px; z-index: 10"
+        style="position: absolute; top: 16px; right: 16px; z-index: 10"
       >
-        <v-icon>close</v-icon>
+        <v-icon>$close</v-icon>
       </v-btn>
     </div>
   </v-dialog>
@@ -39,14 +49,14 @@
 <script>
 export default {
   data: () => ({
-    imageBaseUrl: process.env.imageBaseUrl
+    imageBaseUrl: process.env.imageBaseUrl,
   }),
   props: ["value", "item"],
   computed: {
     srcSet() {
       if (!this.item.formats) return;
       return Object.values(this.item.formats)
-        .sort(function(a, b) {
+        .sort(function (a, b) {
           if (a.width > b.width) {
             return 1;
           }
@@ -67,8 +77,8 @@ export default {
       },
       set(val) {
         this.$emit("input", val);
-      }
-    }
-  }
+      },
+    },
+  },
 };
 </script>

@@ -4,26 +4,29 @@
     flat
     color="transparent"
     class="category-wrapper px-4 pt-3 pb-4 td-none"
-    style="display:flex; flex-direction: column"
+    style="display: flex; flex-direction: column"
     :to="`/catalog/${item.slug}`"
     :title="item.name"
   >
     <div class="category-img-wrapper">
-      <img
+      <v-img
         class="category-img ma-auto mb-2"
+        contain
         v-if="item.img"
-        v-lazy="imageBaseUrl+item.img.url"
+        :src="imageBaseUrl + item.img.url"
         :alt="item.name"
         :title="item.name"
       />
     </div>
-    <h3
-      class="category-text text-center lumber font-weight-medium mb-0 primary--text"
+    <div
+      class="category-text text-center font-weight-medium mb-0 primary--text"
       style
-    >{{item.name}}</h3>
+    >
+      {{ item.name }}
+    </div>
   </v-card>
 </template>
-<style lang="stylus" scoped>
+<style lang="scss" scoped>
 .category-wrapper {
   .category-text {
     font-size: 1.2rem;
@@ -84,8 +87,8 @@ export default {
   props: ["item"],
   data() {
     return {
-      imageBaseUrl: process.env.imageBaseUrl
+      imageBaseUrl: process.env.imageBaseUrl,
     };
-  }
+  },
 };
 </script>

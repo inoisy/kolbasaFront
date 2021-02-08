@@ -3,12 +3,14 @@
     <page-header title="Каталог" :breadrumbs="breadrumbs" />
     <section
       class="background background-repeat"
-      v-lazy:background-image="require('~/assets/img/bg.jpg')"
+      style="background-image: url(/bg.jpg)"
     >
+      <!-- v-lazy:background-image="require('~/assets/img/bg.jpg')" -->
+
       <v-container grid-list-lg class="py-12">
-        <template v-for="(category,index) in categories">
+        <template v-for="(category, index) in categories">
           <vertical-card
-            v-if="category.children.length===0"
+            v-if="category.children.length === 0"
             :item="category"
             type="catalog"
             class="mb-10 d-block"
@@ -18,13 +20,14 @@
             v-else
             :key="index"
             class="pa-3 mb-10 pb-4 pl-4"
-            style="border: 1px solid #c1c1c1; border-radius: 10px;"
+            style="border: 1px solid #c1c1c1; border-radius: 10px"
           >
             <nuxt-link
               :to="`/catalog/${category.slug}`"
               class="mb-6 d-block category-text lumber font-weight-medium mb-0 primary--text fs-1-5 underline-on-hover"
               :title="category.name"
-            >{{category.name}}</nuxt-link>
+              >{{ category.name }}</nuxt-link
+            >
             <vertical-card
               class="catalog-card layout wrap mt-3"
               v-for="child in category.children"
@@ -39,7 +42,7 @@
   </div>
 </template>
 
-<style lang="stylus" scoped>
+<style lang="scss" scoped>
 @media (max-width: 960px) {
 }
 </style>
@@ -59,9 +62,9 @@ export default {
           hid: "description",
           name: "description",
           content:
-            "Каталог Альянс Фуд. Колбаса и другие мясные изделия оптом по ценам производителя. Самовывоз со склада в Москве. Доставка по РФ"
-        }
-      ]
+            "Каталог Альянс Фуд. Колбаса и другие мясные изделия оптом по ценам производителя. Самовывоз со склада в Москве. Доставка по РФ",
+        },
+      ],
     };
   },
   components: { PageHeader, VerticalCard, ProductCard },
@@ -71,13 +74,13 @@ export default {
       breadrumbs: [
         {
           to: "/",
-          text: "Главная"
+          text: "Главная",
         },
         {
           to: "/catalog",
-          text: "Каталог"
-        }
-      ]
+          text: "Каталог",
+        },
+      ],
     };
   },
   async asyncData(ctx) {
@@ -108,11 +111,11 @@ export default {
             }
           }
         }
-      `
+      `,
     });
     return {
       categories: categoriesData.categories
-        .filter(item => item.parent.length === 0)
+        .filter((item) => item.parent.length === 0)
         .sort((a, b) => {
           if (a.children.length > b.children.length) {
             return 1;
@@ -120,9 +123,9 @@ export default {
           if (a.children.length < b.children.length) {
             return -1;
           }
-        })
+        }),
     };
-  }
+  },
 };
 </script>
 

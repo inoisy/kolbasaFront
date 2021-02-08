@@ -1,0 +1,378 @@
+.v-application {
+  font-family: "Montserrat" !important;
+}
+
+.v-main {
+  margin-top: $toolbar-mobile-height;
+
+  @include md {
+    margin-top: $toolbar-desktop-height;
+  }
+}
+
+.toasted-container {
+  font-family: "Montserrat" !important;
+
+  &.top-right {
+    top: 10px !important;
+    right: 20px !important;
+  }
+}
+
+
+// $toolbar-mobile-height;$toolbar-desktop-height;
+
+.dialog-content-wrapper {
+  margin: $toolbar-mobile-height + $dialog-mobile-margin $dialog-mobile-margin $dialog-mobile-margin !important;
+  max-height: calc(100% - #{$toolbar-mobile-height + $dialog-mobile-margin*2}) !important;
+
+  @include md {
+    margin: $toolbar-desktop-height + $dialog-desktop-margin $dialog-desktop-margin $dialog-desktop-margin !important;
+    max-height: calc(100% - #{$toolbar-desktop-height + $dialog-desktop-margin*2}) !important;
+  }
+}
+
+.dialog-image-wrapper {
+  margin-top: 120px !important;
+  max-height: calc(90vh - 100px) !important;
+}
+
+@media (min-width: 960px) {
+
+  .dialog-content-wrapper,
+  .dialog-image-wrapper {
+    max-width: 900px !important;
+  }
+}
+
+@media (min-width: 1264px) {
+
+  .dialog-content-wrapper,
+  .dialog-image-wrapper {
+    max-width: 1185px !important;
+  }
+}
+
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+// .theme--dark.v-breadcrumbs{
+//   .v-breadcrumbs__item {
+//     color: white;
+
+//     &:hover {
+//       color: #d50000;
+//     }
+//   }
+// }
+
+.v-navigation-drawer--temporary {
+  z-index: 4000 !important;
+}
+
+.v-toolbar__content,
+.v-toolbar__extension {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+
+}
+
+.ya-phone a,
+.ya-phone-icon a {
+  text-decoration: none;
+}
+
+.white--text {
+  &>* {
+    color: white
+  }
+}
+
+.primary--text.theme--dark {
+  color: #d50000 !important;
+}
+
+
+
+.quantity {
+  .v-input__control {
+    min-width: 45px;
+  }
+
+  input {
+    text-align: center !important;
+  }
+}
+
+.footer-list .v-list__tile {
+  font-size: 0.9rem !important;
+  font-weight: 300;
+  height: 2.5rem !important;
+}
+
+.underline-on-hover {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    color: #d50000 !important;
+  }
+}
+
+
+.fs-1 {
+  font-size: 1rem;
+}
+
+.fs-1-3,
+.fs-1-3>* {
+  font-size: 1.3rem !important;
+}
+
+.fs-1-5 {
+  font-size: 1.5rem;
+}
+
+.fs-2 {
+  font-size: 2rem;
+}
+
+
+.lumber {
+  font-family: 'Montserrat Alternates' !important;
+  font-weight: 700 !important;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Montserrat Alternates' !important;
+  font-weight: 700 !important;
+}
+
+// .mont {
+//   font-family: 'Mont' !important;
+
+//   &>*,
+//   &>*>* {
+//     font-family: 'Mont' !important;
+//   }
+// }
+
+.td-none {
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%
+}
+
+
+.display-flex {
+  display: flex;
+}
+
+.display-flex.row {
+  flex-direction: row;
+}
+
+.display-flex.column {
+  flex-direction: column;
+}
+
+.d-flex.column {
+  flex-direction: column;
+}
+
+.display-flex.wrap {
+  flex-wrap: wrap;
+}
+
+.pos-relative {
+  position: relative;
+}
+
+.v-list-group__header {
+  padding-left: 0 !important;
+}
+
+.background {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+}
+
+.background-repeat {
+  background-color: rgb(240, 240, 240);
+  background-repeat: repeat !important;
+  background-size: 100% !important;
+}
+
+.background-with-transparent {
+
+  position: relative;
+
+  &:before {
+    content: "";
+    background: url(/bg.jpg);
+    opacity: 0.5;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    background-position: center;
+    background-size: cover;
+    background-repeat: repeat;
+  }
+
+  >div {
+    position: relative;
+
+  }
+
+  // .container {
+  //   position: relative;
+  // }
+}
+
+.text-decoration-none {
+  text-decoration: none;
+}
+
+// .content-wrapper {
+
+//   h2,
+//   h3,
+//   h4,
+//   h5,
+//   ul,
+//   table {
+//     margin-bottom: 1rem;
+//   }
+
+//   h2,
+//   h3 {
+//     line-height: normal;
+//   }
+
+//   table {
+//     border-spacing: 0;
+//     max-width: 100%;
+
+//     tr:not(:last-child) td {
+//       border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+//     }
+
+//     tr td:not(:last-child),
+//     td:only-child {
+//       border-right: 1px solid rgba(0, 0, 0, 0.12);
+//     }
+
+//     tr {
+//       td {
+//         padding-right: 16px
+//       }
+
+//       td:only-child:not([rowspan]) {
+//         padding-left: 16px;
+//         // padding-right: 16px;
+//       }
+
+//       td:not(:first-child) {
+//         padding-left: 16px;
+//         // padding-right: 16px;
+//       }
+//     }
+
+//     td,
+//     th {
+//       height: 36px;
+//     }
+//   }
+// }
+
+html {
+  font-size: 14px !important;
+}
+
+// img[lazy=loading] {
+//   background-image: url(https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif);
+//   background-position: center;
+// }
+
+.w-100 {
+  width: 100%;
+}
+
+// .main-header {
+//   .v-toolbar__content {
+//     padding: 0 !important;
+//   }
+// }
+
+// .main-carousel {
+//   .v-image__image.v-image__image--cover {
+//     background-color: #212121;
+//   }
+
+//   min-height: 500px;
+
+//   .v-window__container {
+//     min-height: 500px;
+
+//     .v-carousel__item {
+//       min-height: 500px;
+//     }
+//   }
+// }
+
+@media (min-width:576px) {
+  html {
+    font-size: 16px !important;
+  }
+}
+
+// @media (min-width:1199px) {
+//     html {
+//         font-size:18px !important;
+// 	}
+// }
+
+@media (min-width: 1904px) {
+  .container:not(.container--fluid) {
+    max-width: 1570px !important;
+  }
+}
+
+
+.v-application .grey {
+  background-color: #9e9e9e !important;
+  border-color: #9e9e9e !important
+}
+
+.v-application .grey.lighten-3 {
+  background-color: #eee !important;
+  border-color: #eee !important
+}
+
+
+.v-application .grey.lighten-2 {
+  background-color: #e0e0e0 !important;
+  border-color: #e0e0e0 !important
+}
+
+.v-application .grey.lighten-1 {
+  background-color: #bdbdbd !important;
+  border-color: #bdbdbd !important
+}
+
+.v-application .grey.lighten-4 {
+  background-color: #f5f5f5 !important;
+  border-color: #f5f5f5 !important
+}

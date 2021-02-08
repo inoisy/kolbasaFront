@@ -1,12 +1,14 @@
 <template>
   <div>
+    <!-- show-arrows-on-hover -->
     <v-carousel
-      class="main-carousel"
+      :class="$style.mainCarousel"
       cycle
-      height="calc(100vh - 106px)"
-      hide-delimiter-background
-      show-arrows-on-hover
+      height="inherit"
+      hide-delimiters
       interval="10000"
+      show-arrows-on-hover
+      dark
     >
       <v-carousel-item
         v-for="(item, i) in sliders"
@@ -25,11 +27,15 @@
               class="text-xs-left justify-center column white--text"
             >
               <h2
-                style
-                class="header lumber font-weight-medium mb-8"
+                :class="$style.mainHeader"
+                class="mb-8"
                 v-text="item.header"
               />
-              <div class="subheader mb-8 lumber" v-html="item.content" />
+              <div
+                :class="$style.mainSubHeader"
+                class="mb-8"
+                v-html="item.content"
+              />
               <v-btn
                 v-if="item.buttontext"
                 :to="item.href"
@@ -47,21 +53,8 @@
       </v-carousel-item>
     </v-carousel>
 
-    <div
-      class="background"
-      v-lazy:background-image="require('~/assets/img/bg.jpg')"
-      style="
-        background-color: #f0f0f0;
-        background-repeat: repeat;
-        background-size: 100%;
-      "
-    >
-      <v-container
-        grid-list-lg
-        class="py-10"
-        style="min-height: 100vh"
-        id="content-wrapper"
-      >
+    <div :class="$style.contentSection">
+      <v-container grid-list-lg class="py-15" id="content-wrapper">
         <div class="mb-5 pb-4 align-center d-flex column">
           <v-btn
             color="accent"
@@ -69,14 +62,13 @@
             text
             x-large
             class="ma-auto d-inline-flex mb-4"
-            data-aos="zoom-in"
             to="/catalog"
           >
             <h2 class="primary--text lumber fs-2">Каталог</h2>
           </v-btn>
+
           <template v-for="(item, i) in categories">
             <div
-              data-aos="zoom-in"
               v-if="item.children.length === 0"
               class="flex xs6 sm6 md4 lg3"
               :key="item.id"
@@ -91,6 +83,7 @@
             >
               <div class="flex xs12 text-center">
                 <v-btn
+                  :class="$style.categoryButton"
                   color="accent"
                   tile
                   text
@@ -105,25 +98,20 @@
                 </v-btn>
               </div>
               <div
-                data-aos="zoom-in"
                 v-for="child in item.children"
                 class="flex xs6 sm6 md4 lg3"
                 :key="child.id"
               >
-                <main-page-card :item="child"></main-page-card>
+                <main-page-card :item="child" />
               </div>
             </div>
           </template>
         </div>
-        <div data-aos="zoom-in">
-          <v-img
-            class="mx-auto my-10 xs10 md10 lg9 xl8 flex"
-            contain
-            :src="require('~/assets/delimiter.svg')"
-            title="Разделитель"
-            alt="Разделитель"
-          ></v-img>
-        </div>
+
+        <!-- <div>
+          <svg-icon name="delimiter" />
+        </div> -->
+        <delimiter class="mx-auto my-10 xs10 md10 lg9 xl8 flex" />
 
         <section class="d-flex column">
           <v-btn
@@ -132,38 +120,43 @@
             text
             x-large
             class="ma-auto d-inline-flex mb-5"
-            data-aos="zoom-in"
             to="/manufacturers"
           >
             <h2 class="primary--text lumber fs-2">Производители</h2>
           </v-btn>
-          <!-- <h2 data-aos="zoom-in" class="text-center mb-5 primary--text d-block"></h2> -->
           <div class="d-flex justify-center layout">
             <multi-item-slider :items="manufacturers" />
           </div>
         </section>
-        <div data-aos="zoom-in">
+        <!-- <div>
+          <svg-icon name="delimiter" />
+        </div> -->
+        <delimiter class="mx-auto my-10 xs10 md10 lg9 xl8 flex" />
+        <!-- <div data-aos="zoom-in">
           <v-img
-            class="mx-auto mt-10 xs10 md10 lg9 xl8 flex"
+            class="mx-auto my-10 xs10 md10 lg9 xl8 flex"
             contain
             :src="require('~/assets/delimiter.svg')"
+            title="Разделитель"
+            alt="Разделитель"
           ></v-img>
-        </div>
+        </div> -->
         <div class="layout row wrap align-center justify-center pt-5">
-          <div class="flex hidden-sm-and-down md4 lg3 mb-5" data-aos="fade-up">
-            <img
+          <div class="flex hidden-sm-and-down md4 lg3 mb-5">
+            <v-img
               class="bottom-img pr-4 d-block ma-auto"
-              v-lazy="require('~/assets/img/bottomImage1.png')"
+              src="/bottomImage1.png"
+              contain
               alt="Колбаса оптом в Москве"
               title="Колбаса оптом"
             />
           </div>
           <v-flex xs10 md8 lg9 class="d-flex mb-5">
             <div class="my-auto">
-              <h1 class="bottom-header d-block mb-6" data-aos="fade-up">
+              <h1 class="bottom-header d-block mb-6">
                 Колбаса оптом по самым выгодным для наших парнеров ценам.
               </h1>
-              <div class="bottom-text" data-aos="fade-up">
+              <div class="bottom-text">
                 Одним из ключевых направлений маркетинговой политики компании
                 Альянс Фуд является создание, поддержание и развитие
                 взаимовыгодных партнерских отношений. Почти четверть века мы
@@ -176,40 +169,39 @@
         <div class="layout row wrap align-center justify-center pb-4">
           <div class="xs10 md8 lg9 flex d-flex">
             <div class="my-auto">
-              <h2 class="bottom-header d-block mb-6" data-aos="fade-up">
+              <h2 class="bottom-header d-block mb-6">
                 Доверяя нам – вы выбираете качество
               </h2>
-              <div class="bottom-text mb-6" data-aos="fade-up">
+              <div class="bottom-text mb-6">
                 Для нас не имеет значения статус наших партнеров на рынке или
                 величина их годового товарооборота: со всеми компаньонами мы
                 строим ровные, доверительные отношения.
               </div>
             </div>
           </div>
-          <div class="flex hidden-sm-and-down md4 lg3" data-aos="fade-up">
-            <img
+          <div class="flex hidden-sm-and-down md4 lg3">
+            <v-img
+              contain
               class="bottom-img pl-4 d-block ma-auto"
-              v-lazy="require('~/assets/img/bottomImage2.png')"
+              src="/bottomImage2.png"
               alt="Колбаса оптом с доставкой"
               title="Колбаса оптом"
             />
           </div>
         </div>
-        <div data-aos="zoom-in">
-          <v-img
-            class="mx-auto my-5 xs10 md10 lg9 xl8 flex"
-            contain
-            :src="require('~/assets/delimiter.svg')"
-          ></v-img>
-        </div>
+        <delimiter class="mx-auto my-10 xs10 md10 lg9 xl8 flex" />
+
+        <!-- <div>
+          <svg-icon name="delimiter" />
+        </div> -->
 
         <section class="flex ma-auto">
-          <div class="benefits bottom-text layout row wrap" data-aos="fade-up">
+          <div class="benefits bottom-text layout row wrap">
             <div class="flex offset-xs1 xs10 md12">
               <h2 class="bottom-header text-center primary--text mb-6">
                 Наши преимущества
               </h2>
-              <p class="text-center primary--text lumber mb-6 fs-1-3">
+              <p class="text-center primary--text mb-6 fs-1-3">
                 После первого шага, сделанного навстречу будущему
                 сотрудничеству, вы убедитесь, насколько выгодны и комфортны для
                 развития вашего бизнеса условия, предоставленные нашей
@@ -221,38 +213,32 @@
               v-for="(item, index) in benefits"
               :key="'benefit' + index"
             >
-              <div class="img-wrapper">
-                <img
-                  v-lazy="item.img"
-                  class="d-block pt-1"
-                  :alt="`Купить колбасу оптом ${item.header}`"
-                  :title="item.header"
-                  style="width: 3.5rem; min-width: 3.5rem"
-                />
-              </div>
+              <!-- <div class="img-wrapper">
+                <svg-icon :name="item.img" />
+              </div> -->
               <div class="pl-3">
-                <h4 class="lumber font-weight-bold mb-2">{{ item.header }}</h4>
-                <div class="lumber" style="font-size: 1rem">
+                <div class="lumber font-weight-bold mb-2">
+                  {{ item.header }}
+                </div>
+                <div style="font-size: 1rem">
                   {{ item.text }}
                 </div>
               </div>
             </div>
           </div>
         </section>
-        <div data-aos="zoom-in">
-          <v-img
-            class="mx-auto mt-8 mb-5 xs10 md10 lg9 xl8 flex"
-            contain
-            :src="require('~/assets/delimiter.svg')"
-          ></v-img>
-        </div>
+        <delimiter class="mx-auto my-10 xs10 md10 lg9 xl8 flex" />
+
+        <!-- <div>
+          <svg-icon name="delimiter" />
+        </div> -->
         <div class="layout row wrap align-center justify-center pt-5">
           <v-flex xs10 md8 class="d-flex mb-5">
             <div class="my-auto">
-              <h2 class="bottom-header mb-6 d-block" data-aos="fade-up">
+              <h2 class="bottom-header mb-6 d-block">
                 Халяльная продукция оптом.
               </h2>
-              <div class="lumber" data-aos="fade-up">
+              <div class="">
                 <p>
                   Халяль&nbsp;&ndash; это экологически чистый продукт из мяса,
                   отличающийся своими превосходными вкусовыми свойствами.
@@ -282,10 +268,11 @@
               </div>
             </div>
           </v-flex>
-          <div class="flex hidden-sm-and-down md4 mb-5" data-aos="fade-up">
-            <img
+          <div class="flex hidden-sm-and-down md4 mb-5">
+            <v-img
               class="halal-img pr-4"
-              v-lazy="require('~/assets/halal1.png')"
+              contain
+              src="/halal.png"
               alt="Халяльная продукция в Москве"
               title="Халяльная продукция"
             />
@@ -295,7 +282,50 @@
     </div>
   </div>
 </template>
-<style lang="stylus" scoped>
+<style lang="scss" scoped module>
+.mainCarousel {
+  background-color: #212121;
+  height: calc(100vh - 64px) !important;
+  @include md {
+    height: calc(100vh - 80px) !important;
+  }
+  .mainHeader {
+    font-size: 2.2rem;
+    // font-family: "Signika";
+    line-height: 125%;
+    @include sm {
+      font-size: 2.5rem;
+    }
+  }
+  .mainSubHeader {
+    font-size: 1.1rem;
+    // font-family: "Montserrat" !important;
+    line-height: 140%;
+    @include sm {
+      font-size: 1.3rem;
+    }
+  }
+}
+// $toolbar-mobile-height: 64px;
+// $toolbar-desktop-height: 80px;
+
+.contentSection {
+  background-color: #f0f0f0;
+  // background-repeat: repeat;
+  background-size: 100%;
+  background-image: url(/bg.jpg);
+  background-color: #f0f0f0;
+  background-repeat: repeat !important;
+  background-size: 100% !important;
+  .categoryButton {
+    white-space: normal !important;
+    ::v-deep > span {
+      width: 100% !important;
+    }
+  }
+}
+</style>
+<style lang="scss" scoped>
 // .btn-scroll {
 // position: absolute;
 // bottom: 5px;
@@ -308,15 +338,15 @@
   background-color: #131313;
 }
 
-.header {
-  font-size: 2.5rem;
-  line-height: normal;
-}
+// .header {
+//   font-size: 2.5rem;
+//   line-height: normal;
+// }
 
-.subheader {
-  font-size: 1.3rem;
-  line-height: 1.5;
-}
+// .subheader {
+//   font-size: 1.3rem;
+//   line-height: 1.5;
+// }
 
 .button {
   border-color: white !important;
@@ -326,20 +356,20 @@
 
 .bottom-header {
   font-size: 2rem;
-  color: #4A1F00;
-  font-family: 'Lumberjack';
+  color: #4a1f00;
+  // font-family: "Lumberjack";
   line-height: normal;
 
   &:first-letter {
-    color: #95282A;
-    font-size: 4rem;
+    color: #95282a;
+    font-size: 3rem;
   }
 }
 
 .bottom-text {
-  font-size: 1.45rem;
-  font-family: 'Lumberjack';
-  color: #4A1F00;
+  font-size: 1.2rem;
+  // font-family: "Lumberjack";
+  color: #4a1f00;
 }
 
 .bottom-img {
@@ -355,13 +385,13 @@
 }
 
 @media (min-width: 600px) {
-  .header {
-    font-size: 3rem;
-  }
+  // .header {
+  //   font-size: 3rem;
+  // }
 
-  .subheader {
-    font-size: 1.5rem;
-  }
+  // .subheader {
+  //   font-size: 1.5rem;
+  // }
 
   .background {
     background-position: 75% center;
@@ -438,43 +468,43 @@ export default {
         {
           header: "Доставка",
           text: "Быстрая доставка по РФ и странам ЕАЭС",
-          img: require("@/assets/benefits/shipped.svg"),
+          img: "shipped",
         },
         {
           header: "Цены",
           text: "Лучшие цены напрямую от производителей",
-          img: require("@/assets/benefits/currency.svg"),
+          img: "currency",
         },
         {
           header: "Акции",
           text:
             "Разнообразные бонусы в виде скидок и акций нашим постоянным клиентам",
-          img: require("@/assets/benefits/1179545.svg"),
+          img: "sale",
         },
         {
           header: "Выбор",
           text:
             "Много видов колбас и мясных изделий и этот перечень постоянно увеличивается",
-          img: require("@/assets/benefits/product.svg"),
+          img: "product",
         },
         {
           header: "Гарантии",
           text:
             "Многоуровневый контроль качества исключает поставки некачественной продукции",
-          img: require("@/assets/benefits/shield.svg"),
+          img: "shield.svg",
         },
         {
           header: "Сертификаты",
           text:
             "Вся продукция имеет документы, подтверждающие качество и состав изделий",
-          img: require("@/assets/benefits/certificate.svg"),
+          img: "certificate",
         },
       ],
     };
   },
-  // mounted() {
-  //   console.log(this.$getCachedData());
-  // },
+  mounted() {
+    console.log(this.$vuetify.icons);
+  },
 
   async asyncData(ctx) {
     let client = ctx.app.apolloProvider.defaultClient;

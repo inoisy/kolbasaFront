@@ -33,7 +33,13 @@
         @blur="$v.email.$touch()"
         :error-messages="emailErrors"
       ></v-text-field>
-      <v-text-field class="xs12 py-0 flex" outlined dense v-model="address" label="Адрес"></v-text-field>
+      <v-text-field
+        class="xs12 py-0 flex"
+        outlined
+        dense
+        v-model="address"
+        label="Адрес"
+      ></v-text-field>
       <v-textarea
         class="xs12 py-0 flex"
         outlined
@@ -53,23 +59,20 @@
           :loading="loading"
           style="width: 100%"
           title="Подтвердить заказ"
-        >Подтвердить заказ</v-btn>
+          >Подтвердить заказ</v-btn
+        >
       </v-flex>
     </template>
-    <v-slide-y-transition>
+    <!-- <v-slide-y-transition>
       <v-flex xs12 v-if="this.formSuccess || this.formError">
-        <v-alert
-          :value="this.formSuccess"
-          class="flex xs12 mt-3"
-          type="success"
-        >Заказ успешно отправлен.</v-alert>
-        <v-alert
-          :value="this.formError"
-          class="flex xs12 mt-3"
-          type="error"
-        >Ошибка при отправке заказа.</v-alert>
+        <v-alert :value="this.formSuccess" class="flex xs12 mt-3" type="success"
+          >Заказ успешно отправлен.</v-alert
+        >
+        <v-alert :value="this.formError" class="flex xs12 mt-3" type="error"
+          >Ошибка при отправке заказа.</v-alert
+        >
       </v-flex>
-    </v-slide-y-transition>
+    </v-slide-y-transition> -->
   </v-form>
 </template>
 
@@ -106,19 +109,21 @@ export default {
     email: { email },
   },
   data: function () {
-    let user; // = this.$store.state.localStorage.user;
-    if (this.$store.getters["auth/isLogined"]) {
-      const getUser = this.$store.getters["auth/getUser"];
-      user = {
-        name: getUser.firstname,
-        phone: getUser.phone,
-        email: getUser.email,
-        address: "",
-        id: getUser.id,
-      };
-    } else {
-      user = this.$store.state.localStorage.user;
-    }
+    // let user; // = this.$store.state.localStorage.user;
+    // if (this.$store.getters["auth/isLogined"]) {
+    //   const getUser = this.$store.getters["auth/getUser"];
+    //   user = {
+    //     name: getUser.firstname,
+    //     phone: getUser.phone,
+    //     email: getUser.email,
+    //     address: "",
+    //     id: getUser.id,
+    //   };
+    // } else {
+    //   user = this.$store.state.localStorage.user;
+    // }
+    const user = this.$strapi.user || {};
+    // console.log("🚀 ~ file: ContactForm.vue ~ line 126 ~ user", user);
     return {
       formSuccess: false,
       formError: false,
@@ -160,45 +165,65 @@ export default {
       });
       // console.log("submit -> busket", busketObj);
       try {
+        console.log(this.$strapi.user);
         this.loading = true;
-        const req = await this.$axios.post(process.env.baseUrl + "/orders", {
-          oneClickbuy: this.oneClickBuy,
-          productName: this.oneClickBuy ? this.productName : null,
-          busket: busketObj,
-          name: this.name,
-          phone: this.phone,
-          message: this.message,
-          address: this.address,
-          email: this.email,
-          user: this.userID,
-          summa: this.$store.getters.summa,
-          // REMOVE
-          // isTest: true,
-        });
-        this.loading = false;
-        if (req.status === 200) {
-          // this.$store.commit("saveBasket");
-          if (!this.$store.getters["auth/isLogined"]) {
-            this.$store.commit("setUserData", {
-              name: this.name,
-              phone: this.phone,
-              address: this.address,
-              email: this.email,
+        await this.$strapi.$orders
+          .create({
+            oneClickbuy: this.oneClickBuy,
+            productName: this.oneClickBuy ? this.productName : null,
+            busket: busketObj,
+            name: this.name,
+            phone: this.phone,
+            message: this.message,
+            address: this.address,
+            email: this.email,
+            user: this.userID,
+            summa: this.$store.getters.summa,
+            // REMOVE
+            isTest: true,
+          })
+          .then(() => {
+            this.loading = false;
+            this.$toast.success("Заказ успешно отправлен!", {
+              icon: (el) => {
+                el.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon__svg" style="width:27px; height:27px;  margin-right: 15px;"><path d="${this.$vuetify.icons.values.success}"></svg>`;
+                return el;
+              },
             });
-          }
+          })
+          .catch(() => {
+            this.loading = false;
+          });
+        // this.loading = false;
+        // console.log(
+        //   "🚀 ~ file: ContactForm.vue ~ line 178 ~ submit ~ create",
+        //   create
+        // );
+        // const req = await this.$axios.post(process.env.baseUrl + "/orders", );
+        // this.loading = false;
+        // if (req.status === 200) {
+        //   // this.$store.commit("saveBasket");
+        //   if (!this.$store.getters["auth/isLogined"]) {
+        //     this.$store.commit("setUserData", {
+        //       name: this.name,
+        //       phone: this.phone,
+        //       address: this.address,
+        //       email: this.email,
+        //     });
+        //   }
 
-          this.formSuccess = true;
-          if (window.yaCounter54918895) {
-            window.yaCounter54918895.reachGoal("order");
-          }
-          setTimeout(() => {
-            this.$emit("offerClose");
-            !this.oneClickBuy && this.$store.commit("clearBasket");
-          }, 4000);
-        } else {
-          this.formError = true;
-          this.loading = false;
-        }
+        //   this.formSuccess = true;
+        //   if (window.yaCounter54918895) {
+        //     window.yaCounter54918895.reachGoal("order");
+        //   }
+        //   setTimeout(() => {
+        //     this.$emit("offerClose");
+        //     !this.oneClickBuy && this.$store.commit("clearBasket");
+        //   }, 4000);
+        // } else {
+        //   this.formError = true;
+        //   this.loading = false;
+        // }
       } catch (error) {
         this.loading = false;
         // console.log("submit -> error", error);
@@ -208,6 +233,14 @@ export default {
     },
   },
   computed: {
+    user() {
+      console.log(
+        "🚀 ~ file: ContactForm.vue ~ line 225 ~ user ~ this.$strapi.user",
+        this.$strapi.user
+      );
+
+      return this.$strapi.user;
+    },
     //  isLogined() {
     //   return this.$store.getters["auth/isLogined"];
     // },

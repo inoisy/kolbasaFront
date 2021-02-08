@@ -4,7 +4,7 @@
     id="sidebarContent"
     class="sidebarContent"
     v-resize="onResize"
-    :class="fixedTop ? 'fixed-top':''"
+    :class="fixedTop ? 'fixed-top' : ''"
     ref="sidebarContent"
     :style="!breakpoint ? `max-height: ${sidebar.maxHeight}px;` : ''"
   >
@@ -26,7 +26,7 @@ export default {
         this.sidebar.windowScrollTop > this.sidebar.offsetHeight &&
         this.sidebar.bottomOffset > 0
       );
-    }
+    },
   },
   methods: {
     onResize() {
@@ -51,7 +51,7 @@ export default {
       this.sidebar.windowScrollTop =
         window.pageYOffset || document.documentElement.scrollTop;
       this.calculateSidebar();
-    }
+    },
   },
   mounted() {
     const elem = this.$refs.sidebarContent
@@ -68,14 +68,14 @@ export default {
       sidebar: {
         windowScrollTop: 0,
         offsetHeight: 0,
-        bottomOffset: 1000
-      }
+        bottomOffset: 1000,
+      },
     };
-  }
+  },
 };
 </script>
 
-<style lang="stylus" scoped>
+<style lang="scss" scoped>
 .sidebarContent {
   width: 100%;
 
@@ -112,7 +112,8 @@ export default {
 }
 
 @media (min-width: 960px) {
-  .fixed-top, .fixed-bottom {
+  .fixed-top,
+  .fixed-bottom {
     top: 80px;
   }
 }

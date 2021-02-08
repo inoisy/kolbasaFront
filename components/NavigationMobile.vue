@@ -1,26 +1,33 @@
 <template>
   <v-navigation-drawer
-    :value="drawer"
+    :value="show"
     temporary
     fixed
     right
     touchless
-    @input="change"
     class="pt-2"
     width="22.5rem"
+    @input="change"
   >
     <v-subheader>НАВИГАЦИЯ</v-subheader>
     <v-list class="pt-0">
-      <template v-for="(item,i) in menuItems">
-        <v-list-group v-if="item.items && item.items.length>0" :key="item.to">
+      <template v-for="(item, i) in menuItems">
+        <v-list-group v-if="item.items && item.items.length > 0" :key="item.to">
           <v-list-item slot="activator" :to="item.to" :title="item.name">
-            <v-list-item-content>{{ item.name}}</v-list-item-content>
+            <v-list-item-content>{{ item.name }}</v-list-item-content>
           </v-list-item>
 
           <div v-for="product in item.items" :key="product.name">
             <div v-if="product.children && product.children.length > 0">
-              <v-list-item nuxt exact :to="`${item.to}/${product.slug}`" :title="product.name">
-                <v-list-item-title class="pl-6">{{ product.name}}</v-list-item-title>
+              <v-list-item
+                nuxt
+                exact
+                :to="`${item.to}/${product.slug}`"
+                :title="product.name"
+              >
+                <v-list-item-title class="pl-6">{{
+                  product.name
+                }}</v-list-item-title>
               </v-list-item>
               <v-list-item
                 v-for="child in product.children"
@@ -30,11 +37,21 @@
                 :to="`${item.to}/${child.slug}`"
                 :title="child.name"
               >
-                <v-list-item-title class="pl-10">{{child.name}}</v-list-item-title>
+                <v-list-item-title class="pl-10">{{
+                  child.name
+                }}</v-list-item-title>
               </v-list-item>
             </div>
-            <v-list-item v-else :title="product.name" nuxt exact :to="`${item.to}/${product.slug}`">
-              <v-list-item-title class="pl-6">{{ product.name}}</v-list-item-title>
+            <v-list-item
+              v-else
+              :title="product.name"
+              nuxt
+              exact
+              :to="`${item.to}/${product.slug}`"
+            >
+              <v-list-item-title class="pl-6">{{
+                product.name
+              }}</v-list-item-title>
             </v-list-item>
           </div>
         </v-list-group>
@@ -48,7 +65,7 @@
           exact
           :title="item.name"
         >
-          <v-list-item-title>{{item.name}}</v-list-item-title>
+          <v-list-item-title>{{ item.name }}</v-list-item-title>
         </v-list-item>
       </template>
     </v-list>
@@ -57,24 +74,26 @@
 
 <script>
 export default {
-  data() {
-    return {
-      drawerInner: false
-    };
+  props: {
+    show: { type: Boolean, default: false },
   },
   methods: {
     change(val) {
-      this.$emit("changeDrawer", val);
-    }
+      if (!val) {
+        this.$emit("close");
+      }
+    },
   },
   computed: {
+    menuItems() {
+      return this.$store.getters.menuItems;
+    },
     isModal() {
       return this.$route.name === "catalog-category-slug" &&
         this.$route.params.slug
         ? false
         : true;
-    }
+    },
   },
-  props: ["menuItems", "drawer"]
 };
 </script>

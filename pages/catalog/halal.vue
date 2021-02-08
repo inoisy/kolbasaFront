@@ -4,23 +4,40 @@
     <page-header title="Халяльная продукция оптом" :breadrumbs="breadcrumbs" />
     <section
       class="background background-repeat"
-      v-lazy:background-image="require('~/assets/img/bg.jpg')"
+      style="background-image: url(/bg.jpg)"
     >
+      <!-- v-lazy:background-image="require('~/assets/img/bg.jpg')" -->
       <v-container grid-list-lg class="py-12">
-        <v-layout row wrap v-for="category of categories" :key="category.id" class="mb-10">
-          <h2 class="mb-5 flex xs12 d-block">{{category.name}} халяль оптом</h2>
+        <v-layout
+          row
+          wrap
+          v-for="category of categories"
+          :key="category.id"
+          class="mb-10"
+        >
+          <h2 class="mb-5 flex xs12 d-block">
+            {{ category.name }} халяль оптом
+          </h2>
           <div
             class="flex xs12 sm6 md4 lg3 xl2"
             v-for="product of category.products"
             :key="product.id"
           >
-            <product-card :product="product" :to="`/catalog/halal/${product.slug}`" :halal="true"></product-card>
+            <product-card
+              :product="product"
+              :to="`/catalog/halal/${product.slug}`"
+              :halal="true"
+            ></product-card>
             <!-- :to="`/catalog/${category.slug}/${product.slug}`" -->
           </div>
         </v-layout>
         <v-layout row wrap v-if="page.content">
           <v-divider class="my-4"></v-divider>
-          <div class="content-wrapper" v-if="page.content" v-html="page.content"></div>
+          <div
+            class="content-wrapper"
+            v-if="page.content"
+            v-html="page.content"
+          ></div>
         </v-layout>
       </v-container>
     </section>
@@ -35,7 +52,7 @@ import ProductCard from "~/components/ProductCard";
 export default {
   head() {
     return {
-      title: "Халяльная продукция"
+      title: "Халяльная продукция",
     };
   },
   components: { ProductCard, PageHeader },
@@ -86,13 +103,13 @@ export default {
             }
           }
         }
-      `
+      `,
     });
     return {
       categories: categoryData.categories.filter(
-        item => item.products && item.products.length > 0
+        (item) => item.products && item.products.length > 0
       ),
-      page: categoryData.pages[0]
+      page: categoryData.pages[0],
     };
   },
   methods: {
@@ -104,27 +121,27 @@ export default {
       // });
       // // console.log("handleClose -> products", products.length);
       // this.products = products;
-    }
+    },
   },
   data() {
     return {
       breadcrumbs: [
         {
           to: "/",
-          text: "Главная"
+          text: "Главная",
         },
         {
           to: "/catalog",
-          text: "Каталог"
+          text: "Каталог",
         },
         {
           to: "/catalog/halal",
-          text: "Халяльная продукция"
-        }
+          text: "Халяльная продукция",
+        },
       ],
-      imageBaseUrl: process.env.imageBaseUrl
+      imageBaseUrl: process.env.imageBaseUrl,
     };
-  }
+  },
 };
 </script>
 

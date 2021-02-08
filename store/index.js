@@ -1,4 +1,30 @@
 import gql from "graphql-tag";
+
+class CartProduct {
+  constructor(item) {
+    if (item.id) {
+      this.id = item.id
+    }
+    if (item._id) {
+      this.id = item._id
+    }
+    if (item.category) {
+      this.categorySlug = item.category.slug
+    }
+
+    this.discountPrice = item.discountPrice
+    if (item.img) {
+      this.img = item.img.formats && item.img.formats.thumbnail ? item.img.formats.thumbnail.url : item.img.url
+    }
+    this.isDiscount = item.isDiscount
+    this.minimumOrder = item.minimumOrder || 1
+    this.priceNum = item.priceNum
+    this.slug = item.slug
+    this.weight = item.weight
+    this.name = item.name
+  }
+}
+
 export const mutations = {
   breadcrumbs(state, item) {
     state.sessionStorage.breadcrumbs = item
@@ -6,86 +32,157 @@ export const mutations = {
   generalInfo(state, item) {
     state.sessionStorage.generalInfo = item
   },
-  category(state, item) {
-    state.sessionStorage.category = item
-  },
-  manufacturer(state, item) {
-    state.sessionStorage.manufacturer = item
-  },
-  incrementBasket(state, id) {
-    let product = state.localStorage.basket.find((product) => product.id === id);
-    product.count += product.minimumOrder
-  },
-  addToBasket(state, product) {
-    // console.log("addToBasket -> qty", product.qty)
-    const qty = product.qty || 1
-    let cartProduct = state.localStorage.basket.find((item) => item.id === (product.id || product._id));
-    if (cartProduct) {
-      cartProduct.count += cartProduct.minimumOrder * qty;
-    } else {
-      state.localStorage.basket.push({
-        ...product,
-        count: product.minimumOrder * qty
-      })
+  'UPDATE_CART_BY_ID'(state, { id, quantity }) {
+    const record = state.localStorage.cartItemList.find(element => element.id == id);
+    if (record) {
+      record.quantity = quantity;
     }
   },
-  clearBasket(state) {
-    state.localStorage.basket = []
+  "ADD_TO_CART"(state, { item }) {
+    // console.log("🚀 ~ file: cart.js ~ line 68 ~ state", state)
+    const product = new CartProduct(item)
+    state.localStorage.cartItemList.push({
+      ...product,
+      quantity: product.minimumOrder
+    });
   },
-  changeBasket(state, params) {
-    const {
-      qty,
-      id
-    } = params
-    let product = state.localStorage.basket.find((item) => item.id === id);
-    if (product.minimumOrder > 1) {
-      const ostatok = qty % product.minimumOrder
-      if (ostatok !== 0) {
-        product.count = qty + (product.minimumOrder - ostatok)
-      } else {
-        product.count = qty
-      }
-    } else {
-      product.count = qty
+  'SET_CART'(state, productList) {
+    if (productList) {
+      state.localStorage.cartItemList = productList;
     }
   },
-  deleteFromBasket(state, id) {
-    let cartProductIndex = state.localStorage.basket.findIndex((item) => item.id === id);
-    state.localStorage.basket.splice(cartProductIndex, 1);
-  },
-  removeFromBasket(state, id) {
-    let cartProduct = state.localStorage.basket.find((item) => item.id === id);
-    cartProduct.count -= cartProduct.minimumOrder;
-    if (cartProduct.count <= 0) {
-      let cartProductIndex = state.localStorage.basket.findIndex((item) => item.id === id);
-      state.localStorage.basket.splice(cartProductIndex, 1);
-    }
-  },
-  // saveBasket(state) {
-  //   state.localStorage.basketStory.unshift(state.localStorage.basket)
-  // },
-  setUserData(state, data) {
-    state.localStorage.user = data
-  }
-}
-export const strict = false
-export const getters = {
-  summa(state) {
-    if (Array.isArray(state.localStorage.basket)) {
-      const summ = state.localStorage.basket.reduce(
-        (acc, product) => {
-          acc =
-            product.isDiscount && product.discountPrice ?
-            acc + product.discountPrice * product.count :
-            acc + product.count * product.priceNum;
-          return acc;
-        }, 0)
+  'REMOVE_CART_ITEM'(state, id) {
+    console.log("🚀 ~ file: index.js ~ line 54 ~ id", id)
+    console.log("🚀 ~ file: index.js ~ line 54 ~ state", state)
+    const record = state.localStorage.cartItemList.find(element => element.id == id);
+    if (record) {
+      state.localStorage.cartItemList.splice(state.localStorage.cartItemList.indexOf(record), 1);
 
-      return summ % 1 > 0 ? summ.toFixed(1) : summ
+    }
+  },
+  'INCREMENT_CART'(state, id) {
+    const record = state.localStorage.cartItemList.find(element => element.id == id);
+    if (record) {
+      record.quantity += record.minimumOrder;
+    }
+  },
+  'DECREMENT_CART'(state, id) {
+    const record = state.localStorage.cartItemList.find(element => element.id == id);
+    if (record) {
+      const quantityNew = record.quantity -= record.minimumOrder
+      if (quantityNew > 0) {
+        record.quantity = quantityNew
+      } else {
+        state.localStorage.cartItemList.splice(state.localStorage.cartItemList.indexOf(record), 1);
+      }
+    }
+  },
+}
+// export const strict = false
+export const getters = {
+  cart(state) {
+    const cart = state.localStorage.cartItemList.map(product => {
+      product.subSumm = product.isDiscount
+        ? Math.round(product.discountPrice * product.quantity)
+        : Math.round(product.priceNum * product.quantity)
+      return product
+    })
+    // console.log("🚀 ~ file: index.js ~ line 142 ~ cart ~ cart", cart)
+    return cart
+  },
+  cartSumm(state) {
+    const summa = state.localStorage.cartItemList.reduce(
+      (acc, product) => {
+        acc =
+          product.isDiscount && product.discountPrice ?
+            acc + product.discountPrice * product.quantity :
+            acc + product.quantity * product.priceNum;
+        return acc;
+      }, 0)
+    console.log("🚀 ~ file: index.js ~ line 142 ~ cartSumm ~ summa", summa)
+
+    return summa
+  },
+  isCart(state) {
+    return !!state.localStorage.cartItemList.length
+  },
+  cartLength(state) {
+    // console.log("🚀 ~ file: index.js ~ line 146 ~ cartLength ~ state.localStorage.cartItemList.length", state.localStorage.cartItemList.length)
+
+    return state.localStorage.cartItemList.length
+  },
+  isInCart: (state, getters) => id => {
+    // console.log(!getters.isCart)
+    if (!getters.isCart) {
+      return false;
+    }
+    // console.log("🚀 ~ file: index.js ~ line 136 ~ state", state)
+    // console.log("🚀 ~ file: cart.js ~ line 80 ~ id", id)
+    const recordIndex = state.localStorage.cartItemList.findIndex((element) => element.id == id)
+    // console.log("🚀 ~ file: cart.js ~ line 81 ~ record", recordIndex)
+    if (recordIndex >= 0) {
+      return true
     } else {
-      state.localStorage.basket = []
+      return false
+    }
+  },
+  quantity: (state) => id => {
+    const record = state.localStorage.cartItemList.find((element) => element.id == id)
+    // console.log("🚀 ~ file: cart.js ~ line 81 ~ record", record)
+    if (record) {
+      return record.quantity
+    } else {
       return 0
     }
+  },
+  getProductQty: (state) => id => {
+    console.log("🚀 ~ file: index.js ~ line 71 ~ id", id)
+    const finded = state.localStorage.basket.find(
+      (item) => (item._id === id) || (item.id === id)
+    );
+    console.log("🚀 ~ file: index.js ~ line 76 ~ state.localStorage.basket", finded)
+
+    // console.log("🚀 ~ file: index.js ~ line 74 ~ index", index)
+    if (!finded) {
+      return 0
+    }
+    return finded.count
+  },
+
+  menuItems(state, getters) {
+    // console.log("🚀 ~ file: index.js ~ line 91 ~ menuItems ~ state", getters)
+    return [
+      {
+        name: "Главная",
+        to: "/",
+      },
+      {
+        name: "Каталог",
+        to: "/catalog",
+        items: [
+          ...getters.getParentCategories,
+          { name: "Акционная продукция", slug: "discount" },
+          { name: "Халяльная продукция", slug: "halal" },
+        ],
+      },
+      {
+        name: "Производители",
+        to: "/manufacturers",
+        items: state.sessionStorage.generalInfo.manufacturers,
+      },
+      {
+        name: "О компании",
+        to: "/about",
+      },
+      {
+        name: "Доставка",
+        to: "/delivery",
+      },
+      {
+        name: "Контакты",
+        to: "/contacts",
+      },
+    ];
   },
   getParentCategories(state) {
     if (state.sessionStorage.generalInfo && state.sessionStorage.generalInfo.categories) {
@@ -104,6 +201,7 @@ export const getters = {
     return manufacturerFind ? manufacturerFind.id : null
   },
   getCategory: state => slug => {
+    console.log("🚀 ~ file: index.js ~ line 159 ~ state", state)
     if (!slug) return null
     const category = state.sessionStorage.generalInfo.categories.find(
       item => item.slug === slug
@@ -129,23 +227,67 @@ export const getters = {
   }
 }
 export const actions = {
+  addToCart({ commit }, { item }) {
+    commit("ADD_TO_CART", { item })
+  },
+  updateCartById({ commit, state }, { id, quantity }) {
+    console.log("🚀 ~ file: index.js ~ line 251 ~ updateCartById ~ state", state)
+    const record = state.localStorage.cartItemList.find(element => element.id == id);
+    if (record) {
+      console.log("🚀 ~ file: cart.js ~ line 110 ~ updateCartById ~ record", record)
+      let newQuantity;
+      if (record.minimumOrder > 1) {
+        const ostatok = quantity % record.minimumOrder
+        console.log("🚀 ~ file: cart.js ~ line 66 ~ ostatok", ostatok)
+        if (ostatok !== 0) {
+          newQuantity = quantity + (record.minimumOrder - ostatok)
+
+        } else {
+          newQuantity = quantity
+        }
+      } else {
+        newQuantity = quantity
+      }
+      console.log("🚀 ~ file: cart.js ~ line 124 ~ updateCartById ~ newQuantity", record.quantity, newQuantity)
+
+      if (record.quantity !== newQuantity) {
+        console.log("🚀 ~ file: cart.js ~ line 127 UPDATE_CART_BY_ID", record.quantity, newQuantity)
+
+        commit("UPDATE_CART_BY_ID", { id, quantity: newQuantity })
+        return newQuantity
+      } else {
+        return record.quantity
+      }
+    }
+
+  },
+  removeItemInCart({ commit }, id) {
+    commit("REMOVE_CART_ITEM", id)
+  },
+  incrementCart({ commit }, id) {
+    commit("INCREMENT_CART", id)
+  },
+  decrementCart({ commit }, id) {
+    commit("DECREMENT_CART", id)
+  },
+  setCart({ commit }, cart) {
+    commit("SET_CART", cart)
+  },
+  clearCart({ commit }) {
+    commit("SET_CART", [])
+  },
+
   async nuxtServerInit(state, ctx) {
-    const user = ctx.$cookies.get('user')
-    // console.log("nuxtServerInit -> user", user)
-    if (user) {
-      // console.log("nuxtServerInit -> user", user)
-      await state.commit("auth/setUserData", user)
-    }
-    const jwt = ctx.$cookies.get('jwt')
-    // console.log("nuxtServerInit -> jwt", jwt)
-    if (jwt) {
-      // console.log("nuxtServerInit -> user", user)
-      await state.commit("auth/setJWT", jwt)
-    }
-
-
+    // const user = ctx.$cookies.get('user')
+    // if (user) {
+    //   await state.commit("auth/setUserData", user)
+    // }
+    // const jwt = ctx.$cookies.get('jwt')
+    // if (jwt) {
+    //   await state.commit("auth/setJWT", jwt)
+    // }
     if (ctx.isDev) {
-      const query = gql `
+      const query = gql`
           {
             contact {
               phone
@@ -184,7 +326,7 @@ export const actions = {
             }
           }
         `
-      let client = this.app.apolloProvider.defaultClient;
+      const client = this.app.apolloProvider.defaultClient;
       const {
         data
       } = await client.query({
@@ -203,14 +345,14 @@ export const actions = {
     }
   },
   async fetchProductType(state, id) {
-    let client = this.app.apolloProvider.defaultClient;
+    const client = this.app.apolloProvider.defaultClient;
     const {
       data: productTypeData
     } = await client.query({
       variables: {
-        id: id
+        id
       },
-      query: gql `
+      query: gql`
           query ProductTypeQuery($id: ID!) {
             productType(id: $id) {
               _id
@@ -222,18 +364,17 @@ export const actions = {
           }
         `
     });
-    // await ctx.commit("manufacturer", manufacturerData.manufacturer);
-    return productTypeData.productType //.manufacturer
+    return productTypeData.productType
   },
   async fetchManufacturer(ctx, id) {
-    let client = this.app.apolloProvider.defaultClient;
+    const client = this.app.apolloProvider.defaultClient;
     const {
       data: manufacturerData
     } = await client.query({
       variables: {
-        id: id
+        id
       },
-      query: gql `
+      query: gql`
           query ManufacturerQuery($id: ID!) {
             manufacturer(id: $id) {
               id
@@ -256,11 +397,11 @@ export const actions = {
     return manufacturerData.manufacturer
   },
   async fetchCategory(ctx, id) {
-    let client = this.app.apolloProvider.defaultClient;
+    const client = this.app.apolloProvider.defaultClient;
     const {
       data: categoryData
     } = await client.query({
-      query: gql `
+      query: gql`
         query CategoryQuery( $id: ID! ) {
           category(id: $id) {
             id
@@ -300,18 +441,18 @@ export const actions = {
         }
       `,
       variables: {
-        id: id,
+        id
       }
     });
-    await ctx.commit("category", categoryData.category);
+    // await ctx.commit("category", categoryData.category);
     return categoryData.category
   },
   async fetchProduct(ctx, slug) {
-    let client = this.app.apolloProvider.defaultClient;
+    const client = this.app.apolloProvider.defaultClient;
     const {
       data: productData
     } = await client.query({
-      query: gql `
+      query: gql`
         fragment relatedProduct on Product {
           name
           slug
@@ -380,19 +521,17 @@ export const actions = {
         }
       `,
       variables: {
-        slug: slug,
+        slug
       }
     });
     // console.log("productData.products", productData)
     if (!productData.productFull.length) return null
-
-
     return productData.productFull[0]
   },
   async fetchProducts(ctx, params) {
     let n = 3
     const getProducts = async () => {
-      let client = this.app.apolloProvider.defaultClient;
+      const client = this.app.apolloProvider.defaultClient;
       const vars = {
         ...params.manufacturer && {
           manufacturer: params.manufacturer
@@ -408,7 +547,7 @@ export const actions = {
       const {
         data: productsData
       } = await client.query({
-        query: gql `
+        query: gql`
         query productsQuery(
             $manufacturer: ID $category: [ID!] $product_type: ID $sort: String $limit: Int $start: Int
           ) {
@@ -459,29 +598,93 @@ export const actions = {
     try {
       return await getProducts()
     } catch (error) {
-      console.log("fetchProducts -> error", error)
       n -= 1
-      console.log("fetchProducts -> n", n)
-      // this.app.$sentry.captureException(error)
-      // console.log("fetchProducts -> error", error)
-      // return []
-
       if (n === 0) return []
       return await getProducts()
     }
-
   }
 }
-// console.log("fetchProducts -> productsData", productsData)
 
-// const {
-//   data: productsData
-// } = await this.$axios.get("/products", {
-//   params: {
-//     category: params.category,
-//     _limit: params.limit || 20,
-//     _sort: params.sort || "name:asc",
-//     _start: params.start || 0,
-//     manufacturer: params.manufacturer
-//   }
-// })
+  // isItemInBusket: (state) => id => {
+  //   const find = state.localStorage.basket.find(
+  //     (item) => item.id === id
+  //   );
+  //   console.log("🚀 ~ file: index.js ~ line 74 ~ index", find)
+  //   return !!find
+  // },
+  // summa(state) {
+  //   if (Array.isArray(state.localStorage.basket)) {
+  //     const summ = state.localStorage.basket.reduce(
+  //       (acc, product) => {
+  //         acc =
+  //           product.isDiscount && product.discountPrice ?
+  //             acc + product.discountPrice * product.count :
+  //             acc + product.count * product.priceNum;
+  //         return acc;
+  //       }, 0)
+
+  //     return summ % 1 > 0 ? summ.toFixed(1) : summ
+  //   } else {
+  //     state.localStorage.basket = []
+  //     return 0
+  //   }
+  // },
+
+   // category(state, item) {
+  //   state.sessionStorage.category = item
+  // },
+  // manufacturer(state, item) {
+  //   state.sessionStorage.manufacturer = item
+  // },
+  // incrementBasket(state, id) {
+  //   const product = state.localStorage.basket.find((product) => product._id === id);
+  //   product.count += product.minimumOrder
+  // },
+  // addToBasket(state, product) {
+  //   console.log("addToBasket -> qty", product)
+  //   const qty = product.qty || 1
+  //   const cartProduct = state.localStorage.basket.find((item) => item.id === (product.id || product._id));
+  //   if (cartProduct) {
+  //     cartProduct.count += cartProduct.minimumOrder * qty;
+  //   } else {
+  //     state.localStorage.basket.push({
+  //       ...product,
+  //       count: product.minimumOrder * qty
+  //     })
+  //   }
+  // },
+  // clearBasket(state) {
+  //   state.localStorage.basket = []
+  // },
+  // changeBasket(state, params) {
+  //   const {
+  //     qty,
+  //     id
+  //   } = params
+  //   const product = state.localStorage.basket.find((item) => item._id === id);
+  //   if (product.minimumOrder > 1) {
+  //     const ostatok = qty % product.minimumOrder
+  //     if (ostatok !== 0) {
+  //       product.count = qty + (product.minimumOrder - ostatok)
+  //     } else {
+  //       product.count = qty
+  //     }
+  //   } else {
+  //     product.count = qty
+  //   }
+  // },
+  // deleteFromBasket(state, id) {
+  //   const cartProductIndex = state.localStorage.basket.findIndex((item) => item.id === id);
+  //   state.localStorage.basket.splice(cartProductIndex, 1);
+  // },
+  // removeFromBasket(state, id) {
+  //   const cartProduct = state.localStorage.basket.find((item) => item.id === id);
+  //   cartProduct.count -= cartProduct.minimumOrder;
+  //   if (cartProduct.count <= 0) {
+  //     const cartProductIndex = state.localStorage.basket.findIndex((item) => item.id === id);
+  //     state.localStorage.basket.splice(cartProductIndex, 1);
+  //   }
+  // },
+  // setUserData(state, data) {
+  //   state.localStorage.user = data
+  // }

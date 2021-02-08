@@ -10,29 +10,31 @@
     :ripple="false"
     class="fill-height product-wrapper"
   >
-    <div class="product-card-img-wrap" style="position: relative;">
-      <img
+    <div class="product-card-img-wrap" style="position: relative">
+      <v-img
         itemprop="image"
         class="d-block ma-auto product-img pa-3"
         :title="product.name"
         :alt="product.name"
-        v-lazy="imgUrl"
+        :src="imgUrl"
+        contain
       />
       <div class="product-card-mini-imgs">
-        <img
+        <v-img
           class="product-card-halal-img"
           v-if="product.isHalal"
-          src="~/assets/halal1.png"
+          src="/halal-min.png"
           title="Халяльная продукция"
           alt="Халяльная продукция"
+          contain
         />
-        <img
+        <!-- <v-img
           class="product-card-manufacturer-img d-block"
           :title="product.manufacturer.name"
           :alt="product.manufacturer.name"
           v-if="product.manufacturer && product.manufacturer.img"
-          v-lazy="product.manufacturer && product.manufacturer.img ? imageBaseUrl + product.manufacturer.img.url : require('~/assets/no-image.png')"
-        />
+          :src="imageBaseUrl + product.manufacturer.img.url"
+        /> -->
       </div>
     </div>
     <div class="display-flex mb-2">
@@ -42,61 +44,84 @@
         itemtype="http://schema.org/Offer"
         class="pl-0 display-flex align-center"
       >
-        <span itemprop="price" v-show="product.priceNum" class="product-price">{{price}}</span>
-        <span v-show="!product.priceNum" style="font-size: 0.88rem">Нет в наличии</span>
+        <span
+          itemprop="price"
+          v-show="product.priceNum"
+          class="product-price"
+          >{{ price }}</span
+        >
+        <span v-show="!product.priceNum" style="font-size: 0.88rem"
+          >Нет в наличии</span
+        >
         <span
           class="pl-2 product-price"
           v-if="product.isDiscount"
-          style="text-decoration: line-through;"
-        >{{product.priceNum}}</span>
+          style="text-decoration: line-through"
+          >{{ product.priceNum }}</span
+        >
         &nbsp;
         <span
           v-show="product.priceNum"
           itemprop="priceCurrency"
           content="RUB"
           class="product-price"
-        >р</span>
-        <v-chip
-          v-if="isDiscount"
-          color="accent"
-          dark
-          class="ml-2"
-        >-{{Math.round(100*(product.priceNum-product.discountPrice)/product.priceNum) }}%</v-chip>
+          >р</span
+        >
+        <v-chip v-if="isDiscount" color="accent" dark class="ml-2"
+          >-{{
+            Math.round(
+              (100 * (product.priceNum - product.discountPrice)) /
+                product.priceNum
+            )
+          }}%</v-chip
+        >
       </div>
       <div
         itemprop="description"
-        style="font-size: 15px;"
+        style="font-size: 15px"
         class="align-center display-flex pa-0 ml-2"
-      >{{product.weight ? ` / ${product.weight} кг.` : ''}}</div>
+      >
+        {{ product.weight ? ` / ${product.weight} кг.` : "" }}
+      </div>
       <div v-if="isMultiple" class="ml-auto">
-        <span class="product-price">{{Math.round(price*product.minimumOrder)}} р</span>
-        <span style="font-size: 15px;">/ {{product.minimumOrder}} {{product.piece ? "шт." : "кг."}}</span>
+        <span class="product-price"
+          >{{ Math.round(price * product.minimumOrder) }} р</span
+        >
+        <span style="font-size: 15px"
+          >/ {{ product.minimumOrder }}
+          {{ product.piece ? "шт." : "кг." }}</span
+        >
       </div>
     </div>
 
-    <h2
-      itemprop="name"
-      class="product-name mb-0 mt-1"
-      style
-    >{{product.name}}{{halal ? "&nbsp; халяль" : ''}}</h2>
+    <div itemprop="name" class="product-name mb-0 mt-1">
+      {{ product.name }}{{ halal ? "&nbsp; халяль" : "" }}
+    </div>
     <div class="product-busket-wrap" ref="productCardActions">
+      <!-- {{ busketWatch }} -->
       <v-btn
-        v-show="!busket"
+        v-if="isMounted && !isInCart"
         class="pruduct-busket-btn"
         tile
         color="#f2f2f2"
-        style="height: 40px;"
+        style="height: 40px"
         :disabled="!product.priceNum"
         elevation="0"
         @click="handleAdd"
-      >В корзину</v-btn>
-      <client-only>
-        <product-quantity v-if="busket" class="mx-auto" :id="product.id" :qty="busket"></product-quantity>
-      </client-only>
+        >В корзину</v-btn
+      >
+      <!-- <client-only v-else> -->
+      <product-quantity
+        v-else
+        class="mx-auto"
+        :id="product._id || product.id"
+        @deleted="isInCart = false"
+      ></product-quantity>
+      <!-- </client-only> -->
     </div>
   </v-card>
 </template>
-<style lang="stylus" scoped>
+<style lang="scss" scoped>
 .product-wrapper {
   padding: 10px;
 }
@@ -140,7 +165,8 @@
   }
 }
 
-.product-img, .product-card-img-wrap {
+.product-img,
+.product-card-img-wrap {
   height: 140px;
   max-height: 140px;
 }
@@ -150,14 +176,16 @@
 }
 
 @media (min-width: 600px) {
-  .product-img, .product-card-img-wrap {
+  .product-img,
+  .product-card-img-wrap {
     height: 140px;
     max-height: 140px;
   }
 }
 
 @media (min-width: 960px) {
-  .product-img, .product-card-img-wrap {
+  .product-img,
+  .product-card-img-wrap {
     height: 160px;
     max-height: 160px;
   }
@@ -169,23 +197,30 @@ import ProductQuantity from "~/components/ProductQuantity";
 
 export default {
   data() {
-    return { imageBaseUrl: process.env.imageBaseUrl };
+    return {
+      imageBaseUrl: process.env.imageBaseUrl,
+      isMounted: false,
+      isInCart: false,
+    };
   },
   props: {
     to: {
-      type: String
+      type: String,
     },
     product: {
-      type: Object
+      type: Object,
     },
     halal: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   components: { ProductQuantity },
 
   computed: {
+    // isInCart() {
+    //   return this.$store.getters.isInCart(this.product.id);
+    // },
     isDiscount() {
       return this.product.isDiscount && this.product.discountPrice;
     },
@@ -203,25 +238,54 @@ export default {
         return this.imageBaseUrl + this.product.img.url;
       return this.imageBaseUrl + this.product.img.formats.thumbnail.url;
     },
-    busket() {
-      const index = this.$store.state.localStorage.basket.findIndex(
-        item => item.id === this.product.id
-      );
-      return index >= 0
-        ? this.$store.state.localStorage.basket[index].count
-        : false;
-    }
+    // busket() {
+    //   const index = this.$store.state.localStorage.basket.findIndex(
+    //     (item) => item.id === this.product.id
+    //   );
+    //   console.log(
+    //     "🚀 ~ file: ProductCard.vue ~ line 244 ~ busket ~ index",
+    //     index
+    //   );
+    //   return index >= 0
+    //     ? this.$store.state.localStorage.basket[index].count
+    //     : false;
+    // },
+  },
+  // watch: {
+  //   busketWatch() {
+  //     const index = this.$store.state.localStorage.basket.findIndex(
+  //       (item) => item.id === this.product.id
+  //     );
+  //     console.log(
+  //       "🚀 ~ file: ProductCard.vue ~ line 244 ~ busket ~ index",
+  //       index,
+  //       !!(index >= 0)
+  //     );
+  //     return !!(index >= 0);
+  //   },
+  // },
+  mounted() {
+    console.log("id", this.product.id);
+    this.isMounted = true;
+    this.isInCart = this.$store.getters.isInCart(this.product.id);
+    // console.log("id", this.isInCart);
   },
   methods: {
+    async handleAdd() {
+      await this.$store.dispatch("addToCart", {
+        item: Object.assign({}, this.product),
+      });
+      this.isInCart = true;
+    },
     cardClick(event) {
       if (this.$refs.productCardActions.contains(event.target)) {
         event.preventDefault();
       }
     },
-    async handleAdd(event) {
-      await this.$store.commit("addToBasket", this.product);
-    }
-  }
+    // async handleAdd(event) {
+    //   await this.$store.commit("addToBasket", this.product);
+    // },
+  },
 };
 </script>
 

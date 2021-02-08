@@ -1,23 +1,22 @@
 <template>
-  <div class="header d-flex" v-lazy:background-image="require('~/assets/img/promo.jpg')">
+  <div class="header d-flex" style="background-image: url(/promo.jpg)">
+    <!-- v-lazy:background-image="require('~/assets/img/promo.jpg')" -->
     <v-container fill-height :fluid="fluid" grid-list-lg>
       <v-layout
         column
-        style="min-height: 40vh;"
-        :class="isPadding ? 'justify-space-between' : 'justify-space-around pb-12'"
+        style="min-height: 40vh"
+        :class="
+          isPadding ? 'justify-space-between' : 'justify-space-around pb-12'
+        "
       >
-        <v-breadcrumbs :items="breadrumbs" dark class="breadcrumbs-wrap px-4 py-3" large>
-          <template v-slot:item="{ item }">
-            <v-breadcrumbs-item
-              :to="item.to"
-              nuxt
-              exact
-              :title="item.text"
-              class="breadcrumbs-item text-center text-md-left"
-            >{{ item.text }}</v-breadcrumbs-item>
-          </template>
-        </v-breadcrumbs>
-        <h1 class="lumber header-text white--text text-center px-4 my-10">{{title}}</h1>
+        <breadcrumbs
+          :items="breadrumbs"
+          large
+          class="breadcrumbs-wrap px-4 py-3"
+        />
+        <h1 class="lumber header-text white--text text-center px-4 my-10">
+          {{ title }}
+        </h1>
         <div class="slot-wrapper d-flex" ref="slot">
           <slot></slot>
         </div>
@@ -30,23 +29,23 @@
 export default {
   props: {
     title: {
-      type: String
+      type: String,
     },
     breadrumbs: {
-      type: Array
+      type: Array,
     },
     fluid: {
       type: Boolean,
-      default: false
+      default: false,
     },
     isPadding: {
       type: Boolean,
-      default: false
-    }
-  }
+      default: false,
+    },
+  },
 };
 </script>
-<style lang="stylus" scoped>
+<style lang="scss" scoped>
 .breadcrumbs-wrap {
   justify-content: center;
 }

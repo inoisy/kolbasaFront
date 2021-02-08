@@ -17,61 +17,7 @@ const description = "Альянс Фуд. Колбаса и другие мяс�
 
 
 module.exports = {
-  mode: 'universal',
-  // hooks: {
-  //   build: {
-  //     async before(builder) {
-  //       const query = `
-  //         {
-  //           contact {
-  //             phone
-  //             email
-  //             addressText
-  //             addressCoords
-  //             accessTime
-  //           }
-  //           categories(sort: "name:asc", limit: 999) {
-  //             id
-  //             name
-  //             slug
-  //             parent {
-  //               id
-  //             }
-  //             children {
-  //               id
-  //               name
-  //               slug
-  //               img {
-  //                 url
-  //               }
-  //             }
-  //             img {
-  //               url
-  //             }
-  //           }
-  //           manufacturers(sort: "name:asc", limit:999) {
-  //             id
-  //             name
-  //             slug
-
-  //             img {
-  //               url
-  //             }
-  //           }
-  //         }
-  //       `
-  //       const fetchApollo = apolloFetch.createApolloFetch({
-  //         uri: backendUrl + '/graphql'
-  //       });
-
-  //       const data = await fetchApollo({
-  //         query
-  //       })
-  //       const extraFilePath = path.join(builder.nuxt.options.srcDir, 'assets', 'generalData.json')
-  //       await fs.writeFileSync(extraFilePath, JSON.stringify(data.data))
-  //     }
-  //   }
-  // },
+  // target: "static",
   env: {
     name: name,
     description: description,
@@ -85,7 +31,7 @@ module.exports = {
     fallback: "404.html",
     routes
   },
-
+  // components: false,
   /*
    ** Headers of the page
    */
@@ -93,27 +39,27 @@ module.exports = {
     title: name,
     titleTemplate: `%s - ${name}`,
     meta: [{
-        charset: 'utf-8'
-      },
-      {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1'
-      },
-      {
-        hid: 'description',
-        name: 'description',
-        content: description
-      }
+      charset: 'utf-8'
+    },
+    {
+      name: 'viewport',
+      content: 'width=device-width, initial-scale=1'
+    },
+    {
+      hid: 'description',
+      name: 'description',
+      content: description
+    }
     ],
     link: [{
-        rel: 'icon',
-        type: 'image/x-icon',
-        href: '/favicon.ico'
-      },
-      {
-        rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css?family=Material+Icons'
-      }
+      rel: 'icon',
+      type: 'image/x-icon',
+      href: '/favicon.ico'
+    },
+      // {
+      //   rel: 'stylesheet',
+      //   href: 'https://fonts.googleapis.com/css?family=Material+Icons'
+      // }
     ]
   },
 
@@ -123,39 +69,76 @@ module.exports = {
   loading: {
     color: '#d50000'
   },
-
+  components: true,
   /*
    ** Global CSS
    */
   css: [
-    '~/assets/style/app.styl'
+    '~/assets/style/app.scss'
   ],
-
+  plugins: [
+    '@/plugins/cachedApi.js',
+    '@/plugins/strapi.js',
+    // '~/plugins/fa.js',
+    // "@/plugins/lazyload.js",
+    // {
+    //   src: '@/plugins/aos.js',
+    //   ssr: false
+    // },
+    // {
+    //   src: '@/plugins/infiniteLoading.js',
+    //   ssr: false
+    // }
+  ],
+  router: {
+    extendRoutes(routes, resolve) {
+      routes.push(
+        //   {
+        //   name: 'catalog-nested',
+        //   path: '/catalog/:categorySlug/:productSlug',
+        //   component: resolve(__dirname, 'components/pages/catalog.vue')
+        // }
+        {
+          path: "/catalog/:category",
+          component: resolve(__dirname, 'components/pages/_category.vue'),
+          name: "catalog-category",
+          children: [{
+            path: ":slug?",
+            component: resolve(__dirname, 'components/pages/_category/_slug.vue'),
+            name: "catalog-category-slug"
+          }]
+        }
+      )
+    }
+  },
   buildModules: [
-    '@nuxtjs/dotenv',
+    // '@nuxtjs/dotenv',
+    // '@nuxtjs/pwa',
+    // https://github.com/nuxt-community/style-resources-module
+    // '@nuxtjs/eslint-module',
+    '@nuxtjs/style-resources',
+    '@nuxtjs/vuetify',
   ],
+  // pwa: {
+  //   meta: {
+  //     name, description
+  //     /* meta options */
+  //   }
+  // },
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [
-    '@/plugins/cachedApi.js',
-    "@/plugins/lazyload.js",
-    {
-      src: '@/plugins/aos.js',
-      ssr: false
-    }, {
-      src: '@/plugins/infiniteLoading.js',
-      ssr: false
-    }
-  ],
 
   modules: [
-    'cookie-universal-nuxt',
-    '@nuxtjs/sentry',
+    '@nuxtjs/strapi',
+    '@nuxtjs/toast',
+    'nuxt-webfontloader',
+    // 'cookie-universal-nuxt',
+    // '@nuxtjs/sentry',
     'nuxt-vuex-localstorage',
-    ['@nuxtjs/google-analytics', {
-      id: process.env.GOOGLE_ID
-    }],
+    // ['@nuxtjs/google-analytics', {
+    //   id: process.env.GOOGLE_ID
+    // }],
     [
       '@nuxtjs/yandex-metrika',
       {
@@ -166,11 +149,11 @@ module.exports = {
         webvisor: true
       }
     ],
-    ['vue-yandex-maps/nuxt', {
-      apiKey: process.env.MAP_KEY,
-      lang: 'ru_RU',
-      version: '2.1'
-    }],
+    // ['vue-yandex-maps/nuxt', {
+    //   apiKey: process.env.MAP_KEY,
+    //   lang: 'ru_RU',
+    //   version: '2.1'
+    // }],
     // [
     //   "@nuxtjs/markdownit",
     //   {
@@ -186,9 +169,6 @@ module.exports = {
       baseURL: backendUrl
     }],
     ['@nuxtjs/apollo', {
-      watchLoading: '~/plugins/apollo-watch-loading-handler.js',
-      // optional
-      errorHandler: '~/plugins/apollo-error-handler.js',
       clientConfigs: {
         default: {
           httpEndpoint: backendUrl + '/graphql',
@@ -204,7 +184,7 @@ module.exports = {
       themeColor: '#d50000'
     }],
 
-    ['@nuxtjs/redirect-module', redirectRoutes],
+    // ['@nuxtjs/redirect-module', redirectRoutes],
 
 
     ['@nuxtjs/sitemap', {
@@ -216,41 +196,76 @@ module.exports = {
       Allow: '/',
       Sitemap: sitename + "/sitemap.xml"
     }],
-    ["nuxt-ssr-cache", {
-      store: {
-        type: 'redis',
-        host: 'localhost',
-        ttl: 4 * 60 * 60,
-        configure: [
-
-          ['maxmemory', '200mb'],
-          ['maxmemory-policy', 'allkeys-lru'],
-        ],
-      },
-      pages: [
-        "/"
-      ],
-    }, ],
-    ['@nuxtjs/vuetify', {
-      treeShake: true,
-      defaultAssets: {
-        font: {
-          family: 'Open Sans'
-        },
-        icons: "md"
-      },
-      customVariables: ['~/assets/variables.scss'],
-      theme: {
-        themes: {
-          light: {
-            primary: '#4A1F00',
-            accent: "#d50000",
-          },
-        },
-      },
-    }],
 
   ],
+  strapi: {
+    // Options
+    url: backendUrl,
+    expires: '365d',
+    key: "jwt",
+    entities: ["orders"]
+  },
+  toast: {
+    theme: "outline",
+    position: 'top-right',
+    duration: 8000,
+    iconPack: 'callback',
+    action: {
+      text: "Закрыть",
+      onClick: (e, toastObject) => {
+        toastObject.goAway(0);
+      },
+    },
+    // register: [ // Register custom toasts
+    //   {
+    //     name: 'my_error',
+    //     message: message => message,
+    //     options: {
+    //       type: 'error',
+    //       theme: 'bubble',
+
+    //     }
+    //   }
+    // ]
+  },
+  vuetify: {
+    customVariables: ["~/assets/variables.scss"],
+    treeShake: true,
+    options: {
+      customProperties: true
+    },
+    defaultAssets: false,
+    optionsPath: './vuetify.options.js'
+  },
+  // svgSprite: {
+  //   input: '~/assets/icons/'
+  // },
+  webfontloader: {
+    google: {
+      families: [
+        'Open Sans:n4,n5,n7',
+        'Signika:n7'
+      ],
+      urls: [
+        // for each Google Fonts add url + options you want
+        // here add font-display option
+        'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Signika:wght@700&display=swap',
+        'https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap'
+      ]
+      // families: ['Montserrat:400,500,700']
+      // "https://fonts.googleapis.com/css2?family=Signika:wght@700&display=swap"
+    }
+  },
+  styleResources: {
+    // your settings here
+    sass: [],
+    scss: [
+      './assets/styles/_mixins/*.scss',
+      './assets/styles/_vars/*.scss',
+    ],
+    less: [],
+    stylus: []
+  },
   sentry: {
     dsn: 'https://e3280a17ba94410780a38ca12ccc2e6e@o413020.ingest.sentry.io/5295312', // Enter your project's DSN here
     config: {}, // Additional config
@@ -267,6 +282,6 @@ module.exports = {
       ]
     },
     transpile: ["@nuxtjs/vuetify", /^aos/, /^@nuxtjs.*/, "nuxt-vuex-localstorage"],
-    extend(config, ctx) {}
+    extend(config, ctx) { }
   }
 }

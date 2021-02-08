@@ -1,15 +1,18 @@
 <template>
   <v-slide-group show-arrows>
-    <v-slide-item v-for="(item,index) in items" :key="`multi-slide${index}`">
+    <v-slide-item v-for="(item, index) in items" :key="`multi-slide${index}`">
       <nuxt-link
-        data-aos="zoom-in"
         :to="`/manufacturers/${item.slug}`"
         :title="item.name"
         class="pa-3"
       >
         <v-img
           contain
-          :src="item.img ? imageBaseUrl+ item.img.url  : require('~/assets/no-image.png')"
+          :src="
+            item.img
+              ? imageBaseUrl + item.img.url
+              : require('~/assets/no-image.png')
+          "
           class="ma-auto d-block manuf-img"
           :alt="item.name"
           :title="item.name"
@@ -24,13 +27,13 @@ export default {
   props: ["items"],
   data() {
     return {
-      imageBaseUrl: process.env.imageBaseUrl
+      imageBaseUrl: process.env.imageBaseUrl,
     };
-  }
+  },
 };
 </script>
 
-<style lang="stylus" scoped>
+<style lang="scss" scoped>
 .manuf-img {
   transition: all 0.2s;
   filter: saturate(0.5);

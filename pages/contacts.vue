@@ -1,14 +1,67 @@
 <template>
   <div>
     <page-header :title="title" :breadrumbs="breadrumbs" />
-    <section
-      class="background background-repeat"
-      v-lazy:background-image="require('~/assets/img/bg.jpg')"
-    >
+    <section class="background-with-transparent">
       <v-container grid-list-lg>
-        <v-layout row wrap class="py-12">
+        <v-row class="py-12">
+          <v-col cols="12" md="6" lg="4" :class="$style.contactsWrapper">
+            <v-list :class="$style.contactsList" light width="100%">
+              <v-list-item
+                :class="$style.link"
+                title="Телефон"
+                :href="`tel:${contacts.phone}`"
+              >
+                <v-list-item-icon>
+                  <v-icon>$phone</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content itemprop="telephone">
+                  {{ contacts.phone }}
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item
+                :class="$style.link"
+                :href="`mailto:${contacts.email}`"
+                title="email"
+              >
+                <v-list-item-icon>
+                  <v-icon>$email</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content itemprop="email">
+                  {{ contacts.email }}
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item title="Адрес">
+                <v-list-item-icon>
+                  <v-icon>$map</v-icon>
+                  <!-- <svg-icon name="pin" style="width: 24px; height: 24px" /> -->
+                </v-list-item-icon>
+                {{ contacts.addressText }}
+              </v-list-item>
+              <v-list-item title="Время работы">
+                <v-list-item-icon>
+                  <v-icon>$time</v-icon>
+                  <!-- <svg-icon name="time" style="width: 24px; height: 24px" /> -->
+                </v-list-item-icon>
+                {{ contacts.accessTime }}
+              </v-list-item>
+            </v-list>
+          </v-col>
+          <v-col
+            cols="12"
+            md="6"
+            offset-lg="1"
+            lg="7"
+            :class="$style.yandexMapWrapper"
+            id="map"
+          >
+            <client-only>
+              <map-component :coords="contacts.addressCoords" />
+            </client-only>
+          </v-col>
+        </v-row>
+        <!-- <v-layout row wrap class="py-12">
           <v-flex
-            v-for="(contact,i) in contacts"
+            v-for="(contact, i) in contacts"
             :key="`contact-${i}`"
             class="mb-2 fs-1-3"
             xs12
@@ -20,36 +73,39 @@
               :href="contact.href"
               class="link font-weight-medium d-inline-flex align-center"
             >
-              <v-icon class="mr-3" color="rgba(0,0,0,0.87)">{{contact.icon}}</v-icon>
-              {{contact.text}}
+              <v-icon v-text="contact.icon"></v-icon>
+              {{ contact.text }}
             </a>
             <div v-else class="font-weight-medium d-inline-flex align-center">
-              <v-icon class="mr-3" color="rgba(0,0,0,0.87)">{{contact.icon}}</v-icon>
-              {{contact.text}}
+              <v-icon v-text="contact.icon"></v-icon>
+              {{ contact.text }}
             </div>
           </v-flex>
         </v-layout>
         <v-layout row wrap id="map">
           <client-only>
-            <yandex-map
-              :coords="addressCoords"
-              zoom="16"
-              style="width: 100%; height: 35rem;"
-              class="mb-6"
-            >
-              <ymap-marker marker-id="1" marker-type="placemark" :coords="addressCoords"></ymap-marker>
-            </yandex-map>
+            <map-component :addressCoords="addressCoords" />
           </client-only>
-        </v-layout>
+        </v-layout> -->
       </v-container>
     </section>
   </div>
 </template>
 
 <script>
-import PageHeader from "~/components/PageHeader";
+import { hydrateWhenIdle, hydrateWhenVisible } from "vue-lazy-hydration";
+
 const pageName = "Контакты";
 export default {
+  components: {
+    // addressCoords,
+    PageHeader: hydrateWhenIdle(() => import("~/components/PageHeader.vue")),
+    MapComponent: hydrateWhenVisible(
+      () => import("~/components/MapComponent.vue"),
+      // Optional.
+      { observerOptions: { rootMargin: "100px" } }
+    ),
+  },
   head() {
     return {
       title: pageName,
@@ -57,90 +113,79 @@ export default {
         {
           hid: "description",
           name: "description",
-          content: pageName + " " + process.env.description
-        }
-      ]
+          content: pageName + " " + process.env.description,
+        },
+      ],
     };
   },
   data() {
     return {
+      // mapSettings: {
+      //   apiKey: process.env.MAP_KEY,
+      //   lang: "ru_RU",
+      //   version: "2.1",
+      // },
       title: pageName,
       breadrumbs: [
         {
           to: "/",
-          text: "Главная"
+          text: "Главная",
         },
         {
           to: "/contacts",
-          text: "Контакты"
-        }
-      ]
+          text: "Контакты",
+        },
+      ],
     };
   },
-  async asyncData(ctx) {
-    // await ctx.store.dispatch("fetchGeneralInfo");
-  },
-  components: { PageHeader },
   computed: {
     contacts() {
-      const contacts = this.$store.state.sessionStorage.generalInfo
-        ? this.$store.state.sessionStorage.generalInfo.contacts
-        : null;
-      const contactsArr = [];
-      if (contacts) {
-        contactsArr.push(
-          {
-            icon: "phone",
-            href: `tel:${contacts.phone}`,
-            text: contacts.phone
-          },
-          {
-            icon: "mail",
-            href: `mailto:${contacts.email}`,
-            text: contacts.email
-          },
-          {
-            icon: "location_on",
-            href: ``,
-            text: contacts.addressText
-          },
-          {
-            icon: "access_time",
-            href: ``,
-            text: contacts.accessTime
-          }
-        );
-      }
-      return contactsArr;
+      return this.$store.state.sessionStorage.generalInfo.contacts; // contactsArr;
     },
-    addressCoords() {
-      const contacts = this.$store.state.sessionStorage.generalInfo
-        ? this.$store.state.sessionStorage.generalInfo.contacts
-        : null;
-      return contacts ? contacts.addressCoords : [];
-    }
-  }
+  },
 };
 </script>
-<style lang="stylus" scoped>
-.link a {
-  color: rgba(0, 0, 0, 0.87) !important;
-}
 
-.link {
-  color: rgba(0, 0, 0, 0.87);
-
-  &:hover {
-    color: #d50000;
-
-    i {
-      color: #d50000 !important;
-    }
+<style lang="scss" scoped module>
+.yandexMapWrapper {
+  height: 400px;
+  min-height: 400px;
+  @include md {
+    height: 300px;
+    min-height: 300px;
+  }
+  @include lg {
+    height: 400px;
+    min-height: 400px;
   }
 }
+.contactsWrapper {
+  display: flex;
+  align-items: center;
+  .contactsList {
+    background: transparent !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    font-weight: 500;
+    font-size: 16px;
+    .link {
+      color: rgba(0, 0, 0, 0.87);
 
-a {
-  text-decoration: none;
+      &:hover {
+        color: #d50000 !important;
+
+        ::v-deep svg {
+          color: #d50000 !important;
+        }
+      }
+    }
+  }
+  // ::v-deep a {
+  //   &:hover {
+  //     color: #d50000 !important;
+  //   }
+  // }
 }
 </style>
+
 

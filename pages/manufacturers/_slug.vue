@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nuxt-child />
+    <nuxt-child @close="handleClose" />
     <page-header
       :title="`Мясокомбинат ${manufacturer.name} оптом`"
       :breadrumbs="breadrumbs"
@@ -12,20 +12,30 @@
             class="mb-12 mx-auto"
             large
             color="accent"
-            :href="imageBaseUrl+manufacturer.catalog.url"
+            :href="imageBaseUrl + manufacturer.catalog.url"
             :title="`Каталог ${manufacturer.name}`"
           >
-            <v-icon left dark>save_alt</v-icon>Загрузить прайс
+            <v-icon left dark>{{ icons.mdiDownload }}</v-icon>
+            <!-- <svg-icon name="save_alt" style="width: 24px; height: 24px" /> -->
+
+            Загрузить прайс
           </v-btn>
         </template>
       </slot>
     </page-header>
     <div
       class="background background-repeat"
-      v-lazy:background-image="require('~/assets/img/bg.jpg')"
+      style="background-image: url(/bg.jpg)"
     >
+      <!-- v-lazy:background-image="require('~/assets/img/bg.jpg')" -->
       <v-container grid-list-lg class="pt-10 pb-7">
-        <v-layout row wrap v-for="(category,index) of categories" :key="category.id" class="mb-5">
+        <v-layout
+          row
+          wrap
+          v-for="(category, index) of categories"
+          :key="category.id"
+          class="mb-5"
+        >
           <h2 class="display-flex align-center wrap xs12 mb-3 flex">
             <nuxt-link
               :to="`/catalog/${category.item.slug}?manufacturer=${manufacturer.slug}`"
@@ -38,7 +48,7 @@
           <div
             class="flex xs12 sm6 md4 lg3 xl2"
             v-for="product of category.products"
-            :key="product.id"
+            :key="`${product.id}-${product.__v}`"
           >
             <product-card
               :product="product"
@@ -53,7 +63,10 @@
       <section class="content-wrapper grey lighten-4">
         <v-container grid-list-lg class="py-10">
           <div v-if="isContent" class="content-wrapper">
-            <div class="flex xs12" v-html="isContent ? manufacturer.content : ''"></div>
+            <div
+              class="flex xs12"
+              v-html="isContent ? manufacturer.content : ''"
+            ></div>
             <!-- <v-divider class="mt-3" v-show="categories.length>0"></v-divider> -->
           </div>
         </v-container>
@@ -64,6 +77,7 @@
 <script>
 import PageHeader from "~/components/PageHeader";
 import ProductCard from "~/components/ProductCard";
+import { mdiDownload } from "@mdi/js";
 
 export default {
   head() {
@@ -81,6 +95,7 @@ export default {
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl,
+      icons: { mdiDownload },
     };
   },
   async asyncData({ store, params, error, $axios }) {
@@ -121,6 +136,25 @@ export default {
       ];
       this.$store.commit("breadcrumbs", items);
       return items;
+    },
+  },
+  methods: {
+    handleClose(id, categorySlug) {
+      console.log("close", id, "categorySlug: ", categorySlug);
+
+      const category = this.categories.find(
+        (category) => category.item.slug == categorySlug
+      );
+      console.log(
+        "🚀 ~ file: _slug.vue ~ line 144 ~ handleClose ~ category",
+        category
+      );
+      const product = category.products.find((item) => item._id === id);
+      product.__v = product.__v + 1;
+      console.log(
+        "🚀 ~ file: _slug.vue ~ line 146 ~ handleClose ~ product",
+        product
+      );
     },
   },
 };

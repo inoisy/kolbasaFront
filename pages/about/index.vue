@@ -1,35 +1,52 @@
 <template>
   <div>
-    <page-header :title="title" :breadrumbs="breadrumbs" />
-
-    <main
+    <LazyHydrate when-idle>
+      <page-header :title="title" :breadrumbs="breadrumbs" />
+    </LazyHydrate>
+    <section class="background-with-transparent">
+      <!-- <main
       class="background"
-      v-lazy:background-image="require('~/assets/img/bg.jpg')"
-      style="background-color: #f0f0f0; background-repeat: repeat; background-size: 100%;"
-    >
+      style="
+        background-color: #f0f0f0;
+        background-repeat: repeat;
+        background-size: 100%;
+        background-image: url(/bg.jpg);
+      "
+    > -->
       <v-container class="py-12" grid-list-lg>
         <v-row>
           <v-col cols="12">
-            <div v-html="page.content"></div>
+            <LazyHydrate never>
+              <content-wrapper v-html="page.content" />
+            </LazyHydrate>
+            <!-- <div v-html="page.content"></div> -->
           </v-col>
         </v-row>
       </v-container>
-    </main>
+    </section>
   </div>
 </template>
     
 
 <script>
-import PageHeader from "~/components/PageHeader";
-import gql from "graphql-tag";
+import LazyHydrate from "vue-lazy-hydration";
 
+// import PageHeader from "~/components/PageHeader";
+import gql from "graphql-tag";
+// import { mdiAccount, mdiPencil, mdiShareVariant, mdiDelete } from "@mdi/js";
+// icons: {
+//   mdiAccount,
+//   mdiPencil,
+//   mdiShareVariant,
+//   mdiDelete,
+// },
 export default {
   head() {
     return {
       title: "О компании",
     };
   },
-  components: { PageHeader },
+  components: { LazyHydrate },
   data() {
     return {
       title: "О компании",
@@ -63,6 +80,9 @@ export default {
       page: pageData.pages[0],
     };
   },
+  // mounted() {
+  //   console.log(this.$vuetify.icons);
+  // },
 };
 </script>
 

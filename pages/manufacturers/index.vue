@@ -3,14 +3,13 @@
     <page-header title="Производители" :breadrumbs="breadrumbs" />
     <div
       class="background background-repeat"
-      v-lazy:background-image="require('~/assets/img/bg.jpg')"
+      style="background-image: url(/bg.jpg)"
     >
       <v-container class="py-12" grid-list-lg>
-        <!-- <div> -->
+        <!-- <div> v-lazy:background-image="require('~/assets/img/bg.jpg')" -->
         <vertical-card
-          v-for="(item,index) in manufacturers"
+          v-for="(item, index) in manufacturers"
           :key="index"
-          data-aos="fade-up"
           :item="item"
           type="manufacturers"
           class="mb-6"
@@ -30,12 +29,12 @@ import VerticalCard from "~/components/VerticalCard";
 export default {
   head() {
     return {
-      title: "Производители(мясокомбинаты)"
+      title: "Производители(мясокомбинаты)",
     };
   },
   data() {
     return {
-      imageBaseUrl: process.env.imageBaseUrl
+      imageBaseUrl: process.env.imageBaseUrl,
     };
   },
   components: { PageHeader, VerticalCard },
@@ -54,10 +53,10 @@ export default {
             }
           }
         }
-      `
+      `,
     });
     return {
-      manufacturers: manufacturerData.manufacturers
+      manufacturers: manufacturerData.manufacturers,
     };
   },
   computed: {
@@ -65,15 +64,15 @@ export default {
       return [
         {
           to: "/",
-          text: "Главная"
+          text: "Главная",
         },
         {
           to: this.$route.path,
-          text: "Производители"
-        }
+          text: "Производители",
+        },
       ];
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -1,0 +1,6 @@
+@mixin bg ($bg-content...) {
+    background: $bg-content;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}

@@ -90,6 +90,8 @@ export default {
   watch: {
     dialog(val) {
       if (val === false) {
+        console.log(this.product.category.slug);
+        this.$emit("close", this.product._id, this.product.category.slug);
         this.$router.push({ params: { productSlug: null } });
       }
     },

@@ -3,20 +3,20 @@
     <h3 class="pl-0 mb-5">
       <span>Заказ</span>
       <span v-if="order.oneClick">&nbsp;в один клик&nbsp;</span>
-      <span>{{order.date}}</span>
-      <span v-if="!order.oneClick">на сумму {{order.summa}}</span>
+      <span>{{ order.date }}</span>
+      <span v-if="!order.oneClick">на сумму {{ order.summa }}</span>
     </h3>
     <div class="mb-3">
       <h3 class="mb-2">Получатель</h3>
-      <div class="mb-3">{{order.name}} {{order.phone}}</div>
+      <div class="mb-3">{{ order.name }} {{ order.phone }}</div>
       <v-divider></v-divider>
     </div>
     <div v-if="order.address" class="mb-3">
       <h3 class="mb-2">Адрес доставки</h3>
-      <div class="mb-3">{{order.address}}</div>
+      <div class="mb-3">{{ order.address }}</div>
       <v-divider></v-divider>
     </div>
-    <div v-if="order.oneClick">Товар: {{order.data.product}}</div>
+    <div v-if="order.oneClick">Товар: {{ order.data.product }}</div>
     <div v-else-if="products.length">
       <h3>Состав заказа</h3>
       <v-simple-table class="mb-3">
@@ -28,12 +28,21 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(product,index) in this.products" :key="'product-item-wrapper'+index">
+          <tr
+            v-for="(product, index) in this.products"
+            :key="'product-item-wrapper' + index"
+          >
             <td class="px-1">
               <v-avatar>
-                <img
-                  style="object-fit: cover;"
-                  v-lazy="product.img ? product.img.formats  && product.img.formats.thumbnail ? imageBaseUrl + product.img.formats.thumbnail.url : imageBaseUrl+product.img.url : require('~/assets/no-image.png')"
+                <v-img
+                  contain
+                  :src="
+                    product.img
+                      ? product.img.formats && product.img.formats.thumbnail
+                        ? imageBaseUrl + product.img.formats.thumbnail.url
+                        : imageBaseUrl + product.img.url
+                      : require('~/assets/no-image.png')
+                  "
                   :alt="product.name"
                 />
               </v-avatar>
@@ -44,20 +53,23 @@
                 :to="`/catalog/${product.category.slug}/${product.slug}`"
                 class="d-block underline-on-hover"
                 :title="product.name"
-              >{{product.name}}</nuxt-link>
+                >{{ product.name }}</nuxt-link
+              >
             </td>
-            <td class="px-1 text-center">{{product.qty}}</td>
+            <td class="px-1 text-center">{{ product.qty }}</td>
             <td class="px-1">
               <div
                 class="price ml-1 display-flex align-center justify-center font-weight-medium"
-              >{{product.priceAll }}</div>
+              >
+                {{ product.priceAll }}
+              </div>
             </td>
           </tr>
-          <tr style="background: white !important;" v-if="order.summa">
+          <tr style="background: white !important" v-if="order.summa">
             <td></td>
             <td></td>
             <td class="text-right">Итого:</td>
-            <td class="text-center font-weight-bold">{{order.summa}}</td>
+            <td class="text-center font-weight-bold">{{ order.summa }}</td>
           </tr>
         </tbody>
       </v-simple-table>
