@@ -378,7 +378,7 @@ export const actions = {
   },
   setRootCategory({ commit, state }, newValue) {
     // console.log("🚀state.sessionStorage.rootCategory", !state.sessionStorage.rootCategory)
-    if (!state.sessionStorage.rootCategory || state.sessionStorage.rootCategory.slug !== newValue.slug) {
+    if (!state.sessionStorage.rootCategory || !state.sessionStorage.rootCategory.slug || state.sessionStorage.rootCategory.slug !== newValue.slug) {
       // console.log("ChangeROOTCAT")
       commit("rootCategory", newValue)
     }
