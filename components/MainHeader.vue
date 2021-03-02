@@ -2,7 +2,7 @@
   <section
     v-once
     :class="$style.mainSection"
-    :style="`background-image: url(${require(`~/assets/images/${img}?webp`)})`"
+    :style="`background-image: url(${require(`~/assets/images/${img}`)})`"
   >
     <v-container
       :class="$style.mainSectionInner"

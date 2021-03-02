@@ -46,7 +46,7 @@ export default {
     },
     imageSource: {
       type: String,
-      default: require("~/assets/images/promo_crop.jpg"), // "/promo_crop.webp",
+      default: require("~/assets/images/promo_crop.jpg"),
     },
     noLoad: {
       type: Boolean,
