@@ -131,10 +131,7 @@
         </template>
       </page-header>
     </LazyHydrate>
-    <!-- <LazyHydrate when-visible> -->
-    <!-- <v-container fluid></v-container> :imageSource="require('~/assets/images/bg.jpg')"   :load="initialPageData"-->
-    <!-- <LazyHydrate never :trigger-hydration="true"> -->
-    <!-- !noLoad -->
+
     <div
       :class="$style.categoryWrapper"
       class="background-with-transparent pa-3"
@@ -329,8 +326,6 @@
 import gql from "graphql-tag";
 import LazyHydrate from "vue-lazy-hydration";
 
-// import { mdiSortVariant } from "@mdi/js";
-
 // function calculateImageUrl(imageObject, imageBaseUrl) {
 //   // console.log(
 //   //   "🚀 ~ file: _category.vue ~ line 364 ~ calculateImageUrl ~ imageObject",
@@ -390,7 +385,7 @@ export default {
       // productTypeSelected: null,
       initialPageData: false,
       metaInfo: {},
-      imageSource: require("~/assets/images/bg.jpg"),
+      imageSource: require("~/assets/images/bg.jpg?original"),
       image: "",
       bgLoaded: false,
       isMounted: false,

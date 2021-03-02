@@ -1,12 +1,12 @@
 <template>
   <v-app>
-    <LazyHydrate when-idle>
-      <toolbar
-        @show-user="userDrawer = true"
-        @show-drawer="drawer = true"
-        @show-basket="basketDrawer = true"
-      />
-    </LazyHydrate>
+    <!-- <LazyHydrate when-idle> -->
+    <toolbar
+      @show-user="userDrawer = true"
+      @show-drawer="drawer = true"
+      @show-basket="basketDrawer = true"
+    />
+    <!-- </LazyHydrate> -->
     <lazy-navigation-mobile
       v-if="drawer"
       :show="drawer"
@@ -61,12 +61,12 @@
 </style>
 
 <script>
-import LazyHydrate from "vue-lazy-hydration";
+// import LazyHydrate from "vue-lazy-hydration";
 
 export default {
-  components: {
-    LazyHydrate,
-  },
+  // components: {
+  //   LazyHydrate,
+  // },
   name: "default",
   data() {
     return {

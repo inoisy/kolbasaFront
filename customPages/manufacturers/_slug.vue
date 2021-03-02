@@ -16,7 +16,7 @@
             :href="imageBaseUrl + manufacturer.catalog.url"
             :title="`Каталог ${manufacturer.name}`"
           >
-            <v-icon left dark>{{ icons.mdiDownload }}</v-icon>
+            <v-icon left dark>$file</v-icon>
             Загрузить прайс
           </v-btn>
           <!-- </template> -->
@@ -25,7 +25,7 @@
     </LazyHydrate>
 
     <div
-      :style="`background-image: url(${require('~/assets/images/bg.jpg')})`"
+      :style="`background-image: url(${require('~/assets/images/bg.jpg?original')})`"
       class="background-with-transparent"
     >
       <v-container grid-list-lg class="pt-10 pb-7">
@@ -79,7 +79,7 @@
 <script>
 // import PageHeader from "~/components/PageHeader";
 // import ProductCard from "~/components/ProductCard";
-import { mdiDownload } from "@mdi/js";
+// import { mdiDownload } from "@mdi/js";
 import LazyHydrate from "vue-lazy-hydration";
 
 export default {
@@ -104,7 +104,7 @@ export default {
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl,
-      icons: { mdiDownload },
+      // iscons: { mdiDownload },
     };
   },
   async asyncData({ store, params, error, $strapi }) {

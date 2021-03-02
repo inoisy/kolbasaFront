@@ -343,7 +343,9 @@ export default {
       return this.imageBaseUrl + this.product.img.formats.thumbnail.url;
     },
   },
-
+  // mounted() {
+  //   console.log("mounted");
+  // },
   methods: {
     // Will only be called once the element is intersected
     // onIntersect(entries, observer, isIntersecting) {

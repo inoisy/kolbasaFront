@@ -1,61 +1,105 @@
 <template>
   <div :class="$style.appBar">
-    <nuxt-link
-      :class="$style.logoWrapper"
-      to="/"
-      class="py-1 fill-height d-flex align-center"
-      title="Логотип Альянс Фуд"
-    >
-      <v-img
-        id="logo-img"
-        :src="require('~/assets/images/logo1.png')"
-        alt="Логотип Альянс Фуд"
-        title="Логотип Альянс Фуд"
-        max-height="100%"
-        contain
-      ></v-img>
-      <v-img
-        id="logo-text"
-        class="mt-1 mx-1"
-        :src="require('~/assets/images/logo2.png')"
-        alt="Логотип Альянс Фуд"
-        title="Логотип Альянс Фуд"
-        max-height="80%"
-        contain
-      ></v-img>
-    </nuxt-link>
-    <v-spacer></v-spacer>
-    <template v-for="(item, index) in menuItems">
-      <v-btn
-        v-if="!item.disable"
-        :key="item.slug + index"
-        :id="item.slug"
-        :to="item.to"
-        class="fill-height ma-0 header-link hidden-sm-and-down"
-        style="height: 100%"
-        text
-        tile
-        color="#95282a"
-        :title="item.name"
-      >
-        {{ item.name }}
-        <v-icon v-if="item.isChild">{{ icons.mdiMenuDown }}</v-icon>
-      </v-btn>
-      <v-btn
-        v-else
-        :key="item.slug + index"
-        :id="item.slug"
-        class="fill-height ma-0 header-link hidden-sm-and-down"
-        style="height: 100%"
-        text
-        tile
-        color="#95282a"
-        :title="item.name"
-      >
-        {{ item.name }}
-        <v-icon v-if="item.isChild">{{ icons.mdiMenuDown }}</v-icon>
-      </v-btn>
-    </template>
+    <LazyHydrate when-idle>
+      <div :class="$style.appBarInner">
+        <nuxt-link
+          :class="$style.logoWrapper"
+          to="/"
+          class="py-1 fill-height d-flex align-center"
+          title="Логотип Альянс Фуд"
+        >
+          <v-img
+            id="logo-img"
+            :src="require('~/assets/images/logo1.png')"
+            alt="Логотип Альянс Фуд"
+            title="Логотип Альянс Фуд"
+            max-height="100%"
+            contain
+          />
+          <v-img
+            id="logo-text"
+            class="mt-1 mx-1"
+            :src="require('~/assets/images/logo2.png')"
+            alt="Логотип Альянс Фуд"
+            title="Логотип Альянс Фуд"
+            max-height="80%"
+            contain
+          />
+        </nuxt-link>
+        <v-spacer></v-spacer>
+        <template v-for="(item, index) in menuItems">
+          <v-btn
+            v-if="!item.disable"
+            :key="item.slug + index"
+            :id="item.slug"
+            :to="item.to"
+            class="fill-height ma-0 header-link hidden-sm-and-down"
+            style="height: 100%"
+            text
+            tile
+            color="#95282a"
+            :title="item.name"
+          >
+            {{ item.name }}
+            <v-icon v-if="item.isChild">$dropdown</v-icon>
+          </v-btn>
+          <v-btn
+            v-else
+            :key="item.slug + index"
+            :id="item.slug"
+            class="fill-height ma-0 header-link hidden-sm-and-down"
+            style="height: 100%"
+            text
+            tile
+            color="#95282a"
+            :title="item.name"
+          >
+            {{ item.name }}
+            <v-icon v-if="item.isChild">$dropdown</v-icon>
+          </v-btn>
+        </template>
+
+        <v-btn
+          @click="$emit('show-basket')"
+          :disabled="!(isMounted && isCart)"
+          class="cart-wrap header-link"
+          color="#95282a"
+          :hover="false"
+          text
+        >
+          <span v-if="summa > 0" class="cart-text mr-2"
+            >{{ summa }}&nbsp;р</span
+          >
+          <v-badge
+            class="cart-badge"
+            color="#95282a"
+            :value="isMounted && isCart"
+            overlap
+            :content="cartLength"
+          >
+            <v-icon color="#95282a">{{ icons.mdiBasket }}</v-icon>
+          </v-badge>
+        </v-btn>
+        <v-btn
+          @click="$emit('show-user')"
+          icon
+          class="ml-1"
+          large
+          title="Меню пользователя"
+        >
+          <v-icon medium color="#95282a">{{ icons.mdiAccount }}</v-icon>
+        </v-btn>
+        <v-btn
+          @click="$emit('show-drawer')"
+          icon
+          class="ml-1 hidden-md-and-up"
+          large
+          title="Меню"
+        >
+          <v-icon medium color="#95282a">$menu</v-icon>
+        </v-btn>
+      </div>
+    </LazyHydrate>
     <lazy-toolbar-catalog-menu
       v-if="!isMobile && isMounted"
       :items="menuItems[0].items"
@@ -71,43 +115,6 @@
       :items="menuItems[2].items"
       parentSlug="about"
     />
-    <v-btn
-      @click="$emit('show-basket')"
-      :disabled="!(isMounted && isCart)"
-      class="cart-wrap header-link"
-      color="#95282a"
-      :hover="false"
-      text
-    >
-      <span v-if="summa > 0" class="cart-text mr-2">{{ summa }}&nbsp;р</span>
-      <v-badge
-        class="cart-badge"
-        color="#95282a"
-        :value="isMounted && isCart"
-        overlap
-        :content="cartLength"
-      >
-        <v-icon color="#95282a">{{ icons.mdiBasket }}</v-icon>
-      </v-badge>
-    </v-btn>
-    <v-btn
-      @click="$emit('show-user')"
-      icon
-      class="ml-1"
-      large
-      title="Меню пользователя"
-    >
-      <v-icon medium color="#95282a">{{ icons.mdiAccount }}</v-icon>
-    </v-btn>
-    <v-btn
-      @click="$emit('show-drawer')"
-      icon
-      class="ml-1 hidden-md-and-up"
-      large
-      title="Меню"
-    >
-      <v-icon medium color="#95282a">{{ icons.mdiMenu }}</v-icon>
-    </v-btn>
   </div>
 </template>
 <style lang="scss" scoped module>
@@ -124,13 +131,25 @@
   position: fixed;
   top: 0;
   z-index: 300;
-  display: flex;
-  align-items: center;
+
   @include md {
     height: $toolbar-desktop-height;
   }
   .logoWrapper {
     padding-right: 8px;
+  }
+  .appBarInner {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    // @media (min-width: 1264px) {
+    //   max-width: 1185px;
+    //   margin-left: auto;
+    //   margin-right: auto;
+    // }
+    // .container {
+
+    // }
   }
 }
 </style>
@@ -149,24 +168,24 @@
 //   max-width: 280px;
 // }
 
-.manufacturer-menu-inner {
-  top: $toolbar-mobile-height !important;
-  @include md {
-    top: $toolbar-desktop-height !important;
-  }
-}
+// .manufacturer-menu-inner {
+//   top: $toolbar-mobile-height !important;
+//   @include md {
+//     top: $toolbar-desktop-height !important;
+//   }
+// }
 
-.extra-text {
-  height: 42px !important;
-  font-size: 0.8rem !important;
-  line-height: 1.1 !important;
-}
+// .extra-text {
+//   height: 42px !important;
+//   font-size: 0.8rem !important;
+//   line-height: 1.1 !important;
+// }
 
-#header-top {
-  background-color: #282828;
-  height: 42px;
-  justify-content: space-around;
-}
+// #header-top {
+//   background-color: #282828;
+//   height: 42px;
+//   justify-content: space-around;
+// }
 
 .cart-wrap {
   height: 100% !important;
@@ -288,7 +307,13 @@
 </style>
 
 <script>
-import { mdiMenuDown, mdiMenu, mdiAccount, mdiBasket } from "@mdi/js";
+import { mdiAccount, mdiBasket } from "@mdi/js";
+import LazyHydrate from "vue-lazy-hydration";
+
+// export default {
+//   components: {
+//     LazyHydrate,
+//   },
 // icons: {
 //   mdiAccount,
 //   mdiPencil,
@@ -296,10 +321,13 @@ import { mdiMenuDown, mdiMenu, mdiAccount, mdiBasket } from "@mdi/js";
 //   mdiDelete,
 // },
 export default {
+  components: {
+    LazyHydrate,
+  },
   // props: ["menuItems"],
   data() {
     return {
-      icons: { mdiMenuDown, mdiMenu, mdiAccount, mdiBasket },
+      icons: { mdiAccount, mdiBasket },
       isMounted: false,
     };
   },

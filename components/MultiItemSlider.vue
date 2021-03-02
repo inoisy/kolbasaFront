@@ -8,11 +8,14 @@
       >
         <v-img
           contain
-          :src="item.img ? imageBaseUrl + item.img.url : '/no-image.png'"
           class="ma-auto d-block manuf-img"
+          :src="
+            require(`~/assets/images/manufacturers/${item.slug}.png?resize&size=200`)
+          "
           :alt="item.name"
           :title="item.name"
         />
+        <!-- :src="item.img ? imageBaseUrl + item.img.url : '/no-image.png'" -->
       </nuxt-link>
     </v-slide-item>
   </v-slide-group>

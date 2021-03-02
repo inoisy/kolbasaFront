@@ -1,6 +1,32 @@
 <template>
   <div>
     <LazyHydrate when-idle>
+      <main-header
+        v-bind="{
+          header: headerData.header,
+          subheader: headerData.subheader,
+          buttontext: headerData.buttontext,
+          subheader: headerData.subheader,
+          href: headerData.href,
+          img: headerData.img.url,
+        }"
+      />
+      <!--
+        
+         headerData: {
+        buttontext: "Хочу скидки!",
+        subheader:
+          "«Альянс Фуд» предлагает первоклассные продукты по реально выгодной стоимости. Участвуйте в ежемесячных акциях и получайте выгодно свежайшие и вкуснейшие колбасы",
+        header:
+          "Хотите высокое качество по низкой цене? Успейте купить по акции!",
+        href: "/catalog/discount",
+        img: {
+          url: "promo.jpg",
+        },
+      },
+        :header="page.header" :subheader="page.subheader" v-bind="{ header: page.header, subheader: page.subheader }" -->
+    </LazyHydrate>
+    <!-- <LazyHydrate when-idle>
       <v-carousel
         :class="$style.mainCarousel"
         cycle
@@ -49,9 +75,9 @@
           </v-container>
         </v-carousel-item>
       </v-carousel>
-    </LazyHydrate>
+    </LazyHydrate> -->
     <div
-      :style="`background-image: url(${require('~/assets/images/bg.jpg')})`"
+      :style="`background-image: url(${require('~/assets/images/bg.jpg?original')})`"
       :class="$style.contentSection"
       class="background-with-transparent"
     >
@@ -140,11 +166,11 @@
               <v-img
                 class="bottom-img pr-4 d-block ma-auto"
                 :src="require('~/assets/images/bottomImage1.png')"
-                :lazy-src="require('~/assets/images/bottomImage1.png?lqip')"
                 contain
                 alt="Колбаса оптом в Москве"
                 title="Колбаса оптом"
               />
+              <!-- :lazy-src="require('~/assets/images/bottomImage1.png?lqip')" -->
             </div>
             <v-flex xs10 md8 lg9 class="d-flex mb-5">
               <div class="my-auto">
@@ -180,12 +206,12 @@
               <v-img
                 class="bottom-img pl-4 d-block ma-auto"
                 :src="require('~/assets/images/bottomImage2.png')"
-                :lazy-src="require('~/assets/images/bottomImage2.png?lqip')"
                 contain
                 alt="Колбаса оптом с доставкой"
                 title="Колбаса оптом"
               />
             </div>
+            <!-- :lazy-src="require('~/assets/images/bottomImage2.png?lqip')" -->
           </div>
         </LazyHydrate>
         <delimiter class="mx-auto my-10 xs10 md10 lg9 xl8 flex" />
@@ -283,12 +309,12 @@
             <div class="flex hidden-sm-and-down md4 mb-5">
               <v-img
                 :src="require('~/assets/images/halal.png')"
-                :lazy-src="require('~/assets/images/halal.png?lqip')"
                 class="halal-img pr-4"
                 contain
                 alt="Халяльная продукция в Москве"
                 title="Халяльная продукция"
               />
+              <!-- :lazy-src="require('~/assets/images/halal.png?lqip')" -->
             </div>
           </v-row>
         </LazyHydrate>
@@ -302,36 +328,36 @@
   border-style: dashed;
   border-width: 2px;
 }
-.mainCarousel {
-  background-color: #212121;
-  height: 45rem !important;
+// .mainCarousel {
+//   background-color: #212121;
+//   height: 45rem !important;
 
-  @supports (height: max(640px, 100vh)) {
-    // @debug var(--toolbar-mobile-height);
-    height: max(640px, calc(100vh - #{$toolbar-mobile-height})) !important;
-  }
-  @include md {
-    height: 46.5rem !important;
-    @supports (height: max(640px, 100vh)) {
-      height: max(640px, calc(100vh - #{$toolbar-desktop-height})) !important;
-    }
-  }
+//   @supports (height: max(640px, 100vh)) {
+//     // @debug var(--toolbar-mobile-height);
+//     height: max(640px, calc(100vh - #{$toolbar-mobile-height})) !important;
+//   }
+//   @include md {
+//     height: 46.5rem !important;
+//     @supports (height: max(640px, 100vh)) {
+//       height: max(640px, calc(100vh - #{$toolbar-desktop-height})) !important;
+//     }
+//   }
 
-  .mainHeader {
-    font-size: 2.2rem;
-    line-height: 125%;
-    @include sm {
-      font-size: 2.5rem;
-    }
-  }
-  .mainSubHeader {
-    font-size: 1.1rem;
-    line-height: 140%;
-    @include sm {
-      font-size: 1.3rem;
-    }
-  }
-}
+//   .mainHeader {
+//     font-size: 2.2rem;
+//     line-height: 125%;
+//     @include sm {
+//       font-size: 2.5rem;
+//     }
+//   }
+//   .mainSubHeader {
+//     font-size: 1.1rem;
+//     line-height: 140%;
+//     @include sm {
+//       font-size: 1.3rem;
+//     }
+//   }
+// }
 // $toolbar-mobile-height: 64px;
 // $toolbar-desktop-height: 80px;
 
@@ -523,6 +549,11 @@ export default {
       return this.$store.getters.getParentCategories;
     },
     manufacturers() {
+      // console.log(
+      //   "🚀 ~ file: index.vue ~ line 556 ~ manufacturers ~ this.$store.state.sessionStorage.generalInfo.manufacturers",
+      //   this.$store.state.sessionStorage.generalInfo.manufacturers
+      // );
+
       return this.$store.state.sessionStorage.generalInfo.manufacturers;
     },
   },
@@ -565,32 +596,47 @@ export default {
           img: "certificate.svg",
         },
       ],
+      headerData: {
+        buttontext: "Хочу скидки!",
+        subheader:
+          "«Альянс Фуд» предлагает первоклассные продукты по реально выгодной стоимости. Участвуйте в ежемесячных акциях и получайте выгодно свежайшие и вкуснейшие колбасы",
+        header:
+          "Хотите высокое качество по низкой цене? Успейте купить по акции!",
+        href: "/catalog/discount",
+        img: {
+          url: "promo.jpg",
+        },
+      },
     };
   },
   // mounted() {
   //   console.log(this.$vuetify.icons);
   // },
 
-  async asyncData({ app }) {
-    // const client = ctx.;
-    const { data: promosData } = await app.apolloProvider.defaultClient.query({
-      query: gql`
-        {
-          promos {
-            header
-            content
-            buttontext
-            href
-            img {
-              url
-            }
-          }
-        }
-      `,
-    });
-    return {
-      sliders: promosData.promos,
-    };
-  },
+  // async asyncData({ app }) {
+  //   // const client = ctx.;
+  //   const { data: promosData } = await app.apolloProvider.defaultClient.query({
+  //     query: gql`
+  //       {
+  //         promos {
+  //           header
+  //           content
+  //           buttontext
+  //           href
+  //           img {
+  //             url
+  //           }
+  //         }
+  //       }
+  //     `,
+  //   });
+  //   console.log(
+  //     "🚀 ~ file: index.vue ~ line 591 ~ asyncData ~ promosData",
+  //     promosData
+  //   );
+  //   return {
+  //     sliders: promosData.promos,
+  //   };
+  // },
 };
 </script>

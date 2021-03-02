@@ -4,7 +4,7 @@
       <page-header :title="title" :breadrumbs="breadrumbs" />
     </LazyHydrate>
     <div
-      :style="`background-image: url(${require('~/assets/images/bg.jpg')})`"
+      :style="`background-image: url(${require('~/assets/images/bg.jpg?original')})`"
       class="background-with-transparent"
     >
       <v-container grid-list-lg class="pt-16 pb-15">

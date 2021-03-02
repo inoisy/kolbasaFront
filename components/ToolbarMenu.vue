@@ -6,21 +6,22 @@
     :activator="`#${parentSlug}`"
     content-class="menu-inner"
   >
-    <!-- v-model="showMenu" -->
-    <v-list color="white" :class="isTwoColumns && 'two-columns'" dense>
-      <template v-for="(child, index) in items">
-        <v-list-item
-          :key="'list-group' + index"
-          :to="`/${parentSlug}/${child.slug}`"
-          :title="child.name"
-          class="list-item"
-        >
-          <v-list-item-title>
-            {{ child.name }}
-          </v-list-item-title>
-        </v-list-item>
-      </template>
-    </v-list>
+    <LazyHydrate on-interaction>
+      <v-list color="white" :class="isTwoColumns && 'two-columns'" dense>
+        <template v-for="(child, index) in items">
+          <v-list-item
+            :key="'list-group' + index"
+            :to="`/${parentSlug}/${child.slug}`"
+            :title="child.name"
+            class="list-item"
+          >
+            <v-list-item-title>
+              {{ child.name }}
+            </v-list-item-title>
+          </v-list-item>
+        </template>
+      </v-list>
+    </LazyHydrate>
   </v-menu>
 </template>
 <style lang="scss" scoped>
@@ -51,7 +52,12 @@
 }
 </style>
 <script>
+import LazyHydrate from "vue-lazy-hydration";
+
 export default {
+  components: {
+    LazyHydrate,
+  },
   props: {
     items: {
       type: Array,

@@ -238,14 +238,7 @@
 
 <script>
 import { mdiDeleteForeverOutline, mdiDeleteEmptyOutline } from "@mdi/js";
-//  import { mdiAccount, mdiPencil, mdiShareVariant, mdiDelete } from "@mdi/js";
-// import { mdiAccount, mdiPencil, mdiShareVariant, mdiDelete } from "@mdi/js";
-// icons: {
-//   mdiAccount,
-//   mdiPencil,
-//   mdiShareVariant,
-//   mdiDelete,
-// },
+
 // import ContactForm from "~/components/ContactForm";
 // import ProductQuantity from "~/components/ProductQuantity";
 

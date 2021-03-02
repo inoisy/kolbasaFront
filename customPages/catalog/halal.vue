@@ -8,7 +8,7 @@
       />
     </LazyHydrate>
     <div
-      :style="`background-image: url(${require('~/assets/images/bg.jpg')})`"
+      :style="`background-image: url(${require('~/assets/images/bg.jpg?original')})`"
       class="background-with-transparent"
     >
       <v-container grid-list-lg class="py-12">

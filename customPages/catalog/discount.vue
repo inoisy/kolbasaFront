@@ -4,9 +4,8 @@
     <LazyHydrate when-idle>
       <page-header :title="title" :breadrumbs="breadcrumbs" />
     </LazyHydrate>
-    <!-- :imageSource="require('~/assets/images/bg.jpg')" -->
     <div
-      :style="`background-image: url(${require('~/assets/images/bg.jpg')})`"
+      :style="`background-image: url(${require('~/assets/images/bg.jpg?original')})`"
       class="background-with-transparent"
     >
       <v-container grid-list-lg class="py-16">
@@ -53,7 +52,7 @@
 import gql from "graphql-tag";
 // import PageHeader from "~/components/PageHeader";
 // import ProductCard from "~/components/ProductCard";
-import { mdiDownload } from "@mdi/js";
+// import { mdiDownload } from "@mdi/js";
 import LazyHydrate from "vue-lazy-hydration";
 
 export default {
@@ -177,9 +176,6 @@ export default {
     return {
       title: "Акционная продукция",
       imageBaseUrl: process.env.imageBaseUrl,
-      icons: {
-        mdiDownload,
-      },
     };
   },
 };
