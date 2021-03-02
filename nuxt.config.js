@@ -233,8 +233,8 @@ module.exports = async () => {
       //   }
       // ],
       [
-        // "@nuxtjs/yandex-metrika",
-        "~/modules/yandex-metrika",
+        "@nuxtjs/yandex-metrika",
+        // "~/modules/yandex-metrika",
         {
           id: process.env.YANDEX_ID,
           clickmap: true,
@@ -242,7 +242,7 @@ module.exports = async () => {
           accurateTrackBounce: true,
           webvisor: true,
           useCDN: false,
-          defer: false
+          // defer: false
         }
       ],
 
