@@ -2,7 +2,7 @@
   <div>
     <page-header :title="title" :breadrumbs="breadrumbs" />
     <div
-      :style="`background-image: url(${require('~/assets/images/bg.jpg?webp')})`"
+      :style="`background-image: url(${require('~/assets/images/bg.jpg')})`"
       class="background-with-transparent"
     >
       <v-container grid-list-lg>

@@ -1,8 +1,5 @@
 <template>
   <div class="header-wrapper d-flex" :style="`background-image: url(${image})`">
-    <!-- :imageSource="imageSource"
-    :load="!noLoad" -->
-    <!--  :no-load="noLoad" :style="`background-image: url(${image})`" require('~/assets/images/promo_crop.jpg?webp'  ref="wrapper" -->
     <v-container
       class="header-inner"
       :class="fluid ? 'fluid' : 'nofluid'"
@@ -49,7 +46,7 @@ export default {
     },
     imageSource: {
       type: String,
-      default: require("~/assets/images/promo_crop.jpg?webp"), // "/promo_crop.webp",
+      default: require("~/assets/images/promo_crop.jpg"), // "/promo_crop.webp",
     },
     noLoad: {
       type: Boolean,

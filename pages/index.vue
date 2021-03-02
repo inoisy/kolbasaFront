@@ -51,7 +51,7 @@
       </v-carousel>
     </LazyHydrate>
     <div
-      :style="`background-image: url(${require('~/assets/images/bg.jpg?webp')})`"
+      :style="`background-image: url(${require('~/assets/images/bg.jpg')})`"
       :class="$style.contentSection"
       class="background-with-transparent"
     >

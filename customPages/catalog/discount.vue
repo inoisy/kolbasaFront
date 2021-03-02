@@ -4,9 +4,9 @@
     <LazyHydrate when-idle>
       <page-header :title="title" :breadrumbs="breadcrumbs" />
     </LazyHydrate>
-    <!-- :imageSource="require('~/assets/images/bg.jpg?webp')" -->
+    <!-- :imageSource="require('~/assets/images/bg.jpg')" -->
     <div
-      :style="`background-image: url(${require('~/assets/images/bg.jpg?webp')})`"
+      :style="`background-image: url(${require('~/assets/images/bg.jpg')})`"
       class="background-with-transparent"
     >
       <v-container grid-list-lg class="py-16">

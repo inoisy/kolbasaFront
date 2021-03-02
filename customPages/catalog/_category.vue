@@ -11,7 +11,7 @@
         class="pos-relative"
         :no-load="noLoad"
       >
-        <!--  :imageSource="'https://api.prodaem-kolbasu.ru/uploads/031ba5905e18488794851c8d512b1227_5642513f3d.jpeg'" :loadingImage="require('~/assets/images/promo_crop.jpg?lqip')" :loading="!initialPageData" require('~/assets/images/promo_crop.jpg?webp') -->
+        <!--  :imageSource="'https://api.prodaem-kolbasu.ru/uploads/031ba5905e18488794851c8d512b1227_5642513f3d.jpeg'" :loadingImage="require('~/assets/images/promo_crop.jpg?lqip')" :loading="!initialPageData" require('~/assets/images/promo_crop.jpg') -->
         <!-- <template v-slot:breadcrumbs>
           <div
             v-if="!initialPageData && isProductRoute"
@@ -132,7 +132,7 @@
       </page-header>
     </LazyHydrate>
     <!-- <LazyHydrate when-visible> -->
-    <!-- <v-container fluid></v-container> :imageSource="require('~/assets/images/bg.jpg?webp')"   :load="initialPageData"-->
+    <!-- <v-container fluid></v-container> :imageSource="require('~/assets/images/bg.jpg')"   :load="initialPageData"-->
     <!-- <LazyHydrate never :trigger-hydration="true"> -->
     <!-- !noLoad -->
     <div
@@ -390,7 +390,7 @@ export default {
       // productTypeSelected: null,
       initialPageData: false,
       metaInfo: {},
-      imageSource: require("~/assets/images/bg.jpg?webp"),
+      imageSource: require("~/assets/images/bg.jpg"),
       image: "",
       bgLoaded: false,
       isMounted: false,
