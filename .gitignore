@@ -82,5 +82,8 @@ dist
 
 public
 
-
 .trash
+
+static/data.json
+
+assets/images/manufacturers/*
