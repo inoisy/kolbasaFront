@@ -332,9 +332,9 @@ module.exports = async () => {
       dsn: 'https://e3280a17ba94410780a38ca12ccc2e6e@o413020.ingest.sentry.io/5295312', // Enter your project's DSN here
       config: {}, // Additional config
     },
-    ...(!isDev && {
-      modern: 'client'
-    }),
+    // ...(!isDev && {
+    //   modern: 'client'
+    // }),
     render: {
       // http2: {
       //   push: true

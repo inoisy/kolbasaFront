@@ -86,7 +86,7 @@
                             height="3rem"
                             width="3rem"
                             :src="
-                              require(`~/assets/images/manufacturers/${product.manufacturer.slug}.png`)
+                              require(`~/assets/images/manufacturers/${product.manufacturer.slug}.png?resize&size=50`)
                             "
                             :alt="product.manufacturer.name"
                             :title="product.manufacturer.name"
