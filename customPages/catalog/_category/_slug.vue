@@ -180,7 +180,7 @@
                     @add="handleAdd"
                   />
                   <!-- @delete="handleDelete" -->
-                  <!-- <v-btn
+                  <v-btn
                     class="mt-3 fill-width"
                     dark
                     color="#d50000"
@@ -192,7 +192,7 @@
                     @click="handleOneClickBuy"
                   >
                     Купить в один клик
-                  </v-btn> -->
+                  </v-btn>
                 </div>
               </LazyHydrate>
               <div class="manufacturer my-3" v-if="product.manufacturer">
@@ -209,7 +209,7 @@
               </LazyHydrate>
             </v-flex>
           </v-layout>
-          <!-- <div v-show="!showProductCard" class="pb-6 pt-6 mx-auto">
+          <div v-show="!showProductCard" class="pb-6 pt-6 mx-auto">
             <div class="fs-1-5 mb-5 font-weight-bold mb-3">
               Купить "{{ product.name }}" в один клик
             </div>
@@ -218,7 +218,7 @@
               :oneClickBuy="true"
               :productName="product.name"
             />
-          </div> -->
+          </div>
         </v-container>
       </template>
       <LazyHydrate v-if="related.length" when-visible>
@@ -286,22 +286,25 @@ export default {
   // },
   name: "child",
   head() {
-    // console.log("head", this.isProduct);
+    // console.log(
+    //   "head",
+    //   `https://prodaem-kolbasu.ru/catalog/${this.product.category.slug}/${this.product.slug}`
+    // );
     if (this.isProduct && this.product.name) {
       // if (!this.product || !this.product.name) return;
 
       return {
         title: `${this.product.name} оптом`,
         // TODO
-        // link: [
-        //   {
-        //     rel: "canonical",
-        //     href:
-        //       this.category && this.category.slug
-        //         ? `https://prodaem-kolbasu.ru/catalog/${this.category.slug}/${this.product.slug}`
-        //         : "",
-        //   },
-        // ],
+        link: [
+          {
+            rel: "canonical",
+            href:
+              this.product.category && this.product.category.slug
+                ? `https://prodaem-kolbasu.ru/catalog/${this.product.category.slug}/${this.product.slug}`
+                : "",
+          },
+        ],
         meta: [
           {
             hid: "description",

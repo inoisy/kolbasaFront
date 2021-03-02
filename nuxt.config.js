@@ -240,7 +240,7 @@ module.exports = async () => {
           clickmap: false,
           trackLinks: false,
           accurateTrackBounce: false,
-          webvisor: false,
+          webvisor: true,
           useCDN: false,
           defer: true
         }
