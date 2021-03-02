@@ -396,6 +396,16 @@ module.exports = async () => {
       //     }],
       //   ]
       // },
+      transpile: ['@nuxtjs/apollo', '@nuxtjs/robots',
+        '@nuxtjs/sentry', '@nuxtjs/sitemap',
+        '@nuxtjs/strapi', '@nuxtjs/toast',
+        '@nuxtjs/yandex-metrika', 'graphql-tag',
+        'nuxt-social-meta',
+        'nuxt-ssr-cache', 'nuxt-vuex-localstorage',
+        'vue', 'vue-infinite-loading',
+        'vue-lazy-hydration', 'vue-server-renderer',
+        'vue-template-compiler', 'vue-the-mask',
+        'vue-yandex-maps', 'vuelidate']
       // transpile: ["@nuxtjs/vuetify", /^aos/, /^@nuxtjs.*/, "nuxt-vuex-localstorage"],
       // extend(config, ctx) { }
     }
