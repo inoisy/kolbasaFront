@@ -51,7 +51,7 @@
               :title="product.manufacturer.name"
               :alt="product.manufacturer.name"
               :src="
-                require(`~/assets/images/manufacturers/${product.manufacturer.slug}.png?resize&size=50`)
+                require(`~/assets/images/manufacturers/${product.manufacturer.slug}.png`)
               "
               contain
               width="50px"
