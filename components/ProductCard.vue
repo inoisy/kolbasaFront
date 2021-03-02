@@ -1,89 +1,121 @@
 <template>
+  <!-- <v-lazy v-if="product" min-height="300px"> -->
   <v-card
-    :title="product.name"
-    :to="to"
+    v-bind="{
+      ripple: false,
+      hover: isValue,
+      ...(isValue
+        ? {
+            title: product.name,
+            to: `/${grandparent}/${parent}/${product.slug}`,
+          }
+        : null),
+    }"
     @click.capture="cardClick"
-    color="white"
-    itemscope
-    itemtype="http://schema.org/Product"
-    hover
-    :ripple="false"
     class="fill-height product-wrapper"
   >
-    <div class="product-card-img-wrap" style="position: relative">
-      <v-img
-        itemprop="image"
-        class="d-block ma-auto product-img pa-3"
-        :title="product.name"
-        :alt="product.name"
-        :src="imgUrl"
-        contain
-      />
-      <div class="product-card-mini-imgs">
-        <v-img
-          class="product-card-halal-img"
-          v-if="product.isHalal"
-          src="/halal-min.png"
-          title="Халяльная продукция"
-          alt="Халяльная продукция"
-          contain
-        />
-        <!-- <v-img
-          class="product-card-manufacturer-img d-block"
-          :title="product.manufacturer.name"
-          :alt="product.manufacturer.name"
-          v-if="product.manufacturer && product.manufacturer.img"
-          :src="imageBaseUrl + product.manufacturer.img.url"
-        /> -->
-      </div>
-    </div>
-    <div class="display-flex mb-2">
-      <div
-        itemprop="offers"
-        itemscope
-        itemtype="http://schema.org/Offer"
-        class="pl-0 display-flex align-center"
-      >
-        <span
-          itemprop="price"
-          v-show="product.priceNum"
-          class="product-price"
-          >{{ price }}</span
+    <!--v-intersect.quiet="onIntersect" <v-lazy v-if="isValue" :value="show"> v-intersect.once="onIntersect" -->
+    <!-- <LazyHydrate when-visible> -->
+    <template v-if="isValue">
+      <!-- <LazyHydrate never :trigger-hydration="isVisible" > -->
+      <!-- v-show="isVisible" -->
+
+      <div itemscope itemtype="http://schema.org/Product">
+        <div class="product-card-img-wrap my-2">
+          <v-img
+            itemprop="image"
+            class="d-block ma-auto product-img"
+            :title="product.name"
+            :alt="product.name"
+            :src="imgUrl"
+            contain
+          >
+            <!--:eager="isVisible" <template v-slot:placeholder>
+          <image-placeholder />
+        </template> -->
+          </v-img>
+
+          <div class="product-card-mini-imgs">
+            <v-img
+              v-if="product.isHalal"
+              class="mr-1"
+              :src="require('~/assets/images/halal-min.png')"
+              title="Халяльная продукция"
+              alt="Халяльная продукция"
+              width="40px"
+              contain
+            />
+            <v-img
+              v-if="product.manufacturer && product.manufacturer.slug"
+              class="d-block"
+              :title="product.manufacturer.name"
+              :alt="product.manufacturer.name"
+              :src="
+                require(`~/assets/images/manufacturers/${product.manufacturer.slug}.png?resize&size=50`)
+              "
+              contain
+              width="50px"
+            />
+            <!-- {{ product.manufacturer.img }} -->
+            <!-- imageBaseUrl + product.manufacturer.img.url -->
+          </div>
+        </div>
+        <div
+          class="text-no-wrap display-flex mb-2 align-end"
+          style="height: 26px"
         >
-        <span v-show="!product.priceNum" style="font-size: 0.88rem"
-          >Нет в наличии</span
-        >
-        <span
-          class="pl-2 product-price"
-          v-if="product.isDiscount"
-          style="text-decoration: line-through"
-          >{{ product.priceNum }}</span
-        >
-        &nbsp;
-        <span
-          v-show="product.priceNum"
-          itemprop="priceCurrency"
-          content="RUB"
-          class="product-price"
-          >р</span
-        >
-        <v-chip v-if="isDiscount" color="accent" dark class="ml-2"
-          >-{{
-            Math.round(
-              (100 * (product.priceNum - product.discountPrice)) /
-                product.priceNum
-            )
-          }}%</v-chip
-        >
-      </div>
-      <div
-        itemprop="description"
-        style="font-size: 15px"
-        class="align-center display-flex pa-0 ml-2"
-      >
-        {{ product.weight ? ` / ${product.weight} кг.` : "" }}
-      </div>
-      <div v-if="isMultiple" class="ml-auto">
+          <div
+            class="pl-0 display-flex align-center"
+            itemprop="offers"
+            itemscope
+            itemtype="http://schema.org/Offer"
+          >
+            <span
+              itemprop="price"
+              v-show="product.priceNum"
+              class="product-price"
+              >{{ price }}</span
+            >
+            <span v-show="!product.priceNum" style="font-size: 0.88rem">
+              Нет в наличии
+            </span>
+            <span
+              class="pl-2 product-price"
+              v-if="product.isDiscount"
+              style="text-decoration: line-through"
+              >{{ product.priceNum }}</span
+            >
+            &nbsp;
+            <span
+              v-show="product.priceNum"
+              itemprop="priceCurrency"
+              content="RUB"
+              class="product-price"
+              >р</span
+            >
+            <v-chip
+              v-if="isDiscount"
+              color="accent"
+              dark
+              style="height: 26px"
+              class="ml-2"
+            >
+              -{{
+                Math.round(
+                  (100 * (product.priceNum - product.discountPrice)) /
+                    product.priceNum
+                )
+              }}%
+            </v-chip>
+          </div>
+          <div
+            itemprop="description"
+            style="font-size: 15px"
+            class="align-center display-flex pa-0 ml-2"
+          >
+            {{ product.weight ? ` / ${product.weight} кг.` : "" }}
+          </div>
+          <!-- <div v-if="isMultiple" class="ml-auto">
         <span class="product-price"
           >{{ Math.round(price * product.minimumOrder) }} р</span
         >
@@ -91,35 +123,61 @@
           >/ {{ product.minimumOrder }}
           {{ product.piece ? "шт." : "кг." }}</span
         >
-      </div>
-    </div>
+      </div> -->
+        </div>
 
-    <div itemprop="name" class="product-name mb-0 mt-1">
-      {{ product.name }}{{ halal ? "&nbsp; халяль" : "" }}
-    </div>
-    <div class="product-busket-wrap" ref="productCardActions">
-      <!-- {{ busketWatch }} -->
-      <v-btn
-        v-if="isMounted && !isInCart"
-        class="pruduct-busket-btn"
-        tile
-        color="#f2f2f2"
-        style="height: 40px"
-        :disabled="!product.priceNum"
-        elevation="0"
-        @click="handleAdd"
-        >В корзину</v-btn
-      >
-      <!-- <client-only v-else> -->
-      <product-quantity
-        v-else
-        class="mx-auto"
-        :id="product._id || product.id"
-        @deleted="isInCart = false"
-      ></product-quantity>
-      <!-- </client-only> -->
-    </div>
+        <div itemprop="name" class="product-name mb-0">
+          {{ product.name }}{{ halal ? "&nbsp; халяль" : "" }}
+        </div>
+        <div class="product-busket-wrap" ref="productCardActions">
+          <product-add
+            class="display-flex align-center wrap"
+            :id="product._id || product.id"
+            isCard
+            @add="handleAdd"
+          />
+          <!-- :="true" -->
+        </div>
+      </div>
+
+      <!-- </LazyHydrate> -->
+    </template>
+    <!-- </v-lazy> -->
+    <lazy-product-sceleton v-else :boilerplate="!loading" />
+    <!-- </LazyHydrate> -->
+
+    <!-- :title="product.name"
+      :to="`/${grandparent}/${parent}/${product.slug}`"
+       hover
+      :ripple="false" -->
+    <!--  color="white" :to="to" -->
+    <!-- isValue -->
+    <!-- {{ Object.entries(product).length === 0 }} -->
+    <!-- <div v-else style="display: flex; flex-direction: column; height: 100%">
+      <v-skeleton-loader
+        class="mb-3"
+        type="image"
+        :boilerplate="!loading"
+        height="150px"
+      />
+      <v-skeleton-loader type="text" :boilerplate="!loading" />
+      <v-skeleton-loader type="text" width="50%" :boilerplate="!loading" />
+      <v-skeleton-loader type="text" width="30%" :boilerplate="!loading" />
+
+      <v-skeleton-loader
+        class="mt-auto"
+        type="button"
+        height="48px"
+        width="100%"
+        :boilerplate="!loading"
+      />
+    </div> -->
+
+    <!-- </v-sheet> -->
   </v-card>
+  <!-- </v-lazy> -->
+
+  <!-- :class="$style.productInner" :boilerplate="!pageData"-->
 </template>
 <style lang="scss" scoped>
 .product-wrapper {
@@ -131,10 +189,10 @@
   height: 40px;
   background-color: #f2f2f2;
 
-  .pruduct-busket-btn {
-    width: 100%;
-    color: black !important;
-  }
+  // .pruduct-busket-btn {
+  //   width: 100%;
+  //   color: black !important;
+  // }
 }
 
 .product-price {
@@ -165,6 +223,10 @@
   }
 }
 
+.product-card-img-wrap {
+  position: relative;
+}
+
 .product-img,
 .product-card-img-wrap {
   height: 140px;
@@ -186,41 +248,81 @@
 @media (min-width: 960px) {
   .product-img,
   .product-card-img-wrap {
-    height: 160px;
-    max-height: 160px;
+    height: 150px;
+    max-height: 150px;
   }
 }
 </style>
 
 <script>
-import ProductQuantity from "~/components/ProductQuantity";
+// import LazyHydrate from "vue-lazy-hydration";
+
+// import ProductSceleton from "./ProductSceleton.vue";
+// import ProductQuantity from "~/components/ProductQuantity";
+// import ProductAdd from "./ProductAdd.vue";
 
 export default {
+  // components: { LazyHydrate },
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl,
-      isMounted: false,
-      isInCart: false,
+      // isVisible: this.show,
+      // isMounted: false,
+      // isInCart: false,
     };
   },
   props: {
-    to: {
-      type: String,
-    },
-    product: {
-      type: Object,
-    },
+    // to: {
+    //   type: String,
+    //   default: "",
+    // },
+
+    product: [Object, Boolean],
+    // {
+    //   type: Object,
+    //   default: () => {},
+    // },
     halal: {
       type: Boolean,
       default: false,
     },
+    grandparent: {
+      type: String,
+      default: "catalog",
+    },
+    parent: {
+      type: String,
+      default: "",
+      required: true,
+    },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
+    show: {
+      type: Boolean,
+      default: false,
+    },
+    // grandparent="catalog"
+    //             :parent="category.slug"
   },
-  components: { ProductQuantity },
-
   computed: {
-    // isInCart() {
-    //   return this.$store.getters.isInCart(this.product.id);
+    //   isActive: {
+    //   get() {
+    //     console.log(
+    //       "🚀 ~ file: ProductCard.vue ~ line 308 ~ get ~ this.show",
+    //       this.show
+    //     );
+
+    //     return this.show;
+    //   },
+    //   set(val) {
+    //     console.log("🚀 ~ file: ProductCard.vue ~ line 310 ~ set ~ val", val);
+    //   },
     // },
+    isValue() {
+      return !!this.product;
+    },
     isDiscount() {
       return this.product.isDiscount && this.product.discountPrice;
     },
@@ -229,62 +331,51 @@ export default {
         ? this.product.discountPrice
         : this.product.priceNum;
     },
-    isMultiple() {
-      return this.product.minimumOrder > 1;
-    },
     imgUrl() {
-      if (!this.product.img) return require("~/assets/no-image.png");
-      if (!this.product.img.formats)
+      // if (this.product.imageUrl) {
+      //   return this.product.imageUrl;
+      // }
+      if (!this.product.img) return "/no-image.png";
+      if (!this.product.img.formats) {
         return this.imageBaseUrl + this.product.img.url;
+      }
+
       return this.imageBaseUrl + this.product.img.formats.thumbnail.url;
     },
-    // busket() {
-    //   const index = this.$store.state.localStorage.basket.findIndex(
-    //     (item) => item.id === this.product.id
+  },
+
+  methods: {
+    // Will only be called once the element is intersected
+    // onIntersect(entries, observer, isIntersecting) {
+    //   console.log(
+    //     "🚀 ~ file: ProductCard.vue ~ line 348 ~ onIntersect ~ isIntersecting",
+    //     isIntersecting
     //   );
     //   console.log(
-    //     "🚀 ~ file: ProductCard.vue ~ line 244 ~ busket ~ index",
-    //     index
+    //     "🚀 ~ file: ProductCard.vue ~ line 329 ~ onIntersect ~ entries",
+    //     entries[0].isIntersecting
     //   );
-    //   return index >= 0
-    //     ? this.$store.state.localStorage.basket[index].count
-    //     : false;
+
+    //   // if (isIntersecting) {
+    //   //   this.isVisible = true;
+    //   //   console.log("🚀 this.isVisible", this.isVisible);
+    //   // }
     // },
-  },
-  // watch: {
-  //   busketWatch() {
-  //     const index = this.$store.state.localStorage.basket.findIndex(
-  //       (item) => item.id === this.product.id
-  //     );
-  //     console.log(
-  //       "🚀 ~ file: ProductCard.vue ~ line 244 ~ busket ~ index",
-  //       index,
-  //       !!(index >= 0)
-  //     );
-  //     return !!(index >= 0);
-  //   },
-  // },
-  mounted() {
-    console.log("id", this.product.id);
-    this.isMounted = true;
-    this.isInCart = this.$store.getters.isInCart(this.product.id);
-    // console.log("id", this.isInCart);
-  },
-  methods: {
+
     async handleAdd() {
       await this.$store.dispatch("addToCart", {
         item: Object.assign({}, this.product),
       });
-      this.isInCart = true;
+      // this.isInCart = true;
     },
     cardClick(event) {
-      if (this.$refs.productCardActions.contains(event.target)) {
+      if (
+        this.$refs.productCardActions &&
+        this.$refs.productCardActions.contains(event.target)
+      ) {
         event.preventDefault();
       }
     },
-    // async handleAdd(event) {
-    //   await this.$store.commit("addToBasket", this.product);
-    // },
   },
 };
 </script>

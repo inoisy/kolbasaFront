@@ -194,36 +194,6 @@ export default {
           .catch(() => {
             this.loading = false;
           });
-        // this.loading = false;
-        // console.log(
-        //   "🚀 ~ file: ContactForm.vue ~ line 178 ~ submit ~ create",
-        //   create
-        // );
-        // const req = await this.$axios.post(process.env.baseUrl + "/orders", );
-        // this.loading = false;
-        // if (req.status === 200) {
-        //   // this.$store.commit("saveBasket");
-        //   if (!this.$store.getters["auth/isLogined"]) {
-        //     this.$store.commit("setUserData", {
-        //       name: this.name,
-        //       phone: this.phone,
-        //       address: this.address,
-        //       email: this.email,
-        //     });
-        //   }
-
-        //   this.formSuccess = true;
-        //   if (window.yaCounter54918895) {
-        //     window.yaCounter54918895.reachGoal("order");
-        //   }
-        //   setTimeout(() => {
-        //     this.$emit("offerClose");
-        //     !this.oneClickBuy && this.$store.commit("clearBasket");
-        //   }, 4000);
-        // } else {
-        //   this.formError = true;
-        //   this.loading = false;
-        // }
       } catch (error) {
         this.loading = false;
         // console.log("submit -> error", error);
@@ -234,22 +204,8 @@ export default {
   },
   computed: {
     user() {
-      console.log(
-        "🚀 ~ file: ContactForm.vue ~ line 225 ~ user ~ this.$strapi.user",
-        this.$strapi.user
-      );
-
       return this.$strapi.user;
     },
-    //  isLogined() {
-    //   return this.$store.getters["auth/isLogined"];
-    // },
-    // userData() {
-    //   return (
-    //     this.$store.getters["auth/isLogined"] &&
-    //     this.$store.getters["auth/getUser"]
-    //   );
-    // },
     submitDisabled() {
       return !this.name || !this.phone || this.$v.$anyError;
     },

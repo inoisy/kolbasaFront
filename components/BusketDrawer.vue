@@ -47,7 +47,6 @@
         </v-btn>
       </v-app-bar>
       <div v-show="!offer" class="px-4 pt-4">
-        {{ basket }}
         <v-row>
           <v-col cols="12">
             <v-simple-table class="mb-3">
@@ -74,7 +73,11 @@
                             : '/no-image.png'
                         "
                         :alt="product.name"
-                      />
+                      >
+                        <!-- <template v-slot:placeholder>
+                          <image-placeholder />
+                        </template> -->
+                      </v-img>
                     </v-avatar>
                   </td>
                   <td class="px-1">
@@ -92,7 +95,7 @@
                       :qty="product.quantity"
                       style="max-width: 185px"
                       class="mx-auto"
-                    ></product-quantity>
+                    />
                   </td>
                   <td class="px-1">
                     <div
@@ -103,7 +106,7 @@
                   </td>
                   <td class="px-1">
                     <v-btn
-                      @click="(e) => deleteFromBasket(e, product.id)"
+                      @click="deleteFromBasket(product.id)"
                       class="display-flex"
                       title="Удалить"
                       icon
@@ -138,13 +141,14 @@
               large
               block
               title="Оформить заказ"
-              >Оформить заказ</v-btn
             >
+              Оформить заказ
+            </v-btn>
           </v-col>
           <v-col>
-            <v-btn @click="basketClose" large block outlined
-              >Назад к покупкам</v-btn
-            >
+            <v-btn @click="basketClose" large block outlined>
+              Назад к покупкам
+            </v-btn>
           </v-col>
         </v-row>
       </div>
@@ -260,9 +264,9 @@ export default {
       },
     };
   },
-  mounted() {
-    console.log("icons: ", this.$vuetify.icons);
-  },
+  // mounted() {
+  //   console.log("icons: ", this.$vuetify.icons);
+  // },
   watch: {
     basket() {
       if (this.basket.length === 0) {
@@ -283,7 +287,7 @@ export default {
       this.offer = true;
     },
     async clearBasket() {
-      // this.$toast.show("Logging in...");
+      // TODO CREATE MODAL
       await this.$store.dispatch("clearCart");
     },
     async deleteFromBasket(event, id) {

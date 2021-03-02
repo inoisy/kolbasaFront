@@ -9,8 +9,7 @@ module.exports = {
   },
   extends: [
     '@nuxtjs',
-    'plugin:nuxt/recommended',
-    "eslint:recommended", "google"
+    'plugin:nuxt/recommended'
   ],
   plugins: [
   ],

@@ -1,10 +1,13 @@
 <template>
   <div>
     <page-header :title="title" :breadrumbs="breadrumbs" />
-    <section class="background-with-transparent">
+    <div
+      :style="`background-image: url(${require('~/assets/images/bg.jpg?webp')})`"
+      class="background-with-transparent"
+    >
       <v-container grid-list-lg>
         <v-row class="py-12">
-          <v-col cols="12" md="6" lg="4" :class="$style.contactsWrapper">
+          <v-col :class="$style.contactsWrapper" cols="12" md="6" lg="4">
             <v-list :class="$style.contactsList" light width="100%">
               <v-list-item
                 :class="$style.link"
@@ -33,14 +36,12 @@
               <v-list-item title="Адрес">
                 <v-list-item-icon>
                   <v-icon>$map</v-icon>
-                  <!-- <svg-icon name="pin" style="width: 24px; height: 24px" /> -->
                 </v-list-item-icon>
                 {{ contacts.addressText }}
               </v-list-item>
               <v-list-item title="Время работы">
                 <v-list-item-icon>
                   <v-icon>$time</v-icon>
-                  <!-- <svg-icon name="time" style="width: 24px; height: 24px" /> -->
                 </v-list-item-icon>
                 {{ contacts.accessTime }}
               </v-list-item>
@@ -59,36 +60,8 @@
             </client-only>
           </v-col>
         </v-row>
-        <!-- <v-layout row wrap class="py-12">
-          <v-flex
-            v-for="(contact, i) in contacts"
-            :key="`contact-${i}`"
-            class="mb-2 fs-1-3"
-            xs12
-            d-flex
-            align-center
-          >
-            <a
-              v-if="contact.href"
-              :href="contact.href"
-              class="link font-weight-medium d-inline-flex align-center"
-            >
-              <v-icon v-text="contact.icon"></v-icon>
-              {{ contact.text }}
-            </a>
-            <div v-else class="font-weight-medium d-inline-flex align-center">
-              <v-icon v-text="contact.icon"></v-icon>
-              {{ contact.text }}
-            </div>
-          </v-flex>
-        </v-layout>
-        <v-layout row wrap id="map">
-          <client-only>
-            <map-component :addressCoords="addressCoords" />
-          </client-only>
-        </v-layout> -->
       </v-container>
-    </section>
+    </div>
   </div>
 </template>
 

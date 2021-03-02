@@ -11,15 +11,24 @@ $link: #000000;
 // Link hover color
 $link-hover: #2d56d0;
 $body-font-family: "Montserrat";
+$heading-font-family: "Alice";
 
 $black: #18191f;
-$accent: rgb(0, 126, 255);
+$accent: rgb(213, 0, 0);
 $gray:#ececec;
 $darkLink: #4a1f00;
 $white: rgb(255, 255, 255);
+$error: #FF5252;
+$success: #4CAF50;
+$primary: #4A1F00;
 
 $toolbar-mobile-height: 64px;
 $toolbar-desktop-height: 80px;
 
 $dialog-mobile-margin: 20px;
 $dialog-desktop-margin: 40px;
+
+// :root {
+//     // RIGHT, will work in all Sass versions.
+//     --toolbar-mobile-height: #{$toolbar-mobile-height};
+// }

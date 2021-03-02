@@ -16,28 +16,19 @@
       <nuxt />
     </v-main>
     <v-lazy v-model="isFooter" min-height="300">
-      <lazy-default-footer class="pos-relative" />
+      <lazy-default-footer v-if="isFooter" class="pos-relative" />
     </v-lazy>
     <lazy-user-drawer
       v-if="userDrawer"
       :show="userDrawer"
       @close="userDrawer = false"
     />
-    <!-- </v-navigation-drawer> -->
     <client-only>
-      <!-- <v-navigation-drawer
-        v-model="basketDrawer"
-        temporary
-        fixedfooter-bg
-        right
-        width="550px"
-      > -->
       <lazy-busket-drawer
         v-if="basketDrawer"
         :show="basketDrawer"
         @close="basketDrawer = false"
       />
-      <!-- </v-navigation-drawer> -->
     </client-only>
   </v-app>
 </template>

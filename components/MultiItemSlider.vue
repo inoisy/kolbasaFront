@@ -8,11 +8,7 @@
       >
         <v-img
           contain
-          :src="
-            item.img
-              ? imageBaseUrl + item.img.url
-              : require('~/assets/no-image.png')
-          "
+          :src="item.img ? imageBaseUrl + item.img.url : '/no-image.png'"
           class="ma-auto d-block manuf-img"
           :alt="item.name"
           :title="item.name"

@@ -1,7 +1,7 @@
 export default ({ $strapi, app, $vuetify }) => {
     // console.log("🚀 ~ file: strapi.js ~ line 2 ~ $icons", $vuetify.icons.values.error)
     $strapi.hook('error', (error) => {
-        console.log("🚀 ~ file: strapi.js ~ line 3 ~ $strapi.hook ~ error", error)
+        // console.log("🚀 ~ file: strapi.js ~ line 3 ~ $strapi.hook ~ error", error)
         app.$toast.error(error.message, {
             // icon: $vuetify.icons.error,
             // theme: "outline",

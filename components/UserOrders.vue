@@ -20,9 +20,10 @@
           :key="order.id"
         >
           {{ order.date }}
-          <span v-if="!order.oneClick && order.summa" class="ml-auto"
-            >{{ order.summa }} руб.</span
-          >
+          <div class="ml-auto">
+            <span v-if="order.oneClick">в один клик</span>
+            <span v-else-if="order.summa">{{ order.summa }} руб.</span>
+          </div>
         </v-list-item>
       </v-list>
       <div v-else>Тут будут отображаться ваши заказы.</div>
@@ -38,16 +39,16 @@
       >
         <v-icon>$arrowLeft</v-icon>
       </v-btn>
-      <order
+      <user-order
         :order="formattedOrders.find((item) => item.id === selectedOrder)"
       />
     </div>
   </div>
 </template>
 <script>
-import Order from "~/components/user/Order";
+// import Order from "~/components/Order";
 export default {
-  components: { Order },
+  // components: { Order },
   async mounted() {
     await this.fetchOrders();
   },
@@ -80,22 +81,6 @@ export default {
       this.orders = await this.$strapi.$orders.find({
         _sort: "createdAt:DESC",
       });
-      // console.log(
-      //   "🚀 ~ file: UserOrders.vue ~ line 81 ~ fetchOrders ~ response",
-      //   response
-      // );
-      // this.$axios.setToken(this.$store.getters["auth/getJWT"], "Bearer");
-      // const response = await this.$axios
-      //   .get(process.env.baseUrl + "/orders?_sort=createdAt:DESC")
-
-      //   .catch((error) => {
-      //     if (error.response.data.statusCode === 401) {
-      //       this.$store.commit("auth/logout");
-      //     }
-      //   });
-      // if (response && response.data) {
-      //   this.orders = response.data;
-      // }
     },
     selectOrder(id) {
       this.showOrder = true;

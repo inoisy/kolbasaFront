@@ -3,27 +3,20 @@
     <LazyHydrate when-idle>
       <page-header :title="title" :breadrumbs="breadrumbs" />
     </LazyHydrate>
-    <section class="background-with-transparent">
-      <!-- <main
-      class="background"
-      style="
-        background-color: #f0f0f0;
-        background-repeat: repeat;
-        background-size: 100%;
-        background-image: url(/bg.jpg);
-      "
-    > -->
-      <v-container class="py-12" grid-list-lg>
+    <div
+      :style="`background-image: url(${require('~/assets/images/bg.jpg?webp')})`"
+      class="background-with-transparent"
+    >
+      <v-container class="py-16" grid-list-lg>
         <v-row>
           <v-col cols="12">
             <LazyHydrate never>
               <content-wrapper v-html="page.content" />
             </LazyHydrate>
-            <!-- <div v-html="page.content"></div> -->
           </v-col>
         </v-row>
       </v-container>
-    </section>
+    </div>
   </div>
 </template>
     
@@ -64,7 +57,7 @@ export default {
   },
   async asyncData(ctx) {
     // await ctx.store.dispatch("fetchGeneralInfo");
-    let client = ctx.app.apolloProvider.defaultClient;
+    const client = ctx.app.apolloProvider.defaultClient;
     const { data: pageData } = await client.query({
       query: gql`
         query AboutPageQuery {

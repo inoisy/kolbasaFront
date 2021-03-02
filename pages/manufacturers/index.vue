@@ -1,20 +1,20 @@
 <template>
   <div>
-    <page-header title="Производители" :breadrumbs="breadrumbs" />
+    <LazyHydrate when-idle>
+      <page-header title="Производители" :breadrumbs="breadrumbs" />
+    </LazyHydrate>
     <div
-      class="background background-repeat"
-      style="background-image: url(/bg.jpg)"
+      :style="`background-image: url(${require('~/assets/images/bg.jpg?webp')})`"
+      class="background-with-transparent"
     >
-      <v-container class="py-12" grid-list-lg>
-        <!-- <div> v-lazy:background-image="require('~/assets/img/bg.jpg')" -->
-        <vertical-card
+      <v-container class="py-16" grid-list-lg>
+        <LazyHydrate
+          when-visible
           v-for="(item, index) in manufacturers"
-          :key="index"
-          :item="item"
-          type="manufacturers"
-          class="mb-6"
-        ></vertical-card>
-        <!-- </div> -->
+          :key="`manufacturer-${index}`"
+        >
+          <vertical-card :item="item" type="manufacturers" class="mb-6" />
+        </LazyHydrate>
       </v-container>
     </div>
   </div>
@@ -23,27 +23,21 @@
 
 <script>
 import gql from "graphql-tag";
-import PageHeader from "~/components/PageHeader";
-import VerticalCard from "~/components/VerticalCard";
+import LazyHydrate from "vue-lazy-hydration";
 
 export default {
   head() {
     return {
-      title: "Производители(мясокомбинаты)",
+      title: "Производители (мясокомбинаты)",
     };
   },
-  data() {
-    return {
-      imageBaseUrl: process.env.imageBaseUrl,
-    };
-  },
-  components: { PageHeader, VerticalCard },
-  async asyncData(ctx) {
-    // await ctx.store.dispatch("fetchGeneralInfo");
-    let client = ctx.app.apolloProvider.defaultClient;
-    const { data: manufacturerData } = await client.query({
+  components: { LazyHydrate },
+  async asyncData({ app }) {
+    const {
+      data: manufacturerData,
+    } = await app.apolloProvider.defaultClient.query({
       query: gql`
-        {
+        query ManufacturersQuery {
           manufacturers(sort: "name:asc", limit: 999) {
             name
             slug
@@ -67,7 +61,7 @@ export default {
           text: "Главная",
         },
         {
-          to: this.$route.path,
+          to: "/manufacturers",
           text: "Производители",
         },
       ];

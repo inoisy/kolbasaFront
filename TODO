@@ -1,1 +1,6 @@
 1. promt for clear busket
+2. allowed types for category manufacturer - png; products - jpeg/png
+3. graphql cache
+4. usl sotr
+5. image required for manufacturer/category
+6 move child route to upper level

@@ -1,19 +1,13 @@
 <template>
-  <!-- <div > -->
   <v-container grid-list-lg class="py-12" fill-height>
     <v-row align="center">
       <v-col cols="12" md="6" class="ma-auto" v-if="!error && !success">
-        <h1 class="text-center mb-12">Восстановление пароля</h1>
-        <!-- <div>{{$router}}</div> -->
-        <!-- <p>error {{error}}</p>
-        <p>success {{success}}</p>
-        <p>code {{code}}</p>
-        <p>errorMessage {{errorMessage}}</p>-->
+        <h1 class="text-center mb-10">Восстановление пароля</h1>
         <v-form>
           <v-text-field
             class="pa-0"
             v-model="password"
-            :append-icon="showPass ? 'explore' : 'explore_off'"
+            :append-icon="showPass ? '$eye' : '$eyeOff'"
             label="Пароль*"
             outlined
             dense
@@ -21,11 +15,11 @@
             :error-messages="passwordErrors"
             @click:append="showPass = !showPass"
             :type="showPass ? 'text' : 'password'"
-          ></v-text-field>
+          />
           <v-text-field
             class="pa-0"
             v-model="repeatPassword"
-            :append-icon="showPass ? 'explore' : 'explore_off'"
+            :append-icon="showPass ? '$eye' : '$eyeOff'"
             label="Повторите пароль*"
             outlined
             dense
@@ -33,7 +27,7 @@
             :error-messages="repeatPasswordErrors"
             @click:append="showPass = !showPass"
             :type="showPass ? 'text' : 'password'"
-          ></v-text-field>
+          />
           <v-btn
             color="accent"
             @click="send"
@@ -42,7 +36,9 @@
             :loading="loading"
             style="width: 100%"
             title="Подтвердить"
-          >Изменить пароль</v-btn>
+          >
+            Изменить пароль
+          </v-btn>
         </v-form>
       </v-col>
       <v-col
@@ -50,26 +46,25 @@
         md="6"
         class="ma-auto"
         v-else-if="error"
-        style="display: flex; align-items: center; flex-direction: column;"
+        style="display: flex; align-items: center; flex-direction: column"
       >
         <h1 class="text-center mb-9">Ошибка!</h1>
-        <p
-          class="text-center mb-9"
-          v-if="errorMessage"
-          style="font-size: 20px;font-weight: bold;"
-        >{{errorMessage}}</p>
-        <v-btn color="accent" to="/" class="mx-auto">Перейти на главную страницу</v-btn>
+        <v-btn color="accent" to="/" class="mx-auto">
+          Перейти на главную страницу
+        </v-btn>
       </v-col>
       <v-col
         cols="12"
         md="6"
         v-else-if="success"
         class="ma-auto"
-        style="display: flex; align-items: center; flex-direction: column;"
+        style="display: flex; align-items: center; flex-direction: column"
       >
         <h1 class="text-center mb-9">Ваш пароль успешно изменен!</h1>
 
-        <v-btn color="accent" to="/" class="mx-auto">Перейти на главную страницу</v-btn>
+        <v-btn color="accent" to="/" class="mx-auto">
+          Перейти на главную страницу
+        </v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -78,14 +73,7 @@
 <script>
 import { validationMixin } from "vuelidate";
 import { mask } from "vue-the-mask";
-import {
-  required,
-  maxLength,
-  minLength,
-  email,
-  alpha,
-  sameAs,
-} from "vuelidate/lib/validators";
+import { required, minLength, sameAs } from "vuelidate/lib/validators";
 export default {
   mixins: [validationMixin],
   directives: {
@@ -108,7 +96,7 @@ export default {
       repeatPassword: "",
       showPass: false,
       loading: false,
-      errorMessage: null,
+      // errorMessage: null,
       error: false,
       success: false,
     };
@@ -134,7 +122,6 @@ export default {
     repeatPasswordErrors() {
       const errors = [];
       if (!this.$v.repeatPassword.$dirty) return errors;
-      //   console.log("repeatPassword", this.$v.repeatPassword);
       !this.$v.repeatPassword.required && errors.push("Повторите пароль");
       !this.$v.repeatPassword.sameAsPassword &&
         errors.push("Пароли не совпадают");
@@ -146,42 +133,29 @@ export default {
       this.$v.$touch();
       if (this.$v.$anyError) return;
       this.loading = true;
-      try {
-        const response = await this.$axios
-          .post(process.env.baseUrl + "/auth/reset-password", {
-            code: this.code, // code contained in the reset link of step 3.
-            password: this.password,
-            passwordConfirmation: this.repeatPassword,
-          })
-          .then((response) => {
-            // console.log("Your user's password has been reset.");
-            this.$store.dispatch("auth/setUser", response.data);
-            this.loading = false;
-            this.success = true;
-          })
-          .catch((error) => {
-            console.log("An error occurred:", error.response);
-            try {
-              this.errorMessage =
-                error.response.data.message[0].messages[0].message;
-            } catch (error) {
-              console.log("send -> error", error);
-            }
-            this.error = true;
-            // console.log("register -> message", message);
-            this.loading = false;
-          });
-        console.log("send -> response", response);
-      } catch (error) {}
+
+      await this.$strapi
+        .resetPassword({
+          code: this.code,
+          password: this.password,
+          passwordConfirmation: this.repeatPassword,
+        })
+        .then(() => {
+          this.loading = false;
+          this.success = true;
+        })
+        .catch(() => {
+          this.error = true;
+          this.loading = false;
+        });
     },
   },
-  async asyncData(ctx) {
-    console.log(ctx.query);
-    if (!ctx.query || !ctx.query.code) {
-      ctx.redirect("/");
+  async asyncData({ redirect, query }) {
+    if (!query || !query.code) {
+      redirect("/");
     }
     return {
-      code: ctx.query.code,
+      code: query.code,
     };
   },
 };

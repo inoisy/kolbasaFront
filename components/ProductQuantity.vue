@@ -9,16 +9,10 @@
     >
       <v-icon>$minus</v-icon>
     </v-btn>
-    <!-- {{ id }} -->
-    <!-- {{ quantity }} -->
-    <!-- :value="quantity % 1 > 0 ? quantity.toFixed(1) : quantity" -->
-    <!-- @change="handleChange" -->
-    <!-- {{ quantity }} -->
-
-    <!-- <input type="number" :value="quantity" @change="handleInputChange" /> -->
     <v-text-field
       :value="quantity"
       @change="handleChange"
+      height="36px"
       style="max-width: 100px; min-width: 80px"
       class="quantity"
       rounded
@@ -40,23 +34,11 @@
   </div>
 </template>
 <script>
-// import { mapActions } from "vuex";
-// import {
-//   minLength,
-//   alpha,
-// } from "vuelidate/lib/validators";
 export default {
-  // mixins: [validationMixin],
-  //   validations: {
-  //   },
   props: {
     id: {
       type: String,
       required: true,
-    },
-    qty: {
-      type: Number,
-      default: 1,
     },
   },
   computed: {
@@ -64,6 +46,9 @@ export default {
       return this.$store.getters["quantity"](this.id);
     },
   },
+  // created() {
+  //   console.log("quantity created");
+  // },
   watch: {
     quantity(newCount, oldCount) {
       if (newCount <= 0) {

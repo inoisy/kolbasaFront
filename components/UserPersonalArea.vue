@@ -6,20 +6,28 @@
     </div>
     <div style="font-size: 14px">{{ userData.phone }}</div>
     <div style="font-size: 14px">{{ userData.email }}</div>
-    <div class="mb-12 mt-6">
-      <v-btn outlined @click="showOrders = true" width="200">
-        <v-icon left>{{ icons.mdiHistory }}</v-icon>
-        <!-- <svg-icon name="history" style="width: 24px; height: 24px" /> -->
-        <span>История заказов</span>
-      </v-btn>
-    </div>
-    <div>
-      <v-btn color="#7f7f7f" width="200" outlined @click="logout" text style>
-        <v-icon left>{{ icons.mdiLogoutVariant }}</v-icon>
-        <!-- <svg-icon name="login" style="width: 24px; height: 24px" /> -->
-        <span>Выход</span>
-      </v-btn>
-    </div>
+    <!-- <div class="mb-12 mt-6"> -->
+    <v-btn class="mt-14" outlined block large @click="showOrders = true">
+      <v-icon left>{{ icons.mdiHistory }}</v-icon>
+      <!-- <svg-icon name="history" style="width: 24px; height: 24px" /> -->
+      <span>История заказов</span>
+    </v-btn>
+    <!-- </div>
+    <div> -->
+    <v-btn
+      class="mt-4"
+      color="#7f7f7f"
+      block
+      outlined
+      text
+      large
+      @click="logout"
+    >
+      <v-icon left>{{ icons.mdiLogoutVariant }}</v-icon>
+      <!-- <svg-icon name="login" style="width: 24px; height: 24px" /> -->
+      <span>Выход</span>
+    </v-btn>
+    <!-- </div> -->
   </div>
   <div v-else-if="showOrders">
     <user-orders @close-orders="showOrders = false" />

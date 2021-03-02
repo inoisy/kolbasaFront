@@ -41,7 +41,7 @@
                       ? product.img.formats && product.img.formats.thumbnail
                         ? imageBaseUrl + product.img.formats.thumbnail.url
                         : imageBaseUrl + product.img.url
-                      : require('~/assets/no-image.png')
+                      : '/no-image.png'
                   "
                   :alt="product.name"
                 />

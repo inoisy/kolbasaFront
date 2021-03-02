@@ -1,17 +1,9 @@
 <template>
-  <div>
-    <v-img
-      contain
-      src="/delimiter.svg"
-      title="Разделитель"
-      alt="Разделитель"
-    ></v-img>
-  </div>
+  <v-img
+    contain
+    :src="require('~/assets/images/delimiter.svg')"
+    title="Разделитель"
+    alt="Разделитель"
+    min-height="20px"
+  />
 </template>
-
-<script>
-export default {};
-</script>
-
-<style>
-</style>

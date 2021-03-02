@@ -1,21 +1,25 @@
 <template>
   <div>
-    <page-header title="Каталог" :breadrumbs="breadrumbs" />
-    <section
-      class="background background-repeat"
-      style="background-image: url(/bg.jpg)"
+    <LazyHydrate when-idle>
+      <page-header title="Каталог" :breadrumbs="breadrumbs" />
+    </LazyHydrate>
+    <div
+      :style="`background-image: url(${require('~/assets/images/bg.jpg?webp')})`"
+      class="background-with-transparent"
     >
-      <!-- v-lazy:background-image="require('~/assets/img/bg.jpg')" -->
-
       <v-container grid-list-lg class="py-12">
         <template v-for="(category, index) in categories">
-          <vertical-card
+          <LazyHydrate
             v-if="category.children.length === 0"
-            :item="category"
-            type="catalog"
-            class="mb-10 d-block"
+            when-visible
             :key="index"
-          ></vertical-card>
+          >
+            <vertical-card
+              :item="category"
+              type="catalog"
+              class="mb-10 d-block"
+            />
+          </LazyHydrate>
           <div
             v-else
             :key="index"
@@ -24,21 +28,26 @@
           >
             <nuxt-link
               :to="`/catalog/${category.slug}`"
-              class="mb-6 d-block category-text lumber font-weight-medium mb-0 primary--text fs-1-5 underline-on-hover"
+              class="mb-6 d-block category-text heading-font font-weight-medium mb-0 primary--text fs-1-5 underline-on-hover"
               :title="category.name"
-              >{{ category.name }}</nuxt-link
             >
-            <vertical-card
-              class="catalog-card layout wrap mt-3"
+              {{ category.name }}
+            </nuxt-link>
+            <LazyHydrate
+              when-visible
               v-for="child in category.children"
-              :item="child"
-              type="catalog"
               :key="child.id"
-            ></vertical-card>
+            >
+              <vertical-card
+                class="catalog-card layout wrap mt-3"
+                :item="child"
+                type="catalog"
+              />
+            </LazyHydrate>
           </div>
         </template>
       </v-container>
-    </section>
+    </div>
   </div>
 </template>
 
@@ -47,9 +56,7 @@
 }
 </style>
 <script>
-import PageHeader from "~/components/PageHeader";
-import VerticalCard from "~/components/VerticalCard";
-import ProductCard from "~/components/ProductCard";
+import LazyHydrate from "vue-lazy-hydration";
 
 import gql from "graphql-tag";
 
@@ -67,7 +74,7 @@ export default {
       ],
     };
   },
-  components: { PageHeader, VerticalCard, ProductCard },
+  components: { LazyHydrate },
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl,
@@ -85,7 +92,7 @@ export default {
   },
   async asyncData(ctx) {
     // await ctx.store.dispatch("fetchGeneralInfo");
-    let client = ctx.app.apolloProvider.defaultClient;
+    const client = ctx.app.apolloProvider.defaultClient;
     const { data: categoriesData } = await client.query({
       query: gql`
         {

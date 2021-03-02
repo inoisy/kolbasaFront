@@ -24,3 +24,13 @@ $sm-width: 600px;
         @content
     }
 }
+
+@mixin closeButton() {
+    width: 44px !important;
+    height: 44px !important;
+
+    @include md {
+        width: 48px !important;
+        height: 48px !important;
+    }
+}

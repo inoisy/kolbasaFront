@@ -1,6 +1,11 @@
 export const state = () => ({
   category: {},
   manufacturer: {},
-  generalInfo: {},
-  breadcrumbs: []
+  generalInfo: {
+    contacts: {
+      phone: ""
+    }
+  },
+  breadcrumbs: [],
+  rootCategory: {}
 })

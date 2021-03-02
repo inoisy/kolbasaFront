@@ -3,8 +3,7 @@
     ripple
     flat
     color="transparent"
-    class="category-wrapper px-4 pt-3 pb-4 td-none"
-    style="display: flex; flex-direction: column"
+    class="category-wrapper"
     :to="`/catalog/${item.slug}`"
     :title="item.name"
   >
@@ -18,20 +17,22 @@
         :title="item.name"
       />
     </div>
-    <div
-      class="category-text text-center font-weight-medium mb-0 primary--text"
-      style
-    >
+    <div class="heading-font category-text text-center mb-0 primary--text">
       {{ item.name }}
     </div>
   </v-card>
 </template>
 <style lang="scss" scoped>
 .category-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   .category-text {
-    font-size: 1.2rem;
+    font-size: 18px;
     transition: all 0.2s;
     line-height: 1.2;
+    text-transform: uppercase;
+    font-weight: bold;
   }
 
   .category-img-wrapper {
@@ -42,6 +43,8 @@
       margin: auto;
       max-width: 100%;
       transition: all 0.2s;
+      // transform-origin: center;
+      // transform-box: fill-box;
       object-fit: contain;
     }
   }

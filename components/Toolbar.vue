@@ -1,13 +1,14 @@
 <template>
   <div :class="$style.appBar">
     <nuxt-link
+      :class="$style.logoWrapper"
       to="/"
       class="py-1 fill-height d-flex align-center"
       title="Логотип Альянс Фуд"
     >
       <v-img
         id="logo-img"
-        :src="require('~/assets/img/logo1.png')"
+        :src="require('~/assets/images/logo1.png')"
         alt="Логотип Альянс Фуд"
         title="Логотип Альянс Фуд"
         max-height="100%"
@@ -16,7 +17,7 @@
       <v-img
         id="logo-text"
         class="mt-1 mx-1"
-        :src="require('~/assets/img/logo2.png')"
+        :src="require('~/assets/images/logo2.png')"
         alt="Логотип Альянс Фуд"
         title="Логотип Альянс Фуд"
         max-height="80%"
@@ -25,96 +26,51 @@
     </nuxt-link>
     <v-spacer></v-spacer>
     <template v-for="(item, index) in menuItems">
-      <v-menu
-        :key="index"
-        v-if="item.items && item.items.length > 0"
-        class="fill-height hidden-sm-and-down d-flex"
-        style="height: 100%"
-        allow-overflow
-        open-on-hover
-        offset-y
-        left
-        z-index="3000"
-        transition="slide-y-transition"
-      >
-        <template v-slot:activator="{ on }">
-          <v-btn
-            v-on="on"
-            class="fill-height ma-0 header-link hidden-sm-and-down"
-            slot="activator"
-            style="height: 100%"
-            text
-            tile
-            nuxt
-            :to="item.to"
-            color="#95282a"
-            :title="item.name"
-          >
-            {{ item.name }}
-            <v-icon>{{ icons.mdiMenuDown }}</v-icon>
-          </v-btn>
-        </template>
-        <v-list class="two-columns" color="white">
-          <template v-for="(category, index) in item.items">
-            <template
-              v-if="
-                category && category.children && category.children.length > 0
-              "
-            >
-              <!-- :key="'list-group'+index"
-                  class="list-item"-->
-              <v-list-item
-                :key="'list-group' + index"
-                :to="`/catalog/${category.slug}`"
-                :title="category.name"
-                class="list-item"
-              >
-                <span style="line-height: normal; font-size: 15px">{{
-                  category.name
-                }}</span>
-              </v-list-item>
-              <v-list-item
-                v-for="child in category.children"
-                :key="child.id"
-                :to="`/catalog/${child.slug}`"
-                :title="child.name"
-                class="list-item"
-              >
-                <span class="pl-4">{{ child.name }}</span>
-              </v-list-item>
-            </template>
-            <v-list-item
-              v-else
-              class="list-item"
-              active-class="text--accent"
-              :key="index"
-              nuxt
-              :to="`${item.to}/${category.slug}`"
-              :title="category.name"
-              >{{ category.name }}</v-list-item
-            >
-          </template>
-        </v-list>
-      </v-menu>
-
       <v-btn
-        v-else
+        v-if="!item.disable"
+        :key="item.slug + index"
+        :id="item.slug"
         :to="item.to"
-        :key="index"
-        :title="item.name"
-        class="ma-0 fill-height header-link hidden-sm-and-down"
+        class="fill-height ma-0 header-link hidden-sm-and-down"
         style="height: 100%"
-        color="#95282a"
         text
         tile
-        nuxt
-        exact
+        color="#95282a"
+        :title="item.name"
       >
         {{ item.name }}
+        <v-icon v-if="item.isChild">{{ icons.mdiMenuDown }}</v-icon>
+      </v-btn>
+      <v-btn
+        v-else
+        :key="item.slug + index"
+        :id="item.slug"
+        class="fill-height ma-0 header-link hidden-sm-and-down"
+        style="height: 100%"
+        text
+        tile
+        color="#95282a"
+        :title="item.name"
+      >
+        {{ item.name }}
+        <v-icon v-if="item.isChild">{{ icons.mdiMenuDown }}</v-icon>
       </v-btn>
     </template>
-    <!-- <client-only> -->
-    <!-- {{ !(isMounted && isCart) }} -->
+    <lazy-toolbar-catalog-menu
+      v-if="!isMobile && isMounted"
+      :items="menuItems[0].items"
+    />
+    <lazy-toolbar-menu
+      v-if="!isMobile && isMounted"
+      :items="menuItems[1].items"
+      :isTwoColumns="true"
+      parentSlug="manufacturers"
+    />
+    <lazy-toolbar-menu
+      v-if="!isMobile && isMounted"
+      :items="menuItems[2].items"
+      parentSlug="about"
+    />
     <v-btn
       @click="$emit('show-basket')"
       :disabled="!(isMounted && isCart)"
@@ -134,7 +90,6 @@
         <v-icon color="#95282a">{{ icons.mdiBasket }}</v-icon>
       </v-badge>
     </v-btn>
-    <!-- </client-only> -->
     <v-btn
       @click="$emit('show-user')"
       icon
@@ -174,10 +129,33 @@
   @include md {
     height: $toolbar-desktop-height;
   }
+  .logoWrapper {
+    padding-right: 8px;
+  }
 }
 </style>
 
 <style lang="scss" scoped>
+// $toolbar-mobile-height: 64px;
+// $toolbar-desktop-height: 80px;
+
+// .catalog-second-level-menu-inner {
+//   min-width: 210px !important;
+//   max-width: 280px;
+// }
+
+// .catalog-menu-inner {
+//   min-width: 180px;
+//   max-width: 280px;
+// }
+
+.manufacturer-menu-inner {
+  top: $toolbar-mobile-height !important;
+  @include md {
+    top: $toolbar-desktop-height !important;
+  }
+}
+
 .extra-text {
   height: 42px !important;
   font-size: 0.8rem !important;
@@ -235,23 +213,6 @@
   }
 }
 
-.two-columns {
-  column-count: 2;
-  max-width: 600px;
-  position: relative;
-
-  .list-item {
-    float: left;
-    line-height: 1;
-    break-inside: avoid;
-    width: 100%;
-    min-height: 36px !important;
-    height: 36px !important;
-    line-height: normal;
-    font-size: 14px;
-  }
-}
-
 #logo-img {
   width: 50px;
   max-width: 50px;
@@ -260,14 +221,18 @@
 #logo-text {
   width: 110px;
   max-width: 110px;
+  display: none;
+  // padding-right: 8px;
 }
 
 .header-link {
-  font-size: 0.8rem !important;
+  font-size: 12px !important;
   padding: 0 8px !important;
+  letter-spacing: 0 !important;
+  text-indent: 0 !important;
 }
 
-@media (min-width: 576px) {
+@include sm {
   #logo-img {
     width: 65px;
     max-width: 65px;
@@ -276,10 +241,15 @@
   #logo-text {
     width: 140px;
     max-width: 140px;
+    display: block;
+  }
+  .header-link {
+    font-size: 14px !important;
+    padding: 0 6px !important;
   }
 }
 
-@media (min-width: 960px) {
+@include md {
   #logo-img {
     width: 50px;
     max-width: 50px;
@@ -294,12 +264,12 @@
   // justify-content: space-between;
   // }
   .header-link {
-    font-size: 0.8rem !important;
-    padding: 0 6px !important;
+    // font-size: 0.8rem !important;
+    padding: 0 8px !important;
   }
 }
 
-@media (min-width: 1199px) {
+@include lg {
   #logo-img {
     width: 65px;
     max-width: 65px;
@@ -311,7 +281,7 @@
   }
 
   .header-link {
-    font-size: 0.85rem !important;
+    // font-size: 0.85rem !important;
     padding: 0 12px !important;
   }
 }
@@ -329,51 +299,26 @@ export default {
   // props: ["menuItems"],
   data() {
     return {
-      hideExtra: false,
-      extraInfo: [
-        {
-          text: "РАБОТАЕМ ДЛЯ ВАС",
-          img: require("~/assets/icons/interface.svg"),
-        },
-        {
-          text: "ДОСТАВИМ БЕСПЛАТНО",
-          img: require("~/assets/icons/commerce-and-shopping.svg"),
-        },
-        {
-          text: "ЗА ОДИН ДЕНЬ",
-          img: require("~/assets/icons/fast-delivery.svg"),
-        },
-        {
-          text: "С СОБЛЮДЕНИЕМ ВСЕХ САНИТАРНЫХ НОРМ",
-          img: require("~/assets/icons/guard.svg"),
-        },
-      ],
       icons: { mdiMenuDown, mdiMenu, mdiAccount, mdiBasket },
       isMounted: false,
     };
   },
   mounted() {
-    // console.log("id", this.product.id);
     this.isMounted = true;
-    // this.isCart = this.$store.getters.isCart;
-    // console.log("isCart", this.isCart);
   },
   computed: {
+    isMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
+    },
     isCart() {
-      // if(!this.isMounted){
-      //   return false
-      // }
       return this.$store.getters.isCart;
     },
     menuItems() {
       return this.$store.getters.menuItems;
     },
-    // isMobile() {
-    //   return this.$vuetify.breakpoint.smAndDown;
-    // },
     summa() {
       if (!this.isMounted || !this.isCart) {
-        console.log("noSumm");
+        // console.log("noSumm");
         return 0;
       } else {
         return this.$store.getters.cartSumm;
@@ -381,45 +326,61 @@ export default {
     },
     cartLength() {
       if (!this.isMounted || !this.isCart) {
-        console.log("nolength");
+        // console.log("nolength");
         return 0;
       } else {
         const length = this.$store.getters.cartLength;
-        console.log(
-          "🚀 ~ file: Toolbar.vue ~ line 371 ~ cartLength ~ length",
-          length
-        );
+        // console.log(
+        //   "🚀 ~ file: Toolbar.vue ~ line 371 ~ cartLength ~ length",
+        //   length
+        // );
         return length;
       }
     },
-    basketLength() {
-      let length;
-      if (this.$store.state.localStorage.basket) {
-        length = Object.keys(this.$store.state.localStorage.basket).length;
-        if (length < 1) {
-          this.basketDrawer = false;
-        }
-      }
-      return length;
-    },
-    isBasket() {
-      return this.basketLength && this.basketLength > 0;
-    },
-    phone() {
-      return this.$store.state.sessionStorage.generalInfo &&
-        this.$store.state.sessionStorage.generalInfo.contacts
-        ? this.$store.state.sessionStorage.generalInfo.contacts.phone
-        : "";
-    },
+    // basketLength() {
+    //   let length;
+    //   if (this.$store.state.localStorage.basket) {
+    //     length = Object.keys(this.$store.state.localStorage.basket).length;
+    //     if (length < 1) {
+    //       this.basketDrawer = false;
+    //     }
+    //   }
+    //   return length;
+    // },
+    // isBasket() {
+    //   return this.basketLength && this.basketLength > 0;
+    // },
+    // phone() {
+    //   return this.$store.state.sessionStorage.generalInfo.contacts.phone;
+    // },
   },
-  methods: {
-    onScroll() {
-      if (window.scrollY > 150) {
-        this.hideExtra = true;
-      } else {
-        this.hideExtra = false;
-      }
-    },
-  },
+  // methods: {
+  //   onScroll() {
+  //     if (window.scrollY > 150) {
+  //       this.hideExtra = true;
+  //     } else {
+  //       this.hideExtra = false;
+  //     }
+  //   },
+  // },
+  // hideExtra: false,
+  // extraInfo: [
+  //   {
+  //     text: "РАБОТАЕМ ДЛЯ ВАС",
+  //     img: require("~/assets/icons/interface.svg"),
+  //   },
+  //   {
+  //     text: "ДОСТАВИМ БЕСПЛАТНО",
+  //     img: require("~/assets/icons/commerce-and-shopping.svg"),
+  //   },
+  //   {
+  //     text: "ЗА ОДИН ДЕНЬ",
+  //     img: require("~/assets/icons/fast-delivery.svg"),
+  //   },
+  //   {
+  //     text: "С СОБЛЮДЕНИЕМ ВСЕХ САНИТАРНЫХ НОРМ",
+  //     img: require("~/assets/icons/guard.svg"),
+  //   },
+  // ],
 };
 </script>

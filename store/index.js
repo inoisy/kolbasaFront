@@ -1,4 +1,5 @@
 import gql from "graphql-tag";
+import data from '~/static/data.json'
 
 class CartProduct {
   constructor(item) {
@@ -29,6 +30,9 @@ export const mutations = {
   breadcrumbs(state, item) {
     state.sessionStorage.breadcrumbs = item
   },
+  rootCategory(state, item) {
+    state.sessionStorage.rootCategory = item
+  },
   generalInfo(state, item) {
     state.sessionStorage.generalInfo = item
   },
@@ -52,8 +56,8 @@ export const mutations = {
     }
   },
   'REMOVE_CART_ITEM'(state, id) {
-    console.log("🚀 ~ file: index.js ~ line 54 ~ id", id)
-    console.log("🚀 ~ file: index.js ~ line 54 ~ state", state)
+    // console.log("🚀 ~ file: index.js ~ line 54 ~ id", id)
+    // console.log("🚀 ~ file: index.js ~ line 54 ~ state", state)
     const record = state.localStorage.cartItemList.find(element => element.id == id);
     if (record) {
       state.localStorage.cartItemList.splice(state.localStorage.cartItemList.indexOf(record), 1);
@@ -80,7 +84,24 @@ export const mutations = {
 }
 // export const strict = false
 export const getters = {
+  subcategories(state) {
+    if (state.sessionStorage.rootCategory) {
+      const subcats = [
+        {
+          slug: state.sessionStorage.rootCategory.slug,
+          name: `Все ${state.sessionStorage.rootCategory.name}`,
+        },
+      ].concat(state.sessionStorage.rootCategory.children);
+      // console.log("🚀 ~ file: index.js ~ line 94 ~ subcategories ~ subcats", subcats)
+      return subcats
+    } else {
+      // console.log("🚀 ~ file: index.js ~ line 94 ~ subcategories ~ subcats empty")
+      return []
+    }
+  },
+
   cart(state) {
+    // console.log("cart getter called")
     const cart = state.localStorage.cartItemList.map(product => {
       product.subSumm = product.isDiscount
         ? Math.round(product.discountPrice * product.quantity)
@@ -99,66 +120,62 @@ export const getters = {
             acc + product.quantity * product.priceNum;
         return acc;
       }, 0)
-    console.log("🚀 ~ file: index.js ~ line 142 ~ cartSumm ~ summa", summa)
+    // console.log("🚀 ~ file: index.js ~ line 142 ~ cartSumm ~ summa", summa)
 
     return summa
   },
   isCart(state) {
-    return !!state.localStorage.cartItemList.length
+    return state.localStorage.cartItemList && !!state.localStorage.cartItemList.length
   },
   cartLength(state) {
-    // console.log("🚀 ~ file: index.js ~ line 146 ~ cartLength ~ state.localStorage.cartItemList.length", state.localStorage.cartItemList.length)
-
     return state.localStorage.cartItemList.length
   },
-  isInCart: (state, getters) => id => {
-    // console.log(!getters.isCart)
+  isInCartByIds(state, getters) {
     if (!getters.isCart) {
-      return false;
+      return {};
     }
-    // console.log("🚀 ~ file: index.js ~ line 136 ~ state", state)
-    // console.log("🚀 ~ file: cart.js ~ line 80 ~ id", id)
-    const recordIndex = state.localStorage.cartItemList.findIndex((element) => element.id == id)
-    // console.log("🚀 ~ file: cart.js ~ line 81 ~ record", recordIndex)
-    if (recordIndex >= 0) {
-      return true
-    } else {
-      return false
-    }
+    // console.log("🚀 ~ file: index.js ~ line 133 ~ isInCartByIds ~ state")
+
+    return state.localStorage.cartItemList.reduce((out, item) => {
+      // console.log("🚀 ~ file: index.js ~ line 139 ~ returnstate.localStorage.cartItemList.reduce ~ item", item)
+      out[item.id] = true// item.quantity
+      return out
+    }, {})
   },
+  // isInCart: (state, getters) => id => {
+  //   if (!getters.isCart) {
+  //     return false;
+  //   }
+  //   const recordIndex = state.localStorage.cartItemList.findIndex((element) => element.id == id)
+  //   if (recordIndex >= 0) {
+  //     return true
+  //   } else {
+  //     return false
+  //   }
+  // },
   quantity: (state) => id => {
+    // console.log("🚀 ~ file: index.js ~ line 156 ~ id", id)
     const record = state.localStorage.cartItemList.find((element) => element.id == id)
-    // console.log("🚀 ~ file: cart.js ~ line 81 ~ record", record)
     if (record) {
       return record.quantity
     } else {
       return 0
     }
   },
-  getProductQty: (state) => id => {
-    console.log("🚀 ~ file: index.js ~ line 71 ~ id", id)
-    const finded = state.localStorage.basket.find(
-      (item) => (item._id === id) || (item.id === id)
-    );
-    console.log("🚀 ~ file: index.js ~ line 76 ~ state.localStorage.basket", finded)
-
-    // console.log("🚀 ~ file: index.js ~ line 74 ~ index", index)
-    if (!finded) {
-      return 0
-    }
-    return finded.count
-  },
 
   menuItems(state, getters) {
-    // console.log("🚀 ~ file: index.js ~ line 91 ~ menuItems ~ state", getters)
     return [
-      {
-        name: "Главная",
-        to: "/",
-      },
+      // {
+      //   name: "Главная",
+      //   to: "/",
+      //   isChild: false,
+      // },
       {
         name: "Каталог",
+        slug: "catalog",
         to: "/catalog",
+        disable: true,
+        isChild: true,
         items: [
           ...getters.getParentCategories,
           { name: "Акционная продукция", slug: "discount" },
@@ -167,20 +184,35 @@ export const getters = {
       },
       {
         name: "Производители",
+        slug: "manufacturers",
         to: "/manufacturers",
+        disable: false,
+        isChild: true,
         items: state.sessionStorage.generalInfo.manufacturers,
       },
       {
         name: "О компании",
+        slug: "about",
         to: "/about",
-      },
-      {
-        name: "Доставка",
-        to: "/delivery",
+        disable: false,
+        isChild: true,
+        items: [
+          {
+            name: "Доставка",
+            slug: "delivery",
+          },
+          {
+            name: "Условия сотрудничества",
+            slug: "usloviya-sotrudnichestva",
+          },
+        ]
       },
       {
         name: "Контакты",
+        slug: "contacts",
         to: "/contacts",
+        disable: false,
+        isChild: false,
       },
     ];
   },
@@ -193,15 +225,8 @@ export const getters = {
       return []
     }
   },
-  getManufacturerId: state => slug => {
-    if (!slug) return null
-    const manufacturerFind = state.sessionStorage.generalInfo.manufacturers.find(
-      item => item.slug === slug
-    )
-    return manufacturerFind ? manufacturerFind.id : null
-  },
   getCategory: state => slug => {
-    console.log("🚀 ~ file: index.js ~ line 159 ~ state", state)
+    // console.log("🚀 ~ file: index.js ~ line 159 ~ state", state)
     if (!slug) return null
     const category = state.sessionStorage.generalInfo.categories.find(
       item => item.slug === slug
@@ -209,13 +234,17 @@ export const getters = {
     if (!category) return null
     return category
   },
-  getManufacturerById: state => id => {
-    if (!id) return null
-    const manufacturer = state.sessionStorage.generalInfo.manufacturers.find(
-      item => item.id === id
-    )
-    if (!manufacturer) return null
-    return manufacturer
+  getManufacturerBySlug(state, getters) {
+    if (!getters.isCart) {
+      return {};
+    }
+    // console.log("🚀 ~ file: index.js ~ line 133 ~ isInCartByIds ~ state")
+
+    return state.sessionStorage.generalInfo.manufacturers.reduce((out, item) => {
+      // console.log("🚀 ~ file: index.js ~ line 139 ~ returnstate.localStorage.cartItemList.reduce ~ item", item)
+      out[item.slug] = item// item.quantity
+      return out
+    }, {})
   },
   getManufacturer: state => slug => {
     if (!slug) return null
@@ -227,18 +256,89 @@ export const getters = {
   }
 }
 export const actions = {
+  async nuxtServerInit(state, ctx) {
+    // const user = ctx.$cookies.get('user')
+    // if (user) {
+    //   await state.commit("auth/setUserData", user)
+    // }
+    // const jwt = ctx.$cookies.get('jwt')
+    // if (jwt) {
+    //   await state.commit("auth/setJWT", jwt)
+    // }
+    // if (ctx.isDev) {
+    //   const query = gql`
+    //       {
+    //         contact {
+    //           phone
+    //           email
+    //           addressText
+    //           addressCoords
+    //           accessTime
+    //         }
+    //         categories(sort: "name:asc", limit: 999) {
+    //           id
+    //           name
+    //           slug
+    //           parent {
+    //             id
+    //           }
+    //           children {
+    //             id
+    //             name
+    //             slug
+    //             img {
+    //               url
+    //             }
+    //           }
+    //           img {
+    //             url
+    //           }
+    //         }
+    //         manufacturers(sort: "name:asc", limit:999) {
+    //           id
+    //           name
+    //           slug
+
+    //           img {
+    //             url
+    //           }
+    //         }
+    //       }
+    //     `
+    //   const client = this.app.apolloProvider.defaultClient;
+    //   const {
+    //     data
+    //   } = await client.query({
+    //     query
+    //   })
+    //   await state.commit("generalInfo", {
+    //     ...data,
+    //     contacts: data.contact
+    //   })
+    // } else {
+    //   const data = await this._vm.$getCachedData()
+    //   await state.commit("generalInfo", {
+    //     ...data,
+    //     contacts: data.contact
+    //   })
+    // }
+    await state.commit("generalInfo", {
+      ...data,
+      contacts: data.contact
+    })
+  },
   addToCart({ commit }, { item }) {
     commit("ADD_TO_CART", { item })
   },
   updateCartById({ commit, state }, { id, quantity }) {
-    console.log("🚀 ~ file: index.js ~ line 251 ~ updateCartById ~ state", state)
+    // console.log("🚀 ~ file: index.js ~ line 251 ~ updateCartById ~ state", state)
     const record = state.localStorage.cartItemList.find(element => element.id == id);
     if (record) {
-      console.log("🚀 ~ file: cart.js ~ line 110 ~ updateCartById ~ record", record)
+      // console.log("🚀 ~ file: cart.js ~ line 110 ~ updateCartById ~ record", record)
       let newQuantity;
       if (record.minimumOrder > 1) {
         const ostatok = quantity % record.minimumOrder
-        console.log("🚀 ~ file: cart.js ~ line 66 ~ ostatok", ostatok)
+        // console.log("🚀 ~ file: cart.js ~ line 66 ~ ostatok", ostatok)
         if (ostatok !== 0) {
           newQuantity = quantity + (record.minimumOrder - ostatok)
 
@@ -248,10 +348,10 @@ export const actions = {
       } else {
         newQuantity = quantity
       }
-      console.log("🚀 ~ file: cart.js ~ line 124 ~ updateCartById ~ newQuantity", record.quantity, newQuantity)
+      // console.log("🚀 ~ file: cart.js ~ line 124 ~ updateCartById ~ newQuantity", record.quantity, newQuantity)
 
       if (record.quantity !== newQuantity) {
-        console.log("🚀 ~ file: cart.js ~ line 127 UPDATE_CART_BY_ID", record.quantity, newQuantity)
+        // console.log("🚀 ~ file: cart.js ~ line 127 UPDATE_CART_BY_ID", record.quantity, newQuantity)
 
         commit("UPDATE_CART_BY_ID", { id, quantity: newQuantity })
         return newQuantity
@@ -276,74 +376,19 @@ export const actions = {
   clearCart({ commit }) {
     commit("SET_CART", [])
   },
-
-  async nuxtServerInit(state, ctx) {
-    // const user = ctx.$cookies.get('user')
-    // if (user) {
-    //   await state.commit("auth/setUserData", user)
-    // }
-    // const jwt = ctx.$cookies.get('jwt')
-    // if (jwt) {
-    //   await state.commit("auth/setJWT", jwt)
-    // }
-    if (ctx.isDev) {
-      const query = gql`
-          {
-            contact {
-              phone
-              email
-              addressText
-              addressCoords
-              accessTime
-            }
-            categories(sort: "name:asc", limit: 999) {
-              id
-              name
-              slug
-              parent {
-                id
-              }
-              children {
-                id
-                name
-                slug
-                img {
-                  url
-                }
-              }
-              img {
-                url
-              }
-            }
-            manufacturers(sort: "name:asc", limit:999) {
-              id
-              name
-              slug
-
-              img {
-                url
-              }
-            }
-          }
-        `
-      const client = this.app.apolloProvider.defaultClient;
-      const {
-        data
-      } = await client.query({
-        query
-      })
-      await state.commit("generalInfo", {
-        ...data,
-        contacts: data.contact
-      })
-    } else {
-      const data = await this._vm.$getCachedData()
-      await state.commit("generalInfo", {
-        ...data,
-        contacts: data.contact
-      })
+  setRootCategory({ commit, state }, newValue) {
+    // console.log("🚀state.sessionStorage.rootCategory", !state.sessionStorage.rootCategory)
+    if (!state.sessionStorage.rootCategory || state.sessionStorage.rootCategory.slug !== newValue.slug) {
+      // console.log("ChangeROOTCAT")
+      commit("rootCategory", newValue)
     }
+    // if (!state.sessionStorage.rootCategory)
+    // console.log("🚀 ~ file: index.js ~ line 336 ~ setRootCategory ~ newValue", newValue.slug)
+    // console.log(state.sessionStorage.breadcrumbs)
+
+    // commit("rootCategory", newValue)
   },
+
   async fetchProductType(state, id) {
     const client = this.app.apolloProvider.defaultClient;
     const {
@@ -365,36 +410,6 @@ export const actions = {
         `
     });
     return productTypeData.productType
-  },
-  async fetchManufacturer(ctx, id) {
-    const client = this.app.apolloProvider.defaultClient;
-    const {
-      data: manufacturerData
-    } = await client.query({
-      variables: {
-        id
-      },
-      query: gql`
-          query ManufacturerQuery($id: ID!) {
-            manufacturer(id: $id) {
-              id
-              name
-              slug
-              description
-              metaDescription
-              content
-              img {
-                url
-              }
-              catalog {
-                url
-              }
-            }
-          }
-        `
-    });
-    await ctx.commit("manufacturer", manufacturerData.manufacturer);
-    return manufacturerData.manufacturer
   },
   async fetchCategory(ctx, id) {
     const client = this.app.apolloProvider.defaultClient;
@@ -447,162 +462,187 @@ export const actions = {
     // await ctx.commit("category", categoryData.category);
     return categoryData.category
   },
-  async fetchProduct(ctx, slug) {
+  async fetchManufacturer(ctx, id) {
     const client = this.app.apolloProvider.defaultClient;
     const {
-      data: productData
+      data: manufacturerData
     } = await client.query({
+      variables: {
+        id
+      },
       query: gql`
-        fragment relatedProduct on Product {
-          name
-          slug
-          weight
-          isDiscount
-          isHalal
-          priceNum
-          discountPrice
-          minimumOrder
-          piece
-          manufacturer {
-            slug
-            name
-            img {
-              url
-            }
-          }
-          category {
-            slug
-          }
-          img {
-            url
-            formats
-          }
-        }
-        query ProductQuery( $slug: String! ) {
-          productFull:products( where: { slug: $slug } ) {
-            _id
-            description
-            name
-            slug
-            content
-            weight
-            isDiscount
-            isHalal
-            priceNum
-            discountPrice
-            minimumOrder
-            piece
-            category{
-              name
-              slug
-            }
-            img {
-              url
-              formats
-              width
-              height
-            }
-            manufacturer {
+          query ManufacturerQuery($id: ID!) {
+            manufacturer(id: $id) {
+              id
               name
               slug
               description
+              metaDescription
+              content
               img {
                 url
               }
+              catalog {
+                url
+              }
             }
-            relatedProducts {
-              ...relatedProduct
-            },
-            productsRelated {
-              ...relatedProduct
-            }
-
           }
-        }
-      `,
-      variables: {
-        slug
-      }
+        `
     });
-    // console.log("productData.products", productData)
-    if (!productData.productFull.length) return null
-    return productData.productFull[0]
+    // await ctx.commit("manufacturer", manufacturerData.manufacturer);
+    return manufacturerData.manufacturer
   },
-  async fetchProducts(ctx, params) {
-    let n = 3
-    const getProducts = async () => {
-      const client = this.app.apolloProvider.defaultClient;
-      const vars = {
-        ...params.manufacturer && {
-          manufacturer: params.manufacturer
-        },
-        ...params.product_type && {
-          product_type: params.product_type
-        },
-        category: params.category,
-        sort: params.sort || "name:asc",
-        limit: params.limit || 20,
-        start: params.start || 0
-      }
-      const {
-        data: productsData
-      } = await client.query({
-        query: gql`
-        query productsQuery(
-            $manufacturer: ID $category: [ID!] $product_type: ID $sort: String $limit: Int $start: Int
-          ) {
-            products(
-              limit: $limit 
-              start: $start 
-              sort: $sort 
-              where: {
-                manufacturer: $manufacturer
-                category: $category
-                product_type: $product_type
-              }
-          ) {
-            id
-            name
-            slug
-            weight
-            isDiscount
-            isHalal
-            priceNum
-            discountPrice
-            rating
-            minimumOrder
-            piece
-            manufacturer {
-              name
-              slug
-              img {
-                url
-              }
-            }
-            category{
-              name
-              slug
-            }
-            img {
-              url
-              name
-              formats
-            }
-          }
-        }
-      `,
-        variables: vars
-      });
-      return productsData.products
-    }
-    try {
-      return await getProducts()
-    } catch (error) {
-      n -= 1
-      if (n === 0) return []
-      return await getProducts()
-    }
-  }
+  // async fetchProduct(ctx, slug) {
+  //   // const client = this.app.apolloProvider.defaultClient;
+  //   try {
+  //     const {
+  //       data: { products: [product] }
+  //     } = await this.app.apolloProvider.defaultClient.query({
+  //       query: gql`
+  //       fragment relatedProduct on Product {
+  //         name
+  //         slug
+  //         weight
+  //         isDiscount
+  //         isHalal
+  //         priceNum
+  //         discountPrice
+  //         minimumOrder
+  //         piece
+  //         manufacturer {
+  //           slug
+  //           name
+  //         }
+  //         category {
+  //           slug
+  //         }
+  //         img {
+  //           url
+  //           formats
+  //         }
+  //       }
+  //       query ProductQuery( $slug: String! ) {
+  //         products( where: { slug: $slug } ) {
+  //           _id
+  //           description
+  //           name
+  //           slug
+  //           content
+  //           weight
+  //           isDiscount
+  //           isHalal
+  //           priceNum
+  //           discountPrice
+  //           minimumOrder
+  //           piece
+  //           category{
+  //             name
+  //             slug
+  //           }
+  //           img {
+  //             url
+  //             formats
+  //             width
+  //             height
+  //           }
+  //           manufacturer {
+  //             name
+  //             slug
+  //             description
+  //           }
+  //           relatedProducts {
+  //             ...relatedProduct
+  //           },
+  //           productsRelated {
+  //             ...relatedProduct
+  //           }
+
+  //         }
+  //       }
+  //     `,
+  //       variables: {
+  //         slug
+  //       }
+  //     });
+  //     return product
+  //   } catch (error) {
+  //     // console.log("🚀 ~ file: index.js ~ line 523 ~ fetchProduct ~ error", error)
+  //     return null
+  //   }
+
+  // },
+  // async fetchProducts(ctx, params) {
+  //   let n = 3
+  //   const getProducts = async () => {
+  //     const client = this.app.apolloProvider.defaultClient;
+  //     const vars = {
+  //       ...params.manufacturer && {
+  //         manufacturer: params.manufacturer
+  //       },
+  //       ...params.product_type && {
+  //         product_type: params.product_type
+  //       },
+  //       category: params.category,
+  //       sort: params.sort || "name:asc",
+  //       limit: params.limit || 20,
+  //       start: params.start || 0
+  //     }
+  //     const {
+  //       data: productsData
+  //     } = await client.query({
+  //       query: gql`
+  //       query productsQuery(
+  //           $manufacturer: ID $category: [ID!] $product_type: ID $sort: String $limit: Int $start: Int
+  //         ) {
+  //           products(
+  //             limit: $limit 
+  //             start: $start 
+  //             sort: $sort 
+  //             where: {
+  //               manufacturer: $manufacturer
+  //               category: $category
+  //               product_type: $product_type
+  //             }
+  //         ) {
+  //           id
+  //           name
+  //           slug
+  //           weight
+  //           isDiscount
+  //           isHalal
+  //           priceNum
+  //           discountPrice
+  //           rating
+  //           minimumOrder
+  //           piece
+  //           manufacturer {
+  //             name
+  //             slug
+  //           }
+  //           category{
+  //             name
+  //             slug
+  //           }
+  //           img {
+  //             url
+  //             name
+  //             formats
+  //           }
+  //         }
+  //       }
+  //     `,
+  //       variables: vars
+  //     });
+  //     return productsData.products
+  //   }
+  //   try {
+  //     return await getProducts()
+  //   } catch (error) {
+  //     n -= 1
+  //     if (n === 0) return []
+  //     return await getProducts()
+  //   }
+  // }
 }
 
   // isItemInBusket: (state) => id => {

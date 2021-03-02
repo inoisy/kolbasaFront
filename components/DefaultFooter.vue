@@ -99,7 +99,7 @@
             style="background: transparent !important"
             class="footer-list"
           >
-            <template v-for="(category, index) in categories.items">
+            <template v-for="(category, index) in menuItems[0].items">
               <!-- <div
                 :key="'list-group' + index"
                 v-if="
@@ -165,16 +165,14 @@ export default {
     menuItems() {
       return this.$store.getters.menuItems;
     },
-    categories() {
-      return this.menuItems.find((item) => item.name === "Каталог");
-    },
-    manufacturers() {
-      return this.$store.state.sessionStorage.generalInfo.manufacturers;
-    },
+    // categories() {
+    //   return this.$store.getters.getParentCategories; //.menuItems.find((item) => item.name === "Каталог");
+    // },
+    // manufacturers() {
+    //   return this.$store.state.sessionStorage.generalInfo.manufacturers;
+    // },
     contacts() {
-      return this.$store.state.sessionStorage.generalInfo.contacts
-        ? this.$store.state.sessionStorage.generalInfo.contacts
-        : "";
+      return this.$store.state.sessionStorage.generalInfo.contacts;
     },
   },
   // data() {

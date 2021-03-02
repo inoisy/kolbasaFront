@@ -11,7 +11,7 @@
   >
     <v-subheader>НАВИГАЦИЯ</v-subheader>
     <v-list class="pt-0">
-      <template v-for="(item, i) in menuItems">
+      <template v-for="item in menuItems">
         <v-list-group v-if="item.items && item.items.length > 0" :key="item.to">
           <v-list-item slot="activator" :to="item.to" :title="item.name">
             <v-list-item-content>{{ item.name }}</v-list-item-content>
@@ -22,6 +22,7 @@
               <v-list-item
                 nuxt
                 exact
+                dense
                 :to="`${item.to}/${product.slug}`"
                 :title="product.name"
               >
@@ -34,6 +35,7 @@
                 :key="child.id"
                 nuxt
                 exact
+                dense
                 :to="`${item.to}/${child.slug}`"
                 :title="child.name"
               >
@@ -47,6 +49,7 @@
               :title="product.name"
               nuxt
               exact
+              dense
               :to="`${item.to}/${product.slug}`"
             >
               <v-list-item-title class="pl-6">{{
@@ -87,12 +90,6 @@ export default {
   computed: {
     menuItems() {
       return this.$store.getters.menuItems;
-    },
-    isModal() {
-      return this.$route.name === "catalog-category-slug" &&
-        this.$route.params.slug
-        ? false
-        : true;
     },
   },
 };
