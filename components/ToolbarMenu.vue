@@ -6,24 +6,24 @@
     :activator="`#${parentSlug}`"
     content-class="menu-inner"
   >
-    <div>
-      <LazyHydrate on-interaction>
-        <v-list color="white" :class="isTwoColumns && 'two-columns'" dense>
-          <template v-for="(child, index) in items">
-            <v-list-item
-              :key="'list-group' + index"
-              :to="`/${parentSlug}/${child.slug}`"
-              :title="child.name"
-              class="list-item"
-            >
-              <v-list-item-title>
-                {{ child.name }}
-              </v-list-item-title>
-            </v-list-item>
-          </template>
-        </v-list>
-      </LazyHydrate>
-    </div>
+    <!-- <div>
+      <LazyHydrate on-interaction> -->
+    <v-list color="white" :class="isTwoColumns && 'two-columns'" dense>
+      <template v-for="(child, index) in items">
+        <v-list-item
+          :key="'list-group' + index"
+          :to="`/${parentSlug}/${child.slug}`"
+          :title="child.name"
+          class="list-item"
+        >
+          <v-list-item-title>
+            {{ child.name }}
+          </v-list-item-title>
+        </v-list-item>
+      </template>
+    </v-list>
+    <!-- </LazyHydrate>
+    </div> -->
   </v-menu>
 </template>
 <style lang="scss" scoped>
