@@ -555,7 +555,7 @@ export default {
         });
       }
 
-      this.$store.commit("breadcrumbs", items);
+      this.$store.dispatch("breadcrumbs", items);
       return items;
     },
   },
@@ -802,7 +802,6 @@ export default {
           id,
         },
       });
-      // await ctx.commit("category", categoryData.category);
       return category;
     },
     async sortChange(item) {

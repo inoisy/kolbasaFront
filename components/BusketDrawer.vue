@@ -154,7 +154,8 @@
       </div>
       <div v-if="offer && isSummValid" class="px-4 pt-4">
         <v-subheader class="mb-4 pl-0">ВВЕДИТЕ ВАШИ ДАННЫЕ</v-subheader>
-        <contact-form @offerClose="offer = false" />
+        <contact-form />
+        <!-- @offerClose="offer = false" -->
         <v-divider class="mt-10 mb-6"></v-divider>
         <v-subheader class="pl-0">ВАШ ЗАКАЗ</v-subheader>
         <v-simple-table>
@@ -290,7 +291,7 @@ export default {
       // TODO CREATE MODAL
       await this.$store.dispatch("clearCart");
     },
-    async deleteFromBasket(event, id) {
+    async deleteFromBasket(id) {
       await this.$store.dispatch("removeItemInCart", id);
     },
   },

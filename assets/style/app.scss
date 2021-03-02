@@ -134,21 +134,21 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 // html::-webkit-scrollbar {
-  //   width: 16px;
-  //   height: 16px
-  // }
+//   width: 16px;
+//   height: 16px
+// }
 
-  // html::-webkit-scrollbar-thumb {
-  //   background: #e4e4e4;
-  //   // background: #434343;
-  //   border-radius: 16px;
-  //   box-shadow: inset 2px 2px 2px hsla(0, 0%, 100%, .25), inset -2px -2px 2px rgba(0, 0, 0, .25)
-  // }
+// html::-webkit-scrollbar-thumb {
+//   background: #e4e4e4;
+//   // background: #434343;
+//   border-radius: 16px;
+//   box-shadow: inset 2px 2px 2px hsla(0, 0%, 100%, .25), inset -2px -2px 2px rgba(0, 0, 0, .25)
+// }
 
-  // html::-webkit-scrollbar-track {
-  //   // background: linear-gradient(90deg, #434343, #434343 1px, #111 0, #111)
-  //   background: linear-gradient(90deg, #a5a5a5, #e0e0e0 1px, #d2d2d2 0, #f5f5f5);
-  // }
+// html::-webkit-scrollbar-track {
+//   // background: linear-gradient(90deg, #434343, #434343 1px, #111 0, #111)
+//   background: linear-gradient(90deg, #a5a5a5, #e0e0e0 1px, #d2d2d2 0, #f5f5f5);
+// }
 
 .fs-1 {
   font-size: 1rem;
@@ -399,28 +399,28 @@ html {
 }
 
 // .error {
-   //   background-color: $error !important;
-   //   border-color: $error !important;
-   // }
+//   background-color: $error !important;
+//   border-color: $error !important;
+// }
 
 .error--text {
-  color: $error !important;
-  caret-color: $error !important;
+  color: $error;
+  caret-color: $error;
 }
 
 .success {
-  background-color: $success !important;
-  border-color: $success !important;
+  background-color: $success;
+  border-color: $success;
 }
 
 .success--text {
-  color: $success !important;
-  caret-color: $success !important;
+  color: $success;
+  caret-color: $success;
 }
 
 .success {
-  background-color: $success !important;
-  border-color: $success !important;
+  background-color: $success;
+  border-color: $success;
 }
 
 .primary--text {

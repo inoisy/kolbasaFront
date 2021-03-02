@@ -148,7 +148,7 @@ export default {
           text: this.manufacturer.name,
         },
       ];
-      this.$store.commit("breadcrumbs", items);
+      this.$store.dispatch("breadcrumbs", items);
       return items;
     },
   },

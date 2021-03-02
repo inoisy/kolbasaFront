@@ -4,7 +4,7 @@
     scrollable
     :width="showProductCard ? 'auto' : '600px'"
     content-class="dialog-content-wrapper"
-    :persistent="false"
+    :retain-focus="false"
   >
     <v-sheet :class="$style.dialogInner" light>
       <div :class="$style.toolbar">
@@ -180,7 +180,7 @@
                     @add="handleAdd"
                   />
                   <!-- @delete="handleDelete" -->
-                  <v-btn
+                  <!-- <v-btn
                     class="mt-3 fill-width"
                     dark
                     color="#d50000"
@@ -192,7 +192,7 @@
                     @click="handleOneClickBuy"
                   >
                     Купить в один клик
-                  </v-btn>
+                  </v-btn> -->
                 </div>
               </LazyHydrate>
               <div class="manufacturer my-3" v-if="product.manufacturer">
@@ -209,18 +209,16 @@
               </LazyHydrate>
             </v-flex>
           </v-layout>
-          <div v-show="!showProductCard" class="pb-6 pt-6 mx-auto">
+          <!-- <div v-show="!showProductCard" class="pb-6 pt-6 mx-auto">
             <div class="fs-1-5 mb-5 font-weight-bold mb-3">
               Купить "{{ product.name }}" в один клик
             </div>
-            <LazyHydrate on-interaction>
-              <lazy-contact-form
-                v-if="!showProductCard"
-                :oneClickBuy="true"
-                :productName="product.name"
-              />
-            </LazyHydrate>
-          </div>
+            <lazy-contact-form
+              v-if="!showProductCard"
+              :oneClickBuy="true"
+              :productName="product.name"
+            />
+          </div> -->
         </v-container>
       </template>
       <LazyHydrate v-if="related.length" when-visible>

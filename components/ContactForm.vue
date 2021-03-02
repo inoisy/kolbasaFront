@@ -8,7 +8,6 @@
         :counter="35"
         label="Ваше имя*"
         required
-        autofocus
         outlined
         dense
         @blur="$v.name.$touch()"
@@ -108,7 +107,7 @@ export default {
     phone: { required, minLength: minLength(10), maxLength: maxLength(19) },
     email: { email },
   },
-  data: function () {
+  data() {
     // let user; // = this.$store.state.localStorage.user;
     // if (this.$store.getters["auth/isLogined"]) {
     //   const getUser = this.$store.getters["auth/getUser"];
@@ -127,11 +126,11 @@ export default {
     return {
       formSuccess: false,
       formError: false,
-      name: user.name,
-      phone: user.phone,
-      address: user.address,
-      email: user.email,
-      userID: user.id,
+      name: user.name || "",
+      phone: user.phone || "",
+      address: user.address || "",
+      email: user.email || "",
+      userID: user.id || "",
       message: "",
       mask: "+7 (###) ### - ####",
       loading: false,
@@ -150,22 +149,20 @@ export default {
       this.$v.$touch();
       if (this.$v.$anyError) return;
       // console.log("submit -> busket", this.$store.state.localStorage.basket);
-      const busketObj = this.$store.state.localStorage.basket.map((item) => {
+      const busketObj = this.$store.getters.cart.map((item) => {
         return {
           name: item.name,
-          qty: item.count,
+          qty: item.quantity,
           id: item.id,
           price: item.isDiscount
             ? Math.round(item.discountPrice)
             : Math.round(item.priceNum),
-          priceAll: item.isDiscount
-            ? Math.round(item.discountPrice * item.count)
-            : Math.round(item.priceNum * item.count),
+          subSumm: item.subSumm,
         };
       });
       // console.log("submit -> busket", busketObj);
       try {
-        console.log(this.$strapi.user);
+        // console.log(this.$strapi.user);
         this.loading = true;
         await this.$strapi.$orders
           .create({
@@ -180,11 +177,12 @@ export default {
             user: this.userID,
             summa: this.$store.getters.summa,
             // REMOVE
-            isTest: true,
+            isTest: false,
           })
           .then(() => {
             this.loading = false;
             this.$toast.success("Заказ успешно отправлен!", {
+              // duration: 999999,
               icon: (el) => {
                 el.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon__svg" style="width:27px; height:27px;  margin-right: 15px;"><path d="${this.$vuetify.icons.values.success}"></svg>`;
                 return el;

@@ -97,12 +97,12 @@ export default {
   },
   methods: {
     async repeatOrder() {
-      await this.$store.commit("clearBasket");
+      await this.$store.dispatch("clearCart");
       for (let product of this.products) {
-        console.log("repeatOrder -> product.qty", product.qty);
+        // console.log("repeatOrder -> product.qty", product.qty);
         // clearBasket;
 
-        await this.$store.commit("addToBasket", product, product.qty);
+        await this.$store.dispatch("addToCart", product);
       }
     },
     async fetchProducts() {

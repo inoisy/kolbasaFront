@@ -102,12 +102,14 @@ export const getters = {
 
   cart(state) {
     // console.log("cart getter called")
-    const cart = state.localStorage.cartItemList.map(product => {
-      product.subSumm = product.isDiscount
+    const cart = state.localStorage.cartItemList.reduce((acc, product) => {
+      const newProd = Object.assign({}, product)
+      newProd.subSumm = product.isDiscount
         ? Math.round(product.discountPrice * product.quantity)
         : Math.round(product.priceNum * product.quantity)
-      return product
-    })
+      acc.push(newProd)
+      return acc
+    }, [])
     // console.log("🚀 ~ file: index.js ~ line 142 ~ cart ~ cart", cart)
     return cart
   },
@@ -327,6 +329,9 @@ export const actions = {
       contacts: data.contact
     })
   },
+  breadcrumbs({ commit }, items) {
+    commit("breadcrumbs", items)
+  },
   addToCart({ commit }, { item }) {
     commit("ADD_TO_CART", { item })
   },
@@ -377,16 +382,9 @@ export const actions = {
     commit("SET_CART", [])
   },
   setRootCategory({ commit, state }, newValue) {
-    // console.log("🚀state.sessionStorage.rootCategory", !state.sessionStorage.rootCategory)
     if (!state.sessionStorage.rootCategory || !state.sessionStorage.rootCategory.slug || state.sessionStorage.rootCategory.slug !== newValue.slug) {
-      // console.log("ChangeROOTCAT")
       commit("rootCategory", newValue)
     }
-    // if (!state.sessionStorage.rootCategory)
-    // console.log("🚀 ~ file: index.js ~ line 336 ~ setRootCategory ~ newValue", newValue.slug)
-    // console.log(state.sessionStorage.breadcrumbs)
-
-    // commit("rootCategory", newValue)
   },
 
   async fetchProductType(state, id) {
