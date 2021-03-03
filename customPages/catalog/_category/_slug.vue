@@ -523,9 +523,7 @@ export default {
       // this.isInCart = true;
       console.log("🚀 ~ file: _slug handleAdd");
 
-      this.$store.dispatch("addToCart", {
-        item: Object.assign({}, this.product),
-      });
+      this.$store.dispatch("addToCart", this.product);
     },
     // async handleDelete() {
     //   this.isInCart = false;

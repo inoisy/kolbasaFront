@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     async logout() {
-      this.$strapi.logout();
+      await this.$strapi.logout();
       // this.$store.commit("auth/logout");
     },
     // change(val) {

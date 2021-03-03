@@ -42,8 +42,7 @@ export const mutations = {
       record.quantity = quantity;
     }
   },
-  "ADD_TO_CART"(state, { item }) {
-    // console.log("🚀 ~ file: cart.js ~ line 68 ~ state", state)
+  "ADD_TO_CART"(state, item) {
     const product = new CartProduct(item)
     state.localStorage.cartItemList.push({
       ...product,
@@ -56,8 +55,6 @@ export const mutations = {
     }
   },
   'REMOVE_CART_ITEM'(state, id) {
-    // console.log("🚀 ~ file: index.js ~ line 54 ~ id", id)
-    // console.log("🚀 ~ file: index.js ~ line 54 ~ state", state)
     const record = state.localStorage.cartItemList.find(element => element.id == id);
     if (record) {
       state.localStorage.cartItemList.splice(state.localStorage.cartItemList.indexOf(record), 1);
@@ -85,19 +82,14 @@ export const mutations = {
 // export const strict = false
 export const getters = {
   subcategories(state) {
-    if (state.sessionStorage.rootCategory) {
-      const subcats = [
-        {
-          slug: state.sessionStorage.rootCategory.slug,
-          name: `Все ${state.sessionStorage.rootCategory.name}`,
-        },
-      ].concat(state.sessionStorage.rootCategory.children);
-      // console.log("🚀 ~ file: index.js ~ line 94 ~ subcategories ~ subcats", subcats)
-      return subcats
-    } else {
-      // console.log("🚀 ~ file: index.js ~ line 94 ~ subcategories ~ subcats empty")
-      return []
-    }
+    return state.sessionStorage.rootCategory.children.reduce((acc, val) => {
+      acc.push(val)
+      return acc
+    }, [{
+      slug: state.sessionStorage.rootCategory.slug,
+      name: `Все ${state.sessionStorage.rootCategory.name}`,
+      id: state.sessionStorage.rootCategory.id
+    }])
   },
 
   cart(state) {
@@ -332,8 +324,9 @@ export const actions = {
   breadcrumbs({ commit }, items) {
     commit("breadcrumbs", items)
   },
-  addToCart({ commit }, { item }) {
-    commit("ADD_TO_CART", { item })
+  addToCart({ commit }, item) {
+    // console.log("🚀 ~ file: index.js ~ line 347 ~ addToCart ~ item", item)
+    commit("ADD_TO_CART", item)
   },
   updateCartById({ commit, state }, { id, quantity }) {
     // console.log("🚀 ~ file: index.js ~ line 251 ~ updateCartById ~ state", state)

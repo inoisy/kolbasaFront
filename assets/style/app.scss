@@ -382,6 +382,10 @@ html {
 // 	}
 // }
 
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 @media (min-width: 1904px) {
   .container:not(.container--fluid) {
     max-width: 1570px !important;

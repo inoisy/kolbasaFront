@@ -4,9 +4,12 @@
     temporary
     fixed
     right
+    touchless
     width="550px"
     @input="change"
   >
+    <!--v-click-outside="change" @input="change" stateless
+    v-click-outside="change" -->
     <div class="pb-6 basketWrapper">
       <v-app-bar class="grey lighten-3 px-2" height="100px" flat>
         <v-btn
@@ -258,12 +261,9 @@ export default {
       },
     };
   },
-  // mounted() {
-  //   console.log("icons: ", this.$vuetify.icons);
-  // },
   watch: {
-    basket() {
-      if (this.basket.length === 0) {
+    "$store.getters.isCart"(val) {
+      if (!val) {
         this.basketClose();
       }
     },
@@ -293,15 +293,11 @@ export default {
     //   return this.$store.getters.summa;
     // },
     summa() {
-      // if (!this.isMounted || !this.isCart) {
-      //   console.log("noSumm");
-      //   return 0;
-      // } else {
       return this.$store.getters.cartSumm;
       // }
     },
     isSummValid() {
-      return this.summa > 3000;
+      return this.summa >= 3000;
     },
     // isMobile() {
     //   return this.$vuetify.breakpoint.smAndDown;

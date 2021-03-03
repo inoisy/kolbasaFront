@@ -7,5 +7,7 @@ export const state = () => ({
     }
   },
   breadcrumbs: [],
-  rootCategory: {}
+  rootCategory: {
+    children: []
+  }
 })

@@ -4,6 +4,7 @@
     temporary
     fixed
     right
+    touchless
     width="550px"
     @input="change"
   >

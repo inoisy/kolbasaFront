@@ -99,6 +99,10 @@ export default {
     async repeatOrder() {
       await this.$store.dispatch("clearCart");
       for (let product of this.products) {
+        console.log(
+          "🚀 ~ file: UserOrder.vue ~ line 102 ~ repeatOrder ~ product",
+          product
+        );
         // console.log("repeatOrder -> product.qty", product.qty);
         // clearBasket;
 

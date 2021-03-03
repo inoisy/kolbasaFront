@@ -11,7 +11,7 @@
         outlined
         dense
         @blur="$v.name.$touch()"
-      ></v-text-field>
+      />
       <v-text-field
         class="xs12 py-0 flex"
         v-model="phone"
@@ -22,7 +22,7 @@
         outlined
         dense
         @blur="$v.phone.$touch()"
-      ></v-text-field>
+      />
       <v-text-field
         class="xs12 py-0 flex"
         v-model="email"
@@ -31,14 +31,14 @@
         dense
         @blur="$v.email.$touch()"
         :error-messages="emailErrors"
-      ></v-text-field>
+      />
       <v-text-field
         class="xs12 py-0 flex"
         outlined
         dense
         v-model="address"
         label="Адрес"
-      ></v-text-field>
+      />
       <v-textarea
         class="xs12 py-0 flex"
         outlined
@@ -47,7 +47,7 @@
         v-model="message"
         hide-details
         label="Комментарий"
-      ></v-textarea>
+      />
       <v-flex xs12>
         <v-btn
           class="ml-0 mt-5"
@@ -58,8 +58,9 @@
           :loading="loading"
           style="width: 100%"
           title="Подтвердить заказ"
-          >Подтвердить заказ</v-btn
         >
+          Подтвердить заказ
+        </v-btn>
       </v-flex>
     </template>
     <!-- <v-slide-y-transition>
@@ -85,7 +86,6 @@ import {
   maxLength,
   minLength,
   email,
-  alpha,
 } from "vuelidate/lib/validators";
 export default {
   props: {
@@ -122,11 +122,10 @@ export default {
     //   user = this.$store.state.localStorage.user;
     // }
     const user = this.$strapi.user || {};
-    // console.log("🚀 ~ file: ContactForm.vue ~ line 126 ~ user", user);
     return {
       formSuccess: false,
       formError: false,
-      name: user.name || "",
+      name: user.firstname || "",
       phone: user.phone || "",
       address: user.address || "",
       email: user.email || "",
@@ -148,7 +147,6 @@ export default {
     async submit() {
       this.$v.$touch();
       if (this.$v.$anyError) return;
-      // console.log("submit -> busket", this.$store.state.localStorage.basket);
       const busketObj = this.$store.getters.cart.map((item) => {
         return {
           name: item.name,
@@ -160,9 +158,7 @@ export default {
           subSumm: item.subSumm,
         };
       });
-      // console.log("submit -> busket", busketObj);
       try {
-        // console.log(this.$strapi.user);
         this.loading = true;
         await this.$strapi.$orders
           .create({
@@ -175,7 +171,7 @@ export default {
             address: this.address,
             email: this.email,
             user: this.userID,
-            summa: this.$store.getters.summa,
+            summa: this.$store.getters.cartSumm,
             // REMOVE
             isTest: false,
           })
@@ -194,7 +190,6 @@ export default {
           });
       } catch (error) {
         this.loading = false;
-        // console.log("submit -> error", error);
         this.formError = true;
         this.clear();
       }

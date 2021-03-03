@@ -343,31 +343,9 @@ export default {
       return this.imageBaseUrl + this.product.img.formats.thumbnail.url;
     },
   },
-  // mounted() {
-  //   console.log("mounted");
-  // },
   methods: {
-    // Will only be called once the element is intersected
-    // onIntersect(entries, observer, isIntersecting) {
-    //   console.log(
-    //     "🚀 ~ file: ProductCard.vue ~ line 348 ~ onIntersect ~ isIntersecting",
-    //     isIntersecting
-    //   );
-    //   console.log(
-    //     "🚀 ~ file: ProductCard.vue ~ line 329 ~ onIntersect ~ entries",
-    //     entries[0].isIntersecting
-    //   );
-
-    //   // if (isIntersecting) {
-    //   //   this.isVisible = true;
-    //   //   console.log("🚀 this.isVisible", this.isVisible);
-    //   // }
-    // },
-
     async handleAdd() {
-      await this.$store.dispatch("addToCart", {
-        item: Object.assign({}, this.product),
-      });
+      await this.$store.dispatch("addToCart", this.product);
       // this.isInCart = true;
     },
     cardClick(event) {

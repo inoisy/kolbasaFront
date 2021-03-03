@@ -21,9 +21,11 @@
               color="accent"
               x-large
               dark
-              @click="handleOrder"
-              >{{ buttontext }}</v-btn
+              nuxt
+              :to="href"
             >
+              {{ buttontext }}
+            </v-btn>
 
             <!-- <v-btn
               min-width="220px"
