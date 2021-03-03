@@ -184,6 +184,9 @@ export default {
                 return el;
               },
             });
+            if (window.yaCounter54918895) {
+              window.yaCounter54918895.reachGoal("order");
+            }
           })
           .catch(() => {
             this.loading = false;

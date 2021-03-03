@@ -292,6 +292,7 @@ module.exports = async () => {
           accurateTrackBounce: true,
           webvisor: true,
           useCDN: false,
+          defer: true,
           // defer: false
         }
       ],
