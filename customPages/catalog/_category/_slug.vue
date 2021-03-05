@@ -351,10 +351,6 @@ export default {
       return;
     }
     const isLoading = process.client;
-    // console.log(
-    //   "🚀 ~ file: _slug.vue ~ line 341 ~ fetch ~ isLoading",
-    //   isLoading
-    // );
     if (isLoading) {
       this.$nuxt.$loading.start();
     }
