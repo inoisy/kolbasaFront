@@ -430,11 +430,11 @@ module.exports = async () => {
       terser: {
         extractComments: false // default was LICENSES
       },
-      ...(!isDev && {
-        extractCSS: {
-          ignoreOrder: true
-        }
-      }),
+      // ...(!isDev && {
+      //   extractCSS: {
+      //     ignoreOrder: true
+      //   }
+      // }),
 
       // analyze: true,
       // babel: {
