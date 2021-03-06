@@ -290,7 +290,11 @@ export default {
     //   "head",
     //   `https://prodaem-kolbasu.ru/catalog/${this.product.category.slug}/${this.product.slug}`
     // );
-    if (this.isProduct && this.product.name) {
+    if (this.isProduct && this.product.name && this.product.slug) {
+      // console.log(
+      //   "🚀 ~ file: _slug.vue ~ line 294 ~ head ~ this.product",
+      //   this.product.slug
+      // );
       // if (!this.product || !this.product.name) return;
 
       return {
@@ -299,10 +303,7 @@ export default {
         link: [
           {
             rel: "canonical",
-            href:
-              this.product.category && this.product.category.slug
-                ? `https://prodaem-kolbasu.ru/catalog/${this.product.category.slug}/${this.product.slug}`
-                : "",
+            href: `https://prodaem-kolbasu.ru/catalog/${this.product.category.slug}/${this.product.slug}`,
           },
         ],
         meta: [
@@ -517,7 +518,7 @@ export default {
     },
     async handleAdd() {
       // this.isInCart = true;
-      console.log("🚀 ~ file: _slug handleAdd");
+      // console.log("🚀 ~ file: _slug handleAdd");
 
       this.$store.dispatch("addToCart", this.product);
     },

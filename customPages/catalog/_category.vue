@@ -342,22 +342,24 @@ import LazyHydrate from "vue-lazy-hydration";
 export default {
   name: "category-main",
   head() {
-    return {
-      title: this.metaInfo.name,
-      meta: [
-        {
-          hid: "description",
-          name: "description",
-          content: this.metaInfo.description,
-        },
-      ],
-      link: [
-        {
-          rel: "canonical",
-          href: this.metaInfo.canonical,
-        },
-      ],
-    };
+    if (!this.isProductRoute) {
+      return {
+        title: this.metaInfo.name,
+        meta: [
+          {
+            hid: "description",
+            name: "description",
+            content: this.metaInfo.description,
+          },
+        ],
+        // link: [
+        //   {
+        //     rel: "canonical",
+        //     href: this.metaInfo.canonical,
+        //   },
+        // ],
+      };
+    }
   },
   components: { LazyHydrate },
   data() {
@@ -567,19 +569,19 @@ export default {
       let description = this.category.metaDescription
         ? this.category.metaDescription
         : `${name} от компании Альянс Фуд с доставкой по всей РФ и СНГ по самым выгодным оптовым ценам от производителя.`;
-      let canonical = `${this.$config.siteUrl}/catalog/${this.category.slug}`;
+      // let canonical = `${this.$config.siteUrl}/catalog/${this.category.slug}`;
       let content = this.category.content;
 
       if (this.manufacturer) {
         name = `${this.category.name} ${this.manufacturer.name} оптом`;
         description = `${name}. ${description}`;
-        canonical = `${canonical}?manufacturer=${this.manufacturer.slug}`;
+        // canonical = `${canonical}?manufacturer=${this.manufacturer.slug}`;
       } else if (this.productType) {
         const productType = await this.fetchProductType(this.productType._id);
 
         name = `${productType.name} оптом`;
         description = `${name}. ${description}`;
-        canonical = `${canonical}?type=${productType.slug}`;
+        // canonical = `${canonical}?type=${productType.slug}`;
         if (productType.content) {
           content = productType.content.concat(content);
         }
@@ -588,7 +590,7 @@ export default {
       this.metaInfo = {
         name,
         description,
-        canonical,
+        // canonical,
         content,
       };
       // return ;

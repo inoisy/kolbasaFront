@@ -12,37 +12,37 @@
       class="background-with-transparent"
     >
       <v-container grid-list-lg class="py-12">
-        <v-layout
-          row
-          wrap
+        <LazyHydrate
           v-for="(category, index) of categories"
           :key="category.id"
-          class="mb-10"
+          when-visible
         >
-          <h2 class="mb-5 flex xs12 d-block">
-            {{ category.name }} халяль оптом
-          </h2>
-          <div
-            class="flex xs12 sm6 md4 lg3 xl2"
-            v-for="product of category.products"
-            :key="`product-${product.id}`"
-          >
-            <!---${product.__v || 0} {{ `${product.id}-${product.__v || 0}` }} -->
-            <product-card
-              :product="product"
-              grandparent="catalog"
-              parent="halal"
-              :show="index === 0"
-              :halal="true"
-            />
-            <!-- </product-card> -->
-            <!-- :to="`/catalog/halal/${product.slug}`" -->
-          </div>
-        </v-layout>
+          <v-layout row wrap class="mb-10">
+            <h2 class="mb-5 flex xs12 d-block">
+              {{ category.name }} халяль оптом
+            </h2>
+            <div
+              class="flex xs12 sm6 md4 lg3 xl2"
+              v-for="product of category.products"
+              :key="`product-${product.id}`"
+            >
+              <!---${product.__v || 0} {{ `${product.id}-${product.__v || 0}` }} -->
+              <product-card
+                :product="product"
+                grandparent="catalog"
+                parent="halal"
+                :show="index === 0"
+                :halal="true"
+              />
+              <!-- </product-card> -->
+              <!-- :to="`/catalog/halal/${product.slug}`" -->
+            </div>
+          </v-layout>
+        </LazyHydrate>
       </v-container>
     </div>
     <section class="grey lighten-3" v-if="page.content">
-      <v-container class="pt-10 pb-7">
+      <v-container class="py-16">
         <v-row>
           <v-col cols="12">
             <LazyHydrate never>
@@ -68,10 +68,15 @@ export default {
     };
   },
   components: { LazyHydrate },
-  async asyncData(ctx) {
+  async asyncData({
+    store,
+    app: {
+      apolloProvider: { defaultClient },
+    },
+  }) {
     // await ctx.store.dispatch("fetchGeneralInfo");
-    const client = ctx.app.apolloProvider.defaultClient;
-    const { data: categoryData } = await client.query({
+    // const client = ctx.app.apolloProvider.defaultClient;
+    const { data: categoryData } = await defaultClient.query({
       query: gql`
         query HalalQuery {
           pages(where: { name: "halal" }) {
@@ -117,7 +122,24 @@ export default {
         }
       `,
     });
+    const breadcrumbs = [
+      {
+        to: "/",
+        text: "Главная",
+      },
+      {
+        to: "/catalog",
+        text: "Каталог",
+      },
+      {
+        // to: "/catalog/halal",
+        text: "Халяльная продукция",
+      },
+    ];
+    store.dispatch("breadcrumbs", breadcrumbs);
+
     return {
+      breadcrumbs,
       categories: categoryData.categories.filter(
         (item) => item.products && item.products.length > 0
       ),
@@ -125,59 +147,29 @@ export default {
     };
   },
   methods: {
-    async handleClose(isInCart, id, categorySlug) {
-      console.log(
-        "close",
-        isInCart,
-        " id: ",
-        id,
-        " categorySlug: ",
-        categorySlug
-      );
-      const { slug, ...params } = this.$route.params;
-
-      const routeSplit = this.$route.path.replace(/\/$/, "").split("/");
-      routeSplit.pop();
-      await this.$router.push({ path: routeSplit.join("/"), params });
-
-      // if (isInCart) {
-      //   const category = this.categories.find(
-      //     (category) => category.slug == categorySlug
-      //   );
-      //   if (category) {
-      //     console.log(
-      //       "🚀 ~ file: _slug.vue ~ line 144 ~ handleClose ~ category",
-      //       category
-      //     );
-      //     const product = category.products.find((item) => item.id === id);
-      //     product.__v = (product.__v || 0) + 1;
-      //     console.log(
-      //       "🚀 ~ file: _slug.vue ~ line 146 ~ handleClose ~ product",
-      //       product
-      //     );
-      //   }
-      // }
+    async handleClose() {
+      await this.$router.push({ path: "/catalog/halal" });
     },
   },
-  data() {
-    return {
-      breadcrumbs: [
-        {
-          to: "/",
-          text: "Главная",
-        },
-        {
-          to: "/catalog",
-          text: "Каталог",
-        },
-        {
-          // to: "/catalog/halal",
-          text: "Халяльная продукция",
-        },
-      ],
-      imageBaseUrl: process.env.imageBaseUrl,
-    };
-  },
+  // data() {
+  //   return {
+  //     breadcrumbs: [
+  //       {
+  //         to: "/",
+  //         text: "Главная",
+  //       },
+  //       {
+  //         to: "/catalog",
+  //         text: "Каталог",
+  //       },
+  //       {
+  //         // to: "/catalog/halal",
+  //         text: "Халяльная продукция",
+  //       },
+  //     ],
+  //     imageBaseUrl: process.env.imageBaseUrl,
+  //   };
+  // },
 };
 </script>
 

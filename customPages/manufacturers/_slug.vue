@@ -29,38 +29,38 @@
       class="background-with-transparent"
     >
       <v-container grid-list-lg class="pt-10 pb-7">
-        <v-layout
-          row
-          wrap
+        <LazyHydrate
+          when-visible
           v-for="(category, index) of categories"
           :key="category.id"
-          class="mb-5"
         >
-          <h2 class="display-flex align-center wrap xs12 mb-3 flex">
-            <nuxt-link
-              :to="`/catalog/${category.item.slug}?manufacturer=${manufacturer.slug}`"
-              :title="manufacturer.name"
-              class="heading-font font-weight-bold d-inline-block primary--text underline-on-hover"
-              v-text="`${category.item.name} ${manufacturer.name} оптом`"
-            ></nuxt-link>
-          </h2>
+          <v-layout row wrap class="mb-5">
+            <h2 class="display-flex align-center wrap xs12 mb-3 flex">
+              <nuxt-link
+                :to="`/catalog/${category.item.slug}?manufacturer=${manufacturer.slug}`"
+                :title="manufacturer.name"
+                class="heading-font font-weight-bold d-inline-block primary--text underline-on-hover"
+                v-text="`${category.item.name} ${manufacturer.name} оптом`"
+              ></nuxt-link>
+            </h2>
 
-          <div
-            class="flex xs12 sm6 md4 lg3 xl2"
-            v-for="product of category.products"
-            :key="`product-${product.id}`"
-          >
-            <!-- -${product.__v} -->
-            <product-card
-              :product="product"
-              grandparent="manufacturers"
-              :parent="manufacturer.slug"
-              :show="index === 0"
-            />
-            <!-- </product-card>
+            <div
+              class="flex xs12 sm6 md4 lg3 xl2"
+              v-for="product of category.products"
+              :key="`product-${product.id}`"
+            >
+              <!-- -${product.__v} -->
+              <product-card
+                :product="product"
+                grandparent="manufacturers"
+                :parent="manufacturer.slug"
+                :show="index === 0"
+              />
+              <!-- </product-card>
                           :to="`/manufacturers/${manufacturer.slug}/${product.slug}`" -->
-          </div>
-        </v-layout>
+            </div>
+          </v-layout>
+        </LazyHydrate>
       </v-container>
       <section class="grey lighten-3" v-if="isContent">
         <v-container class="py-16">
