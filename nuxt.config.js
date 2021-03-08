@@ -145,7 +145,7 @@ module.exports = async () => {
     ],
 
     router: {
-      trailingSlash: false,
+      // trailingSlash: false,
       extendRoutes(routes, resolve) {
         routes.push(
           //   {
