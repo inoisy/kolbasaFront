@@ -14,8 +14,6 @@
     @click.capture="cardClick"
     class="fill-height product-wrapper"
   >
-    <!--v-intersect.quiet="onIntersect" <v-lazy v-if="isValue" :value="show"> v-intersect.once="onIntersect" -->
-    <!-- <LazyHydrate when-visible> -->
     <template v-if="isValue">
       <!-- <LazyHydrate never :trigger-hydration="isVisible" > -->
       <!-- v-show="isVisible" -->
@@ -115,15 +113,6 @@
           >
             {{ product.weight ? ` / ${product.weight} кг.` : "" }}
           </div>
-          <!-- <div v-if="isMultiple" class="ml-auto">
-        <span class="product-price"
-          >{{ Math.round(price * product.minimumOrder) }} р</span
-        >
-        <span style="font-size: 15px"
-          >/ {{ product.minimumOrder }}
-          {{ product.piece ? "шт." : "кг." }}</span
-        >
-      </div> -->
         </div>
 
         <div itemprop="name" class="product-name mb-0">
@@ -144,6 +133,15 @@
     </template>
     <!-- </v-lazy> -->
     <lazy-product-sceleton v-else :boilerplate="!loading" />
+    <!-- <div v-if="isMultiple" class="ml-auto">
+        <span class="product-price"
+          >{{ Math.round(price * product.minimumOrder) }} р</span
+        >
+        <span style="font-size: 15px"
+          >/ {{ product.minimumOrder }}
+          {{ product.piece ? "шт." : "кг." }}</span
+        >
+      </div> -->
     <!-- </LazyHydrate> -->
 
     <!-- :title="product.name"
@@ -179,6 +177,124 @@
 
   <!-- :class="$style.productInner" :boilerplate="!pageData"-->
 </template>
+
+<script>
+// import LazyHydrate from "vue-lazy-hydration";
+
+// import ProductSceleton from "./ProductSceleton.vue";
+// import ProductQuantity from "~/components/ProductQuantity";
+// import ProductAdd from "./ProductAdd.vue";
+
+export default {
+  // components: { LazyHydrate },
+  data() {
+    return {
+      imageBaseUrl: process.env.imageBaseUrl,
+      // isVisible: this.show,
+      // isMounted: false,
+      // isInCart: false,
+    };
+  },
+  props: {
+    // to: {
+    //   type: String,
+    //   default: "",
+    // },
+    // isValue: {
+    //   type: Boolean,
+    //   default: false,
+    // },
+
+    // {
+    product:
+      // type:
+      [Object, Boolean],
+    // default: false,
+    // },
+    // {
+    //   type: Object,
+    //   default: () => {},
+    // },
+    halal: {
+      type: Boolean,
+      default: false,
+    },
+    grandparent: {
+      type: String,
+      default: "catalog",
+    },
+    parent: {
+      type: String,
+      default: "",
+      // required: true,
+    },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
+    show: {
+      type: Boolean,
+      default: false,
+    },
+    // grandparent="catalog"
+    //             :parent="category.slug"
+  },
+  computed: {
+    //   isActive: {
+    //   get() {
+    //     console.log(
+    //       "🚀 ~ file: ProductCard.vue ~ line 308 ~ get ~ this.show",
+    //       this.show
+    //     );
+
+    //     return this.show;
+    //   },
+    //   set(val) {
+    //     console.log("🚀 ~ file: ProductCard.vue ~ line 310 ~ set ~ val", val);
+    //   },
+    // },
+    isValue() {
+      // console.log(!!this.product);
+      return !!this.product;
+    },
+    isDiscount() {
+      return this.product.isDiscount && this.product.discountPrice;
+    },
+    price() {
+      return this.isDiscount
+        ? this.product.discountPrice
+        : this.product.priceNum;
+    },
+    imgUrl() {
+      // if (this.product.imageUrl) {
+      //   return this.product.imageUrl;
+      // }
+      if (!this.product.img) return "/no-image.png";
+      if (!this.product.img.formats) {
+        return this.imageBaseUrl + this.product.img.url;
+      }
+
+      return this.imageBaseUrl + this.product.img.formats.thumbnail.url;
+    },
+  },
+  methods: {
+    async handleAdd() {
+      await this.$store.dispatch("addToCart", this.product);
+      // this.isInCart = true;
+    },
+    cardClick(event) {
+      if (
+        this.$refs.productCardActions &&
+        this.$refs.productCardActions.contains(event.target)
+      ) {
+        event.preventDefault();
+      }
+    },
+  },
+};
+</script>
+
+
 <style lang="scss" scoped>
 .product-wrapper {
   padding: 10px;
@@ -253,110 +369,3 @@
   }
 }
 </style>
-
-<script>
-// import LazyHydrate from "vue-lazy-hydration";
-
-// import ProductSceleton from "./ProductSceleton.vue";
-// import ProductQuantity from "~/components/ProductQuantity";
-// import ProductAdd from "./ProductAdd.vue";
-
-export default {
-  // components: { LazyHydrate },
-  data() {
-    return {
-      imageBaseUrl: process.env.imageBaseUrl,
-      // isVisible: this.show,
-      // isMounted: false,
-      // isInCart: false,
-    };
-  },
-  props: {
-    // to: {
-    //   type: String,
-    //   default: "",
-    // },
-
-    product: [Object, Boolean],
-    // {
-    //   type: Object,
-    //   default: () => {},
-    // },
-    halal: {
-      type: Boolean,
-      default: false,
-    },
-    grandparent: {
-      type: String,
-      default: "catalog",
-    },
-    parent: {
-      type: String,
-      default: "",
-      required: true,
-    },
-    loading: {
-      type: Boolean,
-      default: false,
-    },
-    show: {
-      type: Boolean,
-      default: false,
-    },
-    // grandparent="catalog"
-    //             :parent="category.slug"
-  },
-  computed: {
-    //   isActive: {
-    //   get() {
-    //     console.log(
-    //       "🚀 ~ file: ProductCard.vue ~ line 308 ~ get ~ this.show",
-    //       this.show
-    //     );
-
-    //     return this.show;
-    //   },
-    //   set(val) {
-    //     console.log("🚀 ~ file: ProductCard.vue ~ line 310 ~ set ~ val", val);
-    //   },
-    // },
-    isValue() {
-      return !!this.product;
-    },
-    isDiscount() {
-      return this.product.isDiscount && this.product.discountPrice;
-    },
-    price() {
-      return this.isDiscount
-        ? this.product.discountPrice
-        : this.product.priceNum;
-    },
-    imgUrl() {
-      // if (this.product.imageUrl) {
-      //   return this.product.imageUrl;
-      // }
-      if (!this.product.img) return "/no-image.png";
-      if (!this.product.img.formats) {
-        return this.imageBaseUrl + this.product.img.url;
-      }
-
-      return this.imageBaseUrl + this.product.img.formats.thumbnail.url;
-    },
-  },
-  methods: {
-    async handleAdd() {
-      await this.$store.dispatch("addToCart", this.product);
-      // this.isInCart = true;
-    },
-    cardClick(event) {
-      if (
-        this.$refs.productCardActions &&
-        this.$refs.productCardActions.contains(event.target)
-      ) {
-        event.preventDefault();
-      }
-    },
-  },
-};
-</script>
-

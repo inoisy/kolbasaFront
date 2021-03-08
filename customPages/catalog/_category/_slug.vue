@@ -19,7 +19,7 @@
         >
           <v-icon>$arrowLeft</v-icon>
         </v-btn>
-        <breadcrumbs class="pl-2" :items="breadcrumbs" dark />
+        <breadcrumbs class="pr-3 my-auto" :items="breadcrumbs" dark />
 
         <v-btn
           :class="$style.closeButton"
@@ -179,7 +179,6 @@
                     :id="product._id"
                     @add="handleAdd"
                   />
-                  <!-- @delete="handleDelete" -->
                   <v-btn
                     class="mt-3 fill-width"
                     dark
@@ -242,7 +241,6 @@
                   grandparent="catalog"
                   :parent="product.category.slug"
                 />
-                <!-- :to="`/catalog/${product.category.slug}/${product.slug}`" -->
               </v-flex>
             </v-layout>
           </v-container>
@@ -263,43 +261,13 @@
 <script>
 import LazyHydrate from "vue-lazy-hydration";
 import gql from "graphql-tag";
-// function calculateImageUrl(imageObject, imageBaseUrl) {
-//   if (!imageObject) {
-//     return "/no-image.png";
-//   }
-//   if (!imageObject.formats) {
-//     return imageBaseUrl + imageObject.url;
-//   }
-//   if (imageObject.formats.small) {
-//     return imageBaseUrl + imageObject.formats.small.url;
-//   }
 
-//   return imageBaseUrl + imageObject.formats.thumbnail.url;
-// }
-// import ProductDialog from "~/components/ProductDialog";
 export default {
-  // props: {
-  //   isProductRoute: {
-  //     type: Boolean,
-  //     default: false,
-  //   },
-  // },
   name: "child",
   head() {
-    // console.log(
-    //   "head",
-    //   `https://prodaem-kolbasu.ru/catalog/${this.product.category.slug}/${this.product.slug}`
-    // );
     if (this.isProduct && this.product.name && this.product.slug) {
-      // console.log(
-      //   "🚀 ~ file: _slug.vue ~ line 294 ~ head ~ this.product",
-      //   this.product.slug
-      // );
-      // if (!this.product || !this.product.name) return;
-
       return {
         title: `${this.product.name} оптом`,
-        // TODO
         link: [
           {
             rel: "canonical",
@@ -322,14 +290,10 @@ export default {
     LazyHydrate,
   },
   data() {
-    // console.log("data CHILD INIT", this.$route.params.slug);
     return {
       imageBaseUrl: this.$config.imageBaseUrl,
-      // dialog: !!this.$route.params.slug,
-      // showCard: true,
       showProductCard: true,
       dialogImg: false,
-      // isInCart: false,
       product: {},
       contentFull: "",
       breadcrumbs: [],
@@ -346,7 +310,10 @@ export default {
   },
   fetchDelay: 0,
   async fetch() {
-    // console.log("fetch  this.$route.params.slug ", this.$route.params.slug);
+    // console.log(
+    //   "CHILD fetch  this.$route.params.slug ",
+    //   this.$route.params.slug
+    // );
     // console.log("fetch  this.isProductRoute ", this.isProduct);
     if (!this.isProduct) {
       return;
@@ -509,23 +476,11 @@ export default {
   },
   methods: {
     async handleClose() {
-      await this.$emit(
-        "close"
-        // this.isInCart,
-        // this.product._id,
-        // ...(this.product.category && this.product.category.slug)
-      );
+      await this.$emit("close");
     },
     async handleAdd() {
-      // this.isInCart = true;
-      // console.log("🚀 ~ file: _slug handleAdd");
-
       this.$store.dispatch("addToCart", this.product);
     },
-    // async handleDelete() {
-    //   this.isInCart = false;
-    //   // console.log("🚀 ~ file: _slug handleDelete", this.isInCart);
-    // },
     handleImageDialog() {
       this.dialogImg = true;
     },
@@ -537,13 +492,10 @@ export default {
   computed: {
     isProduct: {
       get() {
-        // console.log("getter called", !!this.$route.params.slug);
         return !!this.$route.params.slug;
       },
       set(val) {
-        // console.log("🚀 ~ file: _slug.vue ~ line 384 ~ value", val);
         if (!val) {
-          // console.log("handleClose called", val);
           this.handleClose();
         }
       },
@@ -566,7 +518,7 @@ export default {
     display: flex;
     align-content: center;
     padding: 10px;
-
+    padding-left: 20px;
     z-index: 4;
 
     @supports ((position: -webkit-sticky) or (position: sticky)) {

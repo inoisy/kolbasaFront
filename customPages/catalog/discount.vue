@@ -5,7 +5,7 @@
       <page-header :title="title" :breadrumbs="breadcrumbs" />
     </LazyHydrate>
     <div
-      :style="`background-image: url(${require('~/assets/images/bg.jpg?original')})`"
+      :style="`background-image: url(/bg.jpg)`"
       class="background-with-transparent"
     >
       <v-container grid-list-lg class="py-16">

@@ -49,7 +49,7 @@
               dark
             /></div
         ></template> -->
-        <!-- <template #header>
+        <template #header>
           <v-skeleton-loader
             v-if="noLoad || !metaInfo.name"
             class="d-flex justify-center"
@@ -60,7 +60,7 @@
             width="100%"
             :boilerplate="!fetchState"
           />
-        </template> -->
+        </template>
         <template #bottom>
           <!-- v-if="!noLoad" <template v-if="noLoad">
             <v-skeleton-loader
@@ -135,7 +135,7 @@
     <div
       :class="$style.categoryWrapper"
       class="background-with-transparent pa-3"
-      :style="`background-image: url(${image})`"
+      :style="`background-image: url(/bg.jpg)`"
       id="contentWrapper"
     >
       <!-- {{ !noLoad }}
@@ -402,6 +402,7 @@ export default {
     this.loadImage();
   },
   async fetch() {
+    // console.log("fetching2");
     if (!this.initialPageData && !this.isProductRoute) {
       const categoryFind = await this.findCategory(this.$route.params.category);
       if (!categoryFind) {
@@ -422,7 +423,11 @@ export default {
       this.category = category;
       const { manufacturer, type } = this.$route.query;
       if (manufacturer) {
-        this.manufacturer = await this.getManufacturer(manufacturer);
+        this.manufacturer = this.$store.getters.getManufacturerBySlug[
+          manufacturer
+        ];
+
+        // ); //await this.getManufacturer(manufacturer);
       }
       if (type) {
         // const productTypeId = category.product_types.find(
@@ -504,6 +509,7 @@ export default {
       this.pageData = true;
     }
   },
+  // fetchOnServer: false,
   watch: {
     noLoad(val) {
       // console.log("watch noLoad ~ val", val);
@@ -511,9 +517,6 @@ export default {
         this.loadImage();
       }
     },
-    // "$route.query.manufacturer"(val) {
-    //   console.log("manufacturer change", val);
-    // },
   },
   computed: {
     noLoad() {
@@ -595,11 +598,6 @@ export default {
       };
       // return ;
     },
-    // cleanProducts(oldLength) {
-    //   for (let index = 0; index < oldLength; index++) {
-    //     this.products[index] = false;
-    //   }
-    // },
     findCategoryById(id) {
       if (!id) return null;
       const category = this.$store.state.sessionStorage.generalInfo.categories.find(

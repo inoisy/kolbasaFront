@@ -1,5 +1,8 @@
 <template>
-  <div class="header-wrapper d-flex" :style="`background-image: url(${image})`">
+  <div
+    class="header-wrapper d-flex"
+    :style="`background-image: url(/promo_crop.jpg)`"
+  >
     <v-container
       class="header-inner"
       :class="fluid ? 'fluid' : 'nofluid'"
@@ -10,7 +13,7 @@
       <!--:="fluid" {{ bgLoaded }} -->
       <slot name="breadcrumbs">
         <breadcrumbs
-          v-if="!noLoad"
+          v-if="breadrumbs.length"
           :items="breadrumbs"
           large
           class="breadcrumbs-wrap pt-6 py-3"
@@ -44,50 +47,51 @@ export default {
       type: Boolean,
       default: false,
     },
-    imageSource: {
-      type: String,
-      default: require("~/assets/images/promo_crop.jpg"),
-    },
-    noLoad: {
-      type: Boolean,
-      default: false,
-    },
+    // imageSource: {
+    //   type: String,
+    //   default: require("~/assets/images/promo_crop.jpg"),
+    // },
+    // noLoad: {
+    //   type: Boolean,
+    //   default: false,
+    // },
   },
-  data() {
-    return {
-      image: "",
-      bgLoaded: false,
-    };
-  },
-  watch: {
-    noLoad(val) {
-      // console.log("watch ~ val", val);
-      if (!val) {
-        this.loadImage();
-      }
-    },
-  },
-  mounted() {
-    this.loadImage();
+  // data() {
+  //   return {
+  //     image: "",
+  //     bgLoaded: false,
+  //   };
+  // },
+  // watch: {
+  //   noLoad(val) {
+  //     // console.log("watch ~ val", val);
+  //     if (!val) {
+  //       this.loadImage();
+  //     }
+  //   },
+  // },
+  // mounted() {
+  //   this.loadImage();
 
-    // this.image = this.imageSource;
-  },
-  methods: {
-    loadImage() {
-      // console.log("loadImage", !this.noLoad && !this.bgLoaded);
-      if (!this.noLoad && !this.bgLoaded) {
-        this.image = this.imageSource;
-        this.bgLoaded = true;
-      }
-    },
-  },
+  //   // this.image = this.imageSource;
+  // },
+  // methods: {
+  //   loadImage() {
+  //     // console.log("loadImage", !this.noLoad && !this.bgLoaded);
+  //     if (!this.noLoad && !this.bgLoaded) {
+  //       this.image = this.imageSource;
+  //       this.bgLoaded = true;
+  //     }
+  //   },
+  // },
 };
 </script>
 <style lang="scss" scoped>
 .breadcrumbs-wrap {
-  justify-content: center;
+  // justify-content: center;
   padding-top: 24px;
   padding-bottom: 12px;
+  text-align: center;
   // position: absolute;
   // top: 0;
   // left: 0;
@@ -144,6 +148,9 @@ export default {
     margin-bottom: 0 !important;
     margin-top: 0 !important;
     padding-top: 10px;
+    padding-left: 12px;
+    padding-right: 12px;
+    width: 100%;
   }
 }
 .fluid {

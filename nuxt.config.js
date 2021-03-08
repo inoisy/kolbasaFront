@@ -145,6 +145,7 @@ module.exports = async () => {
     ],
 
     router: {
+      trailingSlash: false,
       extendRoutes(routes, resolve) {
         routes.push(
           //   {
@@ -185,7 +186,7 @@ module.exports = async () => {
 
           {
             path: "/manufacturers/:manufSlug",
-            component: resolve(__dirname, 'customPages/manufacturers/_slug.vue'),//customPages\manufacturers\_slug.vue
+            component: resolve(__dirname, 'customPages/manufacturers/_manufSlug.vue'),//customPages\manufacturers\_slug.vue
             name: "manufacturers-manufSlug",
             children: [{
               path: ":slug?",
@@ -197,6 +198,7 @@ module.exports = async () => {
       }
     },
     buildModules: [
+      // '@nuxtjs/composition-api',
       '~/modules/hook.js',
       // https://github.com/nuxt-community/style-resources-module
       // '@nuxtjs/eslint-module',

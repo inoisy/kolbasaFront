@@ -77,7 +77,7 @@
       </v-carousel>
     </LazyHydrate> -->
     <div
-      :style="`background-image: url(${require('~/assets/images/bg.jpg?original')})`"
+      :style="`background-image: url(/bg.jpg)`"
       :class="$style.contentSection"
       class="background-with-transparent"
     >
@@ -512,7 +512,7 @@
 </style>
 
 <script>
-import gql from "graphql-tag";
+// import gql from "graphql-tag";
 // import MultiItemSlider from "~/components/MultiItemSlider.vue";
 // import MainPageCard from "~/components/MainPageCard.vue";
 import LazyHydrate from "vue-lazy-hydration";
@@ -546,6 +546,7 @@ export default {
 
   computed: {
     categories() {
+      // console.log("computed categories");
       return this.$store.getters.getParentCategories;
     },
     manufacturers() {

@@ -88,12 +88,12 @@ export default {
     }
   }
 
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  flex: 0 1 auto;
+  // align-content: center;
+  // display: flex;
+  // flex-wrap: wrap;
+  // flex: 0 1 auto;
   list-style-type: none;
-  margin: 0;
+  // margin: 0;
   padding-left: 0;
   // padding: 18px 12px;
   // font-size: 16px;
@@ -104,13 +104,13 @@ export default {
   // }
 
   .breadcrumbsItem {
-    align-items: center;
-    display: inline-flex;
+    // align-items: center;
+    display: inline;
     // font-size: 14px;
     &:not(:last-child) {
       &:after {
         content: "/";
-        display: block;
+        display: inline;
         padding: 0 12px;
         color: rgba($white, 0.5);
       }
@@ -118,8 +118,8 @@ export default {
 
     .breadcrumbsItemLink {
       color: $white;
-      align-items: center;
-      display: inline-flex;
+      // align-items: center;
+      display: inline;
       text-decoration: none;
       text-align: center;
       &:hover {

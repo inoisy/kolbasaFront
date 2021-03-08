@@ -62,7 +62,7 @@
       <v-btn
         @click="$emit('show-basket')"
         :disabled="!(isMounted && isCart)"
-        class="cart-wrap header-link"
+        class="cart-wrap"
         color="#95282a"
         :hover="false"
         text
@@ -187,7 +187,7 @@
 
 .cart-wrap {
   height: 100% !important;
-
+  border-radius: 0;
   .cart-badge {
     width: 40px;
     height: 40px;

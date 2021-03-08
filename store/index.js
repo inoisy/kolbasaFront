@@ -30,44 +30,47 @@ export const mutations = {
   breadcrumbs(state, item) {
     state.sessionStorage.breadcrumbs = item
   },
+  // manufacturer(state, item) {
+  //   state.sessionStorage.manufacturer = item
+  // },
   rootCategory(state, item) {
     state.sessionStorage.rootCategory = item
   },
   generalInfo(state, item) {
     state.sessionStorage.generalInfo = item
   },
-  'UPDATE_CART_BY_ID'(state, { id, quantity }) {
+  updateCartByID(state, { id, quantity }) {
     const record = state.localStorage.cartItemList.find(element => element.id == id);
     if (record) {
       record.quantity = quantity;
     }
   },
-  "ADD_TO_CART"(state, item) {
+  addToCart(state, item) {
     const product = new CartProduct(item)
     state.localStorage.cartItemList.push({
       ...product,
       quantity: product.minimumOrder
     });
   },
-  'SET_CART'(state, productList) {
+  setCart(state, productList) {
     if (productList) {
       state.localStorage.cartItemList = productList;
     }
   },
-  'REMOVE_CART_ITEM'(state, id) {
+  removeCartItem(state, id) {
     const record = state.localStorage.cartItemList.find(element => element.id == id);
     if (record) {
       state.localStorage.cartItemList.splice(state.localStorage.cartItemList.indexOf(record), 1);
 
     }
   },
-  'INCREMENT_CART'(state, id) {
+  incrementCart(state, id) {
     const record = state.localStorage.cartItemList.find(element => element.id == id);
     if (record) {
       record.quantity += record.minimumOrder;
     }
   },
-  'DECREMENT_CART'(state, id) {
+  decrementCart(state, id) {
     const record = state.localStorage.cartItemList.find(element => element.id == id);
     if (record) {
       const quantityNew = record.quantity -= record.minimumOrder
@@ -82,6 +85,9 @@ export const mutations = {
 // export const strict = false
 export const getters = {
   subcategories(state) {
+    if (!state.sessionStorage.rootCategory) {
+      return []
+    }
     return state.sessionStorage.rootCategory.children.reduce((acc, val) => {
       acc.push(val)
       return acc
@@ -228,10 +234,11 @@ export const getters = {
     if (!category) return null
     return category
   },
-  getManufacturerBySlug(state, getters) {
-    if (!getters.isCart) {
-      return {};
-    }
+  getManufacturerBySlug(state) {
+    // console.log("getManufacturerBySlug")
+    // if (!getters.isCart) {
+    //   return {};getters
+    // }
     // console.log("🚀 ~ file: index.js ~ line 133 ~ isInCartByIds ~ state")
 
     return state.sessionStorage.generalInfo.manufacturers.reduce((out, item) => {
@@ -326,7 +333,7 @@ export const actions = {
   },
   addToCart({ commit }, item) {
     // console.log("🚀 ~ file: index.js ~ line 347 ~ addToCart ~ item", item)
-    commit("ADD_TO_CART", item)
+    commit("addToCart", item)
   },
   updateCartById({ commit, state }, { id, quantity }) {
     // console.log("🚀 ~ file: index.js ~ line 251 ~ updateCartById ~ state", state)
@@ -349,9 +356,9 @@ export const actions = {
       // console.log("🚀 ~ file: cart.js ~ line 124 ~ updateCartById ~ newQuantity", record.quantity, newQuantity)
 
       if (record.quantity !== newQuantity) {
-        // console.log("🚀 ~ file: cart.js ~ line 127 UPDATE_CART_BY_ID", record.quantity, newQuantity)
+        // console.log("🚀 ~ file: cart.js ~ line 127 updateCartByID", record.quantity, newQuantity)
 
-        commit("UPDATE_CART_BY_ID", { id, quantity: newQuantity })
+        commit("updateCartByID", { id, quantity: newQuantity })
         return newQuantity
       } else {
         return record.quantity
@@ -360,19 +367,19 @@ export const actions = {
 
   },
   removeItemInCart({ commit }, id) {
-    commit("REMOVE_CART_ITEM", id)
+    commit("removeCartItem", id)
   },
   incrementCart({ commit }, id) {
-    commit("INCREMENT_CART", id)
+    commit("incrementCart", id)
   },
   decrementCart({ commit }, id) {
-    commit("DECREMENT_CART", id)
+    commit("decrementCart", id)
   },
   setCart({ commit }, cart) {
-    commit("SET_CART", cart)
+    commit("setCart", cart)
   },
   clearCart({ commit }) {
-    commit("SET_CART", [])
+    commit("setCart", [])
   },
   setRootCategory({ commit, state }, newValue) {
     if (!state.sessionStorage.rootCategory || !state.sessionStorage.rootCategory.slug || state.sessionStorage.rootCategory.slug !== newValue.slug) {
@@ -402,7 +409,7 @@ export const actions = {
     });
     return productTypeData.productType
   },
-  async fetchCategory(ctx, id) {
+  async fetchCategory(state, id) {
     const client = this.app.apolloProvider.defaultClient;
     const {
       data: categoryData
@@ -454,6 +461,7 @@ export const actions = {
     return categoryData.category
   },
   async fetchManufacturer(ctx, id) {
+    // console.log("fetchManufacturer")
     const client = this.app.apolloProvider.defaultClient;
     const {
       data: manufacturerData
@@ -480,7 +488,9 @@ export const actions = {
           }
         `
     });
+    // console.log(ctx.state)
     // await ctx.commit("manufacturer", manufacturerData.manufacturer);
+    // console.log(ctx.state)
     return manufacturerData.manufacturer
   },
   // async fetchProduct(ctx, slug) {

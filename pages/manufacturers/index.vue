@@ -4,7 +4,7 @@
       <page-header title="Производители" :breadrumbs="breadrumbs" />
     </LazyHydrate>
     <div
-      :style="`background-image: url(${require('~/assets/images/bg.jpg?original')})`"
+      :style="`background-image: url(/bg.jpg)`"
       class="background-with-transparent"
     >
       <v-container class="py-16" grid-list-lg>
@@ -33,6 +33,7 @@ export default {
   },
   components: { LazyHydrate },
   async asyncData({ app }) {
+    // console.log("asyncdatacalled");
     const {
       data: manufacturerData,
     } = await app.apolloProvider.defaultClient.query({

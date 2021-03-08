@@ -3,13 +3,14 @@
     <LazyHydrate when-idle>
       <page-header :title="title" :breadrumbs="breadrumbs" />
     </LazyHydrate>
+
     <div
-      :style="`background-image: url(${require('~/assets/images/bg.jpg?original')})`"
+      style="background-image: url(/bg.jpg)"
       class="background-with-transparent"
     >
       <v-container class="py-16" grid-list-lg>
-        <v-row>
-          <v-col cols="12">
+        <v-row no-gutters>
+          <v-col class="pa-3" cols="12">
             <LazyHydrate never>
               <content-wrapper v-html="page.content" />
             </LazyHydrate>
@@ -23,16 +24,8 @@
 
 <script>
 import LazyHydrate from "vue-lazy-hydration";
-
-// import PageHeader from "~/components/PageHeader";
 import gql from "graphql-tag";
-// import { mdiAccount, mdiPencil, mdiShareVariant, mdiDelete } from "@mdi/js";
-// icons: {
-//   mdiAccount,
-//   mdiPencil,
-//   mdiShareVariant,
-//   mdiDelete,
-// },
+
 export default {
   head() {
     return {
@@ -55,10 +48,16 @@ export default {
       ],
     };
   },
-  async asyncData(ctx) {
-    // await ctx.store.dispatch("fetchGeneralInfo");
-    const client = ctx.app.apolloProvider.defaultClient;
-    const { data: pageData } = await client.query({
+  async asyncData({
+    app: {
+      apolloProvider: { defaultClient },
+    },
+  }) {
+    const {
+      data: {
+        pages: [page],
+      },
+    } = await defaultClient.query({
       query: gql`
         query AboutPageQuery {
           pages(where: { name: "about" }) {
@@ -68,16 +67,10 @@ export default {
         }
       `,
     });
-
+    // console.timeEnd("fetchAsyncData");
     return {
-      page: pageData.pages[0],
+      page,
     };
   },
-  // mounted() {
-  //   console.log(this.$vuetify.icons);
-  // },
 };
 </script>
-
-<style>
-</style>

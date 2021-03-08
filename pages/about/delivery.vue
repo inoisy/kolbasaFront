@@ -4,7 +4,7 @@
       <page-header :title="title" :breadrumbs="breadrumbs" />
     </LazyHydrate>
     <div
-      :style="`background-image: url(${require('~/assets/images/bg.jpg?original')})`"
+      :style="`background-image: url(/bg.jpg)`"
       class="background-with-transparent"
     >
       <v-container grid-list-lg class="pt-16 pb-15">
@@ -58,9 +58,18 @@ export default {
       ];
     },
   },
-  async asyncData({ app }) {
-    const client = app.apolloProvider.defaultClient;
-    const { data: pageData } = await client.query({
+  // async asyncData({ app }) {
+  //   // console.log("asyncData called");
+  //   const client = app.apolloProvider.defaultClient;
+  //   const { data: pageData } =
+  async asyncData({
+    app: {
+      apolloProvider: { defaultClient },
+    },
+  }) {
+    const {
+      data: { delivery },
+    } = await defaultClient.query({
       query: gql`
         {
           delivery {
@@ -72,7 +81,7 @@ export default {
       `,
     });
     return {
-      pageData: pageData.delivery,
+      pageData: delivery,
     };
   },
   components: { LazyHydrate },
