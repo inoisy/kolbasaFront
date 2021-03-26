@@ -33,6 +33,9 @@ import { mdiPhone, mdiEmail, mdiMapMarker, mdiClockOutline, mdiArrowLeft, mdiEye
 // mdiSortVariant,
 export default function ({ app }) {
     return {
+        breakpoint: {
+            mobileBreakpoint: 'sm' // This is equivalent to a value of 960
+        },
         theme: {
             disable: true,
             // dark: false,

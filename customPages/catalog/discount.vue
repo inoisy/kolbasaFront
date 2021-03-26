@@ -1,13 +1,10 @@
 <template>
   <div>
-    <nuxt-child @close="handleClose" />
+    <nuxt-child @close="handleClose" :breadcrumbs-base="breadcrumbs" />
     <LazyHydrate when-idle>
       <page-header :title="title" :breadrumbs="breadcrumbs" />
     </LazyHydrate>
-    <div
-      :style="`background-image: url(/bg.jpg)`"
-      class="background-with-transparent"
-    >
+    <div :style="`background-image: url(/bg.jpg)`" class="background-repeat">
       <v-container grid-list-lg class="py-16">
         <LazyHydrate
           when-visible
@@ -118,6 +115,7 @@ export default {
               isHalal
               minimumOrder
               piece
+              weight
               category {
                 slug
               }
@@ -152,7 +150,7 @@ export default {
         text: title,
       },
     ];
-    store.dispatch("breadcrumbs", breadcrumbs);
+    // store.dispatch("breadcrumbs", breadcrumbs);
 
     return {
       breadcrumbs,

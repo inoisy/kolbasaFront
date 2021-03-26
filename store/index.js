@@ -1,5 +1,4 @@
 import gql from "graphql-tag";
-import data from '~/static/data.json'
 
 class CartProduct {
   constructor(item) {
@@ -25,78 +24,32 @@ class CartProduct {
     this.name = item.name
   }
 }
-
-export const mutations = {
-  breadcrumbs(state, item) {
-    state.sessionStorage.breadcrumbs = item
-  },
-  // manufacturer(state, item) {
-  //   state.sessionStorage.manufacturer = item
-  // },
-  rootCategory(state, item) {
-    state.sessionStorage.rootCategory = item
-  },
-  generalInfo(state, item) {
-    state.sessionStorage.generalInfo = item
-  },
-  updateCartByID(state, { id, quantity }) {
-    const record = state.localStorage.cartItemList.find(element => element.id == id);
-    if (record) {
-      record.quantity = quantity;
-    }
-  },
-  addToCart(state, item) {
-    const product = new CartProduct(item)
-    state.localStorage.cartItemList.push({
-      ...product,
-      quantity: product.minimumOrder
-    });
-  },
-  setCart(state, productList) {
-    if (productList) {
-      state.localStorage.cartItemList = productList;
-    }
-  },
-  removeCartItem(state, id) {
-    const record = state.localStorage.cartItemList.find(element => element.id == id);
-    if (record) {
-      state.localStorage.cartItemList.splice(state.localStorage.cartItemList.indexOf(record), 1);
-
-    }
-  },
-  incrementCart(state, id) {
-    const record = state.localStorage.cartItemList.find(element => element.id == id);
-    if (record) {
-      record.quantity += record.minimumOrder;
-    }
-  },
-  decrementCart(state, id) {
-    const record = state.localStorage.cartItemList.find(element => element.id == id);
-    if (record) {
-      const quantityNew = record.quantity -= record.minimumOrder
-      if (quantityNew > 0) {
-        record.quantity = quantityNew
-      } else {
-        state.localStorage.cartItemList.splice(state.localStorage.cartItemList.indexOf(record), 1);
-      }
-    }
-  },
-}
-// export const strict = false
 export const getters = {
+  // subcategories(state) {
+  //   return state.sessionStorage.category.subcategories
+  // },
+
   subcategories(state) {
-    if (!state.sessionStorage.rootCategory) {
+    const rootCategory = state.sessionStorage.rootCategory
+    if (!rootCategory) {
       return []
     }
-    return state.sessionStorage.rootCategory.children.reduce((acc, val) => {
+    // const value = 
+    // console.log("🚀 ~ file: index.js ~ line 107 ~ value ~ value", value)
+    return rootCategory.children.reduce((acc, val) => {
       acc.push(val)
       return acc
     }, [{
-      slug: state.sessionStorage.rootCategory.slug,
-      name: `Все ${state.sessionStorage.rootCategory.name}`,
-      id: state.sessionStorage.rootCategory.id
+      slug: rootCategory.slug,
+      name: `Все ${rootCategory.name}`,
+      id: rootCategory.id
     }])
   },
+  // categoryBreadcrumbs(state) {
+
+  //     // this.$store.dispatch("breadcrumbs", items);
+  //     return items;
+  //   },
 
   cart(state) {
     // console.log("cart getter called")
@@ -234,16 +187,15 @@ export const getters = {
     if (!category) return null
     return category
   },
+  getCategoryBySlug(state) {
+    return state.sessionStorage.generalInfo.categories.reduce((out, item) => {
+      out[item.slug] = item
+      return out
+    }, {})
+  },
   getManufacturerBySlug(state) {
-    // console.log("getManufacturerBySlug")
-    // if (!getters.isCart) {
-    //   return {};getters
-    // }
-    // console.log("🚀 ~ file: index.js ~ line 133 ~ isInCartByIds ~ state")
-
     return state.sessionStorage.generalInfo.manufacturers.reduce((out, item) => {
-      // console.log("🚀 ~ file: index.js ~ line 139 ~ returnstate.localStorage.cartItemList.reduce ~ item", item)
-      out[item.slug] = item// item.quantity
+      out[item.slug] = item
       return out
     }, {})
   },
@@ -256,8 +208,92 @@ export const getters = {
     return manufacturer
   }
 }
+export const mutations = {
+  breadcrumbs(state, items) {
+    state.sessionStorage.breadcrumbs = items
+  },
+  // subcategories(state, items) {
+  //   state.sessionStorage.category.subcategories = items
+  // },
+  rootCategory(state, items) {
+    state.sessionStorage.rootCategory = items
+  },
+  category(state, item) {
+    state.sessionStorage.category = item
+  },
+  generalInfo(state, item) {
+    state.sessionStorage.generalInfo = item
+  },
+  updateCartByID(state, { id, quantity }) {
+    const record = state.localStorage.cartItemList.find(element => element.id == id);
+    if (record) {
+      record.quantity = quantity;
+    }
+  },
+  addToCart(state, item) {
+    const product = new CartProduct(item)
+    state.localStorage.cartItemList.push({
+      ...product,
+      quantity: product.minimumOrder
+    });
+  },
+  setCart(state, productList) {
+    if (productList) {
+      state.localStorage.cartItemList = productList;
+    }
+  },
+  removeCartItem(state, id) {
+    const record = state.localStorage.cartItemList.find(element => element.id == id);
+    if (record) {
+      state.localStorage.cartItemList.splice(state.localStorage.cartItemList.indexOf(record), 1);
+
+    }
+  },
+  incrementCart(state, id) {
+    const record = state.localStorage.cartItemList.find(element => element.id == id);
+    if (record) {
+      record.quantity += record.minimumOrder;
+    }
+  },
+  decrementCart(state, id) {
+    const record = state.localStorage.cartItemList.find(element => element.id == id);
+    if (record) {
+      const quantityNew = record.quantity -= record.minimumOrder
+      if (quantityNew > 0) {
+        record.quantity = quantityNew
+      } else {
+        state.localStorage.cartItemList.splice(state.localStorage.cartItemList.indexOf(record), 1);
+      }
+    }
+  },
+}
+// export const strict = false
+
 export const actions = {
   async nuxtServerInit(state, ctx) {
+
+
+    // if (ctx.isDev) {
+    //   const query = require("~/graphql/query/generalInfo")
+    //   const {
+    //     data
+    //   } = await this.app.apolloProvider.defaultClient.query({
+    //     query: gql(query)
+    //   })
+    //   await state.commit("generalInfo", {
+    //     ...data,
+    //     contacts: data.contact
+    //   })
+    // } else {
+    const data = require('~/static/data.json')
+    await state.commit("generalInfo", {
+      ...data,
+      contacts: data.contact
+    })
+    // }
+
+
+
     // const user = ctx.$cookies.get('user')
     // if (user) {
     //   await state.commit("auth/setUserData", user)
@@ -266,7 +302,6 @@ export const actions = {
     // if (jwt) {
     //   await state.commit("auth/setJWT", jwt)
     // }
-    // if (ctx.isDev) {
     //   const query = gql`
     //       {
     //         contact {
@@ -323,13 +358,17 @@ export const actions = {
     //     contacts: data.contact
     //   })
     // }
-    await state.commit("generalInfo", {
-      ...data,
-      contacts: data.contact
-    })
+
   },
   breadcrumbs({ commit }, items) {
     commit("breadcrumbs", items)
+  },
+  pushBreadcrumbs({ commit, state }, item) {
+    console.log("🚀 ~ file: index.js ~ line 350 ~ pushBreadcrumbs ~ state.sessionStorage.breadcrumbs", state.sessionStorage.breadcrumbs)
+
+    const existed = [...state.sessionStorage.breadcrumbs]
+    console.log("🚀 ~ file: index.js ~ line 349 ~ pushBreadcrumbs ~ ctx", state.sessionStorage.breadcrumbs)
+    commit("breadcrumbs", [...existed, item])
   },
   addToCart({ commit }, item) {
     // console.log("🚀 ~ file: index.js ~ line 347 ~ addToCart ~ item", item)
@@ -381,10 +420,59 @@ export const actions = {
   clearCart({ commit }) {
     commit("setCart", [])
   },
-  setRootCategory({ commit, state }, newValue) {
-    if (!state.sessionStorage.rootCategory || !state.sessionStorage.rootCategory.slug || state.sessionStorage.rootCategory.slug !== newValue.slug) {
-      commit("rootCategory", newValue)
+  category({ commit, state, dispatch }, newValue) {
+    const oldValue = state.sessionStorage.rootCategory
+    if (!oldValue || !oldValue.slug || oldValue.slug !== newValue.slug) {
+      commit("rootCategory", newValue);
     }
+  },
+  setRootCategory({ commit, state, dispatch }, newValue) {
+    const oldValue = state.sessionStorage.rootCategory
+    if (!oldValue || !oldValue.slug || oldValue.slug !== newValue.slug) {
+      // commit("subcategories", [])
+      // commit("category", {
+      //   rootCategory: newValue,
+      //   // subcategories: newValue.children.reduce((acc, val) => {
+      //   //   acc.push(val)
+      //   //   return acc
+      //   // }, [{
+      //   //   slug: newValue.slug,
+      //   //   name: `Все ${newValue.name}`,
+      //   //   id: newValue.id
+      //   // }])
+      // });
+
+      commit("rootCategory", newValue);
+      // const rootCategory = newValue;
+      let items = [
+        {
+          to: "/",
+          text: "Главная",
+        },
+        {
+          to: "/catalog",
+          text: "Каталог",
+        },
+        {
+          to: `/catalog/${newValue.slug}`,
+          text: newValue.name,
+        }
+      ];
+      // items.push();
+      dispatch("breadcrumbs", items);
+      // if (this.category.slug !== rootCategory.slug) {
+      //   items.push({
+      //     to: `/catalog/${this.category.slug}`,
+      //     text: this.category.name,
+      //     // disable: false,
+      //   });
+      // }
+
+      // const newSubcats =
+      // console.log("🚀 ~ file: index.js ~ line 394 ~ newSubcats ~ newSubcats", newSubcats)
+      // commit("subcategories", newSubcats)
+    }
+
   },
 
   async fetchProductType(state, id) {

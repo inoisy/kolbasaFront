@@ -3,10 +3,7 @@
     <LazyHydrate when-idle>
       <page-header :title="title" :breadrumbs="breadrumbs" />
     </LazyHydrate>
-    <div
-      :style="`background-image: url(/bg.jpg)`"
-      class="background-with-transparent"
-    >
+    <div class="background-with-transparent">
       <v-container grid-list-lg class="pt-16 pb-15">
         <v-row>
           <v-col cols="12">

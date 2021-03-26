@@ -1,5 +1,5 @@
 <template>
-  <v-slide-group show-arrows>
+  <v-slide-group class="slider-wrapper">
     <v-slide-item v-for="(item, index) in items" :key="`multi-slide${index}`">
       <nuxt-link
         :to="`/manufacturers/${item.slug}`"
@@ -8,41 +8,45 @@
       >
         <v-img
           contain
-          class="ma-auto d-block manuf-img"
+          class="manuf-img"
           :src="
             require(`~/assets/images/manufacturers/${item.slug}.png?resize&size=200`)
           "
           :alt="item.name"
           :title="item.name"
         />
-        <!-- :src="item.img ? imageBaseUrl + item.img.url : '/no-image.png'" -->
       </nuxt-link>
     </v-slide-item>
   </v-slide-group>
 </template>
 
-<script>
-export default {
-  props: ["items"],
-  data() {
-    return {
-      imageBaseUrl: process.env.imageBaseUrl,
-    };
-  },
-};
-</script>
-
 <style lang="scss" scoped>
+.slider-wrapper {
+  ::v-deep .v-slide-group__next {
+    position: absolute;
+    right: -52px;
+    bottom: 0;
+    top: 0;
+  }
+  ::v-deep .v-slide-group__prev {
+    position: absolute;
+    left: -52px;
+    bottom: 0;
+    top: 0;
+  }
+}
+
 .manuf-img {
+  transform: perspective(1px);
   transition: all 0.2s;
   filter: saturate(0.5);
-  object-fit: contain;
+  // object-fit: contain;
   width: 80px;
   height: 80px;
 
   &:hover {
     transform: scale(1.05);
-    transition: all 0.3s ease-in-out;
+    // transition: all 0.3s ease-in-out;
     filter: none;
   }
 }
@@ -61,3 +65,14 @@ export default {
   }
 }
 </style>
+
+<script>
+export default {
+  props: ["items"],
+  data() {
+    return {
+      imageBaseUrl: process.env.imageBaseUrl,
+    };
+  },
+};
+</script>

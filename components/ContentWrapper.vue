@@ -1,5 +1,5 @@
-<template>
-  <div class="contentWrapper" v-html="content"></div>
+<template >
+  <div class="contentWrapper" v-html="content" />
 </template>
 <style lang="scss" scoped >
 .contentWrapper {

@@ -27,8 +27,37 @@ $toolbar-desktop-height: 80px;
 
 $dialog-mobile-margin: 20px;
 $dialog-desktop-margin: 40px;
-
-// :root {
-//     // RIGHT, will work in all Sass versions.
-//     --toolbar-mobile-height: #{$toolbar-mobile-height};
+// max-width: 900px !important;
 // }
+
+// @include lg {
+//     max-width: 1185px !important;
+// }
+// @mixin fabButton() {
+//     width: 44px !important;
+//     height: 44px !important;
+
+//     @include md {
+//         width: 48px !important;
+//         height: 48px !important;
+//     }
+// }
+
+:root {
+    --toolbar-height: #{$toolbar-mobile-height};
+    --dialog-margin: #{$dialog-mobile-margin};
+
+    --dialog-width: 100%;
+    --fab-button-size: 44px;
+
+    @include md {
+        --toolbar-height: #{$toolbar-desktop-height};
+        --dialog-margin: #{$dialog-desktop-margin};
+        --dialog-width: 900px;
+        --fab-button-size: 48px;
+    }
+
+    @include lg {
+        --dialog-width: 1185px;
+    }
+}

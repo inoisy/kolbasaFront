@@ -38,13 +38,28 @@ export default {
   // left: 0;
   // right: 0;
   .subcategory {
-    $height: 36px !default;
-    $fontSize: 14px !default;
+    --height: 36px;
+    --font-size: 12px;
+    --padding: 16px;
+    @include sm {
+      --height: 38px;
+      --font-size: 14px;
+      --padding: 19px;
+    }
+    @include md {
+      --height: 44px;
+      --font-size: 15px;
+      --padding: 24px;
+    }
+    @include lg {
+      --height: 48px;
+      --font-size: 16px;
+    }
 
-    height: $height;
-    font-size: $fontSize;
-    line-height: $fontSize;
-    padding: #{($height - $fontSize) / 2} 16px;
+    height: var(--height);
+    font-size: var(--font-size);
+    line-height: 1;
+    padding: calc((var(--height) - var(--font-size)) / 2) var(--padding);
 
     position: relative;
     min-width: 64px;
@@ -56,41 +71,11 @@ export default {
     transition-duration: 0.28s;
     transition-property: box-shadow, opacity;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    vertical-align: middle;
     white-space: nowrap;
     border-radius: 4px !important;
-    align-items: center;
     font-weight: 500;
     max-width: 100%;
     display: inline-block;
-
-    @include sm {
-      $height: 38px;
-      $fontSize: 15px;
-
-      height: $height;
-      font-size: $fontSize;
-      line-height: $fontSize;
-      padding: #{($height - $fontSize) / 2} 19px;
-    }
-    @include md {
-      $height: 44px;
-      $fontSize: 15.5px;
-
-      height: $height;
-      font-size: $fontSize;
-      line-height: $fontSize;
-      padding: #{($height - $fontSize) / 2} 24px;
-    }
-    @include lg {
-      $height: 48px;
-      $fontSize: 16px;
-
-      height: $height;
-      font-size: $fontSize;
-      line-height: $fontSize;
-      padding: #{($height - $fontSize) / 2} 24px;
-    }
 
     &:before {
       background-color: currentColor;

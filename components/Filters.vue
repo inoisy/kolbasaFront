@@ -118,15 +118,26 @@ export default {
   }
 
   .chipItem {
+    --font-size: 12px;
+    --padding-y: 5px;
+    --padding-x: calc(var(--padding-y) * 2);
+    @include md {
+      // --height: 44px;
+      --font-size: 13px;
+      // --padding: 24px;
+    }
+
+    font-size: var(--font-size);
+
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     margin: 3px 8px 3px 0;
     display: inline-block;
-    padding: 5px 15px;
+    padding: var(--padding-y) var(--padding-x);
     border-radius: 4px;
-    font-size: 14px;
-    line-height: 22px;
+
+    line-height: 1.5;
     text-decoration: none;
     color: $black;
     background-color: $white;

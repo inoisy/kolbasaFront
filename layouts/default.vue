@@ -7,7 +7,7 @@
         @show-basket="basketDrawer = true"
       />
     </LazyHydrate>
-    <lazy-navigation-mobile
+    <lazy-drawer-mobile-navigation
       v-if="drawer"
       :show="drawer"
       @close="drawer = false"
@@ -18,18 +18,18 @@
     <v-lazy v-model="isFooter" min-height="300">
       <lazy-default-footer v-if="isFooter" class="pos-relative" />
     </v-lazy>
-    <lazy-user-drawer
+    <lazy-drawer-user
       v-if="userDrawer"
       :show="userDrawer"
       @close="userDrawer = false"
     />
-    <client-only>
-      <lazy-busket-drawer
-        v-if="basketDrawer"
-        :show="basketDrawer"
-        @close="basketDrawer = false"
-      />
-    </client-only>
+    <!-- <client-only> -->
+    <lazy-drawer-busket
+      v-if="basketDrawer"
+      :show="basketDrawer"
+      @close="basketDrawer = false"
+    />
+    <!-- </client-only> -->
   </v-app>
 </template>
 <style lang="scss" scoped>

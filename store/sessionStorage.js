@@ -1,13 +1,15 @@
 export const state = () => ({
-  category: {},
-  manufacturer: {},
+  // category: {},
+  // manufacturer: {},
   generalInfo: {
     contacts: {
       phone: ""
     }
   },
   breadcrumbs: [],
+  category: {},
   rootCategory: {
     children: []
-  }
+  },
+
 })

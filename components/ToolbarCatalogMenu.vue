@@ -6,8 +6,6 @@
     content-class="catalog-menu-inner"
     :activator="activator"
   >
-    <!-- <div>
-      <LazyHydrate on-interaction> -->
     <v-list dense>
       <template v-for="(child, index) in items">
         <template v-if="child.children && child.children.length">
@@ -61,8 +59,6 @@
         </template>
       </template>
     </v-list>
-    <!-- </LazyHydrate>
-    </div> -->
   </v-menu>
 </template>
 

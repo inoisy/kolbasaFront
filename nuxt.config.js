@@ -1,10 +1,8 @@
-// require('dotenv').config()
-// const path = require('path')
-// const fs = require('fs')
-// const apolloFetch = require('apollo-fetch');
 const axios = require('axios')
-
 const routes = require("./routes")
+
+
+// BACKEND_URL=http://localhost:1337
 // const redirectRoutes = require("./redirectRoutes")
 
 const sitename = `https://prodaem-kolbasu.ru`;
@@ -127,7 +125,11 @@ module.exports = async () => {
      ** Customize the progress-bar color
      */
     loading: {
-      color: '#d50000'
+      color: '#d50000',
+      throttle: 50,
+      duration: 3000,
+      continuous: true,
+      failedColor: "black"
     },
     // components: true,
     components: [
@@ -198,6 +200,7 @@ module.exports = async () => {
       }
     },
     buildModules: [
+      // '@nuxtjs/device',
       // '@nuxtjs/composition-api',
       '~/modules/hook.js',
       // https://github.com/nuxt-community/style-resources-module
@@ -238,6 +241,15 @@ module.exports = async () => {
 
     modules: [
       // 'nuxt-ssr-cache',
+      ['@nuxtjs/apollo', {
+        clientConfigs: {
+          default: {
+            httpEndpoint: backendUrl + '/graphql',
+            persisting: true,
+          },
+        },
+        includeNodeModules: true,
+      }],
       '@nuxtjs/strapi',
       ['@nuxtjs/toast', {
         theme: "outline",
@@ -251,39 +263,9 @@ module.exports = async () => {
           },
         },
       }],
-      // ['nuxt-webfontloader', {
-      //   google: {
-      //     families: [
-      //       'Montserrat:400,500,700',
-      //       "Alice"
-      //       // 'Montserrat Alternates:700'
-      //     ],
-      //     urls: [
-      //       // for each Google Fonts add url + options you want
-      //       // here add font-display option
-      //       'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap',
-      //       "https://fonts.googleapis.com/css2?family=Alice&display=swap"
-      //       // 'https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap'
-      //     ]
-      //     // families: ['Montserrat:400,500,700']
-      //     // "https://fonts.googleapis.com/css2?family=Signika:wght@700&display=swap"
-      //   }
-      // }],
+
       // '@nuxtjs/sentry',
       'nuxt-vuex-localstorage',
-      // ['@nuxtjs/google-analytics', {
-      //   id: process.env.GOOGLE_ID
-      // }],
-      // [
-      //   '@rkaliev/nuxtjs-yandex-metrika',
-      //   {
-      //     id: process.env.YANDEX_ID,
-      //     clickmap: true,
-      //     trackLinks: true,
-      //     accurateTrackBounce: true,
-      //     webvisor: true
-      //   }
-      // ],
       [
         "@nuxtjs/yandex-metrika",
         // "~/modules/yandex-metrika",
@@ -302,16 +284,7 @@ module.exports = async () => {
       // ['@nuxtjs/axios', {
       //   baseURL: backendUrl
       // }],
-      ['@nuxtjs/apollo', {
-        clientConfigs: {
-          default: {
-            httpEndpoint: backendUrl + '/graphql',
-            persisting: true,
-          },
-        },
-        includeNodeModules: true,
 
-      }],
       ['nuxt-social-meta', {
         url: sitename,
         title: name,
@@ -334,11 +307,6 @@ module.exports = async () => {
           Montserrat: [400, 500, 700],
           Alice: true
         },
-        // useStylesheet: true 400,600,800,  500,
-        // display: "auto",
-        // inject: true,
-        // useStylesheet: true,
-        // base64: true
       }]
 
     ],
@@ -450,15 +418,16 @@ module.exports = async () => {
       //   ]
       // },
       transpile: ['@nuxtjs/apollo', '@nuxtjs/robots',
-        '@nuxtjs/sentry', '@nuxtjs/sitemap',
+        '@nuxtjs/sitemap',
         '@nuxtjs/strapi', '@nuxtjs/toast',
         '@nuxtjs/yandex-metrika', 'graphql-tag',
         'nuxt-social-meta',
-        'nuxt-ssr-cache', 'nuxt-vuex-localstorage',
-        'vue', 'vue-infinite-loading',
-        'vue-lazy-hydration', 'vue-server-renderer',
-        'vue-template-compiler', 'vue-the-mask',
-        'vue-yandex-maps', 'vuelidate']
+        'nuxt-vuex-localstorage',
+        'vue-infinite-loading',
+        'vue-lazy-hydration',
+        'vue-the-mask',
+        'vue-yandex-maps', 'vuelidate', 'vue', 'vue-server-renderer', 'vue-template-compiler', "nuxt"]
+      // 'nuxt-ssr-cache','@nuxtjs/sentry',
       // transpile: ["@nuxtjs/vuetify", /^aos/, /^@nuxtjs.*/, "nuxt-vuex-localstorage"],
       // extend(config, ctx) { }
     }

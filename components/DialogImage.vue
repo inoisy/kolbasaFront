@@ -1,13 +1,8 @@
 <template>
   <v-dialog v-model="inputVal" content-class="dialog-content-wrapper">
-    <v-sheet :class="$style.imageDialogInner" light>
-      <!-- <div :class="$style.closeButtonWrapper"> -->
-      <v-btn
-        class="closeButton"
-        :class="$style.closeButton"
-        fab
-        @click="inputVal = false"
-      >
+    <v-card :class="$style.imageDialogInner" light>
+      <!--class="closeButton" <div :class="$style.closeButtonWrapper"> -->
+      <v-btn :class="$style.closeButton" fab @click="inputVal = false">
         <v-icon>$close</v-icon>
       </v-btn>
       <!-- </div> -->
@@ -24,7 +19,7 @@
         </template> -->
       </v-img>
       <!-- </div> -->
-    </v-sheet>
+    </v-card>
     <!-- class="dialog-image-wrapper" class="ma-auto" -->
     <!-- class="position-relative" <v-sheet>
       <div> -->
@@ -92,7 +87,10 @@
   top: 10px;
   right: 10px;
   z-index: 10;
-  @include closeButton();
+  width: var(--fab-button-size) !important;
+  height: var(--fab-button-size) !important;
+  // @include closeButton();
+
   // width: 44px !important;
   // height: 44px !important;
   // @include md {

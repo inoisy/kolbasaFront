@@ -3,10 +3,7 @@
     <LazyHydrate when-idle>
       <page-header title="Производители" :breadrumbs="breadrumbs" />
     </LazyHydrate>
-    <div
-      :style="`background-image: url(/bg.jpg)`"
-      class="background-with-transparent"
-    >
+    <div class="background-with-transparent">
       <v-container class="py-16" grid-list-lg>
         <LazyHydrate
           when-visible

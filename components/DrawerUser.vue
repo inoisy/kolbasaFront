@@ -19,7 +19,6 @@
         outlined
       >
         <v-icon>$close</v-icon>
-        <!-- <svg-icon name="close" style="width: 24px; height: 24px" /> -->
       </v-btn>
       <div v-if="!isLogined">
         <h3 class="mb-5">ВХОД</h3>
@@ -28,38 +27,6 @@
         <user-register />
       </div>
       <user-personal-area v-else />
-      <!-- <div v-if="isLogined"> -->
-      <!-- <div v-if="!showOrders">
-          <h2 class="mb-6" style="font-size: 23px">Личный кабинет</h2>
-          <div class="font-weight-bold mb-2" style="font-size: 17px">
-            {{ userData.firstname }}
-          </div>
-          <div style="font-size: 14px">{{ userData.phone }}</div>
-          <div style="font-size: 14px">{{ userData.email }}</div>
-          <div class="mb-12 mt-6">
-            <v-btn outlined @click="showOrders = true" width="200">
-              <v-icon left>{{ icons.mdiHistory }}</v-icon>
-              <span>История заказов</span>
-            </v-btn>
-          </div>
-          <div>
-            <v-btn
-              color="#7f7f7f"
-              width="200"
-              outlined
-              @click="logout"
-              text
-              style
-            >
-              <v-icon left>{{ icons.mdiLogoutVariant }}</v-icon>
-              <span>Выход</span>
-            </v-btn>
-          </div>
-        </div>
-        <div v-else-if="showOrders">
-          <orders @close-orders="showOrders = false" />
-        </div> -->
-      <!-- </div> -->
     </div>
   </v-navigation-drawer>
 </template>

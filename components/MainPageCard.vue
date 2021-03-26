@@ -28,7 +28,7 @@
   flex-direction: column;
   height: 100%;
   .category-text {
-    font-size: 18px;
+    font-size: 1rem;
     transition: all 0.2s;
     line-height: 1.2;
     text-transform: uppercase;

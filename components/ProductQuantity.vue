@@ -33,6 +33,7 @@
     </v-btn>
   </div>
 </template>
+
 <script>
 export default {
   props: {
@@ -79,3 +80,15 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.quantity {
+  ::v-deep .v-input__control {
+    min-width: 45px;
+  }
+
+  ::v-deep input {
+    text-align: center !important;
+  }
+}
+</style>

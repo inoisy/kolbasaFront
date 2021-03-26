@@ -3,10 +3,7 @@
     <LazyHydrate when-idle>
       <page-header title="Каталог" :breadrumbs="breadrumbs" />
     </LazyHydrate>
-    <div
-      :style="`background-image: url(/bg.jpg)`"
-      class="background-with-transparent"
-    >
+    <div class="background-with-transparent">
       <v-container grid-list-lg class="py-12">
         <template v-for="(category, index) in categories">
           <LazyHydrate

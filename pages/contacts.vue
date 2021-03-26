@@ -1,58 +1,102 @@
 <template>
   <div>
     <page-header :title="title" :breadrumbs="breadrumbs" />
-    <div
-      :style="`background-image: url(/bg.jpg)`"
-      class="background-with-transparent"
-    >
+    <div class="background-with-transparent">
       <v-container grid-list-lg>
-        <v-row class="py-12">
-          <v-col :class="$style.contactsWrapper" cols="12" md="6" lg="4">
+        <v-row class="py-16" no-gutters align="center">
+          <v-col :class="$style.contactsWrapper" cols="12" md="6" lg="5">
             <v-list :class="$style.contactsList" light width="100%">
               <v-list-item
                 :class="$style.link"
                 title="Телефон"
                 :href="`tel:${contacts.phone}`"
               >
-                <v-list-item-icon>
-                  <v-icon>$phone</v-icon>
+                <v-list-item-icon :class="$style.iconWrapper">
+                  <v-icon :class="$style.icon">$phone</v-icon>
                 </v-list-item-icon>
                 <v-list-item-content itemprop="telephone">
-                  {{ contacts.phone }}
+                  <v-list-item-title :class="$style.text">
+                    {{ contacts.phone }}
+                  </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
+              <v-list-item
+                :class="$style.link"
+                title="Телефон"
+                :href="`tel:+79261191748`"
+                two-line
+              >
+                <v-list-item-icon :class="$style.iconWrapper">
+                  <v-icon :class="$style.icon">$phone</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content itemprop="telephone">
+                  <v-list-item-title :class="$style.text">
+                    +7 (926) 119 17 48
+                  </v-list-item-title>
+                  <v-list-item-subtitle :class="$style.text">
+                    Для оптовых клиентов
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+
               <v-list-item
                 :class="$style.link"
                 :href="`mailto:${contacts.email}`"
                 title="email"
               >
-                <v-list-item-icon>
-                  <v-icon>$email</v-icon>
+                <v-list-item-icon :class="$style.iconWrapper">
+                  <v-icon :class="$style.icon">$email</v-icon>
                 </v-list-item-icon>
                 <v-list-item-content itemprop="email">
-                  {{ contacts.email }}
+                  <v-list-item-title :class="$style.text">
+                    {{ contacts.email }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle :class="$style.text">
+                    Для заказов
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item
+                :class="$style.link"
+                :href="`mailto:info@prodaem-kolbasu.ru`"
+                title="email"
+              >
+                <v-list-item-icon :class="$style.iconWrapper">
+                  <v-icon :class="$style.icon">$email</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content itemprop="email">
+                  <v-list-item-title :class="$style.text"
+                    >info@prodaem-kolbasu.ru</v-list-item-title
+                  >
+                  <v-list-item-subtitle :class="$style.text">
+                    Для преложений по сотрудничеству
+                  </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item title="Адрес">
-                <v-list-item-icon>
-                  <v-icon>$map</v-icon>
+                <v-list-item-icon :class="$style.iconWrapper">
+                  <v-icon :class="$style.icon">$map</v-icon>
                 </v-list-item-icon>
-                {{ contacts.addressText }}
+                <v-list-item-title :class="$style.text">
+                  {{ contacts.addressText }}
+                </v-list-item-title>
               </v-list-item>
               <v-list-item title="Время работы">
-                <v-list-item-icon>
-                  <v-icon>$time</v-icon>
+                <v-list-item-icon :class="$style.iconWrapper">
+                  <v-icon :class="$style.icon">$time</v-icon>
                 </v-list-item-icon>
-                {{ contacts.accessTime }}
+                <v-list-item-title :class="$style.text">{{
+                  contacts.accessTime
+                }}</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-col>
           <v-col
+            :class="$style.yandexMapWrapper"
+            class="pa-3"
             cols="12"
             md="6"
-            offset-lg="1"
             lg="7"
-            :class="$style.yandexMapWrapper"
             id="map"
           >
             <client-only>
@@ -135,21 +179,40 @@ export default {
 .contactsWrapper {
   display: flex;
   align-items: center;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  @include md {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
   .contactsList {
     background: transparent !important;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
     font-weight: 500;
     font-size: 16px;
+    margin-bottom: 56px;
+    @include md {
+      margin-bottom: unset;
+    }
     .link {
       color: rgba(0, 0, 0, 0.87);
-
       &:hover {
         color: #d50000 !important;
+      }
+    }
+    .text {
+      overflow: unset;
+      text-overflow: unset;
+      white-space: unset;
+    }
 
-        ::v-deep svg {
-          color: #d50000 !important;
-        }
+    .iconWrapper {
+      margin-right: 20px !important;
+      margin-top: auto;
+      margin-bottom: auto;
+      .icon {
+        color: currentColor !important;
       }
     }
   }

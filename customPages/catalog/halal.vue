@@ -1,16 +1,13 @@
 <template>
   <div>
-    <nuxt-child @close="handleClose" />
+    <nuxt-child @close="handleClose" :breadcrumbs-base="breadcrumbs" />
     <LazyHydrate when-idle>
       <page-header
         title="Халяльная продукция оптом"
         :breadrumbs="breadcrumbs"
       />
     </LazyHydrate>
-    <div
-      :style="`background-image: url(/bg.jpg)`"
-      class="background-with-transparent"
-    >
+    <div :style="`background-image: url(/bg.jpg)`" class="background-repeat">
       <v-container grid-list-lg class="py-12">
         <LazyHydrate
           v-for="(category, index) of categories"
@@ -136,7 +133,7 @@ export default {
         text: "Халяльная продукция",
       },
     ];
-    store.dispatch("breadcrumbs", breadcrumbs);
+    // store.dispatch("breadcrumbs", breadcrumbs);
 
     return {
       breadcrumbs,

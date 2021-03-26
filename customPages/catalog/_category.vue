@@ -1,58 +1,27 @@
 <template>
   <div>
-    <NuxtChild @close="handleClose" />
+    <NuxtChild @close="handleClose" :breadcrumbs-base="breadcrumbs" />
     <LazyHydrate when-idle>
-      <!-- never :trigger-hydration="!noLoad" -->
-      <page-header
-        :title="metaInfo.name"
-        :breadrumbs="breadcrumbs"
-        :fluid="true"
-        :isPadding="true"
-        class="pos-relative"
-        :no-load="noLoad"
-      >
-        <!--  :imageSource="'https://api.prodaem-kolbasu.ru/uploads/031ba5905e18488794851c8d512b1227_5642513f3d.jpeg'" :loadingImage="require('~/assets/images/promo_crop.jpg?lqip')" :loading="!initialPageData" require('~/assets/images/promo_crop.jpg') -->
-        <!-- <template v-slot:breadcrumbs>
-          <div
-            v-if="!initialPageData && isProductRoute"
-            style="
-              color: rgba(255, 255, 255, 0.5);
-              display: flex;
-              position: absolute;
-              top: 24px;
-              left: 0;
-              right: 0;
-              justify-content: center;
-            "
-          >
-            <v-skeleton-loader
-              type="button"
-              height="21px"
-              width="64px"
+      <!-- :isProductRoute="isProductRoute" never :trigger-hydration="!noLoad" -->
+      <page-header fluid :load="!isProductRoute">
+        <template #breadcrumbs>
+          <div>
+            <breadcrumbs-sceleton
+              v-if="isProductRoute"
               :boilerplate="!fetchState"
-              dark
             />
-            <span style="padding: 0 12px">/</span>
-            <v-skeleton-loader
-              type="button"
-              height="21px"
-              width="64px"
-              :boilerplate="!fetchState"
-              dark
+            <breadcrumbs
+              v-else
+              :items="breadcrumbs"
+              large
+              class="pt-6 py-3 text-center"
             />
-            <span style="padding: 0 12px">/</span>
-            <v-skeleton-loader
-              type="button"
-              height="21px"
-              width="64px"
-              :boilerplate="!fetchState"
-              dark
-            /></div
-        ></template> -->
+          </div>
+        </template>
         <template #header>
           <v-skeleton-loader
             v-if="noLoad || !metaInfo.name"
-            class="d-flex justify-center"
+            class="d-flex justify-center ma-auto"
             dark
             type="heading"
             min-height="24px"
@@ -60,94 +29,27 @@
             width="100%"
             :boilerplate="!fetchState"
           />
+          <h1 v-else class="header-text" v-text="metaInfo.name" />
         </template>
         <template #bottom>
-          <!-- v-if="!noLoad" <template v-if="noLoad">
-            <v-skeleton-loader
-              class="mx-1"
-              dark
-              type="button"
-              height="48px"
-              width="100%"
-              min-width="120px"
-              :boilerplate="!fetchState"
-            />
-          </template> -->
-          <!-- <template v-else> -->
-          <!-- {{ subcategories }} -->
-          <!-- <template v-if="!noLoad"> -->
-          <!-- <div class="mt-3">  -->
           <div style="max-width: 100%">
             <lazy-subcategories
-              v-if="!isProductRoute && subcategories && subcategories.length"
+              v-if="!isProductRoute && !!subcategories.length"
               :subcategories="subcategories"
             />
           </div>
-          <!-- -->
-          <!-- <div class="mt-3">
-              <v-chip
-                v-for="child in subcategories"
-                :to="`/catalog/${child.slug}`"
-                class="subcategory-btn ma-0 px-3"
-                :key="`subcategory-${child.id}`"
-                :title="child.name"
-                text-color="white"
-                color="transparent"
-                label
-                link
-                nuxt
-                style="height: 36px"
-              >
-                <span class="d-inline-block text-truncate text-uppercase">
-                  {{ child.name }}
-                </span>
-              </v-chip>
-            </div> -->
-          <!-- </template> -->
-          <!-- text color="white"-->
-          <!-- </div> -->
-          <!-- </page-header> -->
-          <!-- </template> -->
-          <!-- <v-tabs
-            v-else
-            background-color="transparent"
-            dark
-            show-arrows
-            center-active
-            centered
-            slider-color="accent"
-            slider-size="3"
-          >
-            <v-tab
-              v-for="child in subcategories"
-              :to="`/catalog/${child.slug}`"
-              :key="`subcategory-${child.slug}`"
-              :title="child.name"
-              nuxt
-            >
-              {{ child.name }}
-            </v-tab>
-          </v-tabs> -->
         </template>
       </page-header>
     </LazyHydrate>
 
     <div
       :class="$style.categoryWrapper"
-      class="background-with-transparent pa-3"
-      :style="`background-image: url(/bg.jpg)`"
       id="contentWrapper"
+      :style="isMounted && !noLoad && `background-image: url(/bg.jpg)`"
     >
-      <!-- {{ !noLoad }}
-      {{ !isProductRoute }} -->
       <div :class="$style.container">
-        <!-- <LazyHydrate never :trigger-hydration="true"> -->
         <LazyHydrate never :trigger-hydration="isMounted && !noLoad">
           <div :class="$style.products">
-            <!-- <LazyHydrate
-            when-visible
-           
-          > -->
             <div
               v-for="(product, index) in products"
               :key="`product-${index}`"
@@ -173,12 +75,7 @@
             <!-- </LazyHydrate> -->
           </div>
         </LazyHydrate>
-        <!-- </LazyHydrate> -->
-
-        <!-- <LazyHydrate never :trigger-hydration="load">:content-class="$style.sortMenu" -->
-
         <div :class="$style.filters">
-          <!-- <LazyHydrate never :trigger-hydration="!isProductRoute"> -->
           <lazy-filtersSort
             v-if="!isProductRoute"
             :sortItems="sortItems"
@@ -186,17 +83,8 @@
             @change="(val) => sortChange(val)"
           />
           <lazy-filters-sort-sceleton v-else :boilerplate="!fetchState" />
-          <!-- </LazyHydrate> -->
           <LazyHydrate never :trigger-hydration="isMounted && !noLoad">
             <div>
-              <!-- <template v-else>
-              <v-skeleton-loader
-                type="button"
-                height="36px"
-                :boilerplate="!fetchState"
-              />
-            </template> -->
-              <!-- <template v-if="initialPageData"> -->
               <lazy-filters
                 v-if="
                   initialPageData &&
@@ -237,110 +125,14 @@
     </section>
   </div>
 </template>
-<style lang="scss" scoped module>
-// .fixed {
-//   position: fixed;
-//   top: 85px;
-//   right: 5px;
-//   max-height: calc(100vh - 85px);
-//   overflow-y: auto;
-// }
-// .sortMenu {
-//   top: 36px;
-//   text-transform: none;
-// }
-// .categorySelected {
-//   color: #ffffff !important;
-//   caret-color: #ffffff !important;
-//   // background-color: rgba($white, 0.5) !important;
-// }
-.categoryWrapper {
-  max-width: 100%;
-  $filtersWidthMd: 270px;
-  $filtersWidthLg: 320px;
-  .container {
-    width: 100%;
-    // padding: 25px 20px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column-reverse;
-    @include md {
-      flex-direction: row;
-    }
-    .filters {
-      padding: 8px;
-      width: 100%;
-      @include md {
-        width: $filtersWidthMd;
-        min-width: $filtersWidthMd;
-        // flex: 0 0 270px;
-      }
-      @include lg {
-        width: $filtersWidthLg;
-        min-width: $filtersWidthLg;
-        // flex: 0 0 300px;
-      }
-    }
-    .products {
-      flex-grow: 1;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-start;
-      align-content: flex-start;
-      // @debug ($filtersWidth);
-      @include md {
-        max-width: calc(100% - #{$filtersWidthMd});
-        // @debug ($filtersWidth);
-      }
-      @include lg {
-        max-width: calc(100% - #{$filtersWidthLg});
-        // @debug ($filtersWidth);
-      }
-      // .sceletonCardWrapper {
-      //   height: 310px;
-      //   @include md {
-      //     height: 300px;
-      //   }
-      // }max-width: calc(100% - 270px);
-      .product {
-        .productInner {
-          height: 300px;
-          @include md {
-            height: 310px;
-          }
-        }
-
-        // height: fit-content;
-        // display: flex;
-        // height: 310px;
-        // @include md {
-        //   height: 300px;
-        // }
-      }
-    }
-  }
-}
-</style>
 
 <script>
 import gql from "graphql-tag";
 import LazyHydrate from "vue-lazy-hydration";
 
-// function calculateImageUrl(imageObject, imageBaseUrl) {
-//   // console.log(
-//   //   "🚀 ~ file: _category.vue ~ line 364 ~ calculateImageUrl ~ imageObject",
-//   //   imageObject
-//   // );
-//   if (!imageObject || !imageObject.url) return "/no-image.png";
-//   if (!imageObject.formats) {
-//     return imageBaseUrl + imageObject.url;
-//   }
-
-//   return imageBaseUrl + imageObject.formats.thumbnail.url;
-// }
-
 export default {
   name: "category-main",
+  loading: false,
   head() {
     if (!this.isProductRoute) {
       return {
@@ -373,9 +165,7 @@ export default {
       imageBaseUrl: this.$config.imageBaseUrl,
       sortItems: sortItems,
       sort: sortItems[0],
-      // sortIcon: mdiSortVariant,
       pageData: false,
-
       categoriesIds: [],
       category: {},
       limit: 20,
@@ -383,140 +173,159 @@ export default {
       manufacturer: false,
       isProductRoute: !!this.$route.params.slug,
       products: new Array(20).fill(false),
-      // manufacturerSelected: null,
-      // productTypeSelected: null,
       initialPageData: false,
       metaInfo: {},
-      imageSource: require("~/assets/images/bg.jpg?original"),
-      image: "",
       bgLoaded: false,
       isMounted: false,
-      // subcategories: [],
-      // subcats: [],
-      // rootCategory: null,
+      isLoading: false,
     };
   },
-
+  watch: {
+    isLoading(val) {
+      console.log("category loading", val);
+      if (val) {
+        this.$nuxt.$loading.start();
+      } else {
+        this.$nuxt.$loading.finish();
+      }
+    },
+  },
   mounted() {
     this.isMounted = true;
-    this.loadImage();
+    // this.loadImage();
   },
   async fetch() {
-    // console.log("fetching2");
     if (!this.initialPageData && !this.isProductRoute) {
-      const categoryFind = await this.findCategory(this.$route.params.category);
+      this.isLoading = true;
+      const categoryFind = this.findCategory(this.$route.params.category);
+
       if (!categoryFind) {
-        this.$nuxt.error({
+        return this.$nuxt.error({
           statusCode: 404,
           message: "Категория не найдена",
           type: "catalog",
         });
       }
-
-      this.categoriesIds.push(categoryFind.id);
+      this.categoriesIds = [categoryFind.id];
       if (categoryFind.children && categoryFind.children.length > 0) {
         this.categoriesIds.push(
           ...categoryFind.children.map((item) => item.id)
         );
       }
-      const category = await this.fetchCategory(categoryFind.id);
-      this.category = category;
+      // const category = ;
+      this.category = await this.fetchCategory(categoryFind.id);
       const { manufacturer, type } = this.$route.query;
       if (manufacturer) {
         this.manufacturer = this.$store.getters.getManufacturerBySlug[
           manufacturer
         ];
-
-        // ); //await this.getManufacturer(manufacturer);
       }
       if (type) {
-        // const productTypeId = category.product_types.find(
-        //   (item) => item.slug === type
-        // )._id;
-        this.productType = category.product_types.find(
+        this.productType = this.category.product_types.find(
           (item) => item.slug === type
-        ); //await this.fetchProductType(productTypeId);
+        );
       }
-      // const isChildCategory = !!category.parent.length;
-      if (!!category.parent.length) {
-        // isChildCategory
-
-        this.$store.dispatch("setRootCategory", category.parent[0]);
+      if (!!this.category.parent.length) {
+        this.$store.dispatch("setRootCategory", this.category.parent[0]);
       } else {
-        // not ChildCategory
         const { children, name, slug } = this.category;
         this.$store.dispatch("setRootCategory", { children, name, slug });
       }
-      // subcategories() {
-      // },
-      this.calculateMeta();
+
+      await this.calculateMeta();
 
       this.initialPageData = true;
     } else if (this.isProductRoute) {
-      const categoryFind = await this.findCategory(this.$route.params.category);
-      if (!categoryFind) {
-        this.$nuxt.error({
+      // console.time("newCategoryFetch");
+      // const categoryMinimal = await this.fetchCategoryMinimalBySlug(
+      //   this.$route.params.category
+      // );
+      // console.log(
+      //   "🚀 ~ file: _category.vue ~ line 481 ~ fetch ~ categoryMinimal",
+      //   categoryMinimal
+      // );
+      // if (!categoryMinimal.length) {
+      //   return this.$nuxt.error({
+      //     statusCode: 404,
+      //     message: "Категория не найдена",
+      //     type: "catalog",
+      //   });
+      // }
+      // const category = categoryMinimal[0];
+      // console.timeEnd("newCategoryFetch");
+      // console.log(
+      //   "🚀 ~ file: _category.vue ~ line 478 ~ fetch ~ categoryMinimal",
+      //   categoryMinimal
+      // );
+
+      // console.time("oldCategoryFetch");
+      this.category = this.findCategory(this.$route.params.category);
+
+      if (!this.category) {
+        return this.$nuxt.error({
           statusCode: 404,
           message: "Категория не найдена",
           type: "catalog",
         });
       }
-      this.category = categoryFind;
-      this.$store.dispatch("setRootCategory", this.category);
+      if (!!this.category.parent.length) {
+        this.$store.dispatch("setRootCategory", this.category.parent[0]);
+      } else {
+        const { children, name, slug } = this.category;
+        this.$store.dispatch("setRootCategory", { children, name, slug });
+      }
+      // this.$store.dispatch("category", this.category);
+      // console.timeEnd("oldCategoryFetch");
+      // this.category = categoryFind;
+      // this.$store.dispatch("setRootCategory", this.category);
+      // this.breadcrumbs = this.calculateBreadcrumbs();
     }
 
     if (!this.pageData && !this.isProductRoute) {
+      this.isLoading = true;
       const oldLength = this.products.length;
-      // console.log(
-      //   "🚀 ~ file: _category.vue ~ line 485 ~ fetch ~ oldLength",
-      //   oldLength
-      // );
       this.products = new Array(oldLength).fill(false);
+      const categoryFind = this.findCategory(this.$route.params.category);
+
+      // console.time("newFetch");
+      // // const categoryFind1 = this.findCategory(this.$route.params.category);
+
+      // const products1 = await this.fetchProductsByCategory({
+      //   category: categoryFind.id,
+      //   limit: this.limit,
+      //   sort: this.sort.value,
+      //   manufacturer: !!this.manufacturer && this.manufacturer._id,
+      //   product_type: !!this.productType && this.productType._id,
+      // });
+      // console.timeEnd("newFetch");
+      // console.time("oldFetch");
+      this.categoriesIds = [categoryFind.id];
+      if (categoryFind.children && categoryFind.children.length > 0) {
+        this.categoriesIds.push(
+          ...categoryFind.children.map((item) => item.id)
+        );
+      }
       const products = await this.fetchProducts({
         category: this.categoriesIds,
         limit: this.limit,
         sort: this.sort.value,
-        manufacturer: this.manufacturer && this.manufacturer._id,
-        product_type: this.productType && this.productType._id,
+        manufacturer: !!this.manufacturer && this.manufacturer._id,
+        product_type: !!this.productType && this.productType._id,
       });
+      // console.timeEnd("oldFetch");
+
       const length = products.length;
       if (oldLength !== length) {
         this.products = this.products.slice(0, length);
       }
-
-      // for (let index = 0; index < length; index++) {
-      //   const { img, ...newProduct } = products[index];
-      //   newProduct.imageUrl = calculateImageUrl(img, this.imageBaseUrl);
-      //   // this.products[index] = products[index];
-      //   this.products[index] = {
-      //     value: Object.freeze(newProduct), // products[index]),
-      //     __v: 0,
-      //   };
-      // }
-      // .map((item) => {
-      //   console.log("isFrozen", !Object.isFrozen(item));
-      //   item.imageUrl = calculateImageUrl(item.img, this.imageBaseUrl);
-      //   delete item.img;
-      //   // console.log(
-      //   //   "🚀 ~ file: _category.vue ~ line 713 ~ returnproducts.map ~ item.img",
-      //   //   item.img
-      //   // );
-
-      //   return { value: Object.freeze(item), __v: 0 };
-      // });
       this.products = products;
-
       this.pageData = true;
     }
-  },
-  // fetchOnServer: false,
-  watch: {
-    noLoad(val) {
-      // console.log("watch noLoad ~ val", val);
-      if (!val) {
-        this.loadImage();
-      }
-    },
+    this.isLoading = false;
+    // if (process.client) {
+    //   console.log("loading finish");
+    //   this.$nuxt.$loading.finish();
+    // }
   },
   computed: {
     noLoad() {
@@ -555,18 +364,59 @@ export default {
         });
       }
 
-      this.$store.dispatch("breadcrumbs", items);
+      // this.$store.dispatch("breadcrumbs", items);
       return items;
     },
   },
   methods: {
-    loadImage() {
-      // console.log("loadImage", !this.noLoad && !this.bgLoaded);
-      if (!this.noLoad && !this.bgLoaded) {
-        this.image = this.imageSource;
-        this.bgLoaded = true;
-      }
-    },
+    // calculateBreadcrumbs() {
+    //   // return [];
+    //   // const breadcrumbs = this.$store.state.sessionStorage.breadcrumbs;
+    //   // console.log(
+    //   //   "🚀 ~ file: _category.vue ~ line 615 ~ calculateBreadcrumbs ~ breadcrumbs",
+    //   //   breadcrumbs
+    //   // );
+    //   // items.push(});
+    //   // disable: false,
+    //   const rootCategory = this.$store.state.sessionStorage.rootCategory;
+    //   let items = [
+    //     {
+    //       to: "/",
+    //       text: "Главная",
+    //     },
+    //     {
+    //       to: "/catalog",
+    //       text: "Каталог",
+    //     },
+    //     {
+    //       to: `/catalog/${rootCategory.slug}`,
+    //       text: rootCategory.name,
+    //     },
+    //   ];
+
+    //   if (this.category.slug !== rootCategory.slug) {
+    //     items.push({
+    //       to: `/catalog/${this.category.slug}`,
+    //       text: this.category.name,
+    //     });
+    //   }
+    //   return items;
+    // },
+    // if (this.category.slug !== rootCategory.slug) {
+    //   this.$store.dispatch("pushBreadcrumbs", {
+    //     to: `/catalog/${this.category.slug}`,
+    //     text: this.category.name,
+    //     // disable: false,
+    //   });
+    // }
+    // this.$store.dispatch("pushBreadcrumbs", {
+    //   to: `/catalog/${this.category.slug}`,
+    //   text: this.category.name,
+    //   // disable: false,
+    // });
+    // this.$store.dispatch("breadcrumbs", breadcrumbs);
+    // return this.$store.state.sessionStorage.breadcrumbs;
+
     async calculateMeta() {
       let name = `${this.category.name} оптом`;
       let description = this.category.metaDescription
@@ -598,34 +448,113 @@ export default {
       };
       // return ;
     },
-    findCategoryById(id) {
-      if (!id) return null;
-      const category = this.$store.state.sessionStorage.generalInfo.categories.find(
-        (item) => item.id === id
-      );
-      if (!category) return null;
-      return category;
-    },
     findCategory(slug) {
-      if (!slug) return null;
-      const category = this.$store.state.sessionStorage.generalInfo.categories.find(
-        (item) => item.slug === slug
-      );
-      if (!category) return null;
-      return category;
+      // const category = this.$store.getters.getCategoryBySlug[slug];
+      // if (!category) return null;
+      return this.$store.getters.getCategoryBySlug[slug];
     },
-    async getManufacturer(slug) {
-      if (!slug) return null;
-      const manufacturer = this.$store.state.sessionStorage.generalInfo.manufacturers.find(
-        (item) => item.slug === slug
-      );
-      if (!manufacturer) return null;
-      return manufacturer;
-    },
+    //  async fetchCategoryMinimalBySlug(slug) {
+    //   // console.log(
+    //   //   "🚀 ~ file: _category.vue ~ line 800 ~ fetchCategory ~ id",
+    //   //   id
+    //   // );
+    //   const {
+    //     data: { categories },
+    //   } = await this.$apollo.query({
+    //     query: gql`
+    //       query CategoryMinimalQuery($slug: String!) {
+    //         categories(where: { slug: $slug }) {
+    //           id
+    //           name
+    //           slug
+    //           parent {
+    //             id
+    //             slug
+    //             name
+    //           }
+    //           children {
+    //             id
+    //             name
+    //             slug
+    //           }
+    //         }
+    //       }
+    //     `,
+    //     variables: {
+    //       slug,
+    //     },
+    //   });
+    //   return categories;
+    // },
+    // async fetchProductsByCategory(params) {
+    //   let {
+    //     data: { byCategory },
+    //   } = await this.$apollo.query({
+    //     query: gql`
+    //       query productsByCategoryQuery(
+    //         $manufacturer: ID
+    //         $id: ID!
+    //         $product_type: ID
+    //         $sort: String
+    //         $limit: Int
+    //         $start: Int
+    //       ) {
+    //         byCategory(
+    //           id: $id
+    //           limit: $limit
+    //           start: $start
+    //           sort: $sort
+    //           where: {
+    //             manufacturer: $manufacturer
+    //             product_type: $product_type
+    //           }
+    //         ) {
+    //           id
+    //           name
+    //           slug
+    //           weight
+    //           isDiscount
+    //           isHalal
+    //           priceNum
+    //           discountPrice
+    //           rating
+    //           minimumOrder
+    //           piece
+    //           manufacturer {
+    //             name
+    //             slug
+    //           }
+    //           category {
+    //             name
+    //             slug
+    //           }
+    //           img {
+    //             url
+    //             name
+    //             formats
+    //           }
+    //         }
+    //       }
+    //     `,
+    //     variables: {
+    //       manufacturer: params.manufacturer || null,
+    //       product_type: params.product_type || null,
+    //       id: params.category,
+    //       sort: params.sort || "name:asc",
+    //       limit: params.limit || 20,
+    //       start: params.start || 0,
+    //     },
+    //   });
+    //   // console.log(data);
+    //   return byCategory.map((item) => {
+    //     return Object.freeze(item);
+    //   });
+    // },
     async fetchProducts(params) {
+      // this.isLoading = true;
       // console.log(
-      //   "🚀 ~ file: _category.vue ~ line 665 ~ fetchProducts ~ params",
-      //   params
+      //   "🚀 ~ file: _category.vue ~ line 620 ~ fetchProducts ~ params",
+      //   JSON.stringify(params)
       // );
       let {
         data: { products },
@@ -677,10 +606,10 @@ export default {
           }
         `,
         variables: {
-          ...(params.manufacturer && {
+          ...(!!params.manufacturer && {
             manufacturer: params.manufacturer,
           }),
-          ...(params.product_type && {
+          ...(!!params.product_type && {
             product_type: params.product_type,
           }),
           category: params.category,
@@ -689,44 +618,11 @@ export default {
           start: params.start || 0,
         },
       });
-      // console.log(
-      //   "🚀 ~ file: _category.vue ~ line 710 ~ fetchProducts ~ products",
-      //   products
-      // );
-      // return products.reduce((acc, item) => {
-      //   item.img = calculateImageUrl(item.img, this.imageBaseUrl);
-      //   console.log(
-      //     "🚀 ~ file: _category.vue ~ line 707 ~ returnproducts.reduce ~ item.img",
-      //     item
-      //   );
-      //   // console.log(
-      //   //   "🚀 ~ file: _category.vue ~ line 713 ~ returnproducts.map ~ item.img",
-      //   //   item.img
-      //   // );
-      //   acc.push({ value: Object.freeze(item), __v: 0 });
 
-      //   return acc; //{ value: Object.freeze(item), __v: 0 };
-      // }, []);
       return products.map((item) => {
-        // console.log("isFrozen", !Object.isFrozen(item));
-        // item.imageUrl = calculateImageUrl(item.img, this.imageBaseUrl);
-        // delete item.img;
-        // console.log(
-        //   "🚀 ~ file: _category.vue ~ line 713 ~ returnproducts.map ~ item.img",
-        //   item.img
-        // );
-
-        return Object.freeze(item); //{ value: Object.freeze(item), __v: 0 };
+        return Object.freeze(item);
       });
     },
-    // calculateImageUrl(imageObject,imageBaseUrl) {
-    //   if (!imageObject || !imageObject.url) return "/no-image.png";
-    //   if (!imageObject.formats) {
-    //     return imageBaseUrl + imageObject.url;
-    //   }
-
-    //   return imageBaseUrl + imageObject.formats.thumbnail.url;
-    // },
     async fetchProductType(id) {
       // const client = this.app.apolloProvider.defaultClient;
       const {
@@ -749,8 +645,62 @@ export default {
       });
       return productType;
     },
+
+    // async fetchCategoryBySlug(slug) {
+    //   // console.log(
+    //   //   "🚀 ~ file: _category.vue ~ line 800 ~ fetchCategory ~ id",
+    //   //   id
+    //   // );
+    //   const {
+    //     data: { categories },
+    //   } = await this.$apollo.query({
+    //     query: gql`
+    //       query CategoryQuery($slug: String!) {
+    //         categories(where: { slug: $slug }) {
+    //           id
+    //           description
+    //           metaDescription
+    //           name
+    //           slug
+    //           content
+    //           manufacturers(sort: "name:asc") {
+    //             _id
+    //             name
+    //             slug
+    //           }
+    //           parent {
+    //             slug
+    //             name
+    //             children {
+    //               id
+    //               name
+    //               slug
+    //             }
+    //           }
+    //           children {
+    //             id
+    //             name
+    //             slug
+    //           }
+    //           product_types(sort: "name:asc") {
+    //             _id
+    //             name
+    //             slug
+    //           }
+    //         }
+    //       }
+    //     `,
+    //     variables: {
+    //       slug,
+    //     },
+    //   });
+    //   return categories;
+    // },
     async fetchCategory(id) {
-      // const client = this.app.apolloProvider.defaultClient;
+      // console.log(
+      //   "🚀 ~ file: _category.vue ~ line 800 ~ fetchCategory ~ id",
+      //   id
+      // );
       const {
         data: { category },
       } = await this.$apollo.query({
@@ -763,9 +713,6 @@ export default {
               name
               slug
               content
-              img {
-                url
-              }
               manufacturers(sort: "name:asc") {
                 _id
                 name
@@ -800,10 +747,6 @@ export default {
       return category;
     },
     async sortChange(item) {
-      // console.log(
-      //   "🚀 ~ file: _category.vue ~ line 755 ~ sortChange ~ item",
-      //   item
-      // );
       if (this.sort.value !== item.value) {
         this.sort = item;
         this.pageData = false;
@@ -811,10 +754,6 @@ export default {
       }
     },
     async productTypeChange(item) {
-      // console.log(
-      //   "🚀 ~ file: _category.vue ~ line 772 ~ productTypeChange ~ item",
-      //   item
-      // );
       this.manufacturer = null;
       const oldValue = this.productType && this.productType._id;
       const newValue = item && item._id;
@@ -826,10 +765,6 @@ export default {
       }
     },
     async manufacturerChange(item) {
-      // console.log(
-      //   "🚀 ~ file: _category.vue ~ line 783 ~ manufacturerChange ~ item",
-      //   item
-      // );
       this.productType = null;
       const oldValue = this.manufacturer && this.manufacturer._id;
       const newValue = item && item._id;
@@ -841,10 +776,7 @@ export default {
       }
     },
 
-    async handleClose(isInCart, id) {
-      // console.log(
-      //   "🚀 ~ file: _category.vue ~ line 911 ~ handleClose ~ isInCart"
-      // );
+    async handleClose() {
       const query = {
         ...(this.manufacturer && { manufacturer: this.manufacturer.slug }),
         ...(this.productType && { type: this.productType.slug }),
@@ -861,24 +793,9 @@ export default {
       if (!this.pageData) {
         await this.$fetch();
       }
-      //  else {
-      // if (isInCart) {
-      //   try {
-      //     const find = this.products.find(({ value }) => value.id === id);
-      //     if (find) {
-      //       find.__v = find.__v + 1;
-      //     }
-      //   } catch (error) {
-      //     console.log(
-      //       "🚀 ~ file: _category.vue ~ line 664 ~ handleClose ~ error",
-      //       error
-      //     );
-      //   }
-      // }
-      // }
     },
     async onInfinite($state) {
-      // const currentLength = this.products.length;
+      this.isLoading = true;
       const newProducts = await this.fetchProducts({
         category: this.categoriesIds,
         start: this.products.length,
@@ -886,7 +803,6 @@ export default {
         manufacturer: this.manufacturer && this.manufacturer._id,
         product_type: this.productType && this.productType._id,
       });
-      // const length = newProducts.length;
       if (newProducts && newProducts.length) {
         // const newProductArr = newProducts.map((product) => {
         //   const { img, ...newProduct } = product;
@@ -913,174 +829,9 @@ export default {
       } else {
         await $state.complete();
       }
+      this.isLoading = false;
     },
   },
-  // isManyProducts() {
-  //   return this.products.length >= this.limit;
-  // },
-  // isMobile() {
-  //   return this.$vuetify.breakpoint.xs;
-  // },
-  // metaInfo() {
-  //   let name = `${this.category.name} оптом`;
-  //   let description = this.category.metaDescription
-  //     ? this.category.metaDescription
-  //     : `${name} от компании Альянс Фуд с доставкой по всей РФ и СНГ по самым выгодным оптовым ценам от производителя.`;
-  //   let canonical = `${this.$config.siteUrl}/catalog/${this.category.slug}`;
-  //   let content = this.category.content;
-
-  //   if (this.manuf) {
-  //     name = `${this.category.name} ${this.manufacturer.name} оптом`;
-  //     description = `${name}. ${description}`;
-  //     canonical = `${canonical}?manufacturer=${this.manufacturer.slug}`;
-  //   } else if (this.prodType) {
-  //     name = `${this.productType.name} оптом`;
-  //     description = `${name}. ${description}`;
-  //     canonical = `${canonical}?type=${this.productType.slug}`;
-  //     if (this.productType.content) {
-  //       content = this.productType.content.concat(content);
-  //     }
-  //   }
-
-  //   return {
-  //     name,
-  //     description,
-  //     canonical,
-  //     content,
-  //   };
-  // },
-  // beforeDestroy() {
-  //   console.log("beforeDestroy", this);
-  //   this.products = [];
-  //   this.metaInfo = {};
-  // },
-  //this.products.concat(newProducts);
-  // console.log("this.products", this.products.length);
-  // await $state.complete();
-  // const length = newProducts.length;
-  // console.log(
-  //   "🚀 ~ file: _category.vue ~ line 684 ~ onInfinite ~ length",
-  //   length
-  // );
-  // this.products = this.products.concat(newProducts);
-  // $state.complete();
-  // if (newProducts && newProducts.length) {
-  //   // const newProductsMapped = newProducts.map((item) => {
-  //   //   return { value: Object.freeze(item), __v: 0 };
-  //   // });
-  //   this.products.concat(newProducts); //= [...this.products, ...newProductsMapped];
-  //   this.productsCount = this.products.length;
-  //   $state.loaded();
-  // } else {
-  //   $state.complete();
-  // }
-  // if (!length) {
-  //   $state.complete();
-  // } else {
-  //   console.log("onInfinite", length);
-  //   for (let index = 0; index <= length - 1; index = index + 1) {
-  //     console.log("onInfinite ~ forindex", index);
-  //     console.log("onInfinite ~ newIndex", currentLength + index);
-  //     this.products[currentLength + index] = {
-  //       value: Object.freeze(newProducts[index]),
-  //       __v: 0,
-  //     };
-  //   }
-  //   $state.loaded();
-  // }
-  // const length = newProducts.length
-  // console.log(
-  //   "🚀 ~ file: _category.vue ~ line 686 ~ onInfinite ~ newProducts",
-  //   newProducts
-  // );
-
-  //  for (let index = 0; index <= length - 1; index = index + 1) {
-  //   this.products[index] = {
-  //     value: Object.freeze(products[index]),
-  //     __v: 0,
-  //   };
-  // }
-  // console.log("recalculate subcategories");
-  // console.log("subcategories", this.$store.getters.subcategories);
-  // if (!this.initialPageData) {
-  //   return false;
-  // }
-  // if (this.parentCategory) {
-  //   const subcats = [
-  //     {
-  //       slug: this.parentCategory.slug,
-  //       name: `Все ${this.parentCategory.name}`,
-  //     },
-  //   ].concat(this.parentCategory.children);
-  //   return subcats;
-  // } else {
-  //   return [
-  //     {
-  //       slug: this.category.slug,
-  //       name: `Все ${this.category.name}`,
-  //     },
-  //     ...this.category.children,
-  //   ];
-  // }
-  // isProduct() {
-  //   // await this.$nextTick(() => {});
-  //   const isProduct = !!this.$route.params.slug;
-  //   console.log("computed ~ isProduct", isProduct);
-  //   return isProduct;
-  // },
-  // isProduct2: {
-  //   // const isProduct = !!this.$route.params.slug;
-  //   // console.log("computed ~ isProduct", isProduct);
-  //   // return !!this.$route.params.slug;
-  // },
-  // async asyncData(ctx) {
-  //   const categoryFind = await ctx.store.getters.getCategory(
-  //     ctx.params.category
-  //   );
-  //   if (!categoryFind) {
-  //     return ctx.error({
-  //       statusCode: 404,
-  //       message: "Категория не найдена",
-  //       type: "catalog",
-  //     });
-  //   }
-  //   let categoriesIds = [categoryFind.id];
-  //   if (categoryFind.children && categoryFind.children.length > 0) {
-  //     categoriesIds.push(...categoryFind.children.map((item) => item.id));
-  //   }
-
-  //   const isProductRoute = !!ctx.params.slug;
-  //   console.log("asyncData ~ isProductRoute", isProductRoute);
-  //   const initialPageData = false;
-  //   let manufacturer, category, productType; //,
-  //   let limit = 60;
-  //   category = await ctx.store.dispatch("fetchCategory", categoryFind.id);
-
-  //   if (ctx.query.manufacturer) {
-  //     manufacturer = ctx.store.getters.getManufacturer(ctx.query.manufacturer);
-  //   }
-
-  //   if (ctx.query.type) {
-  //     productType = await ctx.store.dispatch(
-  //       "fetchProductType",
-  //       category.product_types.find((item) => item.slug === ctx.query.type)._id
-  //     );
-  //   }
-
-  //   return {
-  //     categoriesIds: categoriesIds,
-  //     category: category,
-  //     // manufacturers: category.manufacturers,
-  //     limit: limit,
-  //     productType: productType || null,
-  //     manufacturer: manufacturer || null,
-  //     isProductRoute: isProductRoute,
-  //     products: new Array(limit),
-  //     manufacturerSelected: (manufacturer && manufacturer.id) || null,
-  //     productTypeSelected: (productType && productType._id) || null,
-  //     initialPageData: initialPageData,
-  //   };
-  // },
 };
 </script>
 <style lang="scss" scoped>
@@ -1108,4 +859,56 @@ export default {
 //     }
 //   }
 // }
+</style>
+<style lang="scss" scoped module>
+.categoryWrapper {
+  background-color: #f0f0f0;
+  background-repeat: repeat;
+  background-size: 100% auto;
+
+  max-width: 100%;
+  $filtersWidthMd: 270px;
+  $filtersWidthLg: 320px;
+  position: relative;
+  .container {
+    position: relative;
+    width: 100%;
+    padding: 12px;
+    // padding: 25px 20px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column-reverse;
+    @include md {
+      flex-direction: row;
+    }
+    .filters {
+      padding: 8px;
+      padding-left: 12px;
+      width: 100%;
+      @include md {
+        width: $filtersWidthMd;
+        min-width: $filtersWidthMd;
+        // flex: 0 0 270px;
+      }
+      @include lg {
+        width: $filtersWidthLg;
+        min-width: $filtersWidthLg;
+        // flex: 0 0 300px;
+      }
+    }
+    .products {
+      flex-grow: 1;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      align-content: flex-start;
+      @include md {
+        max-width: calc(100% - #{$filtersWidthMd});
+      }
+      @include lg {
+        max-width: calc(100% - #{$filtersWidthLg});
+      }
+    }
+  }
+}
 </style>

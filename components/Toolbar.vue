@@ -27,12 +27,14 @@
         />
       </nuxt-link>
       <v-spacer></v-spacer>
-      <template v-for="(item, index) in menuItems">
+      <template v-if="isMounted && !isMobile">
         <v-btn
-          v-if="!item.disable"
+          v-for="(item, index) in menuItems"
+          v-bind="{
+            ...(!item.disable ? { to: `/${item.slug}` } : null),
+          }"
           :key="item.slug + index"
           :id="item.slug"
-          :to="item.to"
           class="fill-height ma-0 header-link hidden-sm-and-down"
           style="height: 100%"
           text
@@ -41,9 +43,11 @@
           :title="item.name"
         >
           {{ item.name }}
-          <v-icon v-if="item.isChild">$dropdown</v-icon>
+          <v-icon v-if="item.isChild" style="margin-right: -8px">
+            $dropdown
+          </v-icon>
         </v-btn>
-        <v-btn
+        <!-- v-if="!item.disable" :to="item.to" <v-btn
           v-else
           :key="item.slug + index"
           :id="item.slug"
@@ -56,7 +60,7 @@
         >
           {{ item.name }}
           <v-icon v-if="item.isChild">$dropdown</v-icon>
-        </v-btn>
+        </v-btn> -->
       </template>
 
       <v-btn
@@ -67,7 +71,9 @@
         :hover="false"
         text
       >
-        <span v-if="summa > 0" class="cart-text mr-2">{{ summa }}&nbsp;р</span>
+        <span v-if="summa > 0" class="cart-text mr-2">
+          {{ summa }}&nbsp;&#8381;
+        </span>
         <v-badge
           class="cart-badge"
           color="#95282a"
@@ -99,17 +105,17 @@
     </div>
     <!-- </LazyHydrate> -->
     <lazy-toolbar-catalog-menu
-      v-if="!isMobile && isMounted"
+      v-if="isMounted && !isMobile"
       :items="menuItems[0].items"
     />
     <lazy-toolbar-menu
-      v-if="!isMobile && isMounted"
+      v-if="isMounted && !isMobile"
       :items="menuItems[1].items"
       :isTwoColumns="true"
       parentSlug="manufacturers"
     />
     <lazy-toolbar-menu
-      v-if="!isMobile && isMounted"
+      v-if="isMounted && !isMobile"
       :items="menuItems[2].items"
       parentSlug="about"
     />
@@ -334,7 +340,9 @@ export default {
   },
   computed: {
     isMobile() {
-      return this.$vuetify.breakpoint.smAndDown;
+      // console.log("isMobile ", this.isMounted, this.$vuetify.breakpoint.mobile);
+
+      return this.$vuetify.breakpoint.mobile;
     },
     isCart() {
       return this.$store.getters.isCart;

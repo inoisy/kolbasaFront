@@ -4,20 +4,13 @@
       <page-header :title="title" :breadrumbs="breadrumbs" />
     </LazyHydrate>
 
-    <div
-      style="background-image: url(/bg.jpg)"
-      class="background-with-transparent"
-    >
-      <v-container class="py-16" grid-list-lg>
-        <v-row no-gutters>
-          <v-col class="pa-3" cols="12">
-            <LazyHydrate never>
-              <content-wrapper v-html="page.content" />
-            </LazyHydrate>
-          </v-col>
-        </v-row>
-      </v-container>
-    </div>
+    <section class="background-with-transparent">
+      <LazyHydrate never>
+        <v-container class="py-16 pos-relative">
+          <content-wrapper class="pa-standart" v-html="content" />
+        </v-container>
+      </LazyHydrate>
+    </section>
   </div>
 </template>
     
@@ -25,25 +18,26 @@
 <script>
 import LazyHydrate from "vue-lazy-hydration";
 import gql from "graphql-tag";
+// import BackgroundImage from '~/components/BackgroundImage.vue';
 
+const title = "О компании";
 export default {
   head() {
     return {
-      title: "О компании",
+      title: title,
     };
   },
   components: { LazyHydrate },
   data() {
     return {
-      title: "О компании",
+      title: title,
       breadrumbs: [
         {
           to: "/",
           text: "Главная",
         },
         {
-          to: "/contacts",
-          text: "Контакты",
+          text: title,
         },
       ],
     };
@@ -61,7 +55,6 @@ export default {
       query: gql`
         query AboutPageQuery {
           pages(where: { name: "about" }) {
-            name
             content
           }
         }
@@ -69,7 +62,7 @@ export default {
     });
     // console.timeEnd("fetchAsyncData");
     return {
-      page,
+      content: page.content,
     };
   },
 };
