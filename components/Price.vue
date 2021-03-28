@@ -108,37 +108,9 @@ export default {
         object.price = this.priceNum;
       }
       object.isPrice = !!object.price;
-      //   console.log(
-      //     "🚀 ~ file: Price.vue ~ line 93 ~ priceObject ~ object",
-      //     object
-      //   );
 
       return object;
-      //   const isDiscount = this.isDiscount && !!this.discountPrice
     },
-    // isDiscountComputed() {
-    //   return this.isDiscount && !!this.discountPrice;
-    // },
-    // discountPriceProcentComputed() {
-    //   if (!this.isDiscountComputed) {
-    //     return null;
-    //   }
-    //   this.discountPriceProcent = Math.round(
-    //     (100 * (this.priceNum - this.discountPrice)) / this.priceNum
-    //   );
-    // },
-    // priceComputed() {
-    //   return this.isDiscountComputed ? this.discountPrice : this.priceNum;
-    // },
-    // this.;
-    // if (this.isDiscount) {
-    //   this.discountPriceProcent = Math.round(
-    //     (100 * (this.priceNum - this.discountPrice)) / this.priceNum
-    //   );
-    //   this.price = this.discountPrice;
-    // } else {
-    //   this.price = this.priceNum;
-    // }
   },
 };
 </script>
@@ -158,7 +130,7 @@ export default {
     font-weight: 500;
     color: $black;
     line-height: 1;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     .priceInner {
       display: inline-flex;
       align-items: flex-end;
@@ -173,8 +145,6 @@ export default {
       // padding-bottom: 2px;
       font-size: var(--font-size);
       font-weight: 500;
-      //   line-height: 1;
-      //   line-height: calc(var(--font-size) + 4px);
       .priceIcon {
         color: $black;
       }
@@ -185,13 +155,9 @@ export default {
     .price {
       font-weight: 700;
       font-size: var(--font-size);
-      //   line-height: 1;
-      //   line-height: calc(var(--font-size) + 4px);
     }
     .weight {
       font-size: var(--reduced-font-size);
-      //   line-height: 1;
-      //   line-height: calc(var(--font-size) + 4px);
     }
     .discountPriceProcent {
       background-color: $accent !important;

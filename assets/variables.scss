@@ -1,11 +1,12 @@
 $heading-font-family: "Alice"; //'Montserrat Alternates';
-$body-font-family: 'Montserrat';
+$body-font-family: "Montserrat";
 $color-pack: false;
 $skeleton-loader-heading-height: 38px;
 $skeleton-loader-button-height: 48px;
 $skeleton-loader-button-width: 100%;
 $skeleton-loader-chip-border-radius: 4px;
-$skeleton-loader-text-height:15px;
+$skeleton-loader-text-height: 15px;
+$dialog-max-height: var(--dialog-max-height);
 
 // $btn-border-radius: 0px;
 
@@ -15,33 +16,59 @@ $skeleton-loader-text-height:15px;
 // @import '~vuetify/src/styles/main.sass';
 // @import '~vuetify/src/styles/styles.sass';
 // @import '~vuetify/src/styles/styles.sass';
-$utilities: ("typography":false,
-    "overflow":false,
-    "overflow-x":false,
-    "display":("responsive": false),
-    "float":false,
-    "flex-direction":(responsive:false),
-    "flex-grow":false,
-    "flex-shrink":false,
-    "flex-wrap":(responsive:false,
-        values: wrap nowrap),
-    "justify-content":("responsive": false),
-    "align-items":("responsive": false),
-    "align-content": (responsive: false),
+$utilities: (
+    "typography": false,
+    "overflow": false,
+    "overflow-x": false,
+    "display": (
+        "responsive": false,
+    ),
+    "float": false,
+    "flex-direction": (
+        responsive: false,
+    ),
+    "flex-grow": false,
+    "flex-shrink": false,
+    "flex-wrap": (
+        responsive: false,
+        values: wrap nowrap,
+    ),
+    "justify-content": (
+        "responsive": false,
+    ),
+    "align-items": (
+        "responsive": false,
+    ),
+    "align-content": (
+        responsive: false,
+    ),
     "align-self": false,
     "order": false,
-
     // Margin utilities
-    "margin": (responsive: false),
-    "margin-x": (responsive: false),
-    "margin-y": (responsive: false),
-    "margin-top": (responsive: false),
-    "margin-right": (responsive: false),
-    "margin-bottom": (responsive: false),
-    "margin-left": (responsive: false),
+    "margin":
+        (
+            responsive: false,
+        ),
+    "margin-x": (
+        responsive: false,
+    ),
+    "margin-y": (
+        responsive: false,
+    ),
+    "margin-top": (
+        responsive: false,
+    ),
+    "margin-right": (
+        responsive: false,
+    ),
+    "margin-bottom": (
+        responsive: false,
+    ),
+    "margin-left": (
+        responsive: false,
+    ),
     "margin-start": false,
     "margin-end": false,
-
     // Negative margin utilities
     "negative-margin": false,
     "negative-margin-x": false,
@@ -50,20 +77,33 @@ $utilities: ("typography":false,
     "negative-margin-right": false,
     "negative-margin-bottom": false,
     "negative-margin-left": false,
-    "negative-margin-start":false,
+    "negative-margin-start": false,
     "negative-margin-end": false,
-
     // Padding utilities
-    "padding": (responsive: false),
-    "padding-x": (responsive: false),
-    "padding-y": (responsive: false),
-    "padding-top": (responsive: false),
-    "padding-right": (responsive:false),
-    "padding-bottom": (responsive: false),
-    "padding-left": (responsive: false),
+    "padding":
+        (
+            responsive: false,
+        ),
+    "padding-x": (
+        responsive: false,
+    ),
+    "padding-y": (
+        responsive: false,
+    ),
+    "padding-top": (
+        responsive: false,
+    ),
+    "padding-right": (
+        responsive: false,
+    ),
+    "padding-bottom": (
+        responsive: false,
+    ),
+    "padding-left": (
+        responsive: false,
+    ),
     "padding-start": false,
-    "padding-end":false,
-
+    "padding-end": false,
     // Border
     "rounded": false,
     "rounded-top": false,
@@ -74,16 +114,17 @@ $utilities: ("typography":false,
     "rounded-top-right": false,
     "rounded-bottom-right": false,
     "rounded-bottom-left": false,
-
     // Text
-    "text-align": (responsive: false),
+    "text-align":
+        (
+            responsive: false,
+        ),
     "text-decoration": false,
     "white-space": false,
     "overflow-wrap": false,
     // "text-overflow": false,
-    // "text-transform": false,
+    // "text-transform": false,,,,,
 );
-
 
 // $typography: (responsive: false);
 
@@ -358,7 +399,7 @@ $utilities: ("typography":false,
 //         values: (truncate: nowrap hidden ellipsis)),
 //     "text-transform": (property: text-transform,
 //         class: text,
-//         values: none capitalize lowercase uppercase), 
+//         values: none capitalize lowercase uppercase),
 //     "typography": (responsive: true,
 //         property: (font-size,
 //             font-weight,

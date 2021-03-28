@@ -15,12 +15,12 @@ $heading-font-family: "Alice";
 
 $black: #18191f;
 $accent: rgb(213, 0, 0);
-$gray:#ececec;
+$gray: #ececec;
 $darkLink: #4a1f00;
 $white: rgb(255, 255, 255);
-$error: #FF5252;
-$success: #4CAF50;
-$primary: #4A1F00;
+$error: #ff5252;
+$success: #4caf50;
+$primary: #4a1f00;
 
 $toolbar-mobile-height: 64px;
 $toolbar-desktop-height: 80px;
@@ -45,14 +45,16 @@ $dialog-desktop-margin: 40px;
 
 :root {
     --toolbar-height: #{$toolbar-mobile-height};
-    --dialog-margin: #{$dialog-mobile-margin};
-
+    --dialog-margin: 24px;
     --dialog-width: 100%;
+    --dialog-max-height: calc(100vh - var(--toolbar-height) - var(--dialog-margin) * 2);
+
     --fab-button-size: 44px;
 
     @include md {
         --toolbar-height: #{$toolbar-desktop-height};
-        --dialog-margin: #{$dialog-desktop-margin};
+
+        // --dialog-margin: #{$dialog-desktop-margin};
         --dialog-width: 900px;
         --fab-button-size: 48px;
     }

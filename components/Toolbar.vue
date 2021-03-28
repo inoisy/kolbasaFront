@@ -340,8 +340,6 @@ export default {
   },
   computed: {
     isMobile() {
-      // console.log("isMobile ", this.isMounted, this.$vuetify.breakpoint.mobile);
-
       return this.$vuetify.breakpoint.mobile;
     },
     isCart() {

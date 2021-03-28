@@ -240,6 +240,7 @@ module.exports = async () => {
      */
 
     modules: [
+      // "nuxt-vuex-router-sync",
       // 'nuxt-ssr-cache',
       ['@nuxtjs/apollo', {
         clientConfigs: {

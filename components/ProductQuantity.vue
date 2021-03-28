@@ -1,7 +1,7 @@
 <template>
-  <div class="d-flex align-center px-2">
+  <div class="d-flex align-center">
     <v-btn
-      class="mr-auto"
+      class="quantity-btn"
       icon
       color="#333"
       @click="handleDecrement"
@@ -10,20 +10,18 @@
       <v-icon>$minus</v-icon>
     </v-btn>
     <v-text-field
-      :value="quantity"
-      @change="handleChange"
-      height="36px"
-      style="max-width: 100px; min-width: 80px"
       class="quantity"
+      :value="quantity"
       rounded
       dense
       single-line
       hide-details
-      outlined
+      filled
       type="number"
-    ></v-text-field>
+      @change="handleChange"
+    />
     <v-btn
-      class="ml-auto"
+      class="quantity-btn"
       icon
       color="#333"
       @click="hanleIncrement"
@@ -83,12 +81,27 @@ export default {
 
 <style lang="scss" scoped>
 .quantity {
+  border-radius: var(--quantity-border-radius, 20px);
+  // max-width: 100px;
+  // min-width: 80px;
+  height: 100%;
+  flex: 0 1 80px;
   ::v-deep .v-input__control {
     min-width: 45px;
+    height: 100%;
+    .v-input__slot {
+      padding: 0;
+      // padding: 0 var(--quantity-border-radius, 20px);
+      // min-height: 100 !important;
+      height: 100%;
+    }
   }
-
   ::v-deep input {
     text-align: center !important;
   }
+}
+.quantity-btn {
+  margin-left: var(--quantity-btn-margin);
+  margin-right: var(--quantity-btn-margin);
 }
 </style>

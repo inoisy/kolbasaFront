@@ -10,14 +10,17 @@
             hover: true,
             itemtype: 'http://schema.org/Product',
           }
-        : null),
+        : {
+            disabled: true,
+          }),
     }"
     @click.capture="cardClick"
-    class="fill-height product-wrapper"
+    class="product-wrapper"
   >
+    <!-- @click.capture="cardClick" -->
+
     <template v-if="isValue">
-      <!-- <div itemscope itemtype="http://schema.org/Product"> -->
-      <div class="product-card-img-wrap my-2">
+      <div class="product-card-img-wrap">
         <v-img
           itemprop="image"
           class="d-block ma-auto product-img"
@@ -25,9 +28,7 @@
           :alt="product.name"
           :src="imgUrl"
           contain
-        >
-        </v-img>
-
+        />
         <div class="product-card-mini-imgs">
           <v-img
             v-if="product.isHalal"
@@ -52,8 +53,7 @@
         </div>
       </div>
       <price
-        :class="$style.pricesWrapper"
-        class="text-no-wrap display-flex"
+        class="product-prices-wrapper text-no-wrap display-flex"
         :priceNum="product.priceNum"
         :isDiscount="product.isDiscount"
         :discountPrice="product.discountPrice"
@@ -64,26 +64,30 @@
       <div itemprop="name" class="product-name mb-0">
         {{ product.name + (halal ? "&nbsp; халяль" : "") }}
       </div>
-      <div class="product-busket-wrap" ref="productCardActions">
-        <product-add
-          class="display-flex align-center wrap"
-          :id="product._id || product.id"
-          isCard
-          @add="handleAdd"
-        />
-      </div>
+      <!-- <div > -->
+      <product-add
+        class="product-busket-wrap"
+        ref="productCardActions"
+        :id="product._id || product.id"
+        isCard
+        @add="handleAdd"
+      />
+      <!-- </div> -->
       <meta
         itemprop="description"
         :content="`${product.name} купить в Альянс Фуд за ${product.priceNum}`"
       />
     </template>
-    <lazy-product-sceleton v-else :boilerplate="!loading" />
+    <product-sceleton v-else :boilerplate="!loading" />
+
+    <!-- <product-sceleton></product-sceleton> -->
   </v-card>
 </template>
 
 <script>
+import ProductSceleton from "~/components/ProductSceleton";
 export default {
-  // components: { LazyHydrate },
+  components: { ProductSceleton },
   data() {
     return {
       imageBaseUrl: process.env.imageBaseUrl,
@@ -117,6 +121,7 @@ export default {
   },
   computed: {
     isValue() {
+      // return true;
       return !!this.product;
     },
     isDiscount() {
@@ -139,13 +144,9 @@ export default {
   methods: {
     async handleAdd() {
       await this.$store.dispatch("addToCart", this.product);
-      // this.isInCart = true;
     },
     cardClick(event) {
-      if (
-        this.$refs.productCardActions &&
-        this.$refs.productCardActions.contains(event.target)
-      ) {
+      if (this.$refs.productCardActions.$el.contains(event.target)) {
         event.preventDefault();
       }
     },
@@ -154,17 +155,6 @@ export default {
 </script>
 
 <style lang="scss" scoped module>
-.pricesWrapper {
-  --font-size: 1.1rem;
-  --reduced-font-size: 12px;
-
-  // align-content: flex-start !important;
-  // justify-content: flex-start !important;
-  // align-items: spac;
-  justify-content: space-between !important;
-  white-space: nowrap;
-  min-height: 26px;
-}
 </style>
 <style lang="scss" scoped>
 .product-wrapper {
@@ -175,27 +165,30 @@ export default {
   justify-content: space-between;
   width: 100%;
   height: 100%;
-  // border-radius: 4px;
-  // cursor: pointer;
-  // transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-  // box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%),
-  //   0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
-  // @include md {
-  //   min-height: 310px;
-  // }
+  &:before {
+    color: white;
+  }
 }
+.product-prices-wrapper {
+  --font-size: 16px;
+  --reduced-font-size: 12px;
 
+  justify-content: space-between !important;
+  white-space: nowrap;
+  min-height: 26px;
+  @include lg {
+    --font-size: 18px;
+  }
+}
 .product-busket-wrap {
+  --quantity-border-radius: 0px;
+  --quantity-justify: space-evenly;
+  --product-add-background: #f2f2f2;
+  --product-add-box-shadow: none;
+  --product-add-font-size: 12px;
   margin-top: 10px;
   height: 40px;
   background-color: #f2f2f2;
-  // position: absolute;
-  // width: 100%;
-  // bottom: 10px;
-  // .pruduct-busket-btn {
-  //   width: 100%;
-  //   color: black !important;
-  // }
 }
 
 .product-price {
@@ -228,6 +221,7 @@ export default {
 
 .product-card-img-wrap {
   position: relative;
+  margin-bottom: 10px;
 }
 
 .product-img,

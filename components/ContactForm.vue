@@ -1,5 +1,6 @@
 <template>
-  <v-form class="layout wrap">
+  <v-form>
+    <slot></slot>
     <template v-if="!this.formSuccess && !this.formError">
       <v-text-field
         class="xs12 py-0 flex"
@@ -48,20 +49,20 @@
         hide-details
         label="Комментарий"
       />
-      <v-flex xs12>
-        <v-btn
-          class="ml-0 mt-5"
-          color="accent"
-          @click="submit"
-          large
-          :disabled="submitDisabled"
-          :loading="loading"
-          style="width: 100%"
-          title="Подтвердить заказ"
-        >
-          Подтвердить заказ
-        </v-btn>
-      </v-flex>
+      <!-- <v-flex xs12> -->
+      <v-btn
+        class="ml-0 mt-10"
+        color="accent"
+        @click="submit"
+        large
+        :disabled="submitDisabled"
+        :loading="loading"
+        style="width: 100%"
+        title="Подтвердить заказ"
+      >
+        Подтвердить заказ
+      </v-btn>
+      <!-- </v-flex> -->
     </template>
     <!-- <v-slide-y-transition>
       <v-flex xs12 v-if="this.formSuccess || this.formError">

@@ -33,15 +33,17 @@
         </template>
       </page-header>
     </LazyHydrate>
+
     <div
       class="background-repeat"
       :style="isMounted && !noLoad && `background-image: url(/bg.jpg)`"
     >
+      <!-- <LazyHydrate never :trigger-hydration="!noLoad"> -->
       <v-container class="pt-10 pb-7">
         <LazyHydrate
-          when-visible
           v-for="(category, index) of categories"
           :key="category.id"
+          when-visible
         >
           <v-row no-gutters class="mb-10">
             <v-col cols="12" class="pa-3">
@@ -83,16 +85,17 @@
           </v-row>
         </LazyHydrate>
       </v-container>
-      <section
-        class="grey lighten-3"
+      <!-- </LazyHydrate> -->
+      <LazyHydrate
+        never
         v-if="manufacturer.content && manufacturer.content.length > 0"
       >
-        <v-container class="py-16">
-          <LazyHydrate never>
+        <section class="grey lighten-3">
+          <v-container class="py-16">
             <lazy-content-wrapper class="pa-3" v-html="manufacturer.content" />
-          </LazyHydrate>
-        </v-container>
-      </section>
+          </v-container>
+        </section>
+      </LazyHydrate>
     </div>
   </div>
 </template>
@@ -123,6 +126,7 @@ export default {
     this.isMounted = true;
     // this.loadImage();
   },
+
   data() {
     return {
       imageBaseUrl: this.$config.imageBaseUrl,
@@ -139,9 +143,22 @@ export default {
       ],
 
       breadcrumbs: [],
+      isLoading: false,
     };
   },
+  loading: false,
+
   watch: {
+    isLoading(val) {
+      if (!process.client) {
+        return;
+      }
+      if (val) {
+        this.$nuxt.$loading.start();
+      } else {
+        this.$nuxt.$loading.finish();
+      }
+    },
     "$route.params.slug"(val) {
       if (!!val) {
         // console.log("🚀 ~ file: _manufSlug.vue true", val);
@@ -158,10 +175,7 @@ export default {
 
   async fetch() {
     if (!this.initialPageData && !this.$route.params.slug) {
-      const isLoading = process.client;
-      if (isLoading) {
-        this.$nuxt.$loading.start();
-      }
+      this.isLoading = true;
       const manufacturerbySlug = this.$store.getters.getManufacturerBySlug[
         this.$route.params.manufSlug
       ];
@@ -184,10 +198,8 @@ export default {
       );
       this.initialPageData = true;
       this.calculateBreadcrumbs();
-      if (isLoading) {
-        this.$nuxt.$loading.finish();
-      }
     } else if (this.$route.params.slug) {
+      this.isLoading = true;
       if (process.client) {
         this.$nuxt.$loading.start();
       }
@@ -195,10 +207,8 @@ export default {
         this.$route.params.manufSlug
       ];
       this.calculateBreadcrumbs();
-      if (process.client) {
-        this.$nuxt.$loading.finish();
-      }
     }
+    this.isLoading = false;
   },
 
   computed: {

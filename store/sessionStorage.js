@@ -1,15 +1,27 @@
+const categoryLimit = 20;
 export const state = () => ({
-  // category: {},
-  // manufacturer: {},
   generalInfo: {
     contacts: {
       phone: ""
     }
   },
-  breadcrumbs: [],
-  category: {},
-  rootCategory: {
-    children: []
+  // breadcrumbs: [],
+  categoryPage: {
+    category: {
+      product_types: [],
+      manufacturers: []
+    },
+    rootCategory: {
+      children: []
+    },
+    limit: categoryLimit,
+    manufacturerSelected: null,
+    isManufacturerSelected: false,
+    productTypeSelected: null,
+    isProductTypeSelected: false,
+    categoriesIds: [],
+    categoryMinimal: {},
+    products: new Array(categoryLimit).fill(false)
   },
 
 })

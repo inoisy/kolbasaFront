@@ -4,8 +4,6 @@
 <style lang="scss" scoped >
 .contentWrapper {
   color: $black;
-  overflow-x: auto;
-  overflow-y: hidden;
   :last-child {
     margin-bottom: 0;
   }
@@ -48,17 +46,6 @@
       position: relative;
       &:before {
         content: counter(my-awesome-counter);
-        // display: inline-block;
-        // background: #f3f3f3;
-        // width: 30px;
-        // height: 30px;
-        // -webkit-border-radius: 30px;
-        // border-radius: 30px;
-        // text-align: center;
-        // line-height: 30px;
-        // font-size: 15px;
-        // font-weight: 700;
-        // margin: 0 10px 10px 0;
         color: white;
         font-size: 1.1rem;
         font-weight: bold;
@@ -86,42 +73,40 @@
     margin-top: 3rem;
   }
 
+  ::v-deep figure.table {
+    overflow-x: auto;
+    table {
+      width: calc(100% - 2px);
+      max-width: 100%;
+    }
+  }
+
   ::v-deep table {
     border-spacing: 0;
-    max-width: 100%;
-    width: 100%;
+    // max-width: 100%;
+    // width: calc(100% - 2px);
+    border-collapse: collapse;
+    border-style: hidden;
 
-    tr:not(:last-child) td {
-      border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-    }
-
-    tr td:not(:last-child),
-    td:only-child {
-      border-right: 1px solid rgba(0, 0, 0, 0.12);
-    }
-
-    tr {
-      td {
-        padding-right: 16px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-      }
-
-      td:only-child:not([rowspan]) {
-        padding-left: 16px;
-        // padding-right: 16px;
-      }
-
-      td:not(:first-child) {
-        padding-left: 16px;
-        // padding-right: 16px;
-      }
-    }
-
-    td,
-    th {
+    td {
+      border: thin solid #e0e0e0;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-right: 16px;
       height: 36px;
+      @include md {
+        height: 48px;
+      }
+      &:not(:first-child),
+      &:only-child:not([rowspan]) {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
     }
+    // td:not(:first-child),
+    // td:only-child:not([rowspan]) {
+    //   padding-left: 16px;
+    // }
   }
 }
 </style>

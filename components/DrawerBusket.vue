@@ -85,27 +85,22 @@
                   </td>
                   <td class="px-1">
                     <nuxt-link
+                      class="busket-product-name underline-on-hover"
                       v-if="product.categorySlug"
                       :to="`/catalog/${product.categorySlug}/${product.slug}`"
-                      class="d-block underline-on-hover"
                       :title="product.name"
-                      >{{ product.name }}</nuxt-link
                     >
+                      {{ product.name }}
+                    </nuxt-link>
                   </td>
                   <td class="px-1">
                     <product-quantity
+                      class="buscetProductQuantity"
                       :id="product.id"
-                      :qty="product.quantity"
-                      style="max-width: 185px"
-                      class="mx-auto"
                     />
                   </td>
-                  <td class="px-1">
-                    <div
-                      class="price ml-1 display-flex align-center justify-center font-weight-medium"
-                    >
-                      {{ product.subSumm }}
-                    </div>
+                  <td class="price">
+                    {{ product.subSumm }}
                   </td>
                   <td class="px-1">
                     <v-btn
@@ -158,7 +153,6 @@
       <div v-if="offer && isSummValid" class="px-4 pt-4">
         <v-subheader class="mb-4 pl-0">ВВЕДИТЕ ВАШИ ДАННЫЕ</v-subheader>
         <contact-form />
-        <!-- @offerClose="offer = false" -->
         <v-divider class="mt-10 mb-6"></v-divider>
         <v-subheader class="pl-0">ВАШ ЗАКАЗ</v-subheader>
         <v-simple-table>
@@ -189,52 +183,48 @@
   </v-navigation-drawer>
 </template>
 <style lang="scss" scoped>
-.toolbar-inner {
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
-
-.item-wrapper {
-  min-height: 80px;
-}
-
-.quantity {
-  min-width: 100px;
-}
-
-.price {
-  min-width: 50px;
-}
-
-.btn-wrap {
-  flex-wrap: wrap;
-  flex-direction: column;
-
-  .busket-btn {
-    flex-grow: 1;
-  }
-}
-
-// .busket-btn {
-// width: 100%;
+// .toolbar-inner {
+//   display: flex;
+//   align-items: center;
+//   width: 100%;
 // }
-@media (min-width: 960px) {
-  .btn-wrap {
-    flex-direction: row;
-
-    // flex-direction:column
-    .busket-btn {
-      // flex: 1;
-    }
+.basketWrapper {
+  // --quantity-border-radius: 20px;
+  // .item-wrapper {
+  //   min-height: 80px;
+  // }
+  .busket-product-name {
+    // line-height: 1;
+    line-height: 125%;
+    display: block;
+    font-size: 12px;
+  }
+  .quantity {
+    // min-width: 100px;
+    // @include md {
+    //   width: 155px;
+    //   min-width: 155px;
+    // }
   }
 
-  // .busket-btn {
-  // width: 49%;
-  // }
-  .quantity {
-    width: 155px;
-    min-width: 155px;
+  .price {
+    // min-width: 50px;
+    width: 65px;
+    text-align: center;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .btn-wrap {
+    flex-wrap: wrap;
+    flex-direction: column;
+
+    .busket-btn {
+      flex-grow: 1;
+      @include md {
+        flex-direction: row;
+      }
+    }
   }
 }
 </style>

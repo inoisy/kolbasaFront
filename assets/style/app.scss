@@ -38,11 +38,7 @@
 }
 
 .v-main {
-  padding-top: var(--toolbar-height) !important; //$toolbar-mobile-height;
-
-  // @include md {
-  //   margin-top: $toolbar-desktop-height;
-  // }
+  padding-top: var(--toolbar-height) !important;
 }
 
 .toasted-container {
@@ -63,45 +59,8 @@
   padding: 12px !important;
 }
 
-.imageBackground {
-  position: absolute !important;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-
-  > .v-responsive__content {
-    display: none;
-  }
-
-  > .v-responsive__sizer {
-    display: none;
-  }
-
-  //   >.v-responsive__sizer {
-  //     padding-bottom: 0% !important;
-  //   }
-
-  //   >.v-responsive__content {
-  //     width: unset;
-  //   }
-}
-
-// $toolbar-mobile-height;$toolbar-desktop-height;
-
-.dialog-content-wrapper {
-  margin: $toolbar-mobile-height + $dialog-mobile-margin $dialog-mobile-margin $dialog-mobile-margin !important;
-  max-height: calc(100% - #{$toolbar-mobile-height + $dialog-mobile-margin * 2}) !important;
-
-  @include md {
-    margin: $toolbar-desktop-height + $dialog-desktop-margin $dialog-desktop-margin $dialog-desktop-margin !important;
-    max-height: calc(100% - #{$toolbar-desktop-height + $dialog-desktop-margin * 2}) !important;
-    max-width: 900px !important;
-  }
-
-  @include lg {
-    max-width: 1185px !important;
-  }
+.v-dialog {
+  margin-top: calc(var(--toolbar-height) + var(--dialog-margin)) !important;
 }
 
 input[type="number"]::-webkit-inner-spin-button,

@@ -1,12 +1,10 @@
 <template>
-  <v-dialog v-model="inputVal" content-class="dialog-content-wrapper">
+  <v-dialog v-model="inputVal" :scrollable="false" :max-width="img.width">
+    <!--  + 100 content-class="dialog-content-wrapper" content-class="dialog-content-wrapper" -->
     <v-card :class="$style.imageDialogInner" light>
-      <!--class="closeButton" <div :class="$style.closeButtonWrapper"> -->
       <v-btn :class="$style.closeButton" fab @click="inputVal = false">
         <v-icon>$close</v-icon>
       </v-btn>
-      <!-- </div> -->
-      <!-- <div> -->
       <v-img
         :class="$style.image"
         :src="imgUrl"
@@ -18,16 +16,7 @@
           <image-placeholder />
         </template> -->
       </v-img>
-      <!-- </div> -->
     </v-card>
-    <!-- class="dialog-image-wrapper" class="ma-auto" -->
-    <!-- class="position-relative" <v-sheet>
-      <div> -->
-    <!-- </div> -->
-    <!-- :max-width="item.width"
-        height="inherit"
-        max-height="inherit"
-        width="100%" -->
     <!-- <div style="position: absolute; top: 16px; right: 16px; z-index: 10"
       class="fullscreen-img d-flex"
       style="height: inherit; max-height: inherit"
@@ -62,19 +51,21 @@
   max-height: inherit;
   height: inherit;
   .image {
-    // max-height: calc(90vh - 64px);
-    // max-height: calc(100% - #{$toolbar-desktop-height + $dialog-desktop-margin*2}) !important;
-    max-height: calc(
-      100vh - #{$toolbar-mobile-height + $dialog-mobile-margin * 2}
-    ) !important;
-
-    @include md {
-      // margin: $toolbar-desktop-height + $dialog-desktop-margin $dialog-desktop-margin $dialog-desktop-margin !important;
-      max-height: calc(
-        100vh - #{$toolbar-desktop-height + $dialog-desktop-margin * 2}
-      ) !important;
-    }
+    max-height: var(--dialog-max-height) !important;
   }
+  // max-height: calc(90vh - 64px);
+  // max-height: calc(100% - #{$toolbar-desktop-height + $dialog-desktop-margin*2}) !important;
+  //   max-height: calc(
+  //     100vh - #{$toolbar-mobile-height + $dialog-mobile-margin * 2}
+  //   ) !important;
+
+  //   @include md {
+  //     // margin: $toolbar-desktop-height + $dialog-desktop-margin $dialog-desktop-margin $dialog-desktop-margin !important;
+  //     max-height: calc(
+  //       100vh - #{$toolbar-desktop-height + $dialog-desktop-margin * 2}
+  //     ) !important;
+  //   }
+  // }
 }
 // .closeButton {
 

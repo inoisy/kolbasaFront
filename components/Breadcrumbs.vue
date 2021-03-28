@@ -111,8 +111,11 @@ export default {
       &:after {
         content: "/";
         display: inline;
-        padding: 0 12px;
+        padding: 0 6px;
         color: rgba($white, 0.5);
+        @include md {
+          padding: 0 12px;
+        }
       }
     }
 

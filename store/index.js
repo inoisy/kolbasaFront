@@ -25,17 +25,11 @@ class CartProduct {
   }
 }
 export const getters = {
-  // subcategories(state) {
-  //   return state.sessionStorage.category.subcategories
-  // },
-
-  subcategories(state) {
-    const rootCategory = state.sessionStorage.rootCategory
-    if (!rootCategory) {
+  categorySubcategories(state) {
+    const rootCategory = state.sessionStorage.categoryPage.rootCategory
+    if (!rootCategory || !rootCategory.children || !rootCategory.children.length) {
       return []
     }
-    // const value = 
-    // console.log("🚀 ~ file: index.js ~ line 107 ~ value ~ value", value)
     return rootCategory.children.reduce((acc, val) => {
       acc.push(val)
       return acc
@@ -45,11 +39,65 @@ export const getters = {
       id: rootCategory.id
     }])
   },
-  // categoryBreadcrumbs(state) {
+  categorySubcategoriesIDs(state, getters) {
+    return getters.categorySubcategories.map(item => item.id)
+  },
+  categoryMeta(state) {
+    const { category: { name: categoryName, metaDescription, content: categoryContent }, manufacturerSelected, productTypeSelected } = state.sessionStorage.categoryPage
 
-  //     // this.$store.dispatch("breadcrumbs", items);
-  //     return items;
-  //   },
+    let name = `${categoryName} оптом`;
+    let description = metaDescription
+      ? metaDescription
+      : `${name} от компании Альянс Фуд с доставкой по всей РФ и СНГ по самым выгодным оптовым ценам от производителя.`;
+    let content = categoryContent;
+
+    if (manufacturerSelected) {
+      name = `${categoryName} ${manufacturerSelected.name} оптом`;
+      description = `${name}. ${description}`;
+    } else if (productTypeSelected) {
+      // const productType = await this.fetchProductType(this.productType._id);
+
+      name = `${productTypeSelected.name} оптом`;
+      description = `${name}. ${description}`;
+      if (productTypeSelected.content) {
+        content = productTypeSelected.content.concat(categoryContent);
+      }
+    }
+    return {
+      name,
+      description,
+      content,
+    }
+  },
+
+  categoryBreadcrumbs(state) {
+    const { name: rootName, slug: rootSlug } = state.sessionStorage.categoryPage.rootCategory
+    const { name, slug } = state.sessionStorage.categoryPage.categoryMinimal
+    let items = [
+      {
+        to: "/",
+        text: "Главная",
+      },
+      {
+        to: "/catalog",
+        text: "Каталог",
+      },
+      {
+        to: `/catalog/${rootSlug}`,
+        text: rootName,
+      }
+    ];
+
+    if (slug !== rootSlug) {
+      items.push({
+        to: `/catalog/${slug}`,
+        text: name,
+      });
+    }
+    // console.log("🚀 ~ file: index.js ~ line 68 ~ categoryBreadcrumbs ~ items", items)
+
+    return items
+  },
 
   cart(state) {
     // console.log("cart getter called")
@@ -87,25 +135,11 @@ export const getters = {
     if (!getters.isCart) {
       return {};
     }
-    // console.log("🚀 ~ file: index.js ~ line 133 ~ isInCartByIds ~ state")
-
     return state.localStorage.cartItemList.reduce((out, item) => {
-      // console.log("🚀 ~ file: index.js ~ line 139 ~ returnstate.localStorage.cartItemList.reduce ~ item", item)
       out[item.id] = true// item.quantity
       return out
     }, {})
   },
-  // isInCart: (state, getters) => id => {
-  //   if (!getters.isCart) {
-  //     return false;
-  //   }
-  //   const recordIndex = state.localStorage.cartItemList.findIndex((element) => element.id == id)
-  //   if (recordIndex >= 0) {
-  //     return true
-  //   } else {
-  //     return false
-  //   }
-  // },
   quantity: (state) => id => {
     // console.log("🚀 ~ file: index.js ~ line 156 ~ id", id)
     const record = state.localStorage.cartItemList.find((element) => element.id == id)
@@ -115,7 +149,6 @@ export const getters = {
       return 0
     }
   },
-
   menuItems(state, getters) {
     return [
       // {
@@ -209,18 +242,32 @@ export const getters = {
   }
 }
 export const mutations = {
-  breadcrumbs(state, items) {
-    state.sessionStorage.breadcrumbs = items
-  },
-  // subcategories(state, items) {
-  //   state.sessionStorage.category.subcategories = items
-  // },
-  rootCategory(state, items) {
-    state.sessionStorage.rootCategory = items
+
+
+  rootCategory(state, item) {
+    state.sessionStorage.categoryPage.rootCategory = item
   },
   category(state, item) {
-    state.sessionStorage.category = item
+    state.sessionStorage.categoryPage.category = item
   },
+  changeCategory(state, { category, categoriesIds }) {
+    // rootCategory
+    state.sessionStorage.categoryPage.categoryMinimal = category
+    state.sessionStorage.categoryPage.categoriesIds = categoriesIds
+    // const oldValue = state.sessionStorage.categoryPage.rootCategory
+    // if (!oldValue || !oldValue.slug || oldValue.slug !== rootCategory.slug) {
+    //   state.sessionStorage.categoryPage.rootCategory = rootCategory
+    // }
+  },
+  setFilters(state, { manufacturer = null, productType = null }) {
+    state.sessionStorage.categoryPage.manufacturerSelected = manufacturer
+    state.sessionStorage.categoryPage.productTypeSelected = productType
+  },
+  setSort(state, value) {
+    state.localStorage.category.sort = value
+    // state.sessionStorage.categoryPage.productTypeSelected = productType
+  },
+
   generalInfo(state, item) {
     state.sessionStorage.generalInfo = item
   },
@@ -267,12 +314,430 @@ export const mutations = {
     }
   },
 }
-// export const strict = false
-
 export const actions = {
   async nuxtServerInit(state, ctx) {
+    const data = require('~/static/data.json')
+    await state.commit("generalInfo", {
+      ...data,
+      contacts: data.contact
+    })
+  },
+
+  addToCart({ commit }, item) {
+    commit("addToCart", item)
+  },
+  updateCartById({ commit, state }, { id, quantity }) {
+    // console.log("🚀 ~ file: index.js ~ line 251 ~ updateCartById ~ state", state)
+    const record = state.localStorage.cartItemList.find(element => element.id == id);
+    if (record) {
+      // console.log("🚀 ~ file: cart.js ~ line 110 ~ updateCartById ~ record", record)
+      let newQuantity;
+      if (record.minimumOrder > 1) {
+        const ostatok = quantity % record.minimumOrder
+        // console.log("🚀 ~ file: cart.js ~ line 66 ~ ostatok", ostatok)
+        if (ostatok !== 0) {
+          newQuantity = quantity + (record.minimumOrder - ostatok)
+
+        } else {
+          newQuantity = quantity
+        }
+      } else {
+        newQuantity = quantity
+      }
+      // console.log("🚀 ~ file: cart.js ~ line 124 ~ updateCartById ~ newQuantity", record.quantity, newQuantity)
+
+      if (record.quantity !== newQuantity) {
+        // console.log("🚀 ~ file: cart.js ~ line 127 updateCartByID", record.quantity, newQuantity)
+
+        commit("updateCartByID", { id, quantity: newQuantity })
+        return newQuantity
+      } else {
+        return record.quantity
+      }
+    }
+
+  },
+  removeItemInCart({ commit }, id) {
+    commit("removeCartItem", id)
+  },
+  incrementCart({ commit }, id) {
+    commit("incrementCart", id)
+  },
+  decrementCart({ commit }, id) {
+    commit("decrementCart", id)
+  },
+  setCart({ commit }, cart) {
+    commit("setCart", cart)
+  },
+  clearCart({ commit }) {
+    commit("setCart", [])
+  },
+  async changeCategory({ commit, dispatch, getters: { categorySubcategoriesIDs, getCategoryBySlug } }, slug) {
+    const category = getCategoryBySlug[slug];
+    if (!category) {
+      return false
+    }
+    let rootCategory, categoriesIds, isChildCategory = false;// categoriesIds,
+    if (!!category.parent.length) {
+      rootCategory = getCategoryBySlug[category.parent[0].slug]
+
+      // isChildCategory = true
+      await dispatch("setRootCategory", rootCategory)
+      categoriesIds = [category.id]
+    } else {
+      // rootCategory = category;
+      await dispatch("setRootCategory", category)
+      categoriesIds = categorySubcategoriesIDs
+
+    }
+
+    await commit("changeCategory", { category, categoriesIds })
+    return true
+  },
+  async setRootCategory({ commit, state }, newValue) {
+    const oldValue = state.sessionStorage.categoryPage.rootCategory
+    if (!oldValue || !oldValue.slug || oldValue.slug !== newValue.slug) {
+      await commit("rootCategory", newValue);
+      // await commit("breadcrumbs", categoryBreadcrumbs)
+    }
+  },
+  // setRootCategory(state, { slug: newSlug }) {
+  //   const oldValue = state.sessionStorage.categoryPage.rootCategory
+  //   if (!oldValue || !oldValue.slug || oldValue.slug !== newSlug) {
+  //     state.sessionStorage.categoryPage.rootCategory = item
+  //   }
+  // },
+  async fetchProductType({ }, id) {
+    const {
+      data: { productType }
+    } = await this.app.apolloProvider.defaultClient.query({
+      variables: {
+        id
+      },
+      query: gql`
+          query ProductTypeQuery($id: ID!) {
+            productType(id: $id) {
+              _id
+              id
+              name
+              slug
+              content
+            }
+          }
+        `
+    });
+    return productType
+  },
+  async fetchCategory({ commit, getters: { getManufacturerBySlug }, state: { sessionStorage: { categoryPage: { categoryMinimal: { id } } } } }, query) {
+    //  , route: { query }
+    const {
+      data: { category }
+    } = await this.app.apolloProvider.defaultClient.query({
+      query: gql`
+          query CategoryQuery($id: ID!) {
+            category(id: $id) {
+              id
+              description
+              metaDescription
+              name
+              slug
+              content
+              manufacturers(sort: "name:asc") {
+                _id
+                name
+                slug
+              }
+              parent {
+                slug
+                name
+                children {
+                  id
+                  name
+                  slug
+                }
+              }
+              children {
+                id
+                name
+                slug
+              }
+              product_types(sort: "name:asc") {
+                _id
+                name
+                slug
+              }
+            }
+          }
+        `,
+      variables: {
+        id,
+      },
+    });
+    const { manufacturer, type } = query;
+    let manufacturerSelected, productTypeSelected;
+    if (manufacturer) {
+      manufacturerSelected = getManufacturerBySlug[
+        manufacturer
+      ];
+    }
+    if (type) {
+      productTypeSelected = category.product_types.find(
+        (item) => item.slug === type
+      );
+    }
+    await commit("setFilters", { productType: productTypeSelected, manufacturer: manufacturerSelected })
+    await commit("category", category);
+    return category
+  },
+
+  async fetchCategoryProducts({ state: { sessionStorage: { categoryPage: { categoriesIds, limit, manufacturerSelected, productTypeSelected } }, localStorage: { category: { sort } } } }, start = 0) {
+    // const variables = ;
+    // console.log("🚀 ~ file: index.js ~ line 495 ~ fetchCategoryProducts ~ variables", variables)
+    const {
+      data: { products }
+    } = await this.app.apolloProvider.defaultClient.query({
+      query: gql`
+          query productsQuery(
+            $manufacturer: ID
+            $category: [ID!]
+            $product_type: ID
+            $sort: String
+            $limit: Int
+            $start: Int
+          ) {
+            products(
+              limit: $limit
+              start: $start
+              sort: $sort
+              where: {
+                manufacturer: $manufacturer
+                category: $category
+                product_type: $product_type
+              }
+            ) {
+              id
+              name
+              slug
+              weight
+              isDiscount
+              isHalal
+              priceNum
+              discountPrice
+              rating
+              minimumOrder
+              piece
+              manufacturer {
+                name
+                slug
+              }
+              category {
+                name
+                slug
+              }
+              img {
+                url
+                name
+                formats
+              }
+            }
+          }
+        `,
+      variables: {
+        start: start,
+        category: categoriesIds,
+        limit: limit,
+        sort: sort.value,
+        ...(!!manufacturerSelected && {
+          manufacturer: manufacturerSelected._id,
+        }),
+        ...(!!productTypeSelected && {
+          product_type: productTypeSelected._id,
+        }),
+      },
+    });
+    // await commit("setCategoryProducts", products)
+
+    return products
+  },
 
 
+  async changeProductType({ commit, dispatch }, item) {
+    let productTypeNew = null;
+    if (item) {
+      productTypeNew = await dispatch("fetchProductType", item)
+    }
+    await commit("setFilters", { productType: productTypeNew })
+  },
+  async changeManufacturer({ commit }, manufacturer) {
+    await commit("setFilters", { manufacturer })
+  },
+  async changeSort({ commit }, value) {
+    await commit("setSort", value)
+  },
+  async fetchManufacturer(ctx, id) {
+
+    const {
+      data: manufacturerData
+    } = await this.app.apolloProvider.defaultClient.query({
+      variables: {
+        id
+      },
+      query: gql`
+          query ManufacturerQuery($id: ID!) {
+            manufacturer(id: $id) {
+              id
+              name
+              slug
+              description
+              metaDescription
+              content
+              img {
+                url
+              }
+              catalog {
+                url
+              }
+            }
+          }
+        `
+    });
+
+    return manufacturerData.manufacturer
+  },
+}
+ // this.products = this.products.map(() => false);
+  // await commit("cleanCategoryProducts")
+  // cleanCategoryProducts(state, items) {
+  //   state.sessionStorage.categoryPage.products = state.sessionStorage.categoryPage.products.map(() => false)
+  // },
+  // setCategoryProducts(state, items) {
+  //   state.sessionStorage.categoryPage.products = items
+  // },
+// async fetchAndRefillProducts({ dispatch, commit }) {
+  //   // this.products = this.products.map(() => false);
+  //   await commit("cleanCategoryProducts")
+  //   await dispatch("fetchCategoryProducts"); //await this.fetchProducts();
+
+  // },
+  // async cleanProducts ()
+// async fetchMoreCategoryProducts({ dispatch, commit, state: { sessionStorage: { categoryPage: { products } } } }, $state) {
+  //   const newProducts = await dispatch(
+  //     "fetchCategoryProducts",
+  //     products.length
+  //   );
+  //   if (newProducts && newProducts.length) {
+  //     await commit("setCategoryProducts", [...products, ...newProducts])
+  //     // this.products = [...this.products, ...newProducts];
+  //     await $state.loaded();
+  //   } else {
+  //     await $state.complete();
+  //   }
+  // },
+  // console.log("fetchManufacturer")
+    // const client = this.app.apolloProvider.defaultClient;
+ // console.log(ctx.state)
+    // await ctx.commit("manufacturer", manufacturerData.manufacturer);
+    // console.log(ctx.state)
+// categoriesIds = rootCategory.children.reduce((acc, val) => {
+      //   acc.push(val.id)
+      //   return acc
+      // }, [rootCategory.id])
+    // if (isChildCategory) {
+    //   categoriesIds = [category.id]
+    // } else {
+    //   categoriesIds =categorySubcategoriesIDs
+    // }
+
+    // /!!category.parent.length ? getters.getCategoryBySlug[category.parent[0].slug] : category)
+    // const siblings =  rootCategory.children.reduce((acc, val) => {
+    //   acc.push(val)
+    //   return acc
+    // }, [{
+    //   slug: rootCategory.slug,
+    //   name: `Все ${rootCategory.name}`,
+    //   id: rootCategory.id
+    // }])
+    // const categoriesIds = isChildCategory ? [category.id] : siblings.map(item=>item.id)
+    // if (isChildCategory){
+
+    // }
+    // categorySubcategories(state) {
+    //   const rootCategory = state.sessionStorage.categoryPage.rootCategory
+    //   if (!rootCategory || !rootCategory.children || !rootCategory.children.length) {
+    //     return []
+    //   }
+    //   return rootCategory.children.reduce((acc, val) => {
+    //     acc.push(val)
+    //     return acc
+    //   }, [{
+    //     slug: rootCategory.slug,
+    //     name: `Все ${rootCategory.name}`,
+    //     id: rootCategory.id
+    //   }])
+    // },
+    // categoriesIds, rootCategory, siblings
+    // const productType =
+  // categoryMinimal(state, item) {
+  //   state.sessionStorage.categoryPage.categoryMinimal = item
+  // },
+  // categoriesIds(state, items) {
+  //   state.sessionStorage.categoryPage.categoriesIds = items
+  // },
+  // setRootCategory(state, { slug: newSlug }) {
+  //   const oldValue = state.sessionStorage.categoryPage.rootCategory
+  //   if (!oldValue || !oldValue.slug || oldValue.slug !== newSlug) {
+  //     state.sessionStorage.categoryPage.rootCategory = item
+  //   }
+  // },
+
+  // rootCategory(state, item) {
+  //   state.sessionStorage.categoryPage.rootCategory = item
+
+  // },
+  // category({ commit }, item) {
+  //   commit("category", item)
+  // },
+    // await commit("categoryMinimal", categoryFind)
+    // await dispatch(
+    //   "setRootCategory",
+    //   rootCategory
+    // );
+    // await commit("categoriesIds", categoriesIds)
+  // async setRootCategory({ commit, state }, newValue) {
+  //   const oldValue = state.sessionStorage.categoryPage.rootCategory
+  //   if (!oldValue || !oldValue.slug || oldValue.slug !== newValue.slug) {
+  //     await commit("rootCategory", newValue);
+  //     // await commit("breadcrumbs", categoryBreadcrumbs)
+  //   }
+  // },
+  // async flushProductType({commit}){
+  //   await commit("productTypeSelected", null)
+  // },
+  // async flushManufacturer({ commit }) {
+  //   await commit("productTypeSelected", null)
+  // },
+ // categoryPage(state, item) {
+  //   state.sessionStorage.categoryPage = item
+  // },
+      // console.log("🚀 ~ file: index.js ~ line 254 ~ changeCategory ~ state", state)
+
+     // await commit("categoryMinimal", categoryFind)
+    // await dispatch(
+    //   "setRootCategory",
+    //   rootCategory
+    // );
+    // await commit("categoriesIds", categoriesIds)
+  // manufacturerSelected(state, item) {
+  //   state.sessionStorage.categoryPage.manufacturerSelected = item
+  // },
+  // productTypeSelected(state, item) {
+  //   state.sessionStorage.categoryPage.productTypeSelected = item
+  // },
+    // breadcrumbs(state, items) {
+  //   state.sessionStorage.categoryPage.breadcrumbs = items
+  // },
+      // console.log("🚀 ~ file: index.js ~ line 260 ~ setFilters ~ productType", productType)
+    // console.log("🚀 ~ file: index.js ~ line 260 ~ setFilters ~ manufacturer", manufacturer)
     // if (ctx.isDev) {
     //   const query = require("~/graphql/query/generalInfo")
     //   const {
@@ -285,12 +750,49 @@ export const actions = {
     //     contacts: data.contact
     //   })
     // } else {
-    const data = require('~/static/data.json')
-    await state.commit("generalInfo", {
-      ...data,
-      contacts: data.contact
-    })
-    // }
+   // query: gql`
+      //   query CategoryQuery( $id: ID! ) {
+      //     category(id: $id) {
+      //       id
+      //       description
+      //       metaDescription
+      //       name
+      //       slug
+      //       content
+      //       img {
+      //         url
+      //       }
+      //       manufacturers(sort: "name:asc") {
+      //         _id
+      //         name
+      //         slug
+      //       }
+      //       parent {
+      //         slug
+      //         name
+      //         children {
+      //           id
+      //           name
+      //           slug
+      //         }
+      //       }
+      //       children{
+      //         id
+      //         name
+      //         slug
+      //       }
+      //       product_types(sort: "name:asc") {
+      //         _id
+      //         name
+      //         slug
+      //       }
+      //     }
+      //   }
+      // `,
+      // variables: {
+      //   id
+      // }
+        // }
 
 
 
@@ -358,462 +860,3 @@ export const actions = {
     //     contacts: data.contact
     //   })
     // }
-
-  },
-  breadcrumbs({ commit }, items) {
-    commit("breadcrumbs", items)
-  },
-  pushBreadcrumbs({ commit, state }, item) {
-    console.log("🚀 ~ file: index.js ~ line 350 ~ pushBreadcrumbs ~ state.sessionStorage.breadcrumbs", state.sessionStorage.breadcrumbs)
-
-    const existed = [...state.sessionStorage.breadcrumbs]
-    console.log("🚀 ~ file: index.js ~ line 349 ~ pushBreadcrumbs ~ ctx", state.sessionStorage.breadcrumbs)
-    commit("breadcrumbs", [...existed, item])
-  },
-  addToCart({ commit }, item) {
-    // console.log("🚀 ~ file: index.js ~ line 347 ~ addToCart ~ item", item)
-    commit("addToCart", item)
-  },
-  updateCartById({ commit, state }, { id, quantity }) {
-    // console.log("🚀 ~ file: index.js ~ line 251 ~ updateCartById ~ state", state)
-    const record = state.localStorage.cartItemList.find(element => element.id == id);
-    if (record) {
-      // console.log("🚀 ~ file: cart.js ~ line 110 ~ updateCartById ~ record", record)
-      let newQuantity;
-      if (record.minimumOrder > 1) {
-        const ostatok = quantity % record.minimumOrder
-        // console.log("🚀 ~ file: cart.js ~ line 66 ~ ostatok", ostatok)
-        if (ostatok !== 0) {
-          newQuantity = quantity + (record.minimumOrder - ostatok)
-
-        } else {
-          newQuantity = quantity
-        }
-      } else {
-        newQuantity = quantity
-      }
-      // console.log("🚀 ~ file: cart.js ~ line 124 ~ updateCartById ~ newQuantity", record.quantity, newQuantity)
-
-      if (record.quantity !== newQuantity) {
-        // console.log("🚀 ~ file: cart.js ~ line 127 updateCartByID", record.quantity, newQuantity)
-
-        commit("updateCartByID", { id, quantity: newQuantity })
-        return newQuantity
-      } else {
-        return record.quantity
-      }
-    }
-
-  },
-  removeItemInCart({ commit }, id) {
-    commit("removeCartItem", id)
-  },
-  incrementCart({ commit }, id) {
-    commit("incrementCart", id)
-  },
-  decrementCart({ commit }, id) {
-    commit("decrementCart", id)
-  },
-  setCart({ commit }, cart) {
-    commit("setCart", cart)
-  },
-  clearCart({ commit }) {
-    commit("setCart", [])
-  },
-  category({ commit, state, dispatch }, newValue) {
-    const oldValue = state.sessionStorage.rootCategory
-    if (!oldValue || !oldValue.slug || oldValue.slug !== newValue.slug) {
-      commit("rootCategory", newValue);
-    }
-  },
-  setRootCategory({ commit, state, dispatch }, newValue) {
-    const oldValue = state.sessionStorage.rootCategory
-    if (!oldValue || !oldValue.slug || oldValue.slug !== newValue.slug) {
-      // commit("subcategories", [])
-      // commit("category", {
-      //   rootCategory: newValue,
-      //   // subcategories: newValue.children.reduce((acc, val) => {
-      //   //   acc.push(val)
-      //   //   return acc
-      //   // }, [{
-      //   //   slug: newValue.slug,
-      //   //   name: `Все ${newValue.name}`,
-      //   //   id: newValue.id
-      //   // }])
-      // });
-
-      commit("rootCategory", newValue);
-      // const rootCategory = newValue;
-      let items = [
-        {
-          to: "/",
-          text: "Главная",
-        },
-        {
-          to: "/catalog",
-          text: "Каталог",
-        },
-        {
-          to: `/catalog/${newValue.slug}`,
-          text: newValue.name,
-        }
-      ];
-      // items.push();
-      dispatch("breadcrumbs", items);
-      // if (this.category.slug !== rootCategory.slug) {
-      //   items.push({
-      //     to: `/catalog/${this.category.slug}`,
-      //     text: this.category.name,
-      //     // disable: false,
-      //   });
-      // }
-
-      // const newSubcats =
-      // console.log("🚀 ~ file: index.js ~ line 394 ~ newSubcats ~ newSubcats", newSubcats)
-      // commit("subcategories", newSubcats)
-    }
-
-  },
-
-  async fetchProductType(state, id) {
-    const client = this.app.apolloProvider.defaultClient;
-    const {
-      data: productTypeData
-    } = await client.query({
-      variables: {
-        id
-      },
-      query: gql`
-          query ProductTypeQuery($id: ID!) {
-            productType(id: $id) {
-              _id
-              id
-              name
-              slug
-              content
-            }
-          }
-        `
-    });
-    return productTypeData.productType
-  },
-  async fetchCategory(state, id) {
-    const client = this.app.apolloProvider.defaultClient;
-    const {
-      data: categoryData
-    } = await client.query({
-      query: gql`
-        query CategoryQuery( $id: ID! ) {
-          category(id: $id) {
-            id
-            description
-            metaDescription
-            name
-            slug
-            content
-            img {
-              url
-            }
-            manufacturers(sort: "name:asc") {
-              _id
-              name
-              slug
-            }
-            parent {
-              slug
-              name
-              children {
-                id
-                name
-                slug
-              }
-            }
-            children{
-              id
-              name
-              slug
-            }
-            product_types(sort: "name:asc") {
-              _id
-              name
-              slug
-            }
-          }
-        }
-      `,
-      variables: {
-        id
-      }
-    });
-    // await ctx.commit("category", categoryData.category);
-    return categoryData.category
-  },
-  async fetchManufacturer(ctx, id) {
-    // console.log("fetchManufacturer")
-    const client = this.app.apolloProvider.defaultClient;
-    const {
-      data: manufacturerData
-    } = await client.query({
-      variables: {
-        id
-      },
-      query: gql`
-          query ManufacturerQuery($id: ID!) {
-            manufacturer(id: $id) {
-              id
-              name
-              slug
-              description
-              metaDescription
-              content
-              img {
-                url
-              }
-              catalog {
-                url
-              }
-            }
-          }
-        `
-    });
-    // console.log(ctx.state)
-    // await ctx.commit("manufacturer", manufacturerData.manufacturer);
-    // console.log(ctx.state)
-    return manufacturerData.manufacturer
-  },
-  // async fetchProduct(ctx, slug) {
-  //   // const client = this.app.apolloProvider.defaultClient;
-  //   try {
-  //     const {
-  //       data: { products: [product] }
-  //     } = await this.app.apolloProvider.defaultClient.query({
-  //       query: gql`
-  //       fragment relatedProduct on Product {
-  //         name
-  //         slug
-  //         weight
-  //         isDiscount
-  //         isHalal
-  //         priceNum
-  //         discountPrice
-  //         minimumOrder
-  //         piece
-  //         manufacturer {
-  //           slug
-  //           name
-  //         }
-  //         category {
-  //           slug
-  //         }
-  //         img {
-  //           url
-  //           formats
-  //         }
-  //       }
-  //       query ProductQuery( $slug: String! ) {
-  //         products( where: { slug: $slug } ) {
-  //           _id
-  //           description
-  //           name
-  //           slug
-  //           content
-  //           weight
-  //           isDiscount
-  //           isHalal
-  //           priceNum
-  //           discountPrice
-  //           minimumOrder
-  //           piece
-  //           category{
-  //             name
-  //             slug
-  //           }
-  //           img {
-  //             url
-  //             formats
-  //             width
-  //             height
-  //           }
-  //           manufacturer {
-  //             name
-  //             slug
-  //             description
-  //           }
-  //           relatedProducts {
-  //             ...relatedProduct
-  //           },
-  //           productsRelated {
-  //             ...relatedProduct
-  //           }
-
-  //         }
-  //       }
-  //     `,
-  //       variables: {
-  //         slug
-  //       }
-  //     });
-  //     return product
-  //   } catch (error) {
-  //     // console.log("🚀 ~ file: index.js ~ line 523 ~ fetchProduct ~ error", error)
-  //     return null
-  //   }
-
-  // },
-  // async fetchProducts(ctx, params) {
-  //   let n = 3
-  //   const getProducts = async () => {
-  //     const client = this.app.apolloProvider.defaultClient;
-  //     const vars = {
-  //       ...params.manufacturer && {
-  //         manufacturer: params.manufacturer
-  //       },
-  //       ...params.product_type && {
-  //         product_type: params.product_type
-  //       },
-  //       category: params.category,
-  //       sort: params.sort || "name:asc",
-  //       limit: params.limit || 20,
-  //       start: params.start || 0
-  //     }
-  //     const {
-  //       data: productsData
-  //     } = await client.query({
-  //       query: gql`
-  //       query productsQuery(
-  //           $manufacturer: ID $category: [ID!] $product_type: ID $sort: String $limit: Int $start: Int
-  //         ) {
-  //           products(
-  //             limit: $limit 
-  //             start: $start 
-  //             sort: $sort 
-  //             where: {
-  //               manufacturer: $manufacturer
-  //               category: $category
-  //               product_type: $product_type
-  //             }
-  //         ) {
-  //           id
-  //           name
-  //           slug
-  //           weight
-  //           isDiscount
-  //           isHalal
-  //           priceNum
-  //           discountPrice
-  //           rating
-  //           minimumOrder
-  //           piece
-  //           manufacturer {
-  //             name
-  //             slug
-  //           }
-  //           category{
-  //             name
-  //             slug
-  //           }
-  //           img {
-  //             url
-  //             name
-  //             formats
-  //           }
-  //         }
-  //       }
-  //     `,
-  //       variables: vars
-  //     });
-  //     return productsData.products
-  //   }
-  //   try {
-  //     return await getProducts()
-  //   } catch (error) {
-  //     n -= 1
-  //     if (n === 0) return []
-  //     return await getProducts()
-  //   }
-  // }
-}
-
-  // isItemInBusket: (state) => id => {
-  //   const find = state.localStorage.basket.find(
-  //     (item) => item.id === id
-  //   );
-  //   console.log("🚀 ~ file: index.js ~ line 74 ~ index", find)
-  //   return !!find
-  // },
-  // summa(state) {
-  //   if (Array.isArray(state.localStorage.basket)) {
-  //     const summ = state.localStorage.basket.reduce(
-  //       (acc, product) => {
-  //         acc =
-  //           product.isDiscount && product.discountPrice ?
-  //             acc + product.discountPrice * product.count :
-  //             acc + product.count * product.priceNum;
-  //         return acc;
-  //       }, 0)
-
-  //     return summ % 1 > 0 ? summ.toFixed(1) : summ
-  //   } else {
-  //     state.localStorage.basket = []
-  //     return 0
-  //   }
-  // },
-
-   // category(state, item) {
-  //   state.sessionStorage.category = item
-  // },
-  // manufacturer(state, item) {
-  //   state.sessionStorage.manufacturer = item
-  // },
-  // incrementBasket(state, id) {
-  //   const product = state.localStorage.basket.find((product) => product._id === id);
-  //   product.count += product.minimumOrder
-  // },
-  // addToBasket(state, product) {
-  //   console.log("addToBasket -> qty", product)
-  //   const qty = product.qty || 1
-  //   const cartProduct = state.localStorage.basket.find((item) => item.id === (product.id || product._id));
-  //   if (cartProduct) {
-  //     cartProduct.count += cartProduct.minimumOrder * qty;
-  //   } else {
-  //     state.localStorage.basket.push({
-  //       ...product,
-  //       count: product.minimumOrder * qty
-  //     })
-  //   }
-  // },
-  // clearBasket(state) {
-  //   state.localStorage.basket = []
-  // },
-  // changeBasket(state, params) {
-  //   const {
-  //     qty,
-  //     id
-  //   } = params
-  //   const product = state.localStorage.basket.find((item) => item._id === id);
-  //   if (product.minimumOrder > 1) {
-  //     const ostatok = qty % product.minimumOrder
-  //     if (ostatok !== 0) {
-  //       product.count = qty + (product.minimumOrder - ostatok)
-  //     } else {
-  //       product.count = qty
-  //     }
-  //   } else {
-  //     product.count = qty
-  //   }
-  // },
-  // deleteFromBasket(state, id) {
-  //   const cartProductIndex = state.localStorage.basket.findIndex((item) => item.id === id);
-  //   state.localStorage.basket.splice(cartProductIndex, 1);
-  // },
-  // removeFromBasket(state, id) {
-  //   const cartProduct = state.localStorage.basket.find((item) => item.id === id);
-  //   cartProduct.count -= cartProduct.minimumOrder;
-  //   if (cartProduct.count <= 0) {
-  //     const cartProductIndex = state.localStorage.basket.findIndex((item) => item.id === id);
-  //     state.localStorage.basket.splice(cartProductIndex, 1);
-  //   }
-  // },
-  // setUserData(state, data) {
-  //   state.localStorage.user = data
-  // }

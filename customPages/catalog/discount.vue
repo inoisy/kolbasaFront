@@ -80,7 +80,7 @@ export default {
 
   // components: { ProductCard, PageHeader },
   async asyncData({
-    store,
+    // store,
     app: {
       apolloProvider: { defaultClient },
     },
