@@ -1,6 +1,5 @@
 <template>
   <div :class="$style.pricesWrapper">
-    <!-- {{ priceObject }} -->
     <div
       :class="$style.priceWrapper"
       itemprop="offers"
@@ -8,28 +7,28 @@
       itemtype="http://schema.org/Offer"
     >
       <div :class="$style.priceInner">
-        <span
-          :class="[priceObject.isPrice ? $style.price : $style.noPrice]"
-          itemprop="price"
+        <div
+          v-if="priceObject.isPrice"
+          :class="[$style.price, priceObject.isDiscount && $style.accent]"
+          class="d-inline-flex"
         >
-          {{ priceObject.price || "Нет в наличии" }}
-        </span>
-        <span
-          :class="$style.discount"
-          class="pl-1"
+          <span itemprop="price" v-text="priceObject.price" />
+          <span itemprop="priceCurrency" content="RUB">&#8381;</span>
+        </div>
+        <div
           v-if="priceObject.isDiscount"
+          :class="priceObject.isDiscount && $style.discount"
+          class="d-inline-flex ml-2"
         >
-          {{ this.priceNum }}
-        </span>
-
-        <span
-          :class="$style.priceCurrency"
-          itemprop="priceCurrency"
-          v-show="priceObject.isPrice"
-          content="RUB"
-        >
-          &nbsp;&#8381;
-        </span>
+          <span>{{ this.priceNum }}</span>
+          <span
+            :class="$style.priceCurrency"
+            itemprop="priceCurrency"
+            content="RUB"
+          >
+            &#8381;
+          </span>
+        </div>
         <span
           v-if="priceObject.isPrice && this.weight"
           class="pl-1"
@@ -38,20 +37,25 @@
           за&nbsp;{{ this.weight }}&nbsp;{{ this.piece ? "шт." : "кг." }}
         </span>
       </div>
-
       <div
         :class="$style.discountPriceProcent"
         v-if="priceObject.isDiscount"
-        class="ml-2"
+        class="ml-1"
       >
         -{{ priceObject.discountPriceProcent }}%
       </div>
     </div>
-    <div :class="$style.priceWrapper" v-if="this.minimumOrder > 1">
-      <span :class="$style.price">
-        {{ Math.round(priceObject.price * this.minimumOrder) }}
-      </span>
-      <span :class="$style.priceCurrency">&#8381;</span>
+    <div
+      :class="[$style.priceWrapper, $style.additionalPrice]"
+      v-if="this.minimumOrder > 1"
+    >
+      <div :class="$style.price">
+        <span :class="$style.price">
+          {{ Math.round(priceObject.price * this.minimumOrder) }}
+        </span>
+        <span :class="$style.priceCurrency">&#8381;</span>
+      </div>
+
       <span :class="$style.weight"
         >&nbsp;за&nbsp;{{ this.minimumOrder }}&nbsp;{{
           this.piece ? "шт." : "кг."
@@ -137,24 +141,29 @@ export default {
     }
     .discount {
       text-decoration: line-through;
-      font-size: var(--font-size);
+      font-size: calc(var(--font-size) - 2px);
       color: rgba($black, 0.6);
       //   padding-bottom: 1px;
     }
-    .priceCurrency {
-      // padding-bottom: 2px;
-      font-size: var(--font-size);
-      font-weight: 500;
-      .priceIcon {
-        color: $black;
-      }
-    }
+    // .priceCurrency {
+    //   // padding-bottom: 2px;
+    //   font-size: var(--font-size);
+    //   font-weight: 500;
+    //   .priceIcon {
+    //     color: $black;
+    //   }
+    // }
     .noPrice {
       font-size: 1.5rem;
     }
     .price {
+      display: inline-flex;
       font-weight: 700;
       font-size: var(--font-size);
+      &.accent {
+        font-weight: bold;
+        color: $accent;
+      }
     }
     .weight {
       font-size: var(--reduced-font-size);
@@ -169,6 +178,9 @@ export default {
       display: inline-flex;
       padding: 0 calc(var(--reduced-font-size) / 2);
       color: $white;
+    }
+    &.additionalPrice {
+      display: var(--additional-price-display);
     }
   }
 }

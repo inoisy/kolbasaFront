@@ -17,8 +17,6 @@
     @click.capture="cardClick"
     class="product-wrapper"
   >
-    <!-- @click.capture="cardClick" -->
-
     <template v-if="isValue">
       <div class="product-card-img-wrap">
         <v-img
@@ -64,7 +62,6 @@
       <div itemprop="name" class="product-name mb-0">
         {{ product.name + (halal ? "&nbsp; халяль" : "") }}
       </div>
-      <!-- <div > -->
       <product-add
         class="product-busket-wrap"
         ref="productCardActions"
@@ -72,15 +69,12 @@
         isCard
         @add="handleAdd"
       />
-      <!-- </div> -->
       <meta
         itemprop="description"
         :content="`${product.name} купить в Альянс Фуд за ${product.priceNum}`"
       />
     </template>
     <product-sceleton v-else :boilerplate="!loading" />
-
-    <!-- <product-sceleton></product-sceleton> -->
   </v-card>
 </template>
 
@@ -106,22 +100,14 @@ export default {
     parent: {
       type: String,
       default: "",
-      // required: true,
     },
     loading: {
       type: Boolean,
       default: false,
     },
-    show: {
-      type: Boolean,
-      default: false,
-    },
-    // grandparent="catalog"
-    //             :parent="category.slug"
   },
   computed: {
     isValue() {
-      // return true;
       return !!this.product;
     },
     isDiscount() {
@@ -137,7 +123,6 @@ export default {
       if (!this.product.img.formats) {
         return this.imageBaseUrl + this.product.img.url;
       }
-
       return this.imageBaseUrl + this.product.img.formats.thumbnail.url;
     },
   },
@@ -154,99 +139,85 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped module>
-</style>
 <style lang="scss" scoped>
 .product-wrapper {
   padding: 10px;
-  min-height: 300px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
   height: 100%;
+  min-height: 290px;
+  @include lg {
+    min-height: 300px;
+  }
   &:before {
     color: white;
   }
-}
-.product-prices-wrapper {
-  --font-size: 16px;
-  --reduced-font-size: 12px;
-
-  justify-content: space-between !important;
-  white-space: nowrap;
-  min-height: 26px;
-  @include lg {
-    --font-size: 18px;
+  .product-prices-wrapper {
+    --font-size: 16px;
+    --reduced-font-size: 12px;
+    --additional-price-display: flex;
+    justify-content: space-between !important;
+    white-space: nowrap;
+    min-height: 26px;
+    @include md {
+      --additional-price-display: none;
+    }
+    @include lg {
+      --font-size: 18px;
+    }
   }
-}
-.product-busket-wrap {
-  --quantity-border-radius: 0px;
-  --quantity-justify: space-evenly;
-  --product-add-background: #f2f2f2;
-  --product-add-box-shadow: none;
-  --product-add-font-size: 12px;
-  margin-top: 10px;
-  height: 40px;
-  background-color: #f2f2f2;
-}
-
-.product-price {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #333;
-}
-
-.product-name {
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 20px;
-  height: 40px;
-  overflow: hidden;
-  color: #333;
-}
-
-.product-card-mini-imgs {
-  position: absolute;
-  bottom: 0px;
-  right: 10px;
-  display: flex;
-
-  img {
-    width: 3rem;
-    height: 3rem;
-    object-fit: contain;
+  .product-busket-wrap {
+    --quantity-border-radius: 0px;
+    --quantity-justify: space-evenly;
+    --product-add-background: #f2f2f2;
+    --product-add-box-shadow: none;
+    --product-add-font-size: 12px;
+    margin-top: 10px;
+    height: 40px;
+    background-color: #f2f2f2;
   }
-}
 
-.product-card-img-wrap {
-  position: relative;
-  margin-bottom: 10px;
-}
+  .product-price {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #333;
+  }
 
-.product-img,
-.product-card-img-wrap {
-  height: 140px;
-  max-height: 140px;
-}
+  .product-name {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 20px;
+    height: 40px;
+    overflow: hidden;
+    color: #333;
+  }
 
-.product-img {
-  object-fit: contain;
-}
-
-@media (min-width: 600px) {
-  .product-img,
   .product-card-img-wrap {
-    height: 140px;
-    max-height: 140px;
-  }
-}
+    position: relative;
+    margin-bottom: 10px;
+    --card-img-heigth: 140px;
+    height: var(--card-img-heigth);
+    @include lg {
+      --card-img-heigth: 150px;
+    }
+    .product-img {
+      height: var(--card-img-heigth);
+    }
 
-@media (min-width: 960px) {
-  .product-img,
-  .product-card-img-wrap {
-    height: 150px;
-    max-height: 150px;
+    .product-card-mini-imgs {
+      position: absolute;
+      bottom: 0px;
+      right: 10px;
+      display: flex;
+
+      img {
+        width: 3rem;
+        height: 3rem;
+        object-fit: contain;
+      }
+    }
   }
 }
 </style>

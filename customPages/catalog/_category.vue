@@ -2,55 +2,33 @@
   <div>
     <NuxtChild @close="handleClose" :breadcrumbs-base="breadcrumbs" />
     <LazyHydrate when-idle>
-      <page-header fluid :load="!isProductRoute">
-        <template #breadcrumbs>
-          <div>
-            <breadcrumbs-sceleton v-if="noLoad" :boilerplate="!isLoading" />
-            <breadcrumbs
-              v-else
-              :items="breadcrumbs"
-              large
-              class="pt-6 py-3 text-center"
-            />
-          </div>
-        </template>
-        <template #header>
-          <v-skeleton-loader
-            v-if="noLoad || isLoading"
-            class="d-flex justify-center ma-auto"
-            dark
-            type="heading"
-            min-height="24px"
-            min-width="300px"
-            width="100%"
-            :boilerplate="!isLoading"
-          />
-          <h1 v-else class="header-text" v-text="metaInfo.name" />
-        </template>
+      <page-header
+        :load="!noLoad"
+        :breadcrumbs="breadcrumbs"
+        :isLoading="isLoading"
+        :title="metaInfo.name"
+      >
         <template #bottom>
-          <div style="max-width: 100%">
-            <lazy-subcategories
-              v-if="!noLoad && !!subcategories.length"
-              :subcategories="subcategories"
-            />
-          </div>
+          <lazy-subcategories
+            class="mt-auto"
+            style="width: 100%"
+            v-if="!noLoad && !!subcategories.length"
+            :subcategories="subcategories"
+          />
+          <!-- </div> -->
         </template>
       </page-header>
     </LazyHydrate>
-    <LazyHydrate never :trigger-hydration="!noLoad">
-      <div
-        :class="$style.categoryWrapper"
-        id="contentWrapper"
-        :style="isMounted && !noLoad && `background-image: url(/bg.jpg)`"
-      >
-        <!-- <div>{{ !noLoad }}</div> -->
-        <!-- <LazyHydrate never :trigger-hydration="isMounted && !noLoad"> -->
-        <!-- <lazy-filters-sceleton v-else :boilerplate="!fetchState" /> -->
-        <!-- </LazyHydrate> -->
-        <!-- </LazyHydrate> -->
-        <!-- <LazyHydrate never :trigger-hydration="!noLoad"> -->
-        <div :class="$style.container">
-          <!-- <LazyHydrate never :trigger-hydration="!noLoad"> -->
+
+    <div
+      :class="$style.categoryWrapper"
+      class="background-repeat background-fixed"
+      id="contentWrapper"
+      :style="isMounted && !noLoad && `background-image: url(/bg.jpg)`"
+    >
+      <!-- {{ subcategories }} -->
+      <div :class="$style.container">
+        <LazyHydrate never :trigger-hydration="!noLoad">
           <div :class="$style.products" ref="products">
             <div
               v-for="(product, index) in products"
@@ -74,45 +52,39 @@
             />
             <!-- </client-only> -->
           </div>
+        </LazyHydrate>
+        <div :class="$style.filters">
+          <div :class="$style.filtersInner">
+            <filtersSort
+              :isData="!noLoad"
+              :boilerplate="!isLoading"
+              @change="(val) => sortChange(val)"
+            />
+            <lazy-filters
+              v-if="productTypes.length > 1"
+              filterSlug="type"
+              filterName="виды"
+              :filterAllDisabled="!!manufacturer || !productType"
+              :items="productTypes"
+              :isData="initialPageData"
+              :boilerplate="!isLoading"
+              @change="(val) => productTypeChange(val)"
+            />
 
-          <!-- </LazyHydrate>
-           -->
-          <div :class="$style.filters">
-            <div :class="$style.filtersInner">
-              <filtersSort
-                :isData="!noLoad"
-                :boilerplate="!isLoading"
-                @change="(val) => sortChange(val)"
-              />
-              <!-- </LazyHydrate>
-            <LazyHydrate never :trigger-hydration="!noLoad"> -->
-              <lazy-filters
-                v-if="productTypes.length > 1"
-                filterSlug="type"
-                filterName="виды"
-                :filterAllDisabled="!!manufacturer || !productType"
-                :items="productTypes"
-                :isData="initialPageData"
-                :boilerplate="!isLoading"
-                @change="(val) => productTypeChange(val)"
-              />
-              <!-- </LazyHydrate>
-            <LazyHydrate never :trigger-hydration="!noLoad"> -->
-              <lazy-filters
-                v-if="!!manufacturers && manufacturers.length > 1"
-                filterSlug="manufacturer"
-                filterName="производители"
-                :filterAllDisabled="!!productType || !manufacturer"
-                :items="manufacturers"
-                :isData="initialPageData"
-                :boilerplate="!isLoading"
-                @change="(val) => manufacturerChange(val)"
-              />
-            </div>
+            <lazy-filters
+              v-if="manufacturers.length > 1"
+              filterSlug="manufacturer"
+              filterName="производители"
+              :filterAllDisabled="!!productType || !manufacturer"
+              :items="manufacturers"
+              :isData="initialPageData"
+              :boilerplate="!isLoading"
+              @change="(val) => manufacturerChange(val)"
+            />
           </div>
         </div>
       </div>
-    </LazyHydrate>
+    </div>
     <LazyHydrate v-if="metaInfo.content" never>
       <section class="grey lighten-3">
         <v-container class="py-16">
@@ -128,14 +100,15 @@
 </template>
 
 <script>
-// import gql from "graphql-tag";
 import LazyHydrate from "vue-lazy-hydration";
 
 export default {
   name: "category-main",
   loading: false,
   head() {
-    if (!this.isProductRoute) {
+    if (!this.isProductRoute && !!this.metaInfo && this.metaInfo.name) {
+      // console.log("this.metaInfo", this.metaInfo);
+      // console.log("from route");
       return {
         title: this.metaInfo.name,
         meta: [
@@ -161,10 +134,6 @@ export default {
 
       isMounted: false,
       isLoading: false,
-
-      manufacturers: [],
-      productTypes: [],
-      // sortItems: [],
     };
   },
   watch: {
@@ -195,31 +164,37 @@ export default {
 
   async fetch() {
     this.isLoading = true;
-    const isCategoryExist = await this.$store.dispatch(
+
+    const categoryId = await this.$store.dispatch(
       "changeCategory",
       this.$route.params.category
     );
-    if (!isCategoryExist) {
+    // console.log(
+    //   "🚀 ~ file: _category.vue ~ line 170 ~ fetch ~ categoryId",
+    //   categoryId
+    // );
+
+    if (!categoryId) {
+      // if (process.server) {
+      //   this.$nuxt.context.res.statusCode = 404;
+      // }
+      // throw new Error("Категория не найдена");
       return this.$nuxt.error({
         statusCode: 404,
         message: "Категория не найдена",
         type: "catalog",
       });
     }
-
+    // console.log("CODE IS WTF", categoryId);
     if (!this.initialPageData && !this.isProductRoute) {
-      // this.category =
-      await this.$store.dispatch("fetchCategory", this.$route.query);
-      this.productTypes = this.$store.state.sessionStorage.categoryPage.category.product_types;
-      this.manufacturers = this.$store.state.sessionStorage.categoryPage.category.manufacturers;
-      // this.sortItems = this.$store.state.localStorage.category.sortItems;
-      // console.log(
-      //   "🚀 ~ file: _category.vue ~ line 208 ~ fetch ~ this.$route.query",
-      //   this.$route.query
-      // );
-      // await this.$store.dispatch("fetchCategoryProducts");this.products =
-      //await this.fetchProducts();
-      this.products = await this.$store.dispatch("fetchCategoryProducts");
+      await this.$store.dispatch("fetchAndSetFilters", this.$route.query);
+      this.products = (
+        await Promise.all([
+          this.$store.dispatch("fetchCategoryProducts"),
+          this.$store.dispatch("fetchCategory", categoryId),
+        ])
+      )[0];
+
       this.initialPageData = true;
     }
     this.isLoading = false;
@@ -229,46 +204,46 @@ export default {
       return !this.initialPageData && this.isProductRoute;
     },
     breadcrumbs() {
+      // if (this.$fetchState.error) {
+      //   return [];
+      // }
+      // console.log("breadcrumbs", this.$fetchState.error);
       return this.$store.getters.categoryBreadcrumbs;
-    },
-    subcategories() {
-      return this.$store.getters.categorySubcategories;
-    },
-
-    // sortItems() {
-    //   return this.$store.state.localStorage.category.sortItems;
-    // },
-    productType() {
-      return this.$store.state.sessionStorage.categoryPage.productTypeSelected;
     },
 
     manufacturer() {
       return this.$store.state.sessionStorage.categoryPage.manufacturerSelected;
     },
+    manufacturers() {
+      if (this.noLoad) {
+        return [];
+      }
+      return this.$store.state.sessionStorage.categoryPage.category
+        .manufacturers;
+    },
+    productType() {
+      return this.$store.state.sessionStorage.categoryPage.productTypeSelected;
+    },
 
-    // productTypes() {
-    //   if (this.noLoad) {
-    //     return [];
-    //   }
-    //   return this.$store.state.sessionStorage.categoryPage.category
-    //     .product_types;
-    // },
+    productTypes() {
+      if (this.noLoad) {
+        return [];
+      }
+      return this.$store.state.sessionStorage.categoryPage.category
+        .product_types;
+    },
 
-    // manufacturers() {
-    //   if (this.noLoad) {
-    //     return [];
-    //   }
-    //   return this.$store.state.sessionStorage.categoryPage.category
-    //     .manufacturers;
-    // },
-
-    // products() {
-    //   return this.$store.state.sessionStorage.categoryPage.products;
-    // },
+    subcategories() {
+      if (this.noLoad) {
+        return [];
+      }
+      return this.$store.getters.categorySubcategories;
+    },
     metaInfo() {
-      if (this.isProductRoute) {
+      if (this.noLoad) {
         return {};
       }
+      // console.log("metaInfo", this.noLoad);
       return this.$store.getters.categoryMeta;
     },
   },
@@ -276,9 +251,7 @@ export default {
     async fetchAndRefillProducts() {
       this.isLoading = true;
       this.products = this.products.map(() => false);
-      this.products = await this.$store.dispatch("fetchCategoryProducts"); //await this.fetchProducts();
-
-      // await this.$store.dispatch("fetchAndRefillProducts");
+      this.products = await this.$store.dispatch("fetchCategoryProducts");
       this.isLoading = false;
     },
 
@@ -294,26 +267,16 @@ export default {
       });
     },
     async sortChange(item) {
-      // if (this.sort.value !== item.value) {
-      // this.sort = item;
       await this.scrollToProducts();
       await this.$store.dispatch("changeSort", item);
-
       await this.fetchAndRefillProducts();
-      // }
     },
     async productTypeChange(item) {
-      // this.manufacturer = null;
       const oldValue = this.productType && this.productType._id;
       const newValue = item && item._id;
       if (oldValue !== newValue) {
         await this.scrollToProducts();
         await this.$store.dispatch("changeProductType", newValue);
-        // console.log(
-        //   "🚀 ~ file: _category.vue ~ line 338 ~ productTypeChange ~ newValue",
-        //   newValue
-        // );
-
         await this.fetchAndRefillProducts();
       }
     },
@@ -354,331 +317,94 @@ export default {
       this.isLoading = false;
     },
   },
-};
-//await this.fetchProducts(this.products.length);
-// findCategory(slug) {
-//   return this.$store.getters.getCategoryBySlug[slug];
+}; // $route(val) {
+//   console.log("🚀 ~ file: _category.vue ~ line 202 ~ val", val);
 // },
-// this.products = this.products.map(() => false);
-// this.products = await this.$store.dispatch("fetchCategoryProducts"); //await this.fetchProducts();
-
-// async fetchProducts(start = 0) {
-//   const variables = {
-//     start: start,
-//     category: this.$store.state.sessionStorage.categoryPage.categoriesIds,
-//     limit: this.limit,
-//     sort: this.sort.value,
-//     ...(!!this.manufacturer && {
-//       manufacturer: this.manufacturer._id,
-//     }),
-//     ...(!!this.productType && {
-//       product_type: this.productType._id,
-//     }),
-//   };
-//   let {
-//     data: { products },
-//   } = await this.$apollo.query({
-//     query: gql`
-//       query productsQuery(
-//         $manufacturer: ID
-//         $category: [ID!]
-//         $product_type: ID
-//         $sort: String
-//         $limit: Int
-//         $start: Int
-//       ) {
-//         products(
-//           limit: $limit
-//           start: $start
-//           sort: $sort
-//           where: {
-//             manufacturer: $manufacturer
-//             category: $category
-//             product_type: $product_type
-//           }
-//         ) {
-//           id
-//           name
-//           slug
-//           weight
-//           isDiscount
-//           isHalal
-//           priceNum
-//           discountPrice
-//           rating
-//           minimumOrder
-//           piece
-//           manufacturer {
-//             name
-//             slug
-//           }
-//           category {
-//             name
-//             slug
-//           }
-//           img {
-//             url
-//             name
-//             formats
-//           }
-//         }
-//       }
-//     `,
-//     variables: variables,
-//   });
-
-//   return products.map((item) => {
-//     return Object.freeze(item);
-//   });
-// },
-// categoriesIds: [],
-// const sortItems = [
-//   { title: "По алфавиту", value: "name:asc", slug: "name" },
-//   { title: "По популярности", value: "rating:desc", slug: "rating" },
-//   { title: "Cначала дорогие", value: "priceNum:desc", slug: "pricedesc" },
-//   { title: "Cначала дешевые", value: "priceNum:asc", slug: "priceasc" },
-// ];
-// cons
-// sortItems: sortItems,
-// sort: sortItems[0],
-// link: [
-//   {
-//     rel: "canonical",
-//     href: this.metaInfo.canonical,
-//   },
-// ],
-// fetchState() {
-//   return this.$fetchState.pending;
-// },
-// else {
-//   this.category = categoryFind;
-// }
-// this.calculateBreadcrumbs();
-// imageBaseUrl: this.$config.imageBaseUrl,
-// productType: false,
-// manufacturer: false,
-// pageData: false,
-// metaInfo: {},
-// bgLoaded: false,
-// breadcrumbs: [],
-// async validate({ params, store }) {
-//   console.log("VALUDATE CALLED"); //query
-//   try {
-//     await store.dispatch("rootCategory", params.category);
-//     return true;
-//   } catch (error) {
-//     return false;
+// async "$route.query"({ type, manufacturer }) {
+//   if (this.isProductRoute) {
+//     return;
 //   }
-//   // console.log(
-//   //   "🚀 ~ file: _category.vue ~ line 234 ~ validate ~ params",
-//   //   params
-//   // );
-//   // return true;
-//   // return true // if the params are valid
-//   // return false // will stop Nuxt.js to render the route and display the error page
-// },
-// await this.calculateMeta();
-// console.log(
-//   "🚀 ~ file: _category.vue ~ line 444 ~ productTypeChange ~ newValue",
-//   newValue
-// );this.productType =
-// item;
-// console.log(
-//   "🚀 ~ file: _category.vue ~ line 538 ~ productTypeChange ~ this.productType",
-//   this.productType
-// );
-// this.productType = null;
-// await this.$store.dispatch("fetchProductType", newValue);
 
-// this.manufacturer = item;
-// console.log(
-//   "🚀 ~ file: _category.vue ~ line 421 ~ manufacturerChange ~ item",
-//   item
-// );
-// console.log(
-//   "🚀 ~ file: _category.vue ~ line 611 ~ handleClose ~ this.$router",
-//   this.$store.state.route.from.name
-// );
-//  this.$route.path
-//   .replace(/\/$/, "")
-//   .split("/")
-//   .slice(0, -1)
-//   .join("/"),
-// params: (({ slug, ...params }) => params)(this.$route.params),
-// console.log(
-//   "🚀 ~ file: _category.vue ~ line 230 ~ fetch ~ rootCategory",
-//   rootCategory
-// );
-
-// console.log("fetch initiated");
-
-// const categoryFind = this.findCategory(this.$route.params.category);
-// console.log(
-//   "🚀 ~ file: _category.vue ~ line 231 ~ fetch ~ this.$route.params",
-//   this.$route
-// );
-// if (!!categoryFind.parent.length) {
-//   this.$store.dispatch(
-//     "setRootCategory",
-//     this.findCategory(categoryFind.parent[0].slug)
-//   );
-//   this.categoriesIds = [categoryFind.id];
-// } else {
-//   const { id, children, name, slug } = categoryFind;
-//   this.$store.dispatch("setRootCategory", { id, children, name, slug });
-//   this.categoriesIds = this.$store.getters.categorySubcategoriesIDs;
-// }
-// async calculateMeta() {
-//   console.log(
-//     "🚀 ~ file: _category.vue ~ line 317 ~ calculateMeta ~ calculateMeta"
-//   );
-//   let name = `${this.category.name} оптом`;
-//   let description = this.category.metaDescription
-//     ? this.category.metaDescription
-//     : `${name} от компании Альянс Фуд с доставкой по всей РФ и СНГ по самым выгодным оптовым ценам от производителя.`;
-//   let content = this.category.content;
-
-//   if (this.manufacturer) {
-//     name = `${this.category.name} ${this.manufacturer.name} оптом`;
-//     description = `${name}. ${description}`;
-//   } else if (this.productType) {
-//     const productType = this.productType; //await this.fetchProductType(this.productType._id);
-
-//     name = `${productType.name} оптом`;
-//     description = `${name}. ${description}`;
-//     if (productType.content) {
-//       content = productType.content.concat(content);
+//   if (type) {
+//     if (this.productType && this.productType.slug === type) {
+//       return;
 //     }
+//     // if(type ===this.$ststate.sessionStorage.categoryPage.manufacturerSelected)
+//     await this.scrollToProducts();
+//     await this.$store.dispatch("changeProductTypeBySlug", type);
+//     await this.fetchAndRefillProducts();
+//   } else if (manufacturer) {
+//     if (this.manufacturer && this.manufacturer.slug === manufacturer) {
+//       return;
+//     }
+//     await this.scrollToProducts();
+//     await this.$store.dispatch("changeManufacturerBySlug", manufacturer);
+//     await this.fetchAndRefillProducts();
+//   } else if (!!this.manufacturer || this.productType) {
+//     await this.scrollToProducts();
+//     await this.$store.dispatch("cleanFilters");
+//     await this.fetchAndRefillProducts();
 //   }
-
-//   // this.metaInfo = {
-//   //   name,
-//   //   description,
-//   //   content,
-//   // };
+//   // await this.fetchAndRefillProducts();
 // },
-// console.log(
-//   "🚀 ~ file: _category.vue ~ line 263 ~ fetch ~ this.category",
-//   this.category
-// );
-// this.category); // await this.fetchCategory(categoryFind.id);
-
-// const { manufacturer, type } = this.$route.query;
-// if (manufacturer) {
-//   this.manufacturer = this.$store.getters.getManufacturerBySlug[
-//     manufacturer
-//   ];
-// }
-// if (type) {
-//   this.productType = this.category.product_types.find(
-//     (item) => item.slug === type
-//   );
-// }
-
-// await this.calculateMeta();
-// async calculateBreadcrumbs() {
-//   const rootCategory = this.$store.state.sessionStorage.rootCategory;
-//   let items = [
-//     {
-//       to: "/",
-//       text: "Главная",
-//     },
-//     {
-//       to: "/catalog",
-//       text: "Каталог",
-//     },
-//   ];
-//   items.push({
-//     to: `/catalog/${rootCategory.slug}`,
-//     text: rootCategory.name,
-//   });
-
-//   if (this.category.slug !== rootCategory.slug) {
-//     items.push({
-//       to: `/catalog/${this.category.slug}`,
-//       text: this.category.name,
-//       // disable: false,
-//     });
-//   }
-//   this.breadcrumbs = items;
+// async "$route.query.type"(slug) {
+//    await this.scrollToProducts();
+//     await this.$store.dispatch("changeProductTypeBySlug", slug);
+//     await this.fetchAndRefillProducts();
 // },
-// async fetchProductType(id) {
-//   const {
-//     data: { productType },
-//   } = await this.$apollo.query({
-//     variables: {
-//       id,
-//     },
-//     query: gql`
-//       query ProductTypeQuery($id: ID!) {
-//         productType(id: $id) {
-//           _id
-//           id
-//           name
-//           slug
-//           content
-//         }
-//       }
-//     `,
-//   });
-//   return productType;
-// },
-
-// async fetchCategory(id) {
-//   const {
-//     data: { category },
-//   } = await this.$apollo.query({
-//     query: gql`
-//       query CategoryQuery($id: ID!) {
-//         category(id: $id) {
-//           id
-//           description
-//           metaDescription
-//           name
-//           slug
-//           content
-//           manufacturers(sort: "name:asc") {
-//             _id
-//             name
-//             slug
-//           }
-//           parent {
-//             slug
-//             name
-//             children {
-//               id
-//               name
-//               slug
-//             }
-//           }
-//           children {
-//             id
-//             name
-//             slug
-//           }
-//           product_types(sort: "name:asc") {
-//             _id
-//             name
-//             slug
-//           }
-//         }
-//       }
-//     `,
-//     variables: {
-//       id,
-//     },
-//   });
-//   return category;
+// async "$route.query.manufacturer"(slug) {
+//   await this.scrollToProducts();
+//   await this.$store.dispatch("changeManufacturerBySlug", slug);
+//   await this.fetchAndRefillProducts();
 // },
 </script>
+<style lang="scss" scoped>
+.header-sceleton {
+  ::v-deep .v-skeleton-loader__text {
+    margin-bottom: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+  }
+}
+</style>
 <style lang="scss" scoped module>
+.headerSceleton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.chipsWrapper {
+  //   white-space: normal;
+  flex-wrap: wrap;
+  max-width: 100%;
+  padding: 8px 0;
+  display: flex;
+  flex: 1 0 auto;
+  position: relative;
+  transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+  .chipHeader {
+    width: 100%;
+    text-transform: uppercase;
+    font-family: $heading-font-family;
+    font-weight: bold;
+    font-size: 16px;
+    color: $black;
+    align-items: center;
+    display: flex;
+    height: 48px;
+    // padding: 0 16px 0 16px;
+  }
+}
 .categoryWrapper {
   --indent: calc(var(--toolbar-height) + 20px);
   --height: calc(100vh - var(--indent) - 20px);
   min-height: var(--height);
-  background-color: #f0f0f0;
-  background-repeat: repeat;
-  background-size: 100% auto;
+  // background-color: #f0f0f0;
+  // background-repeat: repeat;
+  // background-size: 100% auto;
 
   max-width: 100%;
   $filtersWidthMd: 270px;

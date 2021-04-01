@@ -76,46 +76,47 @@ export default {
 
 <style style lang="scss" scoped module>
 .breadcrumbs {
-  font-size: 12px;
+  --delimiter-padding: 2px;
+  --font-size: 12px;
+
   @include md {
-    font-size: 14px;
+    font-size: var(--font-size);
+    --delimiter-padding: 5px;
   }
+  font-size: var(--font-size);
 
   &.large {
-    font-size: 14px !important;
+    --font-size: 14px;
+    --delimiter-padding: 3px;
+    // font-size: 14px !important;
     @include md {
-      font-size: 16px !important;
+      --font-size: 16px;
+      --delimiter-padding: 8px;
+      // font-size: 16px !important;
     }
+    //     &:not(:last-child) {
+    //       &:after {
+    // padding: 0 6px;
+    //         @include md {
+    //           padding: 0 12px;
+    //         }
+    //       }
+    //     }
   }
-
-  // align-content: center;
-  // display: flex;
-  // flex-wrap: wrap;
-  // flex: 0 1 auto;
   list-style-type: none;
-  // margin: 0;
   padding-left: 0;
-  // padding: 18px 12px;
-  // font-size: 16px;
-  // &:last-child.dark {
-  //   .breadcrumbsItemLink {
-  //     color: rgba($darkLink, 0.5);
-  //   }
-  // }
-
   .breadcrumbsItem {
-    // align-items: center;
     display: inline;
-    // font-size: 14px;
     &:not(:last-child) {
       &:after {
         content: "/";
+        font-size: var(--font-size);
         display: inline;
-        padding: 0 6px;
         color: rgba($white, 0.5);
-        @include md {
-          padding: 0 12px;
-        }
+        padding: 0 var(--delimiter-padding);
+        // @include md {
+        //   padding: 0 8px;
+        // }
       }
     }
 
@@ -144,9 +145,6 @@ export default {
     &:after {
       color: rgba($darkLink, 0.45);
     }
-    // &:last-child {
-
-    // }
     .breadcrumbsItemLink {
       color: $darkLink;
       &:hover {

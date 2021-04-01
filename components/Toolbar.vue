@@ -47,20 +47,6 @@
             $dropdown
           </v-icon>
         </v-btn>
-        <!-- v-if="!item.disable" :to="item.to" <v-btn
-          v-else
-          :key="item.slug + index"
-          :id="item.slug"
-          class="fill-height ma-0 header-link hidden-sm-and-down"
-          style="height: 100%"
-          text
-          tile
-          color="#95282a"
-          :title="item.name"
-        >
-          {{ item.name }}
-          <v-icon v-if="item.isChild">$dropdown</v-icon>
-        </v-btn> -->
       </template>
 
       <v-btn
@@ -146,54 +132,19 @@
     display: flex;
     align-items: center;
     height: 100%;
-    // @media (min-width: 1264px) {
-    //   max-width: 1185px;
-    //   margin-left: auto;
-    //   margin-right: auto;
-    // }
-    // .container {
-
-    // }
   }
 }
 </style>
 
 <style lang="scss" scoped>
-// $toolbar-mobile-height: 64px;
-// $toolbar-desktop-height: 80px;
-
-// .catalog-second-level-menu-inner {
-//   min-width: 210px !important;
-//   max-width: 280px;
-// }
-
-// .catalog-menu-inner {
-//   min-width: 180px;
-//   max-width: 280px;
-// }
-
-// .manufacturer-menu-inner {
-//   top: $toolbar-mobile-height !important;
-//   @include md {
-//     top: $toolbar-desktop-height !important;
-//   }
-// }
-
-// .extra-text {
-//   height: 42px !important;
-//   font-size: 0.8rem !important;
-//   line-height: 1.1 !important;
-// }
-
-// #header-top {
-//   background-color: #282828;
-//   height: 42px;
-//   justify-content: space-around;
-// }
-
 .cart-wrap {
   height: 100% !important;
   border-radius: 0;
+  &[disabled="disabled"] {
+    padding: 0;
+    min-width: 44px;
+    margin-left: 4px;
+  }
   .cart-badge {
     width: 40px;
     height: 40px;
@@ -201,7 +152,7 @@
     display: flex;
     justify-content: center;
     border-radius: 50%;
-    background-color: #eeeeee;
+    // background-color: #eeeeee;
     transition-duration: 0.28s;
   }
 
@@ -312,23 +263,8 @@
 
 <script>
 import { mdiAccount, mdiBasket } from "@mdi/js";
-// import LazyHydrate from "vue-lazy-hydration";
 
-// export default {
-//   components: {
-//     LazyHydrate,
-//   },
-// icons: {
-//   mdiAccount,
-//   mdiPencil,
-//   mdiShareVariant,
-//   mdiDelete,
-// },
 export default {
-  // components: {
-  //   LazyHydrate,
-  // },
-  // props: ["menuItems"],
   data() {
     return {
       icons: { mdiAccount, mdiBasket },
@@ -350,7 +286,6 @@ export default {
     },
     summa() {
       if (!this.isMounted || !this.isCart) {
-        // console.log("noSumm");
         return 0;
       } else {
         return this.$store.getters.cartSumm;
@@ -358,61 +293,12 @@ export default {
     },
     cartLength() {
       if (!this.isMounted || !this.isCart) {
-        // console.log("nolength");
         return 0;
       } else {
         const length = this.$store.getters.cartLength;
-        // console.log(
-        //   "🚀 ~ file: Toolbar.vue ~ line 371 ~ cartLength ~ length",
-        //   length
-        // );
         return length;
       }
     },
-    // basketLength() {
-    //   let length;
-    //   if (this.$store.state.localStorage.basket) {
-    //     length = Object.keys(this.$store.state.localStorage.basket).length;
-    //     if (length < 1) {
-    //       this.basketDrawer = false;
-    //     }
-    //   }
-    //   return length;
-    // },
-    // isBasket() {
-    //   return this.basketLength && this.basketLength > 0;
-    // },
-    // phone() {
-    //   return this.$store.state.sessionStorage.generalInfo.contacts.phone;
-    // },
   },
-  // methods: {
-  //   onScroll() {
-  //     if (window.scrollY > 150) {
-  //       this.hideExtra = true;
-  //     } else {
-  //       this.hideExtra = false;
-  //     }
-  //   },
-  // },
-  // hideExtra: false,
-  // extraInfo: [
-  //   {
-  //     text: "РАБОТАЕМ ДЛЯ ВАС",
-  //     img: require("~/assets/icons/interface.svg"),
-  //   },
-  //   {
-  //     text: "ДОСТАВИМ БЕСПЛАТНО",
-  //     img: require("~/assets/icons/commerce-and-shopping.svg"),
-  //   },
-  //   {
-  //     text: "ЗА ОДИН ДЕНЬ",
-  //     img: require("~/assets/icons/fast-delivery.svg"),
-  //   },
-  //   {
-  //     text: "С СОБЛЮДЕНИЕМ ВСЕХ САНИТАРНЫХ НОРМ",
-  //     img: require("~/assets/icons/guard.svg"),
-  //   },
-  // ],
 };
 </script>

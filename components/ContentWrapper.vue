@@ -67,6 +67,7 @@
   ::v-deep ul {
     list-style: square inside url("/bullet_min.svg");
     padding-left: 5px !important;
+    margin-bottom: 1.5rem;
   }
 
   ::v-deep h2:not(:first-child) {

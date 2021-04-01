@@ -1,26 +1,31 @@
 <template>
   <div
     class="header-wrapper d-flex"
-    :style="load && `background-image: url(/promo_crop.jpg)`"
+    :style="`background-image: url(/promo_crop.jpg)`"
   >
-    <v-container class="header-inner" style="padding: 0 24px" fill-height fluid>
-      <div class="top-slot-wrapper">
-        <breadcrumbs-sceleton v-if="!load" :boilerplate="!isLoading" />
+    <v-container class="header-inner fluid" fill-height fluid>
+      <!-- :class="fluid ? 'fluid' : 'nofluid'" -->
+
+      <!--:="fluid" {{ bgLoaded }} -->
+      <slot name="breadcrumbs">
         <breadcrumbs
-          v-else
-          :items="breadcrumbs"
+          v-if="breadrumbs.length"
+          :items="breadrumbs"
           large
-          class="breadcrumbs-wrap"
+          class="breadcrumbs-wrap pt-6 py-3"
         />
-      </div>
+      </slot>
       <slot name="header">
+        <!-- {{ title }} -->
         <div class="header-text-wrapper">
-          <h1 class="header-text">
-            <span
+          <h1 v-text="title" class="header-text">
+            <!--    v-if="load"-->
+            <!-- <span
               v-if="title"
               v-text="title"
               :style="isLoading && 'visibility: hidden'"
             />
+            
             <v-skeleton-loader
               v-if="isLoading"
               :class="
@@ -31,14 +36,19 @@
               dark
               type="heading"
               :boilerplate="false"
-            />
+            /> -->
           </h1>
         </div>
       </slot>
-
-      <div class="bottom-slot-wrapper" style="width: 100%; min-width: 100%">
-        <slot name="bottom" />
-      </div>
+      <!-- d-flex justify-center ma-auto min-height="24px"
+            min-width="300px"
+            width="100%" -->
+      <!-- v-if="title" -->
+      <!-- <div class="slot-wrapper d-flex"> -->
+      <!-- <div> -->
+      <slot name="bottom" />
+      <!-- </div> -->
+      <!-- </div> -->
     </v-container>
   </div>
 </template>
@@ -50,46 +60,31 @@ export default {
       type: String,
       default: "",
     },
-    breadcrumbs: {
+    breadrumbs: {
       type: Array,
       default: () => [],
     },
-    fluid: {
-      type: Boolean,
-      default: false,
-    },
-    load: {
-      type: Boolean,
-      default: true,
-    },
-    isLoading: {
-      type: Boolean,
-      default: false,
-    },
+    // fluid: {
+    //   type: Boolean,
+    //   default: false,
+    // },
+    // load: {
+    //   type: Boolean,
+    //   default: true,
+    // },
+    // isLoading: {
+    //   type: Boolean,
+    //   default: false,
+    // },
   },
-  // data() {
-  //   return {
-  //     isLoading: true,
-  //     load: false,
-  //   };
-  // },
+  data() {
+    return {
+      isLoading: true,
+    };
+  },
 };
 </script>
 <style lang="scss" scoped>
-.top-slot-wrapper {
-  padding-top: 24px;
-  padding-bottom: 70px;
-  min-height: 100px;
-  display: flex;
-  align-items: center;
-}
-.bottom-slot-wrapper {
-  min-height: 100px;
-  // max-width: 100%;
-  // width: 100%;
-  display: flex;
-  padding-top: 30px;
-}
 .absolute-header-sceleton {
   position: absolute;
   top: 0;
@@ -112,7 +107,14 @@ export default {
   display: inline-flex !important;
 }
 .breadcrumbs-wrap {
+  // justify-content: center;
+  padding-top: 24px;
+  padding-bottom: 12px;
   text-align: center;
+  // position: absolute;
+  // top: 0;
+  // left: 0;
+  // right: 0;
 }
 
 .header-wrapper {
@@ -130,20 +132,48 @@ export default {
     align-items: center;
     flex-direction: column;
     flex-wrap: nowrap;
-    position: relative;
-    padding: 0 24px 0 24px;
-    justify-content: space-between;
-    height: 100%;
-    max-width: 100%;
-    width: 100%;
     min-height: 400px;
-    // @include md {
-    //   min-height: 450px;
+    position: relative;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+    // &.nofluid {
+    height: 400px;
+    justify-content: space-between;
+    .header-text-wrapper {
+      @include center;
+    }
+    .header-text {
+      margin-bottom: 0 !important;
+      margin-top: 0 !important;
+      padding-left: 12px;
+      padding-right: 12px;
+      width: 100%;
+    }
+    // }
+    // &.fluid {
+    //   padding: 12px 12px 0 12px;
+
+    //   // min-height: 400px;
+    //   justify-content: space-between;
+    //   height: 100%;
+    //   max-width: 100%;
+    //   width: 100%;
+    //   .header-text {
+    //     margin-bottom: 75px;
+    //     margin-top: 75px;
+    //     // @include sm {
+    //     //   margin-bottom: 75px;
+    //     //   // padding-top: 50px;
+    //     // }
+    //     // @include md {
+    //     //   margin-left: 10% !important;
+    //     //   margin-right: 10% !important;
+    //     // }
+    //   }
     // }
     .header-text-wrapper {
       // @include center;
       // min-width: 73%;
-      min-height: 180px;
       width: 100%;
       text-align: center;
       display: flex;
@@ -173,32 +203,4 @@ export default {
     }
   }
 }
-// &.nofluid {
-//   height: 400px;
-//   justify-content: space-between;
-//   .header-text-wrapper {
-//     @include center;
-//   }
-//   .header-text {
-//     margin-bottom: 0 !important;
-//     margin-top: 0 !important;
-//     padding-left: 12px;
-//     padding-right: 12px;
-//     width: 100%;
-//   }
-// }
-// &.fluid {
-// .header-text {
-// margin-bottom: 75px;
-// margin-top: 75px;
-// @include sm {
-//   margin-bottom: 75px;
-//   // padding-top: 50px;
-// }
-// @include md {
-//   margin-left: 10% !important;
-//   margin-right: 10% !important;
-// }
-// }
-// }
 </style>

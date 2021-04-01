@@ -1,7 +1,7 @@
 <template>
   <div>
     <LazyHydrate when-idle>
-      <page-header title="Каталог" :breadrumbs="breadrumbs" />
+      <page-header-simple title="Каталог" :breadrumbs="breadrumbs" />
     </LazyHydrate>
     <div class="background-with-transparent">
       <v-container grid-list-lg class="py-12">

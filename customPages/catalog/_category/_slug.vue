@@ -7,11 +7,11 @@
     @keydown.esc="handleClose"
   >
     <div class="modal-mask" @click="handleClose" />
-    <div class="modal-inner">
+    <div class="modal-inner" :class="!showProductCard && 'formShowed'">
       <LazyHydrate when-idle>
         <div class="toolbar">
           <v-btn
-            class="fabButton mr-3 my-auto"
+            class="fabButton backButton my-auto"
             v-if="!showProductCard"
             color="gray"
             fab
@@ -21,7 +21,6 @@
             <v-icon>$arrowLeft</v-icon>
           </v-btn>
           <breadcrumbs class="pr-3 my-auto" :items="breadcrumbs" dark />
-          <!-- :class="$style.fabButton" -->
           <v-btn class="fabButton ml-auto my-auto" fab @click="handleClose">
             <v-icon>$close</v-icon>
           </v-btn>
@@ -47,73 +46,87 @@
             >
               <h1 itemprop="name" class="productTitle" v-text="product.name" />
               <div class="content-right">
-                <!-- {{ imgThumbnail }}
-                {{ imgThumbnail.height > 300 }} -->
                 <v-card
-                  class="mb-3 image-wrapper"
-                  :ripple="showImageDialog"
+                  id="imgWrapper"
+                  class="image-wrapper"
                   :outlined="!showImageDialog"
-                  :hover="showImageDialog"
-                  v-on="
-                    showImageDialog ? { click: () => handleImageDialog() } : {}
-                  "
+                  :disabled="!showImageDialog"
+                  @click="handleImageDialog"
                 >
                   <div class="mini-imgs-wrapper pr-3 pt-3">
-                    <v-tooltip
-                      v-if="product.manufacturer.description"
-                      activator="#manufacturer-img"
-                      left
-                      max-width="400px"
-                      style="display: block"
-                      z-index="205"
-                      nudge-left
-                    >
-                      <span>{{ product.manufacturer.description }}</span>
-                    </v-tooltip>
-                    <v-img
-                      class="manufacturer-img"
-                      id="manufacturer-img"
-                      contain
-                      height="3rem"
-                      width="3rem"
-                      :src="
-                        require(`~/assets/images/manufacturers/${product.manufacturer.slug}.png?resize&size=50`)
-                      "
-                      :alt="product.manufacturer.name"
-                      :title="product.manufacturer.name"
-                    />
-                    <v-img
-                      class="halal-img mt-1"
+                    <div ref="manufImage">
+                      <v-btn
+                        id="manufacturer-img"
+                        :outlined="isManufacturerDesctiption"
+                        width="55px"
+                        height="55px"
+                        class="pa-0"
+                        color="rgba(0,0,0,0.4)"
+                        :text="!isManufacturerDesctiption"
+                        :disabled="!isManufacturerDesctiption"
+                      >
+                        <!-- <v-img
+                          
+                          contain
+                          
+                          :src="manufacturerImgMin"
+                          
+                        /> -->
+                        <img
+                          class="manufacturer-img"
+                          :src="manufacturerImgMin"
+                          :alt="product.manufacturer.name"
+                          height="50px"
+                          width="50px"
+                        />
+                      </v-btn>
+
+                      <v-menu
+                        v-if="isManufacturerDesctiption"
+                        activator="#manufacturer-img"
+                        attach="#imgWrapper"
+                        z-index="205"
+                        absolute
+                        eager
+                        max-width="100%"
+                      >
+                        <v-sheet class="tooltip-inner">
+                          {{ product.manufacturer.description }}
+                        </v-sheet>
+                      </v-menu>
+                    </div>
+                    <img
+                      class="halal-img mt-2 mx-auto"
                       v-if="product.isHalal"
-                      contain
                       :src="require('~/assets/images/halal-min.png')"
                       alt="Халяльная продукция"
                       title="Халяльная продукция"
-                      height="3rem"
-                      width="3rem"
+                      height="50px"
+                      width="50px"
                     />
+                    <!-- <v-img
+                     contain
+                      
+                    /> -->
                   </div>
-                  <v-responsive
-                    :aspect-ratio="16 / 9"
-                    :max-height="
-                      +imgThumbnail.height < 300
-                        ? imgThumbnail.height + 10
-                        : 300
-                    "
-                  >
+                  <div class="image-inner">
+                    <div
+                      :style="`padding-top: ${
+                        (imgThumbnail.height / imgThumbnail.width) * 100
+                      }%`"
+                    />
                     <img
                       itemscope="itemscope"
                       itemprop="image"
                       class="item-img"
-                      :src="imgThumbnail.url"
+                      :src="$config.imageBaseUrl + imgThumbnail.url"
                       :alt="product.name"
                       contain
                     />
-                  </v-responsive>
+                  </div>
                 </v-card>
-                <!-- :class="$style.pricesWrapper" -->
                 <price
-                  class="productPricesWrapper pt-3 pb-1"
+                  class="productPricesWrapper"
                   :priceNum="product.priceNum"
                   :isDiscount="product.isDiscount"
                   :discountPrice="product.discountPrice"
@@ -122,7 +135,7 @@
                   :minimumOrder="product.minimumOrder"
                 />
                 <product-add
-                  class="productAdd mt-3"
+                  class="productAdd"
                   style="height: 48px"
                   v-if="product.priceNum"
                   :id="product._id"
@@ -151,9 +164,7 @@
                   :title="product.manufacturer.name"
                 />
               </div>
-              <!-- <LazyHydrate never> -->
               <content-wrapper :content="contentFull" />
-              <!-- </LazyHydrate> -->
               <meta
                 itemprop="description"
                 :content="`${product.name} купить в Альянс Фуд за ${product.priceNum}`"
@@ -186,7 +197,6 @@
           </LazyHydrate>
         </template>
         <div v-else class="dialog-form-wrapper">
-          <!-- v-show="!showProductCard" class="fs-1-5 mb-5 font-weight-bold mb-3" -->
           <LazyHydrate on-interaction>
             <lazy-contact-form
               v-if="!showProductCard"
@@ -209,6 +219,7 @@
       :value="dialogImg"
       :alt="product.name"
       @close="dialogImg = false"
+      @loaded="loadingEnd"
     />
   </div>
 </template>
@@ -225,13 +236,10 @@ export default {
       type: Array,
       default: () => [],
     },
-    // isProductRoute: {
-    //   type: Boolean,
-    //   default: false,
-    // },
   },
   head() {
     if (this.isProduct && this.product.name && this.product.slug) {
+      // console.log("from subroute");
       return {
         // bodyAttrs: {
         //   class: this.isProduct && "m-open",
@@ -265,38 +273,29 @@ export default {
     return {
       showProductCard: true,
       dialogImg: false,
-      product: {},
+      product: {
+        manufacturer: {},
+      },
       contentFull: "",
       breadcrumbs: this.breadcrumbsBase,
       showImageDialog: false,
-      // imgUrl: "",
       imgThumbnail: {},
       imgDialog: null,
       related: [],
-      isLoading: false,
-      // pageData: false,
+      isShowManufacturerInfo: false,
+      manufacturerImgMin: null,
     };
   },
   loading: false,
   watch: {
     "$route.params.slug": "$fetch",
-    isLoading(val) {
-      if (!process.client) {
-        return;
-      }
-      if (val) {
-        this.$nuxt.$loading.start();
-      } else {
-        this.$nuxt.$loading.finish();
-      }
-    },
   },
   fetchDelay: 0,
   async fetch() {
     if (!this.isProduct) {
       return;
     }
-    this.isLoading = true;
+    this.loadingStart();
     const {
       data: {
         products: [product],
@@ -394,9 +393,9 @@ export default {
     const relatedProducts = product.relatedProducts || [];
     const productsRelated = product.productsRelated || [];
     this.related = [...relatedProducts, ...productsRelated];
-    // console.log("🚀 ~ file: _slug.vue ", img);
+    this.manufacturerImgMin = require(`~/assets/images/manufacturers/${product.manufacturer.slug}.png?resize&size=50`);
     await this.caclulateImage(product.img);
-    this.isLoading = false;
+    this.loadingEnd();
   },
   methods: {
     caclulateImage(imageObject) {
@@ -404,24 +403,17 @@ export default {
         this.imgUrl = "/no-image.png";
         return;
       }
-      const imageBaseUrl = this.$config.imageBaseUrl;
-
-      if (!imageObject.formats) {
-        this.imgThumbnail = {
-          height: imageObject.height,
-          url: imageBaseUrl + imageObject.url,
-        };
-      } else if (imageObject.formats.small) {
-        this.imgThumbnail = {
-          height: imageObject.formats.small.height,
-          url: imageBaseUrl + imageObject.formats.small.url,
-        };
+      let thumbnailImageObject = imageObject;
+      if (imageObject.formats.small) {
+        thumbnailImageObject = imageObject.formats.small;
       } else {
-        this.imgThumbnail = {
-          height: imageObject.formats.thumbnail.height,
-          url: imageBaseUrl + imageObject.formats.thumbnail.url,
-        };
+        thumbnailImageObject = imageObject.formats.thumbnail;
       }
+      this.imgThumbnail = {
+        width: thumbnailImageObject.width,
+        height: thumbnailImageObject.height,
+        url: thumbnailImageObject.url,
+      };
       if (imageObject.width > 500) {
         this.showImageDialog = true;
         this.imgDialog = {
@@ -431,29 +423,49 @@ export default {
         };
       }
     },
+    loadingStart() {
+      if (!process.client) {
+        return;
+      }
+      this.$nuxt.$loading.start();
+    },
+    loadingEnd() {
+      if (!process.client) {
+        return;
+      }
+      this.$nuxt.$loading.finish();
+    },
     async handleClose() {
       this.$refs.modal.classList.add("dialog-leave-to");
       setTimeout(async () => {
         this.$refs.modal.classList.remove("dialog-leave-to");
         this.showProductCard = true;
-        // if (!this.dialogImg) {
         await this.$emit("close");
       }, 200);
-
-      // }
     },
     async handleAdd() {
       this.$store.dispatch("addToCart", this.product);
     },
-    handleImageDialog() {
+    handleImageDialog(event) {
+      if (
+        !this.showImageDialog ||
+        (this.isManufacturerDesctiption &&
+          this.$refs.manufImage.contains(event.target))
+      ) {
+        // event.preventDefault();
+        return;
+      }
+      this.loadingStart();
       this.dialogImg = true;
     },
-
     handleOneClickBuy() {
       this.showProductCard = false;
     },
   },
   computed: {
+    isManufacturerDesctiption() {
+      return !!this.product.manufacturer.description;
+    },
     isProduct: {
       get() {
         return !!this.$route.params.slug;
@@ -468,9 +480,6 @@ export default {
 };
 </script>
 <style lang="scss">
-// .dialog-content-wrapper {
-//   max-width: var(--dialog-width) !important;
-// }
 .dialog-enter,
 .dialog-leave-to {
   .modal-mask {
@@ -546,15 +555,19 @@ export default {
     border-color: #ffffff;
     color: rgba(0, 0, 0, 0.87);
     outline: none;
-
+    &.formShowed {
+      max-width: 600px;
+    }
     .toolbar {
       background-color: #e0e0e0;
       border-color: #e0e0e0;
       display: flex;
       align-content: center;
-      padding: 10px;
+      padding-top: 10px;
+      padding-bottom: 10px;
       // padding-left: 20px;
       padding-left: var(--card-padding);
+      padding-right: var(--card-padding);
       z-index: 4;
 
       @supports ((position: -webkit-sticky) or (position: sticky)) {
@@ -567,12 +580,20 @@ export default {
         contain: layout;
       }
 
-      @include md {
-        padding: 20px;
-      }
+      // @include md {
+      //   // padding: 20px;
+      // }
       .fabButton {
         width: var(--fab-button-size) !important;
         height: var(--fab-button-size) !important;
+      }
+      .backButton {
+        margin-right: 10px;
+        margin-left: -5px;
+        @include sm {
+          margin-left: 0;
+          margin-right: var(--card-padding);
+        }
       }
     }
 
@@ -583,52 +604,76 @@ export default {
       .productPricesWrapper {
         --font-size: 26px;
         --reduced-font-size: 1rem;
+        margin-bottom: calc(var(--card-padding) - 10px);
       }
       .productTitle {
-        margin-bottom: 24px;
+        margin-bottom: var(--card-padding);
         font-weight: bold;
         line-height: normal;
         font-size: 1.5rem;
-        @include md {
-          margin-bottom: 12px;
-        }
+        // @include md {
+        //   margin-bottom: 12px;
+        // }
       }
       .image-wrapper {
         position: relative;
-        padding: var(--card-padding);
-        // min-height: 165px;
-        // max-height: 350px;
-        // &:after {
-        //   content: "";
-        //   display: block;
-        //   padding-bottom: 66.66666667%;
-        // }
-        .item-img {
-          // max-height: 165px;
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-          display: block;
-          max-height: 100%;
-          max-width: 100%;
-          // position: absolute;
-          // top: 50%;
-          // left: 50%;
-          // transform: translate(-50%, -50%);
+        padding: 12px;
+        margin-bottom: var(--card-padding);
+        .image-inner {
+          max-height: 180px;
+          overflow: hidden;
+          position: relative;
+          @include sm {
+            max-height: 200px;
+          }
+          @include md {
+            max-height: 250px;
+          }
+          .item-img {
+            height: 100%;
+            object-fit: contain;
+            max-height: 100%;
+            max-width: 100%;
+            border-radius: 4px;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            right: 0;
+            bottom: 0;
+          }
+        }
+
+        .tooltip-inner {
+          background: rgb(39 39 39 / 90%);
+          color: rgb(255, 255, 255);
+          border-radius: 4px;
+          font-size: 12px;
+          padding: 10px 16px;
+          pointer-events: none;
         }
         .mini-imgs-wrapper {
           position: absolute;
           right: 0;
           top: 0;
           z-index: 1;
+          pointer-events: all;
+          user-select: all;
           .halal-img {
             display: block;
+            object-fit: contain;
+          }
+          .manufacturer-img {
+            display: block;
+            object-fit: contain;
           }
         }
       }
       .manufacturer {
         margin-bottom: 12px;
-        margin-top: 12px;
+        margin-top: var(--card-padding);
         // margin-top: calc(var(--card-padding) + 5px);
         // margin-bottom: var(--card-padding);
         // @include md {
@@ -673,17 +718,18 @@ export default {
       justify-content: center;
       padding-left: var(--card-padding);
       padding-right: var(--card-padding);
-      @include md {
-        padding-top: 4.5rem;
-        padding-bottom: 5rem;
-      }
+      // @include md {
+      //   padding-top: 4.5rem;
+      //   padding-bottom: 5rem;
+      // }
       .dialog-form-wrapper-header {
-        font-size: 1.5rem;
+        font-size: 18px;
         margin-bottom: var(--card-padding);
         font-weight: bold;
         line-height: 125%;
         @include md {
-          margin-bottom: 35px;
+          font-size: 1.5rem;
+          // margin-bottom: 35px;
         }
       }
     }

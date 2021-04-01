@@ -1,6 +1,6 @@
 <template>
   <div>
-    <page-header :title="title" :breadrumbs="breadrumbs" />
+    <page-header-simple :title="title" :breadrumbs="breadrumbs" />
     <div class="background-with-transparent">
       <v-container grid-list-lg>
         <v-row class="py-16" no-gutters align="center">

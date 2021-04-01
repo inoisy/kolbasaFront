@@ -126,7 +126,7 @@ module.exports = async () => {
      */
     loading: {
       color: '#d50000',
-      throttle: 50,
+      throttle: 30,
       duration: 3000,
       continuous: true,
       failedColor: "black"

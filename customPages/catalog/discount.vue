@@ -2,32 +2,37 @@
   <div>
     <nuxt-child @close="handleClose" :breadcrumbs-base="breadcrumbs" />
     <LazyHydrate when-idle>
-      <page-header :title="title" :breadrumbs="breadcrumbs" />
+      <page-header-simple :title="title" :breadrumbs="breadcrumbs" />
     </LazyHydrate>
     <div :style="`background-image: url(/bg.jpg)`" class="background-repeat">
-      <v-container grid-list-lg class="py-16">
+      <v-container class="py-16">
         <LazyHydrate
           when-visible
           v-for="(category, index) of categories"
           :key="category.id"
         >
-          <v-layout row wrap class="mb-10">
-            <h2 class="mb-3 flex xs12 d-block">{{ category.name }}</h2>
-            <div
-              class="flex xs12 sm6 md4 lg3 xl2"
-              v-for="product of category.products"
-              :key="`product-${product.id}`"
+          <v-row no-gutters class="mb-10">
+            <sceleton-title class="pa-3 col col-12" :isLoading="isLoading">
+              <h2>{{ category.name }}</h2>
+            </sceleton-title>
+            <v-col
+              class="pa-3"
+              v-for="(product, i) of category.products"
+              :key="`product-${index}-${i}`"
+              cols="12"
+              sm="6"
+              md="4"
+              lg="3"
+              xl="2"
             >
-              <!-- -${product.__v || 0} -->
               <product-card
                 :product="product"
                 grandparent="catalog"
                 parent="discount"
-                :show="index === 0"
+                :loading="isLoading"
               />
-              <!-- :to="`/catalog/discount/${product.slug}`" -->
-            </div>
-          </v-layout>
+            </v-col>
+          </v-row>
         </LazyHydrate>
       </v-container>
     </div>
@@ -47,9 +52,7 @@
 
 <script>
 import gql from "graphql-tag";
-// import PageHeader from "~/components/PageHeader";
-// import ProductCard from "~/components/ProductCard";
-// import { mdiDownload } from "@mdi/js";
+
 import LazyHydrate from "vue-lazy-hydration";
 
 export default {
@@ -59,36 +62,54 @@ export default {
       title: this.title,
     };
   },
-  // computed: {
-  //   breadcrumbs() {
-  //     return [
-  //       {
-  //         to: "/",
-  //         text: "Главная",
-  //       },
-  //       {
-  //         to: "/catalog",
-  //         text: "Каталог",
-  //       },
-  //       {
-  //         // to: "/catalog/discount",
-  //         text: this.title,
-  //       },
-  //     ];
-  //   },
-  // },
-
-  // components: { ProductCard, PageHeader },
-  async asyncData({
-    // store,
-    app: {
-      apolloProvider: { defaultClient },
+  loading: false,
+  watch: {
+    isLoading(val) {
+      if (!process.client) {
+        return;
+      }
+      if (val) {
+        this.$nuxt.$loading.start();
+      } else {
+        this.$nuxt.$loading.finish();
+      }
     },
-  }) {
-    // console.log("discount");
-    // await ctx.store.dispatch("fetchGeneralInfo");
-    // const client = apolloProv1`    ` 1q  ider.defaultClient;
-    const { data: categoryData } = await defaultClient.query({
+  },
+  data() {
+    return {
+      isLoading: false,
+      breadcrumbs: [
+        {
+          to: "/",
+          text: "Главная",
+        },
+        {
+          to: "/catalog",
+          text: "Каталог",
+        },
+        {
+          text: "Акционная продукция",
+        },
+      ],
+      title: "Акционная продукция",
+      categories: [
+        {
+          item: false,
+          products: new Array(20).fill(false),
+        },
+      ],
+      page: {},
+    };
+  },
+
+  async fetch() {
+    this.isLoading = true;
+    let {
+      data: {
+        pages: [pageData],
+        categories,
+      },
+    } = await this.$apollo.query({
       query: gql`
         query DiscountQuery {
           pages(where: { name: "discount" }) {
@@ -135,31 +156,20 @@ export default {
         }
       `,
     });
-    const title = "Акционная продукция";
-    const breadcrumbs = [
-      {
-        to: "/",
-        text: "Главная",
-      },
-      {
-        to: "/catalog",
-        text: "Каталог",
-      },
-      {
-        // to: "/catalog/discount",
-        text: title,
-      },
-    ];
-    // store.dispatch("breadcrumbs", breadcrumbs);
+    // console.log(
+    //   "🚀 ~ file: discount.vue ~ line 113 ~ fetch ~ categoryData",
+    //   categories
+    // );
 
-    return {
-      breadcrumbs,
-      title,
-      categories: categoryData.categories.filter(
-        (item) => item.products && item.products.length > 0
-      ),
-      page: categoryData.pages[0],
-    };
+    // const title = "Акционная продукция";
+    // const breadcrumbs =
+    // this.breadcrumbs = breadcrumbs;
+    // this.title = title;
+    this.categories = categories.filter(
+      (item) => item.products && item.products.length > 0
+    );
+    this.page = pageData;
+    this.isLoading = false;
   },
   methods: {
     async handleClose() {
@@ -167,4 +177,43 @@ export default {
     },
   },
 };
+// import PageHeader from "~/components/PageHeader";
+// import ProductCard from "~/components/ProductCard";
+// import { mdiDownload } from "@mdi/js";s
+// computed: {
+//   breadcrumbs() {
+//     return [
+//       {
+//         to: "/",
+//         text: "Главная",
+//       },
+//       {
+//         to: "/catalog",
+//         text: "Каталог",
+//       },
+//       {
+//         // to: "/catalog/discount",
+//         text: this.title,
+//       },
+//     ];
+//   },
+// },
+// components: { ProductCard, PageHeader },
+// async asyncData({
+//   app: {
+//     apolloProvider: { defaultClient },
+//   },
+// }) {
+//})
+// const { data: categoryData } = await defaultClient.query({
+// store.dispatch("breadcrumbs", breadcrumbs);
+
+// return {
+//   breadcrumbs,
+//   title,
+//   categories: categoryData.categories.filter(
+//     (item) => item.products && item.products.length > 0
+//   ),
+//   page: categoryData.pages[0],
+// };
 </script>

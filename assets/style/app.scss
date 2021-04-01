@@ -1,40 +1,5 @@
-// .v-application {
-//   font-family: "Montserrat" !important;
-// }
-// .fade-enter-active,
-// .fade-leave-active {
-//   transition: opacity 3s;
-// }
-
-// .fade-enter,
-// .fade-leave-to {
-//   opacity: 0;
-// }
-
-// body::-webkit-scrollbar {
-//   width: 12px;
-//   scrollbar-width: thin;
-//   /* ширина scrollbar */
-// }
-
 .m-open {
   overflow: hidden;
-  // height: 100vh;
-  // scrollbar-width: 0;
-  // &::-webkit-scrollbar {
-  //   width: 0;
-  // }
-
-  transition: overflow 0.2s ease;
-  // animation: hide-scroll 0.2s ease;
-
-  // @keyframes hide-scroll {
-
-  //   // from,
-  //   to {
-  //     overflow: hidden;
-  //   }
-  // }
 }
 
 .v-main {
@@ -73,71 +38,6 @@ input[type="number"]::-webkit-outer-spin-button {
   z-index: 4000 !important;
 }
 
-// .dialog-image-wrapper {
-//   margin-top: 120px !important;
-//   max-height: calc(90vh - 100px) !important;
-// }
-
-// @media (min-width: 960px) {
-
-//   .dialog-content-wrapper {
-//     max-width: 900px !important;
-//   }
-// }
-
-// @media (min-width: 1264px) {
-
-//   .dialog-content-wrapper {
-//     max-width: 1185px !important;
-//   }
-// }
-// .theme--dark.v-breadcrumbs{
-//   .v-breadcrumbs__item {
-//     color: white;
-
-//     &:hover {
-//       color: #d50000;
-//     }
-//   }
-// }
-// .v-toolbar__content,
-// .v-toolbar__extension {
-//   padding-top: 0px !important;
-//   padding-bottom: 0px !important;
-
-// }
-
-// .ya-phone a,
-// .ya-phone-icon a {
-//   text-decoration: none;
-// }
-
-// .white--text {
-//   &>* {
-//     color: white
-//   }
-// }
-
-// .primary--text.theme--dark {
-//   color: #d50000 !important;
-// }
-
-// .quantity {
-//   .v-input__control {
-//     min-width: 45px;
-//   }
-
-//   input {
-//     text-align: center !important;
-//   }
-// }
-
-// .footer-list .v-list__tile {
-//   font-size: 0.9rem !important;
-//   font-weight: 300;
-//   height: 2.5rem !important;
-// }
-
 .underline-on-hover {
   text-decoration: none;
   color: darken($accent, 20%);
@@ -147,23 +47,9 @@ input[type="number"]::-webkit-outer-spin-button {
     color: $accent !important;
   }
 }
-
-// html::-webkit-scrollbar {
-//   width: 16px;
-//   height: 16px
-// }
-
-// html::-webkit-scrollbar-thumb {
-//   background: #e4e4e4;
-//   // background: #434343;
-//   border-radius: 16px;
-//   box-shadow: inset 2px 2px 2px hsla(0, 0%, 100%, .25), inset -2px -2px 2px rgba(0, 0, 0, .25)
-// }
-
-// html::-webkit-scrollbar-track {
-//   // background: linear-gradient(90deg, #434343, #434343 1px, #111 0, #111)
-//   background: linear-gradient(90deg, #a5a5a5, #e0e0e0 1px, #d2d2d2 0, #f5f5f5);
-// }
+.hidden {
+  visibility: hidden;
+}
 
 .fs-1 {
   font-size: 1rem;
@@ -182,11 +68,6 @@ input[type="number"]::-webkit-outer-spin-button {
   font-size: 2rem;
 }
 
-// .heading-font {
-//   font-family: $heading-font-family !important;
-//   font-weight: 700;
-// }
-
 h1,
 h2,
 h3,
@@ -197,23 +78,6 @@ h6,
   font-family: $heading-font-family;
   // font-weight: 700;
 }
-
-// .mont {
-//   font-family: 'Mont' !important;
-
-//   &>*,
-//   &>*>* {
-//     font-family: 'Mont' !important;
-//   }
-// }
-
-// .td-none {
-//   text-decoration: none;
-// }
-
-// img {
-//   max-width: 100%
-// }
 
 .display-flex {
   display: flex;
@@ -242,13 +106,6 @@ h6,
 .v-list-group__header {
   padding-left: 0 !important;
 }
-
-// .background {
-//   background-position: center;
-//   background-size: cover;
-//   background-repeat: no-repeat;
-
-// }
 
 .background-repeat {
   background-color: #f0f0f0;
@@ -284,39 +141,11 @@ html {
   max-width: 100% !important;
 }
 
-// .main-header {
-//   .v-toolbar__content {
-//     padding: 0 !important;
-//   }
-// }
-
-// .main-carousel {
-//   .v-image__image.v-image__image--cover {
-//     background-color: #212121;
-//   }
-
-//   min-height: 500px;
-
-//   .v-window__container {
-//     min-height: 500px;
-
-//     .v-carousel__item {
-//       min-height: 500px;
-//     }
-//   }
-// }
-
 @media (min-width: 576px) {
   html {
     font-size: 16px !important;
   }
 }
-
-// @media (min-width:1199px) {
-//     html {
-//         font-size:18px !important;
-// 	}
-// }
 
 input[type="number"] {
   -moz-appearance: textfield;
@@ -402,3 +231,159 @@ input[type="number"] {
   background-color: #f5f5f5 !important;
   border-color: #f5f5f5 !important;
 }
+
+// .v-application {
+//   font-family: "Montserrat" !important;
+// }
+// .fade-enter-active,
+// .fade-leave-active {
+//   transition: opacity 3s;
+// }
+
+// .fade-enter,
+// .fade-leave-to {
+//   opacity: 0;
+// }
+
+// body::-webkit-scrollbar {
+//   width: 12px;
+//   scrollbar-width: thin;
+//   /* ширина scrollbar */
+// }
+
+// @media (min-width:1199px) {
+//     html {
+//         font-size:18px !important;
+// 	}
+// }
+
+// .heading-font {
+//   font-family: $heading-font-family !important;
+//   font-weight: 700;
+// }
+
+// .background {
+//   background-position: center;
+//   background-size: cover;
+//   background-repeat: no-repeat;
+// }
+
+// html::-webkit-scrollbar {
+//   width: 16px;
+//   height: 16px
+// }
+
+// html::-webkit-scrollbar-thumb {
+//   background: #e4e4e4;
+//   // background: #434343;
+//   border-radius: 16px;
+//   box-shadow: inset 2px 2px 2px hsla(0, 0%, 100%, .25), inset -2px -2px 2px rgba(0, 0, 0, .25)
+// }
+
+// html::-webkit-scrollbar-track {
+//   // background: linear-gradient(90deg, #434343, #434343 1px, #111 0, #111)
+//   background: linear-gradient(90deg, #a5a5a5, #e0e0e0 1px, #d2d2d2 0, #f5f5f5);
+// }
+
+// .mont {
+//   font-family: 'Mont' !important;
+
+//   &>*,
+//   &>*>* {
+//     font-family: 'Mont' !important;
+//   }
+// }
+
+// .td-none {
+//   text-decoration: none;
+// }
+
+// img {
+//   max-width: 100%
+// }
+// .main-header {
+//   .v-toolbar__content {
+//     padding: 0 !important;
+//   }
+// }
+
+// .main-carousel {
+//   .v-image__image.v-image__image--cover {
+//     background-color: #212121;
+//   }
+
+//   min-height: 500px;
+
+//   .v-window__container {
+//     min-height: 500px;
+
+//     .v-carousel__item {
+//       min-height: 500px;
+//     }
+//   }
+// }
+
+// .dialog-image-wrapper {
+//   margin-top: 120px !important;
+//   max-height: calc(90vh - 100px) !important;
+// }
+
+// @media (min-width: 960px) {
+
+//   .dialog-content-wrapper {
+//     max-width: 900px !important;
+//   }
+// }
+
+// @media (min-width: 1264px) {
+
+//   .dialog-content-wrapper {
+//     max-width: 1185px !important;
+//   }
+// }
+// .theme--dark.v-breadcrumbs{
+//   .v-breadcrumbs__item {
+//     color: white;
+
+//     &:hover {
+//       color: #d50000;
+//     }
+//   }
+// }
+// .v-toolbar__content,
+// .v-toolbar__extension {
+//   padding-top: 0px !important;
+//   padding-bottom: 0px !important;
+
+// }
+
+// .ya-phone a,
+// .ya-phone-icon a {
+//   text-decoration: none;
+// }
+
+// .white--text {
+//   &>* {
+//     color: white
+//   }
+// }
+
+// .primary--text.theme--dark {
+//   color: #d50000 !important;
+// }
+
+// .quantity {
+//   .v-input__control {
+//     min-width: 45px;
+//   }
+
+//   input {
+//     text-align: center !important;
+//   }
+// }
+
+// .footer-list .v-list__tile {
+//   font-size: 0.9rem !important;
+//   font-weight: 300;
+//   height: 2.5rem !important;
+// }

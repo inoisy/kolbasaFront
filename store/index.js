@@ -25,8 +25,31 @@ class CartProduct {
   }
 }
 export const getters = {
-  categorySubcategories(state) {
-    const rootCategory = state.sessionStorage.categoryPage.rootCategory
+  isChildCategory({ sessionStorage: { categoryPage: { categoryMinimal: category } } }) {
+    // console.log("🚀 ~ file: index.js ~ line 30 ~ isChildCategory ~ category", category)
+
+    if (!!category.parent.length) {
+      return true
+    }
+    return false
+  },
+  categoriesIds({ sessionStorage: { categoryPage: { categoryMinimal: category } } }, getters) {
+    // const category = state.sessionStorage.categoryPage.categoryMinimal
+    if (getters.isChildCategory) {
+      return [category.id]
+    }
+    return getters.categorySubcategoriesIDs
+  },
+  rootCategory({ sessionStorage: { categoryPage: { categoryMinimal: category } } }, getters) {
+    // const category = state.sessionStorage.categoryPage.categoryMinimal
+    if (getters.isChildCategory) {
+      return getters.getCategoryBySlug[category.parent[0].slug]
+    }
+    return category
+  },
+  categorySubcategories({ }, getters) {
+    const rootCategory = getters.rootCategory
+    // const rootCategory = state.sessionStorage.categoryPage.rootCategory
     if (!rootCategory || !rootCategory.children || !rootCategory.children.length) {
       return []
     }
@@ -39,12 +62,14 @@ export const getters = {
       id: rootCategory.id
     }])
   },
-  categorySubcategoriesIDs(state, getters) {
+  categorySubcategoriesIDs({ }, getters) {
     return getters.categorySubcategories.map(item => item.id)
   },
   categoryMeta(state) {
     const { category: { name: categoryName, metaDescription, content: categoryContent }, manufacturerSelected, productTypeSelected } = state.sessionStorage.categoryPage
-
+    if (!categoryName) {
+      return {}
+    }
     let name = `${categoryName} оптом`;
     let description = metaDescription
       ? metaDescription
@@ -55,8 +80,6 @@ export const getters = {
       name = `${categoryName} ${manufacturerSelected.name} оптом`;
       description = `${name}. ${description}`;
     } else if (productTypeSelected) {
-      // const productType = await this.fetchProductType(this.productType._id);
-
       name = `${productTypeSelected.name} оптом`;
       description = `${name}. ${description}`;
       if (productTypeSelected.content) {
@@ -70,33 +93,41 @@ export const getters = {
     }
   },
 
-  categoryBreadcrumbs(state) {
-    const { name: rootName, slug: rootSlug } = state.sessionStorage.categoryPage.rootCategory
-    const { name, slug } = state.sessionStorage.categoryPage.categoryMinimal
-    let items = [
-      {
-        to: "/",
-        text: "Главная",
-      },
-      {
-        to: "/catalog",
-        text: "Каталог",
-      },
-      {
-        to: `/catalog/${rootSlug}`,
-        text: rootName,
+  categoryBreadcrumbs(state, getters) {
+    // if (!state.sessionStorage.categoryPage.categoryMinimal) {
+    //   return []
+    // }
+    // console.log("🚀 ~ file: index.js ~ line 96 ~ categoryBreadcrumbs ~ getters.rootCategory", !state.sessionStorage.categoryPage.categoryMinimal)
+    // const { name: rootName, slug: rootSlug } = state.sessionStorage.categoryPage.rootCategory
+    // console.log("🚀 ~ file: index.js ~ line 98 ~ categoryBreadcrumbs ~ state.sessionStorage.categoryPage.categoryMinimal", state.sessionStorage.categoryPage.categoryMinimal)
+    try {
+      const { name: rootName, slug: rootSlug } = getters.rootCategory
+      const { name, slug } = state.sessionStorage.categoryPage.categoryMinimal
+      let items = [
+        {
+          to: "/",
+          text: "Главная",
+        },
+        {
+          to: "/catalog",
+          text: "Каталог",
+        },
+        {
+          to: `/catalog/${rootSlug}`,
+          text: rootName,
+        }
+      ];
+
+      if (slug !== rootSlug) {
+        items.push({
+          to: `/catalog/${slug}`,
+          text: name,
+        });
       }
-    ];
-
-    if (slug !== rootSlug) {
-      items.push({
-        to: `/catalog/${slug}`,
-        text: name,
-      });
+      return items
+    } catch (error) {
+      console.log("error")
     }
-    // console.log("🚀 ~ file: index.js ~ line 68 ~ categoryBreadcrumbs ~ items", items)
-
-    return items
   },
 
   cart(state) {
@@ -136,12 +167,11 @@ export const getters = {
       return {};
     }
     return state.localStorage.cartItemList.reduce((out, item) => {
-      out[item.id] = true// item.quantity
+      out[item.id] = true
       return out
     }, {})
   },
   quantity: (state) => id => {
-    // console.log("🚀 ~ file: index.js ~ line 156 ~ id", id)
     const record = state.localStorage.cartItemList.find((element) => element.id == id)
     if (record) {
       return record.quantity
@@ -203,25 +233,19 @@ export const getters = {
     ];
   },
   getParentCategories(state) {
-    if (state.sessionStorage.generalInfo && state.sessionStorage.generalInfo.categories) {
-      return state.sessionStorage.generalInfo.categories.filter(
-        item => item.parent.length === 0
-      )
-    } else {
-      return []
-    }
-  },
-  getCategory: state => slug => {
-    // console.log("🚀 ~ file: index.js ~ line 159 ~ state", state)
-    if (!slug) return null
-    const category = state.sessionStorage.generalInfo.categories.find(
-      item => item.slug === slug
+    return state.sessionStorage.generalInfo.categories.filter(
+      item => item.parent.length === 0
     )
-    if (!category) return null
-    return category
   },
+
   getCategoryBySlug(state) {
     return state.sessionStorage.generalInfo.categories.reduce((out, item) => {
+      out[item.slug] = item
+      return out
+    }, {})
+  },
+  getProductTypeBySlug(state) {
+    return state.sessionStorage.categoryPage.category.product_types.reduce((out, item) => {
       out[item.slug] = item
       return out
     }, {})
@@ -232,40 +256,32 @@ export const getters = {
       return out
     }, {})
   },
-  getManufacturer: state => slug => {
-    if (!slug) return null
-    const manufacturer = state.sessionStorage.generalInfo.manufacturers.find(
-      item => item.slug === slug
-    )
-    if (!manufacturer) return null
-    return manufacturer
-  }
+
 }
 export const mutations = {
 
 
-  rootCategory(state, item) {
-    state.sessionStorage.categoryPage.rootCategory = item
-  },
+  // rootCategory(state, item) {
+  //   state.sessionStorage.categoryPage.rootCategory = item
+  // },
   category(state, item) {
     state.sessionStorage.categoryPage.category = item
   },
-  changeCategory(state, { category, categoriesIds }) {
-    // rootCategory
+  setCategoryMinimal(state, category) {
     state.sessionStorage.categoryPage.categoryMinimal = category
-    state.sessionStorage.categoryPage.categoriesIds = categoriesIds
-    // const oldValue = state.sessionStorage.categoryPage.rootCategory
-    // if (!oldValue || !oldValue.slug || oldValue.slug !== rootCategory.slug) {
-    //   state.sessionStorage.categoryPage.rootCategory = rootCategory
-    // }
+    // state.sessionStorage.categoryPage.categoriesIds = categoriesIds
   },
+  // setCategory(state, { category, categoriesIds }) {
+  //   state.sessionStorage.categoryPage.categoryMinimal = category
+  //   state.sessionStorage.categoryPage.categoriesIds = categoriesIds
+  // },
+
   setFilters(state, { manufacturer = null, productType = null }) {
     state.sessionStorage.categoryPage.manufacturerSelected = manufacturer
     state.sessionStorage.categoryPage.productTypeSelected = productType
   },
   setSort(state, value) {
     state.localStorage.category.sort = value
-    // state.sessionStorage.categoryPage.productTypeSelected = productType
   },
 
   generalInfo(state, item) {
@@ -293,7 +309,6 @@ export const mutations = {
     const record = state.localStorage.cartItemList.find(element => element.id == id);
     if (record) {
       state.localStorage.cartItemList.splice(state.localStorage.cartItemList.indexOf(record), 1);
-
     }
   },
   incrementCart(state, id) {
@@ -372,41 +387,42 @@ export const actions = {
   clearCart({ commit }) {
     commit("setCart", [])
   },
-  async changeCategory({ commit, dispatch, getters: { categorySubcategoriesIDs, getCategoryBySlug } }, slug) {
-    const category = getCategoryBySlug[slug];
+  async changeCategory({ commit, getters, state: { sessionStorage: { categoryPage: { categoryMinimal } } } }, slug) {
+    const category = getters.getCategoryBySlug[slug];
+    // console.log("🚀 ~ file: index.js ~ line 383 ~ changeCategory ~ category", category)
     if (!category) {
+      // console.log("return false")
       return false
     }
-    let rootCategory, categoriesIds, isChildCategory = false;// categoriesIds,
-    if (!!category.parent.length) {
-      rootCategory = getCategoryBySlug[category.parent[0].slug]
-
-      // isChildCategory = true
-      await dispatch("setRootCategory", rootCategory)
-      categoriesIds = [category.id]
-    } else {
-      // rootCategory = category;
-      await dispatch("setRootCategory", category)
-      categoriesIds = categorySubcategoriesIDs
-
+    // console.log("code is wtf continued")
+    if (categoryMinimal.id !== category.id) {
+      await commit("setCategoryMinimal", category)
     }
 
-    await commit("changeCategory", { category, categoriesIds })
-    return true
+    return category.id
   },
-  async setRootCategory({ commit, state }, newValue) {
-    const oldValue = state.sessionStorage.categoryPage.rootCategory
-    if (!oldValue || !oldValue.slug || oldValue.slug !== newValue.slug) {
-      await commit("rootCategory", newValue);
-      // await commit("breadcrumbs", categoryBreadcrumbs)
-    }
+
+  async fetchProductTypeBySlug({ }, slug) {
+    const {
+      data: { productTypes: [productType] }
+    } = await this.app.apolloProvider.defaultClient.query({
+      variables: {
+        slug
+      },
+      query: gql`
+        query ProductTypeQuery($slug: String!) {
+          productTypes(where:{ slug: $slug}) {
+            _id
+            id
+            name
+            slug
+            content
+          }
+        }
+      `});
+    // console.log("🚀 ~ file: index.js ~ line 405 ~ fetchProductTypeBySlug ~ productTypes", productType)
+    return productType
   },
-  // setRootCategory(state, { slug: newSlug }) {
-  //   const oldValue = state.sessionStorage.categoryPage.rootCategory
-  //   if (!oldValue || !oldValue.slug || oldValue.slug !== newSlug) {
-  //     state.sessionStorage.categoryPage.rootCategory = item
-  //   }
-  // },
   async fetchProductType({ }, id) {
     const {
       data: { productType }
@@ -428,8 +444,20 @@ export const actions = {
     });
     return productType
   },
-  async fetchCategory({ commit, getters: { getManufacturerBySlug }, state: { sessionStorage: { categoryPage: { categoryMinimal: { id } } } } }, query) {
-    //  , route: { query }
+  async fetchAndSetFilters({ commit, dispatch, getters }, query) {
+    const { manufacturer, type } = query;
+    let manufacturerSelected, productTypeSelected;
+    if (manufacturer) {
+      manufacturerSelected = getters.getManufacturerBySlug[manufacturer];
+    }
+    if (type) {
+      productTypeSelected = await dispatch("fetchProductTypeBySlug", type)
+
+    }
+    await commit("setFilters", { productType: productTypeSelected, manufacturer: manufacturerSelected })
+  },
+  async fetchCategory({ commit }, id) {
+
     const {
       data: { category }
     } = await this.app.apolloProvider.defaultClient.query({
@@ -473,26 +501,12 @@ export const actions = {
         id,
       },
     });
-    const { manufacturer, type } = query;
-    let manufacturerSelected, productTypeSelected;
-    if (manufacturer) {
-      manufacturerSelected = getManufacturerBySlug[
-        manufacturer
-      ];
-    }
-    if (type) {
-      productTypeSelected = category.product_types.find(
-        (item) => item.slug === type
-      );
-    }
-    await commit("setFilters", { productType: productTypeSelected, manufacturer: manufacturerSelected })
     await commit("category", category);
-    return category
+
   },
 
-  async fetchCategoryProducts({ state: { sessionStorage: { categoryPage: { categoriesIds, limit, manufacturerSelected, productTypeSelected } }, localStorage: { category: { sort } } } }, start = 0) {
-    // const variables = ;
-    // console.log("🚀 ~ file: index.js ~ line 495 ~ fetchCategoryProducts ~ variables", variables)
+  async fetchCategoryProducts({ getters, state: { sessionStorage: { categoryPage: { limit, manufacturerSelected, productTypeSelected } }, localStorage: { category: { sort } } } }, start = 0) {
+    // categoriesIds,
     const {
       data: { products }
     } = await this.app.apolloProvider.defaultClient.query({
@@ -544,7 +558,8 @@ export const actions = {
         `,
       variables: {
         start: start,
-        category: categoriesIds,
+        category: getters.categoriesIds,
+        // category: categoriesIds,
         limit: limit,
         sort: sort.value,
         ...(!!manufacturerSelected && {
@@ -559,8 +574,9 @@ export const actions = {
 
     return products
   },
-
-
+  async cleanFilters({ commit }) {
+    await commit("setFilters", {})
+  },
   async changeProductType({ commit, dispatch }, item) {
     let productTypeNew = null;
     if (item) {
@@ -605,6 +621,47 @@ export const actions = {
     return manufacturerData.manufacturer
   },
 }
+ // console.log("🚀 ~ file: index.js ~ line 481 ~ fetchCategory ~ productTypeBySlug", productTypeSelected)
+      // productTypeSelected = category.product_types.find(
+      //   (item) => item.slug === type
+      // );
+        // , state: { sessionStorage: { categoryPage: { categoryMinimal: { id } } } }
+    //  , route: { query }dispatch,
+    // dispatch, getters: { getManufacturerBySlug },
+    // const { manufacturer, type } = query;
+    // let manufacturerSelected, productTypeSelected;
+    // if (manufacturer) {
+    //   manufacturerSelected = getManufacturerBySlug[manufacturer];
+    // }
+    // if (type) {
+    //   const productTypeBySlug = await dispatch("fetchProductTypeBySlug", type)
+    //   console.log("🚀 ~ file: index.js ~ line 481 ~ fetchCategory ~ productTypeBySlug", productTypeBySlug)
+    //   productTypeSelected = category.product_types.find(
+    //     (item) => item.slug === type
+    //   );
+    // }
+    // await commit("setFilters", { productType: productTypeSelected, manufacturer: manufacturerSelected })
+    // return category
+     // let rootCategory, categoriesIds;
+    // //isChildCategory
+    // if (!!category.parent.length) {
+    //   rootCategory = getters.getCategoryBySlug[category.parent[0].slug]
+    //   await dispatch("setRootCategory", rootCategory)
+    //   categoriesIds = [category.id]
+    // } else {
+    //   await dispatch("setRootCategory", category)
+    //   categoriesIds = getters.categorySubcategoriesIDs
+    // }
+    // await commit("setCategory", { category, categoriesIds })
+    // console.log(getters.rootCategory)
+    // console.log(getters.categoriesIds)
+  // async setRootCategory({ commit, state }, newValue) {
+  //   const oldValue = state.sessionStorage.categoryPage.rootCategory
+  //   if (!oldValue || !oldValue.slug || oldValue.slug !== newValue.slug) {
+  //     await commit("rootCategory", newValue);
+  //     // await commit("breadcrumbs", categoryBreadcrumbs)
+  //   }
+  // },
  // this.products = this.products.map(() => false);
   // await commit("cleanCategoryProducts")
   // cleanCategoryProducts(state, items) {

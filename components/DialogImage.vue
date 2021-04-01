@@ -1,105 +1,71 @@
 <template>
-  <v-dialog v-model="inputVal" :scrollable="false" :max-width="img.width">
-    <!--  + 100 content-class="dialog-content-wrapper" content-class="dialog-content-wrapper" -->
+  <v-dialog v-model="inputVal" :scrollable="false" :max-width="img.width + 48">
     <v-card :class="$style.imageDialogInner" light>
       <v-btn :class="$style.closeButton" fab @click="inputVal = false">
         <v-icon>$close</v-icon>
       </v-btn>
-      <v-img
-        :class="$style.image"
-        :src="imgUrl"
-        :alt="alt"
-        :title="alt"
-        contain
-      >
-        <!--  :srcset="srcSet"<template v-slot:placeholder>
-          <image-placeholder />
-        </template> -->
-      </v-img>
-    </v-card>
-    <!-- <div style="position: absolute; top: 16px; right: 16px; z-index: 10"
-      class="fullscreen-img d-flex"
-      style="height: inherit; max-height: inherit"
-    >
-      <div
-        style="display: flex; height: inherit; max-height: inherit; width: 100%"
-      >
+
+      <div class="pos-relative">
+        <div :style="`padding-top: ${(img.height / img.width) * 100}%`" />
         <v-img
-          :src="imageBaseUrl + imgUrl"
-          :srcset="srcSet"
-          :alt="item.name"
-          :title="item.name"
-          :max-width="item.width"
-          height="inherit"
-          max-height="inherit"
-          width="100%"
-          class="ma-auto"
+          :class="$style.image"
+          :src="imgUrl"
+          :alt="alt"
+          :title="alt"
           contain
+          @load="$emit('loaded')"
+          @error="$emit('loaded')"
         >
           <template v-slot:placeholder>
-            <image-placeholder />
+            <div class="fill-height row align-center justify-center ma-auto">
+              <v-progress-circular indeterminate color="accent" />
+            </div>
           </template>
         </v-img>
-      </div> -->
-
-    <!-- </div> -->
+      </div>
+    </v-card>
   </v-dialog>
 </template>
 <style lang="scss" scoped module>
 .imageDialogInner {
+  --dialog-img-padding: 12px;
+  @include md {
+    --dialog-img-padding: 24px;
+  }
   position: relative;
   max-height: inherit;
   height: inherit;
+
+  padding: var(--dialog-img-padding);
+  overflow: hidden;
+
   .image {
-    max-height: var(--dialog-max-height) !important;
+    max-height: calc(
+      var(--dialog-max-height) - var(--dialog-img-padding) * 2
+    ) !important;
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0;
+    bottom: 0;
+    border-radius: 4px;
   }
-  // max-height: calc(90vh - 64px);
-  // max-height: calc(100% - #{$toolbar-desktop-height + $dialog-desktop-margin*2}) !important;
-  //   max-height: calc(
-  //     100vh - #{$toolbar-mobile-height + $dialog-mobile-margin * 2}
-  //   ) !important;
-
-  //   @include md {
-  //     // margin: $toolbar-desktop-height + $dialog-desktop-margin $dialog-desktop-margin $dialog-desktop-margin !important;
-  //     max-height: calc(
-  //       100vh - #{$toolbar-desktop-height + $dialog-desktop-margin * 2}
-  //     ) !important;
-  //   }
-  // }
 }
-// .closeButton {
 
-// }
-// .closeButton {
-
-// }
 .closeButton {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: var(--dialog-img-padding);
+  right: var(--dialog-img-padding);
   z-index: 10;
   width: var(--fab-button-size) !important;
   height: var(--fab-button-size) !important;
-  // @include closeButton();
-
-  // width: 44px !important;
-  // height: 44px !important;
-  // @include md {
-  //   width: 48px !important;
-  //   height: 48px !important;
-  // }
+  border: thin solid $black;
 }
-// .fullscreen-img {
-//   background-color: white;
-//   position: relative;
-//   // min-height: 50vh;
-// }
 </style>
 <script>
 export default {
-  // data: () => ({
-  //   imageBaseUrl: process.env.imageBaseUrl,
-  // }),
   props: {
     value: {
       type: Boolean,
@@ -114,41 +80,31 @@ export default {
       default: "",
     },
   },
+  // methods: {
+  //   hanleImageLoad() {
+  //     console.log("imageLoad", this.isLoaded);
+  //     this.isLoaded = true;
+  //     // console.log(
+  //     //   "🚀 ~ file: DialogImage.vue ~ line 68 ~ hanleImageLoad ~ this.isLoaded",
+  //     //   this.isLoaded
+  //     // );
+  //     this.$emit("loaded");
+  //   },
+  // },
+
   computed: {
     imgUrl() {
-      // if (!this.img) {
-      //   return "/no-image.png";
-      // }
-      // if (!this.img.formats) {
       return this.$config.imageBaseUrl + this.img.url;
-      // }
-      // if (this.img.formats.small) {
-      //   return this.imageBaseUrl + this.img.formats.small.url;
-      // }
-
-      // return this.imageBaseUrl + this.img.formats.thumbnail.url;
     },
-    // srcSet() {
-    //   if (!this.item.formats) return;
-    //   return Object.values(this.item.formats)
-    //     .sort(function (a, b) {
-    //       if (a.width > b.width) {
-    //         return 1;
-    //       }
-    //       if (a.width < b.width) {
-    //         return -1;
-    //       }
-    //       return 0;
-    //     })
-    //     .reduce((acc, val) => {
-    //       // console.log("srcSet -> val", val);
-    //       acc = acc + `${this.imageBaseUrl + val.url} ${val.width}w, `;
-    //       return acc;
-    //     }, "");
-    // },
+
     inputVal: {
       get() {
-        return this.value;
+        // console.log(
+        //   "🚀 ~ file: DialogImage.vue ~ line 89 ~ get ~ this.value && this.isLoaded",
+        //   this.value && this.isLoaded
+        // );
+
+        return this.value; //&& this.isLoaded;
       },
       set(val) {
         if (!val) {

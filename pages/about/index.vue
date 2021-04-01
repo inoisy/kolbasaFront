@@ -1,7 +1,7 @@
 <template>
   <div>
     <LazyHydrate when-idle>
-      <page-header :title="title" :breadrumbs="breadrumbs" />
+      <page-header-simple :title="title" :breadrumbs="breadrumbs" />
     </LazyHydrate>
 
     <section class="background-with-transparent">

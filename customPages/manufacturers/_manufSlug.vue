@@ -4,21 +4,10 @@
     <LazyHydrate when-idle>
       <page-header
         :title="`Мясокомбинат ${manufacturer.name} оптом`"
-        :breadrumbs="!noLoad ? breadcrumbs : []"
-        :load="!noLoad"
+        :breadcrumbs="!noLoad ? breadcrumbs : []"
+        :load="!noLoad && !isLoading"
+        :isLoading="isLoading"
       >
-        <template #header>
-          <v-skeleton-loader
-            v-if="noLoad || !manufacturer.name"
-            class="d-flex justify-center ma-auto"
-            dark
-            type="heading"
-            min-height="24px"
-            min-width="300px"
-            width="100%"
-            :boilerplate="!$fetchState.pending"
-          />
-        </template>
         <template #bottom v-if="manufacturer.catalog">
           <v-btn
             class="mb-8 mx-auto"
@@ -35,7 +24,7 @@
     </LazyHydrate>
 
     <div
-      class="background-repeat"
+      class="background-repeat background-fixed"
       :style="isMounted && !noLoad && `background-image: url(/bg.jpg)`"
     >
       <!-- <LazyHydrate never :trigger-hydration="!noLoad"> -->
@@ -46,16 +35,12 @@
           when-visible
         >
           <v-row no-gutters class="mb-10">
-            <v-col cols="12" class="pa-3">
-              <v-skeleton-loader
-                v-if="noLoad || !manufacturer.name || !category.item"
-                width="400px"
-                max-width="100%"
-                height="38px"
-                type="heading"
-                :boilerplate="!$fetchState.pending"
-              />
-              <h2 v-else :class="$style.categoryName">
+            <sceleton-title
+              class="pa-3 col col-12"
+              :noLoad="noLoad"
+              :isLoading="isLoading"
+            >
+              <h2 :class="$style.categoryName">
                 <nuxt-link
                   :to="`/catalog/${category.item.slug}?manufacturer=${manufacturer.slug}`"
                   :title="manufacturer.name"
@@ -63,8 +48,7 @@
                   v-text="`${category.item.name} ${manufacturer.name} оптом`"
                 />
               </h2>
-            </v-col>
-
+            </sceleton-title>
             <v-col
               v-for="(product, i) of category.products"
               :key="`product-${index}-${i}`"
@@ -179,6 +163,13 @@ export default {
       const manufacturerbySlug = this.$store.getters.getManufacturerBySlug[
         this.$route.params.manufSlug
       ];
+      if (!manufacturerbySlug) {
+        return this.$nuxt.error({
+          statusCode: 404,
+          message: "Производитель не найден",
+          type: "manufacturer",
+        });
+      }
       let {
         data: { byManufacturer },
       } = await this.$apollo.query({
@@ -191,6 +182,13 @@ export default {
           id: manufacturerbySlug.id,
         },
       });
+      if (!byManufacturer) {
+        return this.$nuxt.error({
+          statusCode: 404,
+          message: "Производитель не найден",
+          type: "manufacturer",
+        });
+      }
       this.categories = byManufacturer;
       this.manufacturer = await this.$store.dispatch(
         "fetchManufacturer",

@@ -49,15 +49,15 @@
         hide-details
         label="Комментарий"
       />
-      <!-- <v-flex xs12> -->
+      <!-- <v-flex xs12> class="ml-0 mt-10"  style="width: 100%" -->
       <v-btn
-        class="ml-0 mt-10"
+        class="submit-button"
         color="accent"
         @click="submit"
         large
         :disabled="submitDisabled"
         :loading="loading"
-        style="width: 100%"
+        block
         title="Подтвердить заказ"
       >
         Подтвердить заказ
@@ -76,7 +76,11 @@
     </v-slide-y-transition> -->
   </v-form>
 </template>
-
+<style lang="scss" scoped>
+.submit-button {
+  margin-top: var(--card-padding, 40px);
+}
+</style>
 
 <script>
 import { validationMixin } from "vuelidate";
@@ -231,3 +235,4 @@ export default {
   },
 };
 </script>
+

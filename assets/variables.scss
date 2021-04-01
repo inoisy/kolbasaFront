@@ -7,7 +7,7 @@ $skeleton-loader-button-width: 100%;
 $skeleton-loader-chip-border-radius: 4px;
 $skeleton-loader-text-height: 15px;
 $dialog-max-height: var(--dialog-max-height);
-
+$card-disabled-opacity: 1;
 // $btn-border-radius: 0px;
 
 // Modifying a SASS map variable
@@ -123,7 +123,7 @@ $utilities: (
     "white-space": false,
     "overflow-wrap": false,
     // "text-overflow": false,
-    // "text-transform": false,,,,,
+    // "text-transform": false,,,,,,
 );
 
 // $typography: (responsive: false);

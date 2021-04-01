@@ -2,28 +2,36 @@
   <div>
     <nuxt-child @close="handleClose" :breadcrumbs-base="breadcrumbs" />
     <LazyHydrate when-idle>
-      <page-header
+      <page-header-simple
         title="Халяльная продукция оптом"
         :breadrumbs="breadcrumbs"
       />
     </LazyHydrate>
     <div :style="`background-image: url(/bg.jpg)`" class="background-repeat">
-      <v-container grid-list-lg class="py-12">
+      <v-container class="py-16">
         <LazyHydrate
           v-for="(category, index) of categories"
-          :key="category.id"
+          :key="`category-${index}`"
           when-visible
         >
-          <v-layout row wrap class="mb-10">
-            <h2 class="mb-5 flex xs12 d-block">
-              {{ category.name }} халяль оптом
-            </h2>
-            <div
-              class="flex xs12 sm6 md4 lg3 xl2"
-              v-for="product of category.products"
-              :key="`product-${product.id}`"
+          <v-row no-gutters class="mb-10">
+            <sceleton-title
+              class="pa-3 col col-12"
+              :noLoad="isLoading"
+              :isLoading="isLoading"
             >
-              <!---${product.__v || 0} {{ `${product.id}-${product.__v || 0}` }} -->
+              <h2>{{ category.name }} халяль оптом</h2>
+            </sceleton-title>
+            <v-col
+              class="pa-3"
+              v-for="(product, i) of category.products"
+              :key="`product-${index}-${i}`"
+              cols="12"
+              sm="6"
+              md="4"
+              lg="3"
+              xl="2"
+            >
               <product-card
                 :product="product"
                 grandparent="catalog"
@@ -31,10 +39,8 @@
                 :show="index === 0"
                 :halal="true"
               />
-              <!-- </product-card> -->
-              <!-- :to="`/catalog/halal/${product.slug}`" -->
-            </div>
-          </v-layout>
+            </v-col>
+          </v-row>
         </LazyHydrate>
       </v-container>
     </div>
@@ -64,16 +70,63 @@ export default {
       title: "Халяльная продукция",
     };
   },
-  components: { LazyHydrate },
-  async asyncData({
-    store,
-    app: {
-      apolloProvider: { defaultClient },
+  loading: false,
+  watch: {
+    isLoading(val) {
+      if (!process.client) {
+        return;
+      }
+      if (val) {
+        this.$nuxt.$loading.start();
+      } else {
+        this.$nuxt.$loading.finish();
+      }
     },
-  }) {
-    // await ctx.store.dispatch("fetchGeneralInfo");
-    // const client = ctx.app.apolloProvider.defaultClient;
-    const { data: categoryData } = await defaultClient.query({
+  },
+  data() {
+    return {
+      isLoading: false,
+      breadcrumbs: [
+        {
+          to: "/",
+          text: "Главная",
+        },
+        {
+          to: "/catalog",
+          text: "Каталог",
+        },
+        {
+          text: "Халяльная продукция",
+        },
+      ],
+      title: "Халяльная продукция",
+      categories: [
+        {
+          item: false,
+          products: new Array(20).fill(false),
+        },
+      ],
+      page: {},
+    };
+  },
+  components: { LazyHydrate },
+  // async asyncData({
+  //   store,
+  //   app: {
+  //     apolloProvider: { defaultClient },
+  //   },
+  // }) {
+  // await ctx.store.dispatch("fetchGeneralInfo");
+  // const client = ctx.app.apolloProvider.defaultClient;
+  async fetch() {
+    this.isLoading = true;
+    // const { data: categoryData } = await defaultClient.query({
+    const {
+      data: {
+        pages: [pageData],
+        categories,
+      },
+    } = await this.$apollo.query({
       query: gql`
         query HalalQuery {
           pages(where: { name: "halal" }) {
@@ -119,29 +172,19 @@ export default {
         }
       `,
     });
-    const breadcrumbs = [
-      {
-        to: "/",
-        text: "Главная",
-      },
-      {
-        to: "/catalog",
-        text: "Каталог",
-      },
-      {
-        // to: "/catalog/halal",
-        text: "Халяльная продукция",
-      },
-    ];
-    // store.dispatch("breadcrumbs", breadcrumbs);
 
-    return {
-      breadcrumbs,
-      categories: categoryData.categories.filter(
-        (item) => item.products && item.products.length > 0
-      ),
-      page: categoryData.pages[0],
-    };
+    this.categories = categories.filter(
+      (item) => item.products && item.products.length > 0
+    );
+    this.page = pageData;
+    this.isLoading = false;
+    // const breadcrumbs =
+    // store.dispatch("breadcrumbs", breadcrumbs);
+    // return {
+    //   // breadcrumbs,
+    //   categories: ,
+    //   page: pageData,
+    // };
   },
   methods: {
     async handleClose() {

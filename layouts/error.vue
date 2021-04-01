@@ -38,6 +38,7 @@
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
+  height: 100%;
   // position: absolute;
   // top: 0;
   // left: 0;
@@ -77,12 +78,26 @@
 
 <script>
 export default {
-  name: "NuxtError",
+  // name: "NuxtError",
   props: {
     error: {
       type: Object,
       default: null,
     },
+  },
+  head() {
+    console.log("this.metaInfo", "Ошибка", this.message);
+    return {
+      title: this.message || "Ошибка",
+      // titleTemplate: ``,
+      meta: [
+        {
+          name: "viewport",
+          content:
+            "width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no",
+        },
+      ],
+    };
   },
   computed: {
     statusCode() {
@@ -116,20 +131,6 @@ export default {
     //   );
     // }
   },
-  //   async mounted() {
-  //     await this.$store.dispatch("fetchGeneralInfo");
-  //   },
-  head() {
-    return {
-      title: this.message,
-      meta: [
-        {
-          name: "viewport",
-          content:
-            "width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no",
-        },
-      ],
-    };
-  },
+  layout: "error",
 };
 </script>

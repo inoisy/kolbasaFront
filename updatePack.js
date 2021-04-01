@@ -34,13 +34,17 @@ Array.prototype.removeArr = function (val) {
 
 async function main() {
     const packageData = JSON.parse(await fs.readFileSync("./package.json"))
-    const dependencies = Object.keys(packageData.dependencies).removeArr('core-js', "shelljs", "vue", 'vue-server-renderer', 'vue-template-compiler')
-    console.log("🚀 ~ file: updatePack.js ~ line 37 ~ main ~ dependencies", dependencies)
-    // const updateDepString = "yarn add " + dependencies.map(item => item + "@latest").join(" ")
+    // const dependencies = Object.keys(packageData.dependencies).removeArr('core-js', "shelljs", "vue", 'vue-server-renderer', 'vue-template-compiler')
+    // // console.log("🚀 ~ file: updatePack.js ~ line 37 ~ main ~ dependencies", dependencies)
+    // const updateDepString = "yarn upgrade " + dependencies.map(item => item).join(" ")//+ "@latest"
+    // console.log("🚀 ~ file: updatePack.js ~ line 40 ~ main ~ updateDepString", updateDepString)
     // console.log("🚀 ~ file: updatePack.js ~ line 40 ~ main ~ updateDepString", updateDepString)
     // // console.log(updateDepString)
-    // const devDependencies = Object.keys(packageData.devDependencies).removeArr(["sass-loader", 'vue', 'vue-template-compiler'])
-    // const updateDevDepString = "yarn add " + devDependencies.map(item => item + "@latest").join(" ") + " -D"
+    const devDependencies = Object.keys(packageData.devDependencies).removeArr(["vue-server-renderer", "sass-loader", 'vue', 'vue-template-compiler', 'core-js', 'sass', 'deepmerge',
+        'fibers',])
+    console.log("🚀 ~ file: updatePack.js ~ line 44 ~ main ~ devDependencies", devDependencies)
+    const updateDevDepString = "yarn upgrade " + devDependencies.map(item => item).join(" ") //+ " -D" // + "@latest"
+    console.log("🚀 ~ file: updatePack.js ~ line 45 ~ main ~ updateDevDepString", updateDevDepString)
     //     console.log(updateDevDepString + " && " + updateDepString)
 
     //     shell.exec(updateDevDepString + " && " + updateDepString)
