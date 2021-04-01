@@ -100,34 +100,34 @@ export const getters = {
     // console.log("🚀 ~ file: index.js ~ line 96 ~ categoryBreadcrumbs ~ getters.rootCategory", !state.sessionStorage.categoryPage.categoryMinimal)
     // const { name: rootName, slug: rootSlug } = state.sessionStorage.categoryPage.rootCategory
     // console.log("🚀 ~ file: index.js ~ line 98 ~ categoryBreadcrumbs ~ state.sessionStorage.categoryPage.categoryMinimal", state.sessionStorage.categoryPage.categoryMinimal)
-    try {
-      const { name: rootName, slug: rootSlug } = getters.rootCategory
-      const { name, slug } = state.sessionStorage.categoryPage.categoryMinimal
-      let items = [
-        {
-          to: "/",
-          text: "Главная",
-        },
-        {
-          to: "/catalog",
-          text: "Каталог",
-        },
-        {
-          to: `/catalog/${rootSlug}`,
-          text: rootName,
-        }
-      ];
-
-      if (slug !== rootSlug) {
-        items.push({
-          to: `/catalog/${slug}`,
-          text: name,
-        });
+    // try {
+    const { name: rootName, slug: rootSlug } = getters.rootCategory
+    const { name, slug } = state.sessionStorage.categoryPage.categoryMinimal
+    let items = [
+      {
+        to: "/",
+        text: "Главная",
+      },
+      {
+        to: "/catalog",
+        text: "Каталог",
+      },
+      {
+        to: `/catalog/${rootSlug}`,
+        text: rootName,
       }
-      return items
-    } catch (error) {
-      console.log("error")
+    ];
+
+    if (slug !== rootSlug) {
+      items.push({
+        to: `/catalog/${slug}`,
+        text: name,
+      });
     }
+    return items
+    // } catch (error) {
+    //   console.log("error")
+    // }
   },
 
   cart(state) {

@@ -169,23 +169,14 @@ export default {
       "changeCategory",
       this.$route.params.category
     );
-    // console.log(
-    //   "🚀 ~ file: _category.vue ~ line 170 ~ fetch ~ categoryId",
-    //   categoryId
-    // );
 
     if (!categoryId) {
-      // if (process.server) {
-      //   this.$nuxt.context.res.statusCode = 404;
-      // }
-      // throw new Error("Категория не найдена");
       return this.$nuxt.error({
         statusCode: 404,
         message: "Категория не найдена",
         type: "catalog",
       });
     }
-    // console.log("CODE IS WTF", categoryId);
     if (!this.initialPageData && !this.isProductRoute) {
       await this.$store.dispatch("fetchAndSetFilters", this.$route.query);
       this.products = (
@@ -204,10 +195,6 @@ export default {
       return !this.initialPageData && this.isProductRoute;
     },
     breadcrumbs() {
-      // if (this.$fetchState.error) {
-      //   return [];
-      // }
-      // console.log("breadcrumbs", this.$fetchState.error);
       return this.$store.getters.categoryBreadcrumbs;
     },
 
@@ -243,7 +230,6 @@ export default {
       if (this.noLoad) {
         return {};
       }
-      // console.log("metaInfo", this.noLoad);
       return this.$store.getters.categoryMeta;
     },
   },
@@ -317,46 +303,7 @@ export default {
       this.isLoading = false;
     },
   },
-}; // $route(val) {
-//   console.log("🚀 ~ file: _category.vue ~ line 202 ~ val", val);
-// },
-// async "$route.query"({ type, manufacturer }) {
-//   if (this.isProductRoute) {
-//     return;
-//   }
-
-//   if (type) {
-//     if (this.productType && this.productType.slug === type) {
-//       return;
-//     }
-//     // if(type ===this.$ststate.sessionStorage.categoryPage.manufacturerSelected)
-//     await this.scrollToProducts();
-//     await this.$store.dispatch("changeProductTypeBySlug", type);
-//     await this.fetchAndRefillProducts();
-//   } else if (manufacturer) {
-//     if (this.manufacturer && this.manufacturer.slug === manufacturer) {
-//       return;
-//     }
-//     await this.scrollToProducts();
-//     await this.$store.dispatch("changeManufacturerBySlug", manufacturer);
-//     await this.fetchAndRefillProducts();
-//   } else if (!!this.manufacturer || this.productType) {
-//     await this.scrollToProducts();
-//     await this.$store.dispatch("cleanFilters");
-//     await this.fetchAndRefillProducts();
-//   }
-//   // await this.fetchAndRefillProducts();
-// },
-// async "$route.query.type"(slug) {
-//    await this.scrollToProducts();
-//     await this.$store.dispatch("changeProductTypeBySlug", slug);
-//     await this.fetchAndRefillProducts();
-// },
-// async "$route.query.manufacturer"(slug) {
-//   await this.scrollToProducts();
-//   await this.$store.dispatch("changeManufacturerBySlug", slug);
-//   await this.fetchAndRefillProducts();
-// },
+};
 </script>
 <style lang="scss" scoped>
 .header-sceleton {
