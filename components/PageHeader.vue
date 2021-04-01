@@ -110,6 +110,9 @@ export default {
   height: 100% !important;
   width: 300px !important;
   display: inline-flex !important;
+  ::v-deep .v-skeleton-loader__heading {
+    width: 100% !important;
+  }
 }
 .breadcrumbs-wrap {
   text-align: center;
