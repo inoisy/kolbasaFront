@@ -41,7 +41,7 @@
     content: "";
     display: block;
     width: 100%;
-    background-image: url("~assets/img/stroke.png");
+    background-image: url("/images/stroke.png");
     background-repeat: no-repeat;
     background-position: center;
     height: 45px;

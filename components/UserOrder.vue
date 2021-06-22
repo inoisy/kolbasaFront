@@ -97,21 +97,12 @@ export default {
   },
   methods: {
     async repeatOrder() {
-      await this.$store.dispatch("clearCart");
+      await this.$store.dispatch("cart/clearCart");
       for (let product of this.products) {
-        console.log(
-          "🚀 ~ file: UserOrder.vue ~ line 102 ~ repeatOrder ~ product",
-          product
-        );
-        // console.log("repeatOrder -> product.qty", product.qty);
-        // clearBasket;
-
-        await this.$store.dispatch("addToCart", product);
+        await this.$store.dispatch("cart/addToCart", product);
       }
     },
     async fetchProducts() {
-      console.log("fetchProducts -> this.order.data", this.order.data);
-
       if (Array.isArray(this.order.data) && this.order.data.length) {
         const { data: products } = await this.$apollo.query({
           query: gql`

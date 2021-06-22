@@ -157,7 +157,7 @@ export default {
   },
   computed: {
     contacts() {
-      return this.$store.state.sessionStorage.generalInfo.contacts; // contactsArr;
+      return this.$store.state.info.data.contacts; // contactsArr;
     },
   },
 };

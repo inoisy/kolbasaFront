@@ -25,7 +25,7 @@
 
     <div
       class="background-repeat background-fixed"
-      :style="isMounted && !noLoad && `background-image: url(/bg.jpg)`"
+      :style="isMounted && !noLoad && `background-image: url(/images/bg.jpg)`"
     >
       <!-- <LazyHydrate never :trigger-hydration="!noLoad"> -->
       <v-container class="pt-10 pb-7">
@@ -160,9 +160,9 @@ export default {
   async fetch() {
     if (!this.initialPageData && !this.$route.params.slug) {
       this.isLoading = true;
-      const manufacturerbySlug = this.$store.getters.getManufacturerBySlug[
-        this.$route.params.manufSlug
-      ];
+      const manufacturerbySlug = this.$store.getters[
+        "info/getManufacturerBySlug"
+      ][this.$route.params.manufSlug];
       if (!manufacturerbySlug) {
         return this.$nuxt.error({
           statusCode: 404,

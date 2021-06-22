@@ -1,12 +1,9 @@
 <template>
   <div
     class="header-wrapper d-flex"
-    :style="`background-image: url(/promo_crop.jpg)`"
+    style="background-image: url(/images/promo_crop.jpg)"
   >
     <v-container class="header-inner fluid" fill-height fluid>
-      <!-- :class="fluid ? 'fluid' : 'nofluid'" -->
-
-      <!--:="fluid" {{ bgLoaded }} -->
       <slot name="breadcrumbs">
         <breadcrumbs
           v-if="breadrumbs.length"
@@ -25,7 +22,7 @@
               v-text="title"
               :style="isLoading && 'visibility: hidden'"
             />
-            
+
             <v-skeleton-loader
               v-if="isLoading"
               :class="

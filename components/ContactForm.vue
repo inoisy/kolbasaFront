@@ -113,19 +113,6 @@ export default {
     email: { email },
   },
   data() {
-    // let user; // = this.$store.state.localStorage.user;
-    // if (this.$store.getters["auth/isLogined"]) {
-    //   const getUser = this.$store.getters["auth/getUser"];
-    //   user = {
-    //     name: getUser.firstname,
-    //     phone: getUser.phone,
-    //     email: getUser.email,
-    //     address: "",
-    //     id: getUser.id,
-    //   };
-    // } else {
-    //   user = this.$store.state.localStorage.user;
-    // }
     const user = this.$strapi.user || {};
     return {
       formSuccess: false,
@@ -152,7 +139,7 @@ export default {
     async submit() {
       this.$v.$touch();
       if (this.$v.$anyError) return;
-      const busketObj = this.$store.getters.cart.map((item) => {
+      const busketObj = this.$store.getters["cart/cart"].map((item) => {
         return {
           name: item.name,
           qty: item.quantity,
@@ -176,7 +163,7 @@ export default {
             address: this.address,
             email: this.email,
             user: this.userID,
-            summa: this.$store.getters.cartSumm,
+            summa: this.$store.getters["cart/cartSumm"],
             // REMOVE
             isTest: false,
           })

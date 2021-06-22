@@ -7,7 +7,7 @@
         :breadrumbs="breadcrumbs"
       />
     </LazyHydrate>
-    <div :style="`background-image: url(/bg.jpg)`" class="background-repeat">
+    <div :style="`background-image: url(/images/bg.jpg)`" class="background-repeat">
       <v-container class="py-16">
         <LazyHydrate
           v-for="(category, index) of categories"
@@ -110,17 +110,8 @@ export default {
     };
   },
   components: { LazyHydrate },
-  // async asyncData({
-  //   store,
-  //   app: {
-  //     apolloProvider: { defaultClient },
-  //   },
-  // }) {
-  // await ctx.store.dispatch("fetchGeneralInfo");
-  // const client = ctx.app.apolloProvider.defaultClient;
   async fetch() {
     this.isLoading = true;
-    // const { data: categoryData } = await defaultClient.query({
     const {
       data: {
         pages: [pageData],
@@ -178,40 +169,11 @@ export default {
     );
     this.page = pageData;
     this.isLoading = false;
-    // const breadcrumbs =
-    // store.dispatch("breadcrumbs", breadcrumbs);
-    // return {
-    //   // breadcrumbs,
-    //   categories: ,
-    //   page: pageData,
-    // };
   },
   methods: {
     async handleClose() {
       await this.$router.push({ path: "/catalog/halal" });
     },
   },
-  // data() {
-  //   return {
-  //     breadcrumbs: [
-  //       {
-  //         to: "/",
-  //         text: "Главная",
-  //       },
-  //       {
-  //         to: "/catalog",
-  //         text: "Каталог",
-  //       },
-  //       {
-  //         // to: "/catalog/halal",
-  //         text: "Халяльная продукция",
-  //       },
-  //     ],
-  //     imageBaseUrl: process.env.imageBaseUrl,
-  //   };
-  // },
 };
 </script>
-
-<style>
-</style>

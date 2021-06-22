@@ -3,7 +3,7 @@
     class="footer"
     dark
     height="auto"
-    style="background-image: url(/footer-bg.jpg)"
+    style="background-image: url(/images/footer-bg.jpg)"
   >
     <v-container class="pt-10">
       <v-layout row wrap>
@@ -157,29 +157,15 @@
 }
 </style>
 <script>
-// import { mdiPhone, mdiEmail, mdiMapMarker, mdiClockOutline } from "@mdi/js";
-
 export default {
-  // props: ["menuItems"],
   computed: {
     menuItems() {
-      return this.$store.getters.menuItems;
+      return this.$store.getters["info/menuItems"];
     },
-    // categories() {
-    //   return this.$store.getters.getParentCategories; //.menuItems.find((item) => item.name === "Каталог");
-    // },
-    // manufacturers() {
-    //   return this.$store.state.sessionStorage.generalInfo.manufacturers;
-    // },
     contacts() {
-      return this.$store.state.sessionStorage.generalInfo.contacts;
+      return this.$store.state.info.data.contacts;
     },
   },
-  // data() {
-  //   return {
-  //     icons: { mdiPhone, mdiEmail, mdiMapMarker, mdiClockOutline },
-  //   };
-  // },
 };
 </script>
 

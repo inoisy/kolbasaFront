@@ -124,7 +124,7 @@ export default {
   },
   computed: {
     menuItems() {
-      return this.$store.getters.menuItems;
+      return this.$store.getters["info/menuItems"];
     },
   },
 };

@@ -88,7 +88,6 @@ export default {
     };
   },
   async asyncData(ctx) {
-    // await ctx.store.dispatch("fetchGeneralInfo");
     const client = ctx.app.apolloProvider.defaultClient;
     const { data: categoriesData } = await client.query({
       query: gql`

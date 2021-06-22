@@ -4,7 +4,7 @@
     <LazyHydrate when-idle>
       <page-header-simple :title="title" :breadrumbs="breadcrumbs" />
     </LazyHydrate>
-    <div :style="`background-image: url(/bg.jpg)`" class="background-repeat">
+    <div :style="`background-image: url(/images/bg.jpg)`" class="background-repeat">
       <v-container class="py-16">
         <LazyHydrate
           when-visible
@@ -156,15 +156,6 @@ export default {
         }
       `,
     });
-    // console.log(
-    //   "🚀 ~ file: discount.vue ~ line 113 ~ fetch ~ categoryData",
-    //   categories
-    // );
-
-    // const title = "Акционная продукция";
-    // const breadcrumbs =
-    // this.breadcrumbs = breadcrumbs;
-    // this.title = title;
     this.categories = categories.filter(
       (item) => item.products && item.products.length > 0
     );
@@ -177,43 +168,4 @@ export default {
     },
   },
 };
-// import PageHeader from "~/components/PageHeader";
-// import ProductCard from "~/components/ProductCard";
-// import { mdiDownload } from "@mdi/js";s
-// computed: {
-//   breadcrumbs() {
-//     return [
-//       {
-//         to: "/",
-//         text: "Главная",
-//       },
-//       {
-//         to: "/catalog",
-//         text: "Каталог",
-//       },
-//       {
-//         // to: "/catalog/discount",
-//         text: this.title,
-//       },
-//     ];
-//   },
-// },
-// components: { ProductCard, PageHeader },
-// async asyncData({
-//   app: {
-//     apolloProvider: { defaultClient },
-//   },
-// }) {
-//})
-// const { data: categoryData } = await defaultClient.query({
-// store.dispatch("breadcrumbs", breadcrumbs);
-
-// return {
-//   breadcrumbs,
-//   title,
-//   categories: categoryData.categories.filter(
-//     (item) => item.products && item.products.length > 0
-//   ),
-//   page: categoryData.pages[0],
-// };
 </script>

@@ -2,7 +2,7 @@
   <v-img
     class="imageBackground"
     :class="fixed && 'fixed'"
-    src="/bg.jpg"
+    src="/images/bg.jpg"
     position="50% 0%"
     gradient="to left top, rgb(255 255 255 / 12%), rgb(255 255 255 / 50%)"
   />

@@ -65,13 +65,6 @@
                         :text="!isManufacturerDesctiption"
                         :disabled="!isManufacturerDesctiption"
                       >
-                        <!-- <v-img
-                          
-                          contain
-                          
-                          :src="manufacturerImgMin"
-                          
-                        /> -->
                         <img
                           class="manufacturer-img"
                           :src="manufacturerImgMin"
@@ -98,16 +91,12 @@
                     <img
                       class="halal-img mt-2 mx-auto"
                       v-if="product.isHalal"
-                      :src="require('~/assets/images/halal-min.png')"
+                      src="/images/halal-min.png"
                       alt="Халяльная продукция"
                       title="Халяльная продукция"
                       height="50px"
                       width="50px"
                     />
-                    <!-- <v-img
-                     contain
-                      
-                    /> -->
                   </div>
                   <div class="image-inner">
                     <div
@@ -239,11 +228,7 @@ export default {
   },
   head() {
     if (this.isProduct && this.product.name && this.product.slug) {
-      // console.log("from subroute");
       return {
-        // bodyAttrs: {
-        //   class: this.isProduct && "m-open",
-        // },
         htmlAttrs: {
           class: this.isProduct && "m-open",
         },
@@ -368,7 +353,6 @@ export default {
     });
 
     if (!product) {
-      // console.log(Object.keys(this.$nuxt));
       return this.$nuxt.error({
         statusCode: 404,
         message: "Товар не найден",
@@ -379,7 +363,7 @@ export default {
     this.product = productData;
     this.breadcrumbs = [...this.breadcrumbsBase, { text: product.name }];
 
-    const phone = this.$store.state.sessionStorage.generalInfo.contacts.phone;
+    const phone = this.$store.state.info.data.contacts.phone;
     let contentFull = "";
     if (description) {
       contentFull += `<p>${description}</p>`;
@@ -444,7 +428,7 @@ export default {
       }, 200);
     },
     async handleAdd() {
-      this.$store.dispatch("addToCart", this.product);
+      this.$store.dispatch("cart/addToCart", this.product);
     },
     handleImageDialog(event) {
       if (
@@ -452,7 +436,6 @@ export default {
         (this.isManufacturerDesctiption &&
           this.$refs.manufImage.contains(event.target))
       ) {
-        // event.preventDefault();
         return;
       }
       this.loadingStart();

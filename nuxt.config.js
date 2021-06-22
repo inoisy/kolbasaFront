@@ -143,18 +143,12 @@ module.exports = async () => {
     ],
     plugins: [
       '@/plugins/strapi.js',
-      // '~/plugins/directives.js'
     ],
 
     router: {
       // trailingSlash: false,
       extendRoutes(routes, resolve) {
         routes.push(
-          //   {
-          //   name: 'catalog-nested',
-          //   path: '/catalog/:categorySlug/:productSlug',
-          //   component: resolve(__dirname, 'components/pages/catalog.vue')
-          // }
           {
             path: "/catalog/discount",
             component: resolve(__dirname, 'customPages/catalog/discount.vue'), //customPages\catalog\discount.vue
@@ -266,7 +260,11 @@ module.exports = async () => {
       }],
 
       // '@nuxtjs/sentry',
-      'nuxt-vuex-localstorage',
+      ['nuxt-vuex-localstorage', {
+        localStorage: ['cart', 'category'],
+        sessionStorage: ['info', 'categoryPage'],
+        // mode: 'manual'
+      }],
       [
         "@nuxtjs/yandex-metrika",
         // "~/modules/yandex-metrika",
@@ -311,38 +309,7 @@ module.exports = async () => {
       }]
 
     ],
-    // cache: {
-    //   // if you're serving multiple host names (with differing
-    //   // results) from the same server, set this option to true.
-    //   // (cache keys will be prefixed by your host name)
-    //   // if your server is behind a reverse-proxy, please use
-    //   // express or whatever else that uses 'X-Forwarded-Host'
-    //   // header field to provide req.hostname (actual host name)
-    //   useHostPrefix: false,
-    //   pages: [
-    //     // these are prefixes of pages that need to be cached
-    //     // if you want to cache all pages, just include '/'
-    //     '/',
-    //   ],
 
-    //   // key(route, context) {
-    //   //   // custom function to return cache key, when used previous
-    //   //   // properties (useHostPrefix, pages) are ignored. return 
-    //   //   // falsy value to bypass the cache
-    //   // },
-
-    //   store: {
-    //     type: 'memory',
-
-    //     // maximum number of pages to store in memory
-    //     // if limit is reached, least recently used page
-    //     // is removed.
-    //     max: 100,
-
-    //     // number of seconds to store this page in cache
-    //     ttl: 60 * 60 * 60 * 24,
-    //   },
-    // },
     strapi: {
       // Options
       url: backendUrl,

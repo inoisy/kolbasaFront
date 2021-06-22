@@ -252,7 +252,7 @@ export default {
     };
   },
   watch: {
-    "$store.getters.isCart"(val) {
+    isCart(val) {
       if (!val) {
         this.basketClose();
       }
@@ -272,28 +272,24 @@ export default {
     },
     async clearBasket() {
       // TODO CREATE MODAL
-      await this.$store.dispatch("clearCart");
+      await this.$store.dispatch("cart/clearCart");
     },
     async deleteFromBasket(id) {
-      await this.$store.dispatch("removeItemInCart", id);
+      await this.$store.dispatch("cart/removeItemInCart", id);
     },
   },
   computed: {
-    // summa() {
-    //   return this.$store.getters.summa;
-    // },
+    isCart() {
+      return this.$store.getters["cart/isCart"];
+    },
     summa() {
-      return this.$store.getters.cartSumm;
-      // }
+      return this.$store.getters["cart/cartSumm"];
     },
     isSummValid() {
       return this.summa >= 3000;
     },
-    // isMobile() {
-    //   return this.$vuetify.breakpoint.smAndDown;
-    // },
     basket() {
-      return this.$store.getters.cart;
+      return this.$store.getters["cart/cart"];
     },
   },
 };

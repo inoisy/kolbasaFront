@@ -4,7 +4,7 @@
       <section
         v-once
         :class="$style.mainSection"
-        style="background-image: url(/promo.jpg)"
+        style="background-image: url(/images/promo.jpg)"
       >
         <v-container :class="$style.mainSectionInner" fill-height class="py-15">
           <v-row justify="center" no-gutters>
@@ -34,15 +34,8 @@
     </LazyHydrate>
     <div
       class="background-repeat background-fixed"
-      :style="`background-image: linear-gradient(to left, rgb(255 255 255 / 15%), rgb(255 255 255 / 50%)), url(/bg.jpg)`"
+      :style="`background-image: linear-gradient(to left, rgb(255 255 255 / 15%), rgb(255 255 255 / 50%)), url(/images/bg.jpg)`"
     >
-      <!-- pos-relativeclass="pos-relative"<v-img
-        class="contentSection"
-        src="/bg.jpg"
-        position="50% 0%"
-        gradient="to left top, rgb(255 255 255 / 12%), rgb(255 255 255 / 50%)"
-      /> -->
-      <!-- <background-image fixed /> -->
       <v-container class="py-15">
         <div class="mb-5 pb-4 align-center d-flex column">
           <v-btn
@@ -138,12 +131,11 @@
             <v-col md="4" lg="3" class="hidden-sm-and-down pa-3">
               <v-img
                 class="bottom-img pr-4 d-block ma-auto"
-                :src="require('~/assets/images/bottomImage1.png')"
+                src="/images/bottomImage1.png"
                 contain
                 alt="Колбаса оптом в Москве"
                 title="Колбаса оптом"
               />
-              <!-- :lazy-src="require('~/assets/images/bottomImage1.png?lqip')" -->
             </v-col>
             <v-col class="pa-3" cols="10" md="8" lg="9">
               <div class="my-auto">
@@ -178,7 +170,7 @@
             <v-col md="4" lg="3" class="pa-3 hidden-sm-and-down">
               <v-img
                 class="bottom-img pl-4 d-block ma-auto"
-                :src="require('~/assets/images/bottomImage2.png')"
+                src="images/bottomImage2.png"
                 contain
                 alt="Колбаса оптом с доставкой"
                 title="Колбаса оптом"
@@ -212,7 +204,7 @@
               >
                 <div class="img-wrapper">
                   <v-img
-                    :src="require(`~/assets/images/${item.img}`)"
+                    :src="`/images/${item.img}`"
                     class="pt-1"
                     contain
                     :alt="`Купить колбасу оптом ${item.header}`"
@@ -280,13 +272,12 @@
             </v-col>
             <v-col md="4" class="flex hidden-sm-and-down md4 mb-5 pa-3">
               <v-img
-                :src="require('~/assets/images/halal.png')"
+                src="/images/halal.png"
                 class="halal-img pr-4"
                 contain
                 alt="Халяльная продукция в Москве"
                 title="Халяльная продукция"
               />
-              <!-- :lazy-src="require('~/assets/images/halal.png?lqip')" -->
             </v-col>
           </v-row>
         </LazyHydrate>
@@ -330,10 +321,10 @@ export default {
   computed: {
     categories() {
       // console.log("computed categories");
-      return this.$store.getters.getParentCategories;
+      return this.$store.getters["info/getParentCategories"];
     },
     manufacturers() {
-      return this.$store.state.sessionStorage.generalInfo.manufacturers;
+      return this.$store.state.info.data.manufacturers;
     },
   },
   data() {
@@ -383,7 +374,7 @@ export default {
           "Хотите высокое качество по низкой цене? Успейте купить по акции!",
         href: "/catalog/discount",
         img: {
-          url: "promo.jpg",
+          url: "/images/promo.jpg",
         },
       },
     };
@@ -463,39 +454,11 @@ export default {
   font-size: 1.2rem;
   font-weight: bold !important;
 }
-// .contentSection {
-// ::v-deep .v-image__image {
-//   background-color: #f0f0f0;
-//   background-repeat: repeat;
-//   background-size: 100% auto;
-//   background-position: 50%;
-// }
-
-// background-attachment: fixed;
-// background-color: #f0f0f0;
-// // background-repeat: repeat;
-// background-size: 100%;
-// background-image: url(/bg.jpg);
-// background-color: #f0f0f0;
-// background-repeat: repeat !important;
-// background-size: 100% !important;
-// .backdrop-blur {
-//   background-color: rgba(255, 255, 255, 0.9);
-// }
-
-/* if backdrop support: very transparent and blurred */
-
-// }
 .categoryWrapper {
   width: 100%;
   border: 1px solid #cfcfcf;
   border-radius: 10px;
   background-color: hsla(0, 0%, 100%, 0.4);
-
-  // border-radius: 5px;
-  // position: relative;
-  // z-index: 1;
-  // box-shadow: 5px 3px 30px #cfcfcf;
   &:before {
     content: "";
     position: absolute;

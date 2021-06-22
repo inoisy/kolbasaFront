@@ -1,7 +1,7 @@
 <template>
   <v-img
     contain
-    :src="require('~/assets/images/delimiter.svg')"
+    src="/images/delimiter.svg"
     title="Разделитель"
     alt="Разделитель"
     min-height="20px"

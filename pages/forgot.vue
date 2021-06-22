@@ -89,8 +89,7 @@ export default {
       sameAsPassword: sameAs("password"),
     },
   },
-  data: function () {
-    // const user = this.$store.state.localStorage.user;
+  data() {
     return {
       password: "",
       repeatPassword: "",

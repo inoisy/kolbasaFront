@@ -1,8 +1,9 @@
 <template>
   <div
     class="header-wrapper d-flex"
-    :style="load && `background-image: url(/promo_crop.jpg)`"
+    style="background-image: url(/images/promo_crop.jpg)"
   >
+  <!-- load &&  -->
     <v-container class="header-inner" style="padding: 0 24px" fill-height fluid>
       <div class="top-slot-wrapper">
         <breadcrumbs-sceleton v-if="!load" :boilerplate="!isLoading" />

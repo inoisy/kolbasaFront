@@ -31,7 +31,7 @@
           <v-img
             v-if="product.isHalal"
             class="mr-1"
-            :src="require('~/assets/images/halal-min.png')"
+            src="/images/halal-min.png"
             title="Халяльная продукция"
             alt="Халяльная продукция"
             width="40px"
@@ -128,7 +128,7 @@ export default {
   },
   methods: {
     async handleAdd() {
-      await this.$store.dispatch("addToCart", this.product);
+      await this.$store.dispatch("cart/addToCart", this.product);
     },
     cardClick(event) {
       if (this.$refs.productCardActions.$el.contains(event.target)) {

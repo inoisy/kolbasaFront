@@ -60,13 +60,13 @@ export default {
   },
   computed: {
     sort() {
-      return this.$store.state.localStorage.category.sort;
+      return this.$store.state.category.sort;
     },
   },
   data() {
     return {
       sortIcon: mdiSortVariant,
-      sortItems: this.$store.state.localStorage.category.sortItems,
+      sortItems: this.$store.state.category.sortItems,
       isMounted: false,
     };
   },

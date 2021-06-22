@@ -10,7 +10,7 @@
       >
         <v-img
           id="logo-img"
-          :src="require('~/assets/images/logo1.png')"
+          src="/images/logo1.png"
           alt="Логотип Альянс Фуд"
           title="Логотип Альянс Фуд"
           max-height="100%"
@@ -19,7 +19,7 @@
         <v-img
           id="logo-text"
           class="mt-1 mx-1"
-          :src="require('~/assets/images/logo2.png')"
+          src="/images/logo2.png"
           alt="Логотип Альянс Фуд"
           title="Логотип Альянс Фуд"
           max-height="80%"
@@ -60,6 +60,7 @@
         <span v-if="summa > 0" class="cart-text mr-2">
           {{ summa }}&nbsp;&#8381;
         </span>
+        <!-- <client-only> -->
         <v-badge
           class="cart-badge"
           color="#95282a"
@@ -69,6 +70,7 @@
         >
           <v-icon color="#95282a">{{ icons.mdiBasket }}</v-icon>
         </v-badge>
+        <!-- </client-only> -->
       </v-btn>
       <v-btn
         @click="$emit('show-user')"
@@ -279,23 +281,26 @@ export default {
       return this.$vuetify.breakpoint.mobile;
     },
     isCart() {
-      return this.$store.getters.isCart;
+      if (!this.isMounted) {
+        return false;
+      }
+      return this.$store.getters["cart/isCart"];
     },
     menuItems() {
-      return this.$store.getters.menuItems;
+      return this.$store.getters["info/menuItems"];
     },
     summa() {
-      if (!this.isMounted || !this.isCart) {
+      if (!this.isCart) {
         return 0;
       } else {
-        return this.$store.getters.cartSumm;
+        return this.$store.getters["cart/cartSumm"];
       }
     },
     cartLength() {
-      if (!this.isMounted || !this.isCart) {
+      if (!this.isCart) {
         return 0;
       } else {
-        const length = this.$store.getters.cartLength;
+        const length = this.$store.getters["cart/cartLength"];
         return length;
       }
     },

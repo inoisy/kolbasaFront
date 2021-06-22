@@ -4,8 +4,8 @@
       v-if="isMounted && isInCart"
       class="productQuantity"
       :id="id"
-      @deleted="isInCart = false"
     />
+    <!-- @deleted="isInCart = false" -->
     <v-btn
       v-else
       class="productAddButton"
@@ -46,11 +46,11 @@ export default {
   },
   computed: {
     isInCart() {
-      const isCartObj = this.$store.getters.isInCartByIds[this.id];
-      if (!isCartObj) {
-        this.$emit("delete");
-      }
-      return isCartObj;
+      // const isCartObj = ;
+      // if (!isCartObj) {
+      //   this.$emit("delete");
+      // }
+      return this.$store.getters["cart/isInCartByIds"][this.id];
     },
   },
 };

@@ -53,8 +53,6 @@ $dialog-desktop-margin: 40px;
 
     @include md {
         --toolbar-height: #{$toolbar-desktop-height};
-
-        // --dialog-margin: #{$dialog-desktop-margin};
         --dialog-width: 900px;
         --fab-button-size: 48px;
     }

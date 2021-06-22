@@ -35,7 +35,6 @@
   position: relative;
   max-height: inherit;
   height: inherit;
-
   padding: var(--dialog-img-padding);
   overflow: hidden;
 
@@ -80,31 +79,13 @@ export default {
       default: "",
     },
   },
-  // methods: {
-  //   hanleImageLoad() {
-  //     console.log("imageLoad", this.isLoaded);
-  //     this.isLoaded = true;
-  //     // console.log(
-  //     //   "🚀 ~ file: DialogImage.vue ~ line 68 ~ hanleImageLoad ~ this.isLoaded",
-  //     //   this.isLoaded
-  //     // );
-  //     this.$emit("loaded");
-  //   },
-  // },
-
   computed: {
     imgUrl() {
       return this.$config.imageBaseUrl + this.img.url;
     },
-
     inputVal: {
       get() {
-        // console.log(
-        //   "🚀 ~ file: DialogImage.vue ~ line 89 ~ get ~ this.value && this.isLoaded",
-        //   this.value && this.isLoaded
-        // );
-
-        return this.value; //&& this.isLoaded;
+        return this.value;
       },
       set(val) {
         if (!val) {

@@ -24,7 +24,7 @@
       :class="$style.categoryWrapper"
       class="background-repeat background-fixed"
       id="contentWrapper"
-      :style="isMounted && !noLoad && `background-image: url(/bg.jpg)`"
+      :style="isMounted && !noLoad && `background-image: url(/images/bg.jpg)`"
     >
       <!-- {{ subcategories }} -->
       <div :class="$style.container">
@@ -107,8 +107,6 @@ export default {
   loading: false,
   head() {
     if (!this.isProductRoute && !!this.metaInfo && this.metaInfo.name) {
-      // console.log("this.metaInfo", this.metaInfo);
-      // console.log("from route");
       return {
         title: this.metaInfo.name,
         meta: [
@@ -123,7 +121,7 @@ export default {
   },
   components: { LazyHydrate },
   data() {
-    const limit = this.$store.state.sessionStorage.categoryPage.limit;
+    const limit = this.$store.state.categoryPage.limit;
     return {
       category: {},
       limit: limit,
@@ -166,7 +164,7 @@ export default {
     this.isLoading = true;
 
     const categoryId = await this.$store.dispatch(
-      "changeCategory",
+      "categoryPage/changeCategory",
       this.$route.params.category
     );
 
@@ -178,11 +176,14 @@ export default {
       });
     }
     if (!this.initialPageData && !this.isProductRoute) {
-      await this.$store.dispatch("fetchAndSetFilters", this.$route.query);
+      await this.$store.dispatch(
+        "categoryPage/fetchAndSetFilters",
+        this.$route.query
+      );
       this.products = (
         await Promise.all([
-          this.$store.dispatch("fetchCategoryProducts"),
-          this.$store.dispatch("fetchCategory", categoryId),
+          this.$store.dispatch("categoryPage/fetchCategoryProducts"),
+          this.$store.dispatch("categoryPage/fetchCategory", categoryId),
         ])
       )[0];
 
@@ -195,49 +196,49 @@ export default {
       return !this.initialPageData && this.isProductRoute;
     },
     breadcrumbs() {
-      return this.$store.getters.categoryBreadcrumbs;
+      return this.$store.getters["categoryPage/categoryBreadcrumbs"];
     },
 
     manufacturer() {
-      return this.$store.state.sessionStorage.categoryPage.manufacturerSelected;
+      return this.$store.state.categoryPage.manufacturerSelected;
     },
     manufacturers() {
       if (this.noLoad) {
         return [];
       }
-      return this.$store.state.sessionStorage.categoryPage.category
-        .manufacturers;
+      return this.$store.state.categoryPage.category.manufacturers;
     },
     productType() {
-      return this.$store.state.sessionStorage.categoryPage.productTypeSelected;
+      return this.$store.state.categoryPage.productTypeSelected;
     },
 
     productTypes() {
       if (this.noLoad) {
         return [];
       }
-      return this.$store.state.sessionStorage.categoryPage.category
-        .product_types;
+      return this.$store.state.categoryPage.category.product_types;
     },
 
     subcategories() {
       if (this.noLoad) {
         return [];
       }
-      return this.$store.getters.categorySubcategories;
+      return this.$store.getters["categoryPage/categorySubcategories"];
     },
     metaInfo() {
       if (this.noLoad) {
         return {};
       }
-      return this.$store.getters.categoryMeta;
+      return this.$store.getters["categoryPage/categoryMeta"];
     },
   },
   methods: {
     async fetchAndRefillProducts() {
       this.isLoading = true;
       this.products = this.products.map(() => false);
-      this.products = await this.$store.dispatch("fetchCategoryProducts");
+      this.products = await this.$store.dispatch(
+        "categoryPage/fetchCategoryProducts"
+      );
       this.isLoading = false;
     },
 
@@ -254,7 +255,7 @@ export default {
     },
     async sortChange(item) {
       await this.scrollToProducts();
-      await this.$store.dispatch("changeSort", item);
+      await this.$store.dispatch("category/changeSort", item);
       await this.fetchAndRefillProducts();
     },
     async productTypeChange(item) {
@@ -262,7 +263,7 @@ export default {
       const newValue = item && item._id;
       if (oldValue !== newValue) {
         await this.scrollToProducts();
-        await this.$store.dispatch("changeProductType", newValue);
+        await this.$store.dispatch("categoryPage/changeProductType", newValue);
         await this.fetchAndRefillProducts();
       }
     },
@@ -272,7 +273,7 @@ export default {
       const newValue = item && item._id;
       if (oldValue !== newValue) {
         await this.scrollToProducts();
-        await this.$store.dispatch("changeManufacturer", item);
+        await this.$store.dispatch("categoryPage/changeManufacturer", item);
         await this.fetchAndRefillProducts();
       }
     },
@@ -288,10 +289,8 @@ export default {
     },
     async onInfinite($state) {
       this.isLoading = true;
-      // await this.$store.dispatch("fetchMoreCategoryProducts", $state);
-
       const newProducts = await this.$store.dispatch(
-        "fetchCategoryProducts",
+        "categoryPage/fetchCategoryProducts",
         this.products.length
       );
       if (newProducts && newProducts.length) {

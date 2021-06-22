@@ -42,7 +42,7 @@ export default {
   },
   computed: {
     quantity() {
-      return this.$store.getters["quantity"](this.id);
+      return this.$store.getters["cart/quantity"](this.id);
     },
   },
   // created() {
@@ -59,21 +59,21 @@ export default {
     async handleChange(qty) {
       const quantity = parseInt(qty);
       if (quantity > 0) {
-        const quan = await this.$store.dispatch("updateCartById", {
+        const quan = await this.$store.dispatch("cart/updateCartById", {
           id: this.id,
           quantity: quantity,
         });
         return quan;
       } else {
-        this.$store.dispatch("removeItemInCart", this.id);
+        this.$store.dispatch("cart/removeItemInCart", this.id);
         return 0;
       }
     },
     async hanleIncrement() {
-      await this.$store.dispatch("incrementCart", this.id);
+      await this.$store.dispatch("cart/incrementCart", this.id);
     },
     async handleDecrement() {
-      await this.$store.dispatch("decrementCart", this.id);
+      await this.$store.dispatch("cart/decrementCart", this.id);
     },
   },
 };
