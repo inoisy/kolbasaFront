@@ -72,7 +72,7 @@ export default {
             }
         },
     },
-    // components: { Order },
+
     async mounted() {
         await this.fetchOrders();
     },

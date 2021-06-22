@@ -1,9 +1,9 @@
 <template>
-  <v-img
-    contain
-    src="/images/delimiter.svg"
-    title="Разделитель"
-    alt="Разделитель"
-    min-height="20px"
-  />
+    <v-img
+        contain
+        src="/images/delimiter.svg"
+        title="Разделитель"
+        alt="Разделитель"
+        min-height="20px"
+    />
 </template>

@@ -1,107 +1,105 @@
 <template>
-  <div :class="$style.subcategoriesWrapper">
-    <nuxt-link
-      v-for="child in subcategories"
-      :to="`/catalog/${child.slug}`"
-      :class="$style.subcategory"
-      :exact-active-class="$style.subcategorySelected"
-      :key="`subcategory-${child.id}`"
-      :title="child.name"
-      v-ripple
-    >
-      <!-- <span class="d-inline-block text-truncate text-uppercase"> -->
-      {{ child.name }}
-      <!-- </span> -->
-    </nuxt-link>
-  </div>
+    <div :class="$style.subcategoriesWrapper">
+        <nuxt-link
+            v-for="child in subcategories"
+            :key="`subcategory-${child.id}`"
+            v-ripple
+            :to="`/catalog/${child.slug}`"
+            :class="$style.subcategory"
+            :exact-active-class="$style.subcategorySelected"
+            :title="child.name"
+        >
+
+            {{ child.name }}
+
+        </nuxt-link>
+    </div>
 </template>
 
 <script>
 export default {
-  props: {
-    subcategories: {
-      type: Array,
-      required: true,
+    props: {
+        subcategories: {
+            type: Array,
+            required: true,
+        },
     },
-  },
 };
 </script>
 
 <style lang="scss" scoped module>
-.subcategoriesWrapper {
-  justify-content: center;
-  display: flex;
-  flex-flow: wrap-reverse;
-  max-width: 100%;
-  //   position: absolute;
-  // bottom: 0;
-  // left: 0;
-  // right: 0;
-  .subcategory {
-    --height: 36px;
-    --font-size: 12px;
-    --padding: 16px;
-    @include sm {
-      --height: 38px;
-      --font-size: 14px;
-      --padding: 19px;
-    }
-    @include md {
-      --height: 44px;
-      --font-size: 15px;
-      --padding: 24px;
-    }
-    @include lg {
-      --height: 48px;
-      --font-size: 16px;
-    }
+    .subcategoriesWrapper {
+        display: flex;
+        justify-content: center;
+        flex-flow: wrap-reverse;
+        max-width: 100%;
 
-    height: var(--height);
-    font-size: var(--font-size);
-    line-height: 1;
-    padding: calc((var(--height) - var(--font-size)) / 2) var(--padding);
+        .subcategory {
+            --height: 36px;
+            --font-size: 12px;
+            --padding: 16px;
 
-    position: relative;
-    min-width: 64px;
-    color: $white;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-decoration: none;
-    text-transform: uppercase;
-    transition-duration: 0.28s;
-    transition-property: box-shadow, opacity;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    white-space: nowrap;
-    border-radius: 4px !important;
-    font-weight: 500;
-    max-width: 100%;
-    display: inline-block;
+            @include sm {
+                --height: 38px;
+                --font-size: 14px;
+                --padding: 19px;
+            }
 
-    &:before {
-      background-color: currentColor;
-      bottom: 0;
-      border-radius: inherit;
-      content: "";
-      left: 0;
-      opacity: 0;
-      position: absolute;
-      pointer-events: none;
-      right: 0;
-      top: 0;
+            @include md {
+                --height: 44px;
+                --font-size: 15px;
+                --padding: 24px;
+            }
+
+            @include lg {
+                --height: 48px;
+                --font-size: 16px;
+            }
+
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            min-width: 64px;
+            max-width: 100%;
+            height: var(--height);
+            padding: calc((var(--height) - var(--font-size)) / 2) var(--padding);
+            border-radius: 4px !important;
+            text-decoration: none;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+            white-space: nowrap;
+            font-size: var(--font-size);
+            font-weight: 500;
+            line-height: 1;
+            color: $white;
+            transition-duration: .28s;
+            transition-property: box-shadow, opacity;
+            transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+
+            &:before {
+                content: "";
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                border-radius: inherit;
+                background-color: currentColor;
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            &:hover {
+                &:before {
+                    opacity: .12;
+                }
+            }
+        }
+
+        .subcategorySelected {
+            &:before {
+                opacity: .12;
+            }
+        }
     }
-    &:hover {
-      &:before {
-        opacity: 0.12;
-      }
-    }
-  }
-  .subcategorySelected {
-    &:before {
-      opacity: 0.12;
-    }
-  }
-  //   .theme--light.v-chip--active:hover::before, .theme--light.v-chip--active::before {
-  //     opacity: 0.12;
-  // }
-}
 </style>

@@ -77,7 +77,6 @@ h5,
 h6,
 .heading-font {
     font-family: $heading-font-family;
-    // font-weight: 700;
 }
 
 .display-flex {
@@ -113,7 +112,6 @@ h6,
     background-position: 50%;
     background-repeat: repeat;
     background-size: 100% auto;
-    // position: relative;
 }
 
 .background-fixed {
@@ -123,7 +121,6 @@ h6,
 .background-with-transparent {
     position: relative;
     background-color: #f0f0f0;
-    // background-image: url(/bg.jpg);
     background-image: linear-gradient(to left, rgb(255 255 255 / 31%), rgb(255 255 255 / 82%)), url(/bg.jpg);
     background-position: 50%;
     background-repeat: repeat;

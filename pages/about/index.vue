@@ -41,7 +41,7 @@ export default {
         }
       `,
         });
-        // console.timeEnd("fetchAsyncData");
+
         return {
             content: page.content,
         };

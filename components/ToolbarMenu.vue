@@ -24,6 +24,26 @@
         </v-list>
     </v-menu>
 </template>
+<script>
+export default {
+    props: {
+        items: {
+            type: Array,
+            default: () => [],
+        },
+        parentSlug: {
+            type: String,
+            default: '',
+        },
+        isTwoColumns: {
+            type: Boolean,
+            default: false,
+        },
+    },
+
+
+};
+</script>
 <style lang="scss" scoped>
     .menu-inner {
         top: $toolbar-mobile-height !important;
@@ -53,48 +73,4 @@
             padding-left: 1rem;
         }
     }
-</style>
-<script>
-
-
-export default {
-    // components: {
-    //   LazyHydrate,
-    // },
-    props: {
-        items: {
-            type: Array,
-            default: () => [],
-        },
-        parentSlug: {
-            type: String,
-            default: '',
-        },
-        isTwoColumns: {
-            type: Boolean,
-            default: false,
-        },
-    },
-    //   data() {
-    //     return {
-    //       showMenu: false,
-    //     };
-    //   },
-    //   computed:{
-    //       twoColumns(){
-    //           return this.isTwoColumns || this.items.length >10
-    //       }
-    //   },
-    //   watch: {
-    //     "$route.path"() {
-    //       this.showMenu = false;
-    //     },
-    //   },
-    //   beforeDestroy() {
-    //     this.showMenu = false;
-    //   },
-};
-</script>
-
-<style>
 </style>

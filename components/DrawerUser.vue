@@ -35,7 +35,7 @@
 
 export default {
     middleware: 'auth',
-    // components: { Register, Login, Orders },
+
     props: {
         show: {
             type: Boolean,
@@ -45,13 +45,12 @@ export default {
     data() {
         return {
             showOrders: false,
-            // icons: { mdiHistory, mdiLogoutVariant },
+
         };
     },
     computed: {
         isLogined() {
             return Boolean(this.$strapi.user);
-            // return this.$store.getters["auth/isLogined"];
         },
         userData() {
             return this.$strapi.user;

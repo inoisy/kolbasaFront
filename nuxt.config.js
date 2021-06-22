@@ -66,14 +66,7 @@ module.exports = async () => {
             siteUrl: sitename,
         },
 
-        // generate: {
-        //   interval: 300,
-        //   dir: 'public',
-        //   subFolders: false,
-        //   fallback: "404.html",
-        //   routes: generateRoutesArr
-        // },
-        // * Headers of the page
+
         head: {
             title: name,
             titleTemplate: `%s - ${name}`,
@@ -96,7 +89,7 @@ module.exports = async () => {
             }],
         },
 
-        // * Customize the progress-bar color
+
         loading: {
             color: '#d50000',
             throttle: 30,
@@ -107,7 +100,7 @@ module.exports = async () => {
         components: [
             { path: '~/components', extensions: ['vue'] },
         ],
-        // * Global CSS
+
         css: [
             '~/assets/style/app.scss',
         ],
@@ -116,11 +109,11 @@ module.exports = async () => {
         ],
 
         router: {
-            // trailingSlash: false,
+
             extendRoutes(routes, resolve) {
                 routes.push({
                     path: '/catalog/discount',
-                    component: resolve(__dirname, 'customPages/catalog/discount.vue'), // customPages\catalog\discount.vue
+                    component: resolve(__dirname, 'customPages/catalog/discount.vue'),
                     name: 'catalog-discount',
                     children: [{
                         path: ':slug?',
@@ -129,7 +122,7 @@ module.exports = async () => {
                     }],
                 }, {
                     path: '/catalog/halal',
-                    component: resolve(__dirname, 'customPages/catalog/halal.vue'), // customPages\catalog\halal.vue
+                    component: resolve(__dirname, 'customPages/catalog/halal.vue'),
                     name: 'catalog-halal',
                     children: [{
                         path: ':slug?',
@@ -147,7 +140,7 @@ module.exports = async () => {
                     }],
                 }, {
                     path: '/manufacturers/:manufSlug',
-                    component: resolve(__dirname, 'customPages/manufacturers/_manufSlug.vue'), // customPages\manufacturers\_slug.vue
+                    component: resolve(__dirname, 'customPages/manufacturers/_manufSlug.vue'),
                     name: 'manufacturers-manufSlug',
                     children: [{
                         path: ':slug?',
@@ -160,8 +153,8 @@ module.exports = async () => {
         buildModules: [
             ...(isDev ? devModules : []),
             '~/modules/hook.js',
-            // https://github.com/nuxt-community/style-resources-module
-            // '@nuxtjs/eslint-module',
+
+
             '@nuxtjs/style-resources',
             '@nuxtjs/vuetify',
             ['@aceforth/nuxt-optimized-images', {
@@ -170,7 +163,7 @@ module.exports = async () => {
                 responsiveImagesName: ({ isDev }) => isDev ? '[path][name]--[width][hash:optimized].[ext]' : 'img/[contenthash:7]-[width].[ext]',
                 handleImages: ['jpeg', 'png', 'svg', 'webp'],
                 optimizeImages: true,
-                optimizeImagesInDev: true, // TODO
+                optimizeImagesInDev: true,
                 defaultImageLoader: 'img-loader',
                 mozjpeg: {
                     quality: 40,
@@ -180,7 +173,7 @@ module.exports = async () => {
                 },
                 pngquant: false,
                 svgo: {
-                    // enable/disable svgo plugins here
+
                 },
                 webp: {
                     preset: 'default',
@@ -188,7 +181,7 @@ module.exports = async () => {
                 },
             }],
         ],
-        // * Plugins to load before mounting the App
+
 
         modules: [
             ['@nuxtjs/apollo', {

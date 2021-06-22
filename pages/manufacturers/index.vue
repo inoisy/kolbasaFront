@@ -1,40 +1,37 @@
 <template>
-  <div>
-    <LazyHydrate when-idle>
-      <page-header-simple title="Производители" :breadrumbs="breadrumbs" />
-    </LazyHydrate>
-    <div class="background-with-transparent">
-      <v-container class="py-16" grid-list-lg>
-        <LazyHydrate
-          when-visible
-          v-for="(item, index) in manufacturers"
-          :key="`manufacturer-${index}`"
-        >
-          <vertical-card :item="item" type="manufacturers" class="mb-6" />
+    <div>
+        <LazyHydrate when-idle>
+            <page-header-simple title="Производители" :breadrumbs="breadrumbs" />
         </LazyHydrate>
-      </v-container>
+        <div class="background-with-transparent">
+            <v-container class="py-16" grid-list-lg>
+                <LazyHydrate
+                    v-for="(item, index) in manufacturers"
+                    :key="`manufacturer-${index}`"
+                    when-visible
+                >
+                    <vertical-card :item="item"
+                                   type="manufacturers"
+                                   class="mb-6"
+                    />
+                </LazyHydrate>
+            </v-container>
+        </div>
     </div>
-  </div>
 </template>
-  
+
 
 <script>
-import gql from "graphql-tag";
-import LazyHydrate from "vue-lazy-hydration";
+import gql from 'graphql-tag';
+import LazyHydrate from 'vue-lazy-hydration';
 
 export default {
-  head() {
-    return {
-      title: "Производители (мясокомбинаты)",
-    };
-  },
-  components: { LazyHydrate },
-  async asyncData({ app }) {
-    // console.log("asyncdatacalled");
-    const {
-      data: manufacturerData,
-    } = await app.apolloProvider.defaultClient.query({
-      query: gql`
+    components: { LazyHydrate },
+    async asyncData({ app }) {
+        const {
+            data: manufacturerData,
+        } = await app.apolloProvider.defaultClient.query({
+            query: gql`
         query ManufacturersQuery {
           manufacturers(sort: "name:asc", limit: 999) {
             name
@@ -46,26 +43,29 @@ export default {
           }
         }
       `,
-    });
-    return {
-      manufacturers: manufacturerData.manufacturers,
-    };
-  },
-  computed: {
-    breadrumbs() {
-      return [
-        {
-          to: "/",
-          text: "Главная",
-        },
-        {
-          to: "/manufacturers",
-          text: "Производители",
-        },
-      ];
+        });
+        return {
+            manufacturers: manufacturerData.manufacturers,
+        };
     },
-  },
+    head() {
+        return {
+            title: 'Производители (мясокомбинаты)',
+        };
+    },
+    computed: {
+        breadrumbs() {
+            return [
+                {
+                    to: '/',
+                    text: 'Главная',
+                },
+                {
+                    to: '/manufacturers',
+                    text: 'Производители',
+                },
+            ];
+        },
+    },
 };
 </script>
-
-

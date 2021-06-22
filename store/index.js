@@ -4,7 +4,6 @@ import gql from 'graphql-tag';
 export const mutations = {
 
     generalInfo(state, data) {
-    // state.sessionStorage.generalInfo = data
         state.info.data = data;
     },
 
@@ -17,7 +16,6 @@ export const actions = {
             contacts: data.contact,
         });
     },
-
 
     async fetchManufacturer({ }, id) {
         const {
@@ -94,7 +92,7 @@ export const actions = {
 
 
 // async changeCategory({ commit, getters, state }, slug) {
-//   // state: { sessionStorage: { categoryPage: { categoryMinimal } } }
+//
 //   const categoryMinimal = state.sessionStorage.categoryPage.categoryMinimal
 //   const category = getters.getCategoryBySlug[slug];
 //   if (!category) {
@@ -209,7 +207,7 @@ export const actions = {
 // },
 
 // async fetchCategoryProducts({ getters, state }, start = 0) {
-//   // : { sessionStorage: { categoryPage: { limit, manufacturerSelected, productTypeSelected } }, localStorage: { category: { sort } } }
+//
 //   const { limit, manufacturerSelected, productTypeSelected } = state.sessionStorage.categoryPage
 //   const { sort } = state.localStorage.category
 //   const {
@@ -264,7 +262,7 @@ export const actions = {
 //     variables: {
 //       start: start,
 //       category: getters.categoriesIds,
-//       // category: categoriesIds,
+//
 //       limit: limit,
 //       sort: sort.value,
 //       ...(!!manufacturerSelected && {
@@ -275,7 +273,7 @@ export const actions = {
 //       }),
 //     },
 //   });
-//   // await commit("setCategoryProducts", products)
+//
 
 //   return products
 // },
@@ -364,14 +362,14 @@ export const actions = {
 // },
 // isChildCategory(state) {
 //   const category = state.sessionStorage.categoryPage.categoryMinimal
-//   // { sessionStorage: { categoryPage: { categoryMinimal: category } } }
+//
 //   if (!!category.parent.length) {
 //     return true
 //   }
 //   return false
 // },
 // categoriesIds(state, getters) {
-//   // { sessionStorage: { categoryPage: { categoryMinimal: category } } }
+//
 //   const category = state.sessionStorage.categoryPage.categoryMinimal
 //   if (getters.isChildCategory) {
 //     return [category.id]
@@ -379,7 +377,7 @@ export const actions = {
 //   return getters.categorySubcategoriesIDs
 // },
 // rootCategory(state, getters) {
-//   // { sessionStorage: { categoryPage: { categoryMinimal: category } } }
+//
 //   const category = state.sessionStorage.categoryPage.categoryMinimal
 //   if (getters.isChildCategory) {
 //     return getters.getCategoryBySlug[category.parent[0].slug]

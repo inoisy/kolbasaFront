@@ -31,29 +31,25 @@ export default {
         },
         params,
     }) {
-        // console.log("🚀 ~ file: _slug.vue ~ line 79 ~ params.slug", params.slug);
-
         const {
             data: {
                 pages: [page],
             },
         } = await defaultClient.query({
             query: gql`
-        query PageQuery($slug: String!) {
-          pages(where: { slug: $slug }) {
-            content
-            header
-            metaDescription
-          }
-        }
-      `,
+              query PageQuery($slug: String!) {
+                pages(where: { slug: $slug }) {
+                  content
+                  header
+                  metaDescription
+                }
+              }
+            `,
             variables: {
                 slug: params.slug,
             },
         });
-        // console.log("🚀 ~ file: _slug.vue ~ line 70 ~ page", page);
 
-        // console.timeEnd("fetchAsyncData");
         return {
             page,
         };
@@ -90,7 +86,7 @@ export default {
                     text: 'О компании',
                 },
                 {
-                    //   to: "/delivery",
+
                     text: this.title,
                 },
             ];

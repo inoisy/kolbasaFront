@@ -8,8 +8,6 @@
         width="550px"
         @input="change"
     >
-        <!--v-click-outside="change" @input="change" stateless
-    v-click-outside="change" -->
         <div class="pb-6 basketWrapper">
             <v-app-bar class="grey lighten-3 px-2"
                        height="100px"
@@ -79,11 +77,7 @@
                                                         : '/no-image.png'
                                                 "
                                                 :alt="product.name"
-                                            >
-                                                <!-- <template v-slot:placeholder>
-                          <image-placeholder />
-                        </template> -->
-                                            </v-img>
+                                            />
                                         </v-avatar>
                                     </td>
                                     <td class="px-1">
@@ -192,58 +186,10 @@
         </div>
     </v-navigation-drawer>
 </template>
-<style lang="scss" scoped>
-
-
-    .basketWrapper {
-        // --quantity-border-radius: 20px;
-        // .item-wrapper {
-        //   min-height: 80px;
-        // }
-        .busket-product-name {
-            display: block;
-            font-size: 12px;
-            // line-height: 1;
-            line-height: 125%;
-        }
-
-        .quantity {
-            // min-width: 100px;
-            // @include md {
-            //   width: 155px;
-            //   min-width: 155px;
-            // }
-        }
-
-        .price {
-            // min-width: 50px;
-            width: 65px;
-            padding-right: 5px;
-            padding-left: 5px;
-            text-align: center;
-        }
-
-        .btn-wrap {
-            flex-wrap: wrap;
-            flex-direction: column;
-
-            .busket-btn {
-                flex-grow: 1;
-
-                @include md {
-                    flex-direction: row;
-                }
-            }
-        }
-    }
-</style>
 
 <script>
 import { mdiDeleteForeverOutline, mdiDeleteEmptyOutline } from '@mdi/js';
-
-
 export default {
-    // components: { ContactForm, ProductQuantity },.
     props: {
         show: { type: Boolean, default: false },
     },
@@ -251,7 +197,6 @@ export default {
         return {
             imageBaseUrl: process.env.imageBaseUrl,
             offer: false,
-            // cart: {},
             icons: {
                 mdiDeleteForeverOutline,
                 mdiDeleteEmptyOutline,
@@ -292,7 +237,6 @@ export default {
             this.offer = true;
         },
         async clearBasket() {
-            // TODO CREATE MODAL
             await this.$store.dispatch('cart/clearCart');
         },
         async deleteFromBasket(id) {
@@ -301,3 +245,33 @@ export default {
     },
 };
 </script>
+
+<style lang="scss" scoped>
+    .basketWrapper {
+        .busket-product-name {
+            display: block;
+            font-size: 12px;
+            line-height: 125%;
+        }
+
+        .price {
+            width: 65px;
+            padding-right: 5px;
+            padding-left: 5px;
+            text-align: center;
+        }
+
+        .btn-wrap {
+            flex-wrap: wrap;
+            flex-direction: column;
+
+            .busket-btn {
+                flex-grow: 1;
+
+                @include md {
+                    flex-direction: row;
+                }
+            }
+        }
+    }
+</style>

@@ -1,80 +1,79 @@
 class CartProduct {
     constructor(item) {
         if (item.id) {
-            this.id = item.id
+            this.id = item.id;
         }
         if (item._id) {
-            this.id = item._id
+            this.id = item._id;
         }
         if (item.category) {
-            this.categorySlug = item.category.slug
+            this.categorySlug = item.category.slug;
         }
 
-        this.discountPrice = item.discountPrice
+        this.discountPrice = item.discountPrice;
         if (item.img) {
-            this.img = item.img.formats && item.img.formats.thumbnail ? item.img.formats.thumbnail.url : item.img.url
+            this.img = item.img.formats && item.img.formats.thumbnail ? item.img.formats.thumbnail.url : item.img.url;
         }
-        this.isDiscount = item.isDiscount
-        this.minimumOrder = item.minimumOrder || 1
-        this.priceNum = item.priceNum
-        this.slug = item.slug
-        this.weight = item.weight
-        this.name = item.name
+        this.isDiscount = item.isDiscount;
+        this.minimumOrder = item.minimumOrder || 1;
+        this.priceNum = item.priceNum;
+        this.slug = item.slug;
+        this.weight = item.weight;
+        this.name = item.name;
     }
 }
 export const state = () => ({
     cartItemList: [],
-    // status: true
-})
+
+});
 
 export const getters = {
     cart(state) {
         const cart = state.cartItemList.reduce((acc, product) => {
-            const newProd = Object.assign({}, product)
-            newProd.subSumm = product.isDiscount
-                ? Math.round(product.discountPrice * product.quantity)
-                : Math.round(product.priceNum * product.quantity)
-            acc.push(newProd)
-            return acc
-        }, [])
-        return cart
+            const newProd = Object.assign({}, product);
+            newProd.subSumm = product.isDiscount ?
+                Math.round(product.discountPrice * product.quantity) :
+                Math.round(product.priceNum * product.quantity);
+            acc.push(newProd);
+            return acc;
+        }, []);
+        return cart;
     },
     cartSumm(state) {
-        const summa = state.cartItemList.reduce(
-            (acc, product) => {
-                acc =
+        const summa = state.cartItemList.reduce((acc, product) => {
+            acc =
                     product.isDiscount && product.discountPrice ?
                         acc + product.discountPrice * product.quantity :
                         acc + product.quantity * product.priceNum;
-                return acc;
-            }, 0)
+            return acc;
+        }, 0);
 
-        return summa
+        return summa;
     },
     isCart(state) {
-        return state.cartItemList && !!state.cartItemList.length
+        return state.cartItemList && Boolean(state.cartItemList.length);
     },
     cartLength(state) {
-        return state.cartItemList.length
+        return state.cartItemList.length;
     },
     isInCartByIds(state, getters) {
         if (!getters.isCart) {
             return {};
         }
         return state.cartItemList.reduce((out, item) => {
-            out[item.id] = true
-            return out
-        }, {})
+            out[item.id] = true;
+            return out;
+        }, {});
     },
-    quantity: (state) => id => {
-        const record = state.cartItemList.find((element) => element.id == id)
+    quantity: state => id => {
+        const record = state.cartItemList.find(element => element.id == id);
         if (record) {
-            return record.quantity
+            return record.quantity;
         } else {
-            return 0
+            return 0;
         }
     },
-}
+};
 export const mutations = {
 
     updateCartByID(state, { id, quantity }) {
@@ -84,10 +83,10 @@ export const mutations = {
         }
     },
     addToCart(state, item) {
-        const product = new CartProduct(item)
+        const product = new CartProduct(item);
         state.cartItemList.push({
             ...product,
-            quantity: product.minimumOrder
+            quantity: product.minimumOrder,
         });
     },
     setCart(state, productList) {
@@ -110,54 +109,53 @@ export const mutations = {
     decrementCart(state, id) {
         const record = state.cartItemList.find(element => element.id == id);
         if (record) {
-            const quantityNew = record.quantity -= record.minimumOrder
+            const quantityNew = record.quantity -= record.minimumOrder;
             if (quantityNew > 0) {
-                record.quantity = quantityNew
+                record.quantity = quantityNew;
             } else {
                 state.cartItemList.splice(state.cartItemList.indexOf(record), 1);
             }
         }
     },
-}
+};
 export const actions = {
     addToCart({ commit }, item) {
-        commit("addToCart", item)
+        commit('addToCart', item);
     },
     updateCartById({ commit, state }, { id, quantity }) {
         const record = state.cartItemList.find(element => element.id == id);
         if (record) {
             let newQuantity;
             if (record.minimumOrder > 1) {
-                const ostatok = quantity % record.minimumOrder
+                const ostatok = quantity % record.minimumOrder;
                 if (ostatok !== 0) {
-                    newQuantity = quantity + (record.minimumOrder - ostatok)
+                    newQuantity = quantity + (record.minimumOrder - ostatok);
                 } else {
-                    newQuantity = quantity
+                    newQuantity = quantity;
                 }
             } else {
-                newQuantity = quantity
+                newQuantity = quantity;
             }
             if (record.quantity !== newQuantity) {
-                commit("updateCartByID", { id, quantity: newQuantity })
-                return newQuantity
+                commit('updateCartByID', { id, quantity: newQuantity });
+                return newQuantity;
             } else {
-                return record.quantity
+                return record.quantity;
             }
         }
     },
     removeItemInCart({ commit }, id) {
-        commit("removeCartItem", id)
+        commit('removeCartItem', id);
     },
     incrementCart({ commit }, id) {
-        commit("incrementCart", id)
+        commit('incrementCart', id);
     },
     decrementCart({ commit }, id) {
-        commit("decrementCart", id)
+        commit('decrementCart', id);
     },
-    // setCart({ commit }, cart) {
-    //     commit("setCart", cart)
-    // },
+
+
     clearCart({ commit }) {
-        commit("setCart", [])
+        commit('setCart', []);
     },
-}
+};

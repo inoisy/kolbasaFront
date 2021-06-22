@@ -59,7 +59,6 @@ $utilities: (
     ),
     "margin-start": false,
     "margin-end": false,
-    // Negative margin utilities
     "negative-margin": false,
     "negative-margin-x": false,
     "negative-margin-y": false,
@@ -69,7 +68,6 @@ $utilities: (
     "negative-margin-left": false,
     "negative-margin-start": false,
     "negative-margin-end": false,
-    // Padding utilities
     "padding": (
         responsive: false,
     ),
@@ -93,7 +91,6 @@ $utilities: (
     ),
     "padding-start": false,
     "padding-end": false,
-    // Border
     "rounded": false,
     "rounded-top": false,
     "rounded-right": false,
@@ -103,7 +100,6 @@ $utilities: (
     "rounded-top-right": false,
     "rounded-bottom-right": false,
     "rounded-bottom-left": false,
-    // Text
     "text-align": (
         responsive: false,
     ),

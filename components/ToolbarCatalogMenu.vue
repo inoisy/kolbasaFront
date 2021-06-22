@@ -28,7 +28,7 @@
 
                                 <div class="ml-auto pl-3">
                                     <v-icon style="transform: rotate(270deg);">
-                                        <!-- {{ icons.mdiMenuDown }} -->
+
                                         $dropdown
                                     </v-icon>
                                 </div>
@@ -66,9 +66,7 @@
 
 
 export default {
-    // components: {
-    //   LazyHydrate,
-    // },
+
     props: {
         items: {
             type: Array,
@@ -85,7 +83,7 @@ export default {
     },
     data() {
         return {
-            // icons: { mdiMenuDown },
+
             showMenu: false,
         };
     },

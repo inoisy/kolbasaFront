@@ -3,7 +3,6 @@
         class="header-wrapper d-flex"
         style="background-image: url(/images/promo_crop.jpg);"
     >
-        <!-- load &&  -->
         <v-container class="header-inner"
                      style="padding: 0 24px;"
                      fill-height
@@ -72,12 +71,8 @@ export default {
             default: false,
         },
     },
-    // data() {
-    //   return {
-    //     isLoading: true,
-    //     load: false,
-    //   };
-    // },
+
+
 };
 </script>
 <style lang="scss" scoped>
@@ -90,8 +85,6 @@ export default {
     }
 
     .bottom-slot-wrapper {
-        // max-width: 100%;
-        // width: 100%;
         display: flex;
         min-height: 100px;
         padding-top: 30px;
@@ -109,8 +102,6 @@ export default {
             width: 100% !important;
             height: 85% !important;
             margin-top: auto;
-            // width: 100%;
-            // height: 100%;
             margin-bottom: auto !important;
         }
     }
@@ -152,16 +143,12 @@ export default {
             min-height: 400px;
             padding: 0 24px 0 24px;
             flex-direction: column;
-            // @include md {
-            //   min-height: 450px;
-            // }
+
             .header-text-wrapper {
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 width: 100%;
-                // @include center;
-                // min-width: 73%;
                 min-height: 180px;
                 text-align: center;
 
@@ -172,9 +159,7 @@ export default {
                     font-size: 2.2rem;
                     line-height: 1.2;
                     color: $white;
-                    //       align-items: center;
-                    // display: inline-flex;
-                    // justify-content: center;
+
                     @include sm {
                         font-size: 2.7rem;
                     }

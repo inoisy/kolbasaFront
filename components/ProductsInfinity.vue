@@ -1,25 +1,25 @@
 <template>
-  <client-only>
-    <infinite-loading
-      @infinite="onInfinite"
-      ref="infiniteLoading"
-      class="flex xs12"
-    >
-      <div slot="no-results"></div>
-      <div slot="no-more"></div>
-    </infinite-loading>
-  </client-only>
+    <client-only>
+        <infinite-loading
+            ref="infiniteLoading"
+            class="flex xs12"
+            @infinite="onInfinite"
+        >
+            <div slot="no-results"></div>
+            <div slot="no-more"></div>
+        </infinite-loading>
+    </client-only>
 </template>
 <script>
-import InfiniteLoading from "vue-infinite-loading";
+import InfiniteLoading from 'vue-infinite-loading';
 
 export default {
-  components: { InfiniteLoading },
+    components: { InfiniteLoading },
 
-  methods: {
-    onInfinite($state) {
-      this.$emit("load", $state);
+    methods: {
+        onInfinite($state) {
+            this.$emit('load', $state);
+        },
     },
-  },
 };
 </script>

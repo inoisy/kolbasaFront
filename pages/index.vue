@@ -134,7 +134,7 @@
                                     </nuxt-link>
                                 </v-slide-item>
                             </v-slide-group>
-                            <!-- <multi-item-slider :items="manufacturers" /> -->
+
                         </div>
                     </section>
                 </LazyHydrate>
@@ -344,8 +344,8 @@ export default {
     name: 'IndexPage',
     components: {
         LazyHydrate,
-    // MultiItemSlider,
-    // MainPageCard,
+
+
     },
     data() {
         return {
@@ -421,7 +421,6 @@ export default {
 
     computed: {
         categories() {
-            // console.log("computed categories");
             return this.$store.getters['info/getParentCategories'];
         },
         manufacturers() {
@@ -434,7 +433,6 @@ export default {
 <style lang="scss" scoped module>
     .mainSection {
         height: calc(100vh - #{$toolbar-mobile-height});
-        // position: relative;
         background-color: #212121;
         color: white;
 
@@ -469,7 +467,6 @@ export default {
         .subheader {
             margin-bottom: 2rem;
             text-align: center;
-            // font-weight: 400;
             font-size: 1.2rem;
             line-height: 150%;
 
@@ -495,11 +492,10 @@ export default {
                     margin-bottom: 0;
                 }
             }
-            // .orderBtn,
+
             .seeAllBtn {
                 margin-right: 8px;
                 margin-left: 8px;
-                // margin: 0 12px 12px 12px;
             }
         }
     }
@@ -533,19 +529,6 @@ export default {
             box-shadow: inset 0 0 2000px rgba(255, 255, 255, .5);
             filter: blur(5px);
         }
-        // @supports (
-        //   (-webkit-backdrop-filter: blur(2em)) or (backdrop-filter: blur(2em))
-        // ) {
-        //   // .categoryWrapper {
-        //   // box-shadow: none;
-        //   background-color: rgba(235, 235, 235, 0.4);
-        //   -webkit-backdrop-filter: blur(3px);
-        //   backdrop-filter: blur(3px);
-        //   &:before {
-        //     display: none;
-        //   }
-        //   // }
-        // }
     }
 
     .overflowButton {
@@ -575,7 +558,6 @@ export default {
     }
 
     .manuf-img {
-        // object-fit: contain;
         width: 80px;
         height: 80px;
         transform: perspective(1px);
@@ -584,7 +566,6 @@ export default {
 
         &:hover {
             transform: scale(1.05);
-            // transition: all 0.3s ease-in-out;
             filter: none;
         }
     }
@@ -605,7 +586,6 @@ export default {
 
     .bottom-header {
         font-size: 2rem;
-        // font-family: "Lumberjack";
         line-height: normal;
         color: #4a1f00;
 
@@ -617,7 +597,6 @@ export default {
 
     .bottom-text {
         font-size: 1.2rem;
-        // font-family: "Lumberjack";
         color: #4a1f00;
     }
 

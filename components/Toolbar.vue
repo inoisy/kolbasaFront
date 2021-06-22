@@ -1,309 +1,308 @@
 <template>
-  <div :class="$style.appBar">
-    <!-- <LazyHydrate when-idle> -->
-    <div :class="$style.appBarInner">
-      <nuxt-link
-        :class="$style.logoWrapper"
-        to="/"
-        class="py-1 fill-height d-flex align-center"
-        title="Логотип Альянс Фуд"
-      >
-        <v-img
-          id="logo-img"
-          src="/images/logo1.png"
-          alt="Логотип Альянс Фуд"
-          title="Логотип Альянс Фуд"
-          max-height="100%"
-          contain
-        />
-        <v-img
-          id="logo-text"
-          class="mt-1 mx-1"
-          src="/images/logo2.png"
-          alt="Логотип Альянс Фуд"
-          title="Логотип Альянс Фуд"
-          max-height="80%"
-          contain
-        />
-      </nuxt-link>
-      <v-spacer></v-spacer>
-      <template v-if="isMounted && !isMobile">
-        <v-btn
-          v-for="(item, index) in menuItems"
-          v-bind="{
-            ...(!item.disable ? { to: `/${item.slug}` } : null),
-          }"
-          :key="item.slug + index"
-          :id="item.slug"
-          class="fill-height ma-0 header-link hidden-sm-and-down"
-          style="height: 100%"
-          text
-          tile
-          color="#95282a"
-          :title="item.name"
-        >
-          {{ item.name }}
-          <v-icon v-if="item.isChild" style="margin-right: -8px">
-            $dropdown
-          </v-icon>
-        </v-btn>
-      </template>
+    <div :class="$style.appBar">
+        <div :class="$style.appBarInner">
+            <nuxt-link
+                :class="$style.logoWrapper"
+                to="/"
+                class="py-1 fill-height d-flex align-center"
+                title="Логотип Альянс Фуд"
+            >
+                <v-img
+                    id="logo-img"
+                    src="/images/logo1.png"
+                    alt="Логотип Альянс Фуд"
+                    title="Логотип Альянс Фуд"
+                    max-height="100%"
+                    contain
+                />
+                <v-img
+                    id="logo-text"
+                    class="mt-1 mx-1"
+                    src="/images/logo2.png"
+                    alt="Логотип Альянс Фуд"
+                    title="Логотип Альянс Фуд"
+                    max-height="80%"
+                    contain
+                />
+            </nuxt-link>
+            <v-spacer></v-spacer>
+            <template v-if="isMounted && !isMobile">
+                <v-btn
+                    v-for="(item, index) in menuItems"
+                    v-bind="{
+                        ...(!item.disable ? { to: `/${item.slug}` } : null),
+                    }"
+                    :id="item.slug"
+                    :key="item.slug + index"
+                    class="fill-height ma-0 header-link hidden-sm-and-down"
+                    style="height: 100%;"
+                    text
+                    tile
+                    color="#95282a"
+                    :title="item.name"
+                >
+                    {{ item.name }}
+                    <v-icon v-if="item.isChild" style="margin-right: -8px;">
+                        $dropdown
+                    </v-icon>
+                </v-btn>
+            </template>
 
-      <v-btn
-        @click="$emit('show-basket')"
-        :disabled="!(isMounted && isCart)"
-        class="cart-wrap"
-        color="#95282a"
-        :hover="false"
-        text
-      >
-        <span v-if="summa > 0" class="cart-text mr-2">
-          {{ summa }}&nbsp;&#8381;
-        </span>
-        <!-- <client-only> -->
-        <v-badge
-          class="cart-badge"
-          color="#95282a"
-          :value="isMounted && isCart"
-          overlap
-          :content="cartLength"
-        >
-          <v-icon color="#95282a">{{ icons.mdiBasket }}</v-icon>
-        </v-badge>
-        <!-- </client-only> -->
-      </v-btn>
-      <v-btn
-        @click="$emit('show-user')"
-        icon
-        class="ml-1"
-        large
-        title="Меню пользователя"
-      >
-        <v-icon medium color="#95282a">{{ icons.mdiAccount }}</v-icon>
-      </v-btn>
-      <v-btn
-        @click="$emit('show-drawer')"
-        icon
-        class="ml-1 hidden-md-and-up"
-        large
-        title="Меню"
-      >
-        <v-icon medium color="#95282a">$menu</v-icon>
-      </v-btn>
+            <v-btn
+                :disabled="!(isMounted && isCart)"
+                class="cart-wrap"
+                color="#95282a"
+                :hover="false"
+                text
+                @click="$emit('show-basket')"
+            >
+                <span v-if="summa > 0" class="cart-text mr-2">
+                    {{ summa }}&nbsp;&#8381;
+                </span>
+
+                <v-badge
+                    class="cart-badge"
+                    color="#95282a"
+                    :value="isMounted && isCart"
+                    overlap
+                    :content="cartLength"
+                >
+                    <v-icon color="#95282a">{{ icons.mdiBasket }}</v-icon>
+                </v-badge>
+
+            </v-btn>
+            <v-btn
+                icon
+                class="ml-1"
+                large
+                title="Меню пользователя"
+                @click="$emit('show-user')"
+            >
+                <v-icon medium color="#95282a">{{ icons.mdiAccount }}</v-icon>
+            </v-btn>
+            <v-btn
+                icon
+                class="ml-1 hidden-md-and-up"
+                large
+                title="Меню"
+                @click="$emit('show-drawer')"
+            >
+                <v-icon medium color="#95282a">$menu</v-icon>
+            </v-btn>
+        </div>
+
+        <lazy-toolbar-catalog-menu
+            v-if="isMounted && !isMobile"
+            :items="menuItems[0].items"
+        />
+        <lazy-toolbar-menu
+            v-if="isMounted && !isMobile"
+            :items="menuItems[1].items"
+            :is-two-columns="true"
+            parent-slug="manufacturers"
+        />
+        <lazy-toolbar-menu
+            v-if="isMounted && !isMobile"
+            :items="menuItems[2].items"
+            parent-slug="about"
+        />
     </div>
-    <!-- </LazyHydrate> -->
-    <lazy-toolbar-catalog-menu
-      v-if="isMounted && !isMobile"
-      :items="menuItems[0].items"
-    />
-    <lazy-toolbar-menu
-      v-if="isMounted && !isMobile"
-      :items="menuItems[1].items"
-      :isTwoColumns="true"
-      parentSlug="manufacturers"
-    />
-    <lazy-toolbar-menu
-      v-if="isMounted && !isMobile"
-      :items="menuItems[2].items"
-      parentSlug="about"
-    />
-  </div>
 </template>
 <style lang="scss" scoped module>
-.appBar {
-  padding: 0 12px;
-  height: $toolbar-mobile-height;
-  margin-top: 0px;
-  left: 0px;
-  right: 0px;
-  background-color: whitesmoke;
-  border-color: whitesmoke;
-  box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%),
-    0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
-  position: fixed;
-  top: 0;
-  z-index: 300;
+    .appBar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 300;
+        height: $toolbar-mobile-height;
+        margin-top: 0;
+        padding: 0 12px;
+        border-color: whitesmoke;
+        background-color: whitesmoke;
+        box-shadow:
+            0 2px 4px -1px rgb(0 0 0 / 20%),
+            0 4px 5px 0 rgb(0 0 0 / 14%),
+            0 1px 10px 0 rgb(0 0 0 / 12%);
 
-  @include md {
-    height: $toolbar-desktop-height;
-  }
-  .logoWrapper {
-    padding-right: 8px;
-  }
-  .appBarInner {
-    display: flex;
-    align-items: center;
-    height: 100%;
-  }
-}
+        @include md {
+            height: $toolbar-desktop-height;
+        }
+
+        .logoWrapper {
+            padding-right: 8px;
+        }
+
+        .appBarInner {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+    }
 </style>
 
 <style lang="scss" scoped>
-.cart-wrap {
-  height: 100% !important;
-  border-radius: 0;
-  &[disabled="disabled"] {
-    padding: 0;
-    min-width: 44px;
-    margin-left: 4px;
-  }
-  .cart-badge {
-    width: 40px;
-    height: 40px;
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    border-radius: 50%;
-    // background-color: #eeeeee;
-    transition-duration: 0.28s;
-  }
+    .cart-wrap {
+        height: 100% !important;
+        border-radius: 0;
 
-  .cart-text {
-    position: relative;
-    font-size: 16px;
-    font-weight: 600;
-    color: #95282a;
-    white-space: nowrap;
+        &[disabled="disabled"] {
+            min-width: 44px;
+            margin-left: 4px;
+            padding: 0;
+        }
 
-    &:before {
-      content: "";
-      display: block;
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-bottom: 2px solid #95282a;
-      width: 0;
-      transition: width 0.1s ease-in;
+        .cart-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition-duration: .28s;
+        }
+
+        .cart-text {
+            position: relative;
+            white-space: nowrap;
+            font-size: 16px;
+            font-weight: 600;
+            color: #95282a;
+
+            &:before {
+                content: "";
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                display: block;
+                width: 0;
+                border-bottom: 2px solid #95282a;
+                transition: width .1s ease-in;
+            }
+        }
+
+        &:hover {
+            .cart-badge {
+                background-color: #d8b7b7;
+            }
+
+            .cart-text:before {
+                width: 100%;
+            }
+        }
     }
-  }
 
-  &:hover {
-    .cart-badge {
-      background-color: #d8b7b7;
+    #logo-img {
+        width: 50px;
+        max-width: 50px;
     }
 
-    .cart-text:before {
-      width: 100%;
+    #logo-text {
+        display: none;
+        width: 110px;
+        max-width: 110px;
     }
-  }
-}
 
-#logo-img {
-  width: 50px;
-  max-width: 50px;
-}
+    .header-link {
+        padding: 0 8px !important;
+        text-indent: 0 !important;
+        font-size: 12px !important;
+        letter-spacing: 0 !important;
+    }
 
-#logo-text {
-  width: 110px;
-  max-width: 110px;
-  display: none;
-  // padding-right: 8px;
-}
+    @include sm {
+        #logo-img {
+            width: 65px;
+            max-width: 65px;
+        }
 
-.header-link {
-  font-size: 12px !important;
-  padding: 0 8px !important;
-  letter-spacing: 0 !important;
-  text-indent: 0 !important;
-}
+        #logo-text {
+            display: block;
+            width: 140px;
+            max-width: 140px;
+        }
 
-@include sm {
-  #logo-img {
-    width: 65px;
-    max-width: 65px;
-  }
+        .header-link {
+            padding: 0 6px !important;
+            font-size: 14px !important;
+        }
+    }
 
-  #logo-text {
-    width: 140px;
-    max-width: 140px;
-    display: block;
-  }
-  .header-link {
-    font-size: 14px !important;
-    padding: 0 6px !important;
-  }
-}
+    @include md {
+        #logo-img {
+            width: 50px;
+            max-width: 50px;
+        }
 
-@include md {
-  #logo-img {
-    width: 50px;
-    max-width: 50px;
-  }
+        #logo-text {
+            width: 120px;
+            max-width: 120px;
+        }
 
-  #logo-text {
-    width: 120px;
-    max-width: 120px;
-  }
+        .header-link {
+            padding: 0 8px !important;
+        }
+    }
 
-  // #header-top {
-  // justify-content: space-between;
-  // }
-  .header-link {
-    // font-size: 0.8rem !important;
-    padding: 0 8px !important;
-  }
-}
+    @include lg {
+        #logo-img {
+            width: 65px;
+            max-width: 65px;
+        }
 
-@include lg {
-  #logo-img {
-    width: 65px;
-    max-width: 65px;
-  }
+        #logo-text {
+            width: 130px;
+            max-width: 130px;
+        }
 
-  #logo-text {
-    width: 130px;
-    max-width: 130px;
-  }
-
-  .header-link {
-    // font-size: 0.85rem !important;
-    padding: 0 12px !important;
-  }
-}
+        .header-link {
+            padding: 0 12px !important;
+        }
+    }
 </style>
 
 <script>
-import { mdiAccount, mdiBasket } from "@mdi/js";
+import { mdiAccount, mdiBasket } from '@mdi/js';
 
 export default {
-  data() {
-    return {
-      icons: { mdiAccount, mdiBasket },
-      isMounted: false,
-    };
-  },
-  mounted() {
-    this.isMounted = true;
-  },
-  computed: {
-    isMobile() {
-      return this.$vuetify.breakpoint.mobile;
+    data() {
+        return {
+            icons: { mdiAccount, mdiBasket },
+            isMounted: false,
+        };
     },
-    isCart() {
-      if (!this.isMounted) {
-        return false;
-      }
-      return this.$store.getters["cart/isCart"];
+    computed: {
+        isMobile() {
+            return this.$vuetify.breakpoint.mobile;
+        },
+        isCart() {
+            if (!this.isMounted) {
+                return false;
+            }
+            return this.$store.getters['cart/isCart'];
+        },
+        menuItems() {
+            return this.$store.getters['info/menuItems'];
+        },
+        summa() {
+            if (!this.isCart) {
+                return 0;
+            } else {
+                return this.$store.getters['cart/cartSumm'];
+            }
+        },
+        cartLength() {
+            if (!this.isCart) {
+                return 0;
+            } else {
+                const length = this.$store.getters['cart/cartLength'];
+                return length;
+            }
+        },
     },
-    menuItems() {
-      return this.$store.getters["info/menuItems"];
+    mounted() {
+        this.isMounted = true;
     },
-    summa() {
-      if (!this.isCart) {
-        return 0;
-      } else {
-        return this.$store.getters["cart/cartSumm"];
-      }
-    },
-    cartLength() {
-      if (!this.isCart) {
-        return 0;
-      } else {
-        const length = this.$store.getters["cart/cartLength"];
-        return length;
-      }
-    },
-  },
 };
 </script>
