@@ -1,40 +1,9 @@
-//   complete: '...',
-//   cancel: '...',
-//   close: '...',
-//   delete: '...', // delete (e.g. v-chip close)
-//   clear: '...',
-//   success: '...',
-//   info: '...',
-//   warning: '...',
-//   error: '...',
-//   prev: '...',
-//   next: '...',
-//   checkboxOn: '...',
-//   checkboxOff: '...',
-//   checkboxIndeterminate: '...',
-//   delimiter: '...', // for carousel
-//   sort: '...',
-//   expand: '...',
-//   menu: '...',
-//   subgroup: '...',
-//   dropdown: '...',
-//   radioOn: '...',
-//   radioOff: '...',
-//   edit: '...',
-//   ratingEmpty: '...',
-//   ratingFull: '...',
-//   ratingHalf: '...',
-//   loading: '...',
-//   first: '...',
-//   last: '...',
-//   unfold: '...',
-//   file: '...',
-import { mdiPhone, mdiEmail, mdiMapMarker, mdiClockOutline, mdiArrowLeft, mdiEye, mdiEyeOff, mdiCurrencyRub } from "@mdi/js";
-// mdiSortVariant,
-export default function ({ app }) {
+import { mdiPhone, mdiEmail, mdiMapMarker, mdiClockOutline, mdiArrowLeft, mdiEye, mdiEyeOff, mdiCurrencyRub } from '@mdi/js';
+
+export default function({ app }) {
     return {
         breakpoint: {
-            mobileBreakpoint: 'sm' // This is equivalent to a value of 960
+            mobileBreakpoint: 'sm', // This is equivalent to a value of 960
         },
         theme: {
             disable: true,
@@ -58,7 +27,7 @@ export default function ({ app }) {
                 eyeOff: mdiEyeOff,
                 rub: mdiCurrencyRub,
                 // sort: mdiSortVariant
-            }
+            },
         },
-    }
+    };
 }

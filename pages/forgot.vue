@@ -34,7 +34,7 @@
             large
             :disabled="submitDisabled"
             :loading="loading"
-            style="width: 100%"
+            style="width: 100%;"
             title="Подтвердить"
           >
             Изменить пароль
@@ -46,7 +46,7 @@
         md="6"
         class="ma-auto"
         v-else-if="error"
-        style="display: flex; align-items: center; flex-direction: column"
+        style="display: flex; align-items: center; flex-direction: column;"
       >
         <h1 class="text-center mb-9">Ошибка!</h1>
         <v-btn color="accent" to="/" class="mx-auto">
@@ -58,7 +58,7 @@
         md="6"
         v-else-if="success"
         class="ma-auto"
-        style="display: flex; align-items: center; flex-direction: column"
+        style="display: flex; align-items: center; flex-direction: column;"
       >
         <h1 class="text-center mb-9">Ваш пароль успешно изменен!</h1>
 
@@ -68,7 +68,6 @@
       </v-col>
     </v-row>
   </v-container>
-  <!-- </div> -->
 </template>
 <script>
 import { validationMixin } from "vuelidate";
@@ -95,7 +94,7 @@ export default {
       repeatPassword: "",
       showPass: false,
       loading: false,
-      // errorMessage: null,
+
       error: false,
       success: false,
     };
@@ -112,7 +111,7 @@ export default {
     passwordErrors() {
       const errors = [];
       if (!this.$v.password.$dirty) return errors;
-      //   console.log(this.$v.password);
+
       !this.$v.password.required && errors.push("Введите пароль");
       !this.$v.password.minLength &&
         errors.push("Минимальная длина пароля - 6 символов");
